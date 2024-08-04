@@ -2,8 +2,9 @@ import { useState } from 'react'
 import {Routes, Route, NavLink} from 'react-router-dom'
 
 import Home from './home/Home.jsx'
-import CrudAlimento from './alimento/crudALimento'
+import CrudAlimento from './Alimento/crudALimento'
 import CrudResponsable from './Responsables/CrudResponsable'
+import CrudEstanque from './Estanque/crudEstanque.jsx'
 // import Responsable from './home/Responsable'
 
 import imagen_logo from './IMG/LOGO_GESTIFISH.png'
@@ -46,12 +47,20 @@ const App = () => {
               )}
             </NavLink>
           </li>
+          <li className='nav-item'>
+            <NavLink className='nav-link fs-5' to="/Estanque">
+              {({ isActive }) => (
+                <span className={isActive ? 'active' : ''}>Estanque</span>
+              )}
+            </NavLink>
+          </li>
         </ul>
       </nav>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/Alimentacion' element={<CrudAlimento />} />
         <Route path='/Responsable' element={<CrudResponsable/>}/>
+        <Route path='/Estanque' element={<CrudEstanque/>}/>
       </Routes>
     </>
   );
