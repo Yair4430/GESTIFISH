@@ -21,17 +21,16 @@ const CrudResponsable = () => {
 
     useEffect(() => {
         getAllResponsable();
-    }, [ResponsableList]);
+    }, []);
 
     const getAllResponsable = async () => {
         try {
             const respuesta = await axios.get(URI);
-            // console.log(respuesta.data);
             setResponsableList(respuesta.data);
         } catch (error) {
             console.error('Error fetching responsables:', error);
         }
-    }
+    };
 
     const getResponsable = async (Id_Responsable) => {
         setButtonForm('Enviar');
@@ -42,11 +41,11 @@ const CrudResponsable = () => {
         } catch (error) {
             console.error('Error fetching responsable:', error);
         }
-    }
+    };
 
     const updateTextButton = (texto) => {
         setButtonForm(texto);
-    }
+    };
 
     const deleteResponsable = (Id_Responsable) => {
         Swal.fire({
@@ -72,10 +71,6 @@ const CrudResponsable = () => {
                 }
             }
         });
-    }
-
-    const handleCreate = (newResponsable) => {
-        setResponsableList([...ResponsableList, newResponsable]); // Agrega el nuevo responsable a la lista
     };
 
     return (
@@ -87,9 +82,9 @@ const CrudResponsable = () => {
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Apellidos</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Documento de Identidad</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Tipo de Responsable</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Cor_Responsable</th>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Correo</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Número de Telefono</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Accionnes</th>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -102,15 +97,19 @@ const CrudResponsable = () => {
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Cor_Responsable}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Num_Responsable}</td>
                             <td>
-                                <button className='btn btn-info align-middle' onClick={() => getResponsable(responsable.Id_Responsable)}><i className="fa-solid fa-pen-to-square"></i> Editar</button>
-                                <button className='btn btn-info align-middle m-2' onClick={() => deleteResponsable(responsable.Id_Responsable)}><i className="fa-solid fa-trash-can"></i> Borrar</button>
+                                <button className='btn btn-info align-middle' onClick={() => getResponsable(responsable.Id_Responsable)}>
+                                    <i className="fa-solid fa-pen-to-square"></i> Editar
+                                </button>
+                                <button className='btn btn-info align-middle m-2' onClick={() => deleteResponsable(responsable.Id_Responsable)}>
+                                    <i className="fa-solid fa-trash-can"></i> Borrar
+                                </button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
             <hr />
-            <FormResponsable buttonForm={buttonForm} responsable={responsable} URI={URI} updateTextButton={updateTextButton} />
+            <FormResponsable buttonForm={buttonForm} responsable={responsable} URI={URI} updateTextButton={updateTextButton} getAllResponsable={getAllResponsable} />
             <hr />
             <FromQueryResponsable URI={URI} getResponsable={getResponsable} deleteResponsable={deleteResponsable} buttonForm={buttonForm} />
         </>
