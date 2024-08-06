@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Importa las librerías necesarias
 import express from "express";
 import { 
@@ -52,3 +53,18 @@ routerEstanque.use((err, req, res, next) => {
 
 // Exporta el router para usarlo en tu aplicación principal
 export default routerEstanque;
+=======
+import express from "express";
+import { createEstanque, deleteEstanque, getAllEstanque, getEstanque, updateEstanque } from "../controllers/estanqueController.js";
+
+const router = express.Router();
+
+// Rutas para Estanque
+router.get('/estanque', getAllEstanque);
+router.get('/estanque/:id', getEstanque);
+router.post('/estanque', createEstanque);
+router.put('/estanque/:id', updateEstanque);
+router.delete('/estanque/:id', deleteEstanque);
+
+export default router;
+>>>>>>> 65db394cd671beb8a46b6119eed97cee22344cde
