@@ -1,0 +1,25 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "logs\\.71143fb1a4645a10d34ea89f622b1c5258322b34-audit.json",
+    "files": [
+        {
+            "date": 1722789841282,
+            "name": "logs\\gestifish_2024-08-04.log",
+            "hash": "fa66638e806cb554d3a2f3f7d97a88c3591985932641bec757647580d316ada0"
+        },
+        {
+            "date": 1722868484845,
+            "name": "logs\\gestifish_2024-08-05.log",
+            "hash": "d20bcd562c187cef197cf95d8b0acf94405e606a1c71ee26fa9ef6eadd08a332"
+        },
+        {
+            "date": 1722949196771,
+            "name": "logs\\gestifish_2024-08-06.log",
+            "hash": "258b8c2f313ed521aaf220a37c11ff6150e1361bf920a88a2b620463cfbcd759"
+        }
+    ],
+    "hashType": "sha256"
+}
