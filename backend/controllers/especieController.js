@@ -1,72 +1,162 @@
 import { Sequelize, Op } from "sequelize";
-import especieModel from "../models/especieModel.js";
+import EspecieModel from "../models/especieModel.js";
+import logger from "../middleware/logger.js";
 
-// Obtener todos los registros
-export const getAllEspecie = async (req, res) => {
+// Obtener todas las especies
+export const getAllEspecies = async (req, res) => {
     try {
-        const especie = await especieModel.findAll();
-        if (especie.length > 0) {
-            res.status(200).json(especie); // 200 OK
-        } else {
-            res.status(404).json({ message: "No se encontraron registros" }); // 404 Not Found
-        }
+      const especies = await EspecieModel.findAll();
+      res.json(especies);
     } catch (error) {
-        res.status(500).json({ message: error.message }); // 500 Internal Server Error
+      logger.error("Error al obtener todas las especies:", error);
+      res.status(500).json({ message: error.message });
     }
-};
+  };
 
-// Mostrar un Registro
+// Obtener una especie por Id
 export const getEspecie = async (req, res) => {
+    const { Id_Especie } = req.params;
     try {
-        const especie = await especieModel.findByPk(req.params.id);
+        const especie = await EspecieModel.findOne({
+            where: { Id_Especie }
+        });
+
         if (especie) {
-            res.status(200).json(especie); // 200 OK
+            logger.info(`Especie con Id ${Id_Especie} obtenida exitosamente`);
+            return res.status(200).json(especie);
         } else {
-            res.status(404).json({ message: "Registro no encontrado" }); // 404 Not Found
+            logger.warn(`Especie con Id ${Id_Especie} no encontrada`);
+            return res.status(404).json({ message: 'Especie no encontrada' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message }); // 500 Internal Server Error
+        logger.error('Error al obtener especie:', error);
+        console.error('Error al obtener especie:', error);
+        return res.status(500).json({ message: 'Error al obtener especie', error: error.message });
     }
 };
 
-// Crear un registro
+// Crear una especie
 export const createEspecie = async (req, res) => {
+    const { Nom_Especie, Car_Especie, Tam_Promedio, Den_Especie } = req.body;
+    const Img_Especie = req.file ? req.file.filename : null;
+
+    if (!Nom_Especie || !Car_Especie || !Tam_Promedio || !Den_Especie) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
     try {
-        await especieModel.create(req.body);
-        res.status(201).json({ message: "¡Registro creado exitosamente!" }); // 201 Created
+        const respuesta = await EspecieModel.create({
+            Nom_Especie,
+            Car_Especie,
+            Img_Especie,
+            Tam_Promedio,
+            Den_Especie
+        });
+
+        logger.info('Datos enviados a la base de datos:', respuesta);
+
+        if (respuesta.Id_Especie) {
+            logger.info(`Especie con ID ${respuesta.Id_Especie} creada exitosamente`);
+            return res.status(201).json({ message: "¡Registro creado exitosamente!", data: respuesta });
+        } else {
+            logger.error('Error al crear el registro');
+            return res.status(500).json({ message: "Error al crear el registro" });
+        }
     } catch (error) {
-        res.status(500).json({ message: error.message }); // 500 Internal Server Error
+        if (error.name === 'SequelizeValidationError') {
+            logger.error('Error de validación al crear especie:', error);
+            return res.status(400).json({ message: 'Error de validación', errors: error.errors });
+        }
+
+        logger.error('Error al crear especie:', error);
+        console.error('Error al crear especie:', error);
+        res.status(500).json({ message: 'Error al crear especie', error: error.message });
     }
 };
 
-// Actualizar un registro
+// Actualizar una especie
 export const updateEspecie = async (req, res) => {
+    const { Id_Especie } = req.params;
+    const { Nom_Especie, Car_Especie, Tam_Promedio, Den_Especie } = req.body;
+    const Img_Especie = req.file ? req.file.filename : null;
+
     try {
-        const [updated] = await especieModel.update(req.body, {
-            where: { Id_Especie: req.params.id }
-        });
-        if (updated > 0) {
-            res.status(200).json({ message: "¡Registro actualizado exitosamente!" }); // 200 OK
-        } else {
-            res.status(404).json({ message: "Registro no encontrado" }); // 404 Not Found
+        const especie = await EspecieModel.findOne({ where: { Id_Especie } });
+
+        if (!especie) {
+            logger.warn(`Especie con ID ${Id_Especie} no encontrada`);
+            return res.status(404).json({ message: 'Especie no encontrada' });
         }
+
+        // Actualiza solo los campos proporcionados
+        if (Nom_Especie) especie.Nom_Especie = Nom_Especie;
+        if (Car_Especie) especie.Car_Especie = Car_Especie;
+        if (Tam_Promedio) especie.Tam_Promedio = Tam_Promedio;
+        if (Den_Especie) especie.Den_Especie = Den_Especie;
+        if (Img_Especie) especie.Img_Especie = Img_Especie;
+
+        await especie.save();
+
+        logger.info(`Especie con ID ${Id_Especie} actualizada exitosamente`);
+        return res.status(200).json({ message: '¡Registro actualizado exitosamente!', data: especie });
     } catch (error) {
-        res.status(500).json({ message: error.message }); // 500 Internal Server Error
+        logger.error('Error al actualizar especie:', error);
+        console.error('Error al actualizar especie:', error);
+        return res.status(500).json({ message: 'Error al actualizar especie', error: error.message });
     }
 };
 
-// Borrar un registro
+
+// Borrar una especie
 export const deleteEspecie = async (req, res) => {
+    const { Id_Especie } = req.params;
+
     try {
-        const deleted = await especieModel.destroy({
-            where: { Id_Especie: req.params.id }
+        const result = await EspecieModel.destroy({
+            where: { Id_Especie }
         });
-        if (deleted > 0) {
-            res.status(200).json({ message: "¡Registro borrado exitosamente!" }); // 200 OK
+
+        if (result) {
+            logger.info(`Especie con ID ${Id_Especie} eliminada exitosamente`);
+            return res.status(200).json({ message: 'Especie eliminada exitosamente' });
         } else {
-            res.status(404).json({ message: "Registro no encontrado" }); // 404 Not Found
+            logger.warn(`Especie con ID ${Id_Especie} no encontrada`);
+            return res.status(404).json({ message: 'Especie no encontrada' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message }); // 500 Internal Server Error
+        logger.error('Error al eliminar especie:', error);
+        console.error('Error al eliminar especie:', error);
+        return res.status(500).json({ message: 'Error al eliminar especie', error: error.message });
+    }
+};
+
+
+// Consultar especie por nombre usando like
+export const getQueryEspecie = async (req, res) => {
+    const { Nom_Especie } = req.params;
+    logger.info(`Consulta de Especie: ${Nom_Especie}`);
+    console.log("Nom_Especie recibido:", Nom_Especie);
+
+    if (!Nom_Especie) {
+        logger.warn('Nom_Especie es requerido');
+        return res.status(400).json({ message: "Nom_Especie es requerido" });
+    }
+
+    try {
+        const especies = await EspecieModel.findAll({
+            where: {
+                Nom_Especie: {
+                    [Op.like]: `%${Nom_Especie}%`
+                }
+            }
+        });
+
+        logger.info(`Consulta de especies con nombre ${Nom_Especie} realizada exitosamente`);
+        res.json(especies);
+    } catch (error) {
+        logger.error("Error al consultar Especie:", error);
+        console.error("Error al consultar especie por nombre:", error);
+        res.status(500).json({ message: error.message });
     }
 };
