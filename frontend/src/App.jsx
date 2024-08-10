@@ -2,11 +2,12 @@ import { useState } from 'react'
 import {Routes, Route, NavLink} from 'react-router-dom'
 
 import Home from './home/Home.jsx'
+
 import CrudAlimento from './Alimento/crudALimento'
 import CrudResponsable from './Responsables/CrudResponsable'
 import CrudEstanque from './Estanque/crudEstanque.jsx'
 import CrudEspecie from './Especie/CrudEspecie.jsx'
-// import Responsable from './home/Responsable'
+import CrudTraslado from './Traslado/CrudTraslado.jsx'
 
 import imagen_logo from './IMG/LOGO_GESTIFISH.png'
 import "../src/App.css"
@@ -42,9 +43,9 @@ const App = () => {
             </NavLink>
           </li>
           <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Traslados">
+            <NavLink className='nav-link fs-5' to="/Traslado">
               {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Traslados</span>
+                <span className={isActive ? 'active' : ''}>Traslado</span>
               )}
             </NavLink>
           </li>
@@ -70,6 +71,7 @@ const App = () => {
         <Route path='/Responsable' element={<CrudResponsable/>}/>
         <Route path='/Estanque' element={<CrudEstanque/>}/>
         <Route path='/Especie' element={<CrudEspecie/>}/>
+        <Route path='/Traslado' element={<CrudTraslado/>}/>
       </Routes>
     </>
   );
