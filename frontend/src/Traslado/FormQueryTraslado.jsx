@@ -10,18 +10,19 @@ const FormQueryTraslado = ({ URI, getTraslado, deleteTraslado, buttonForm }) => 
         if (Fec_Traslado) {
             try {
                 const respuesta = await axios.get(`${URI}fecha/${Fec_Traslado}`);
-                setTrasladoQuery(Array.isArray(respuesta.data) ? respuesta.data : [respuesta.data]); // Ensure the result is an array
+                if (respuesta.status >= 200 && respuesta.status < 300) {
+                    setTrasladoQuery(Array.isArray(respuesta.data) ? respuesta.data : [respuesta.data]); // Asegurar que el resultado sea un array
+                } else {
+                    console.warn('HTTP Status:', respuesta.status);
+                }
             } catch (error) {
-                console.error('Error fetching traslado:', error);
+                console.error('Error fetching traslado:', error.response?.status || error.message);
                 setTrasladoQuery([]);
             }
         } else {
             setTrasladoQuery([]);
         }
     };
-    
-    
-    
 
     useEffect(() => {
         setTrasladoQuery([]);

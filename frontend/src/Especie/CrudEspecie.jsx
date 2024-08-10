@@ -4,8 +4,8 @@ import FormEspecie from './FormEspecie';
 import FormQueryEspecie from './FormQueryEspecie';
 import Swal from 'sweetalert2';
 
-const URI = 'http://localhost:3001/especie/';
-const PATH_FOTOS = 'http://localhost:3001/public/uploads';
+const URI = process.env.ROUTER_PRINCIPAL + '/especie/';
+const PATH_FOTOS = process.env.ROUTER_FOTOS;
 
 const CrudEspecie = () => {
     const [EspecieList, setEspecieList] = useState([]);
@@ -25,22 +25,29 @@ const CrudEspecie = () => {
 
     const getAllEspecies = async () => {
         try {
-          const respuesta = await axios.get(URI);
-          setEspecieList(respuesta.data);
+            const respuesta = await axios.get(URI);
+            if (respuesta.status === 200) {
+                setEspecieList(respuesta.data);
+            } else {
+                console.warn('HTTP Status:', respuesta.status);
+            }
         } catch (error) {
-          console.error('Error fetching especies:', error);
+            console.error('Error fetching especies:', error.response?.status || error.message);
         }
-      };
-      
+    };
 
     const getEspecie = async (Id_Especie) => {
         setButtonForm('Enviar');
         try {
-            const respuesta = await axios.get(URI + Id_Especie);
-            setButtonForm('Actualizar');
-            setEspecie({ ...respuesta.data });
+            const respuesta = await axios.get(`${URI}${Id_Especie}`);
+            if (respuesta.status === 200) {
+                setButtonForm('Actualizar');
+                setEspecie({ ...respuesta.data });
+            } else {
+                console.warn('HTTP Status:', respuesta.status);
+            }
         } catch (error) {
-            console.error('Error fetching especie:', error);
+            console.error('Error fetching especie:', error.response?.status || error.message);
         }
     };
 
@@ -60,15 +67,19 @@ const CrudEspecie = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(URI + Id_Especie);
-                    Swal.fire({
-                        title: "¡Borrado!",
-                        text: "Borrado exitosamente",
-                        icon: "success"
-                    });
-                    getAllEspecies(); // Refresh the list after deletion
+                    const respuesta = await axios.delete(`${URI}${Id_Especie}`);
+                    if (respuesta.status === 200) {
+                        Swal.fire({
+                            title: "¡Borrado!",
+                            text: "Borrado exitosamente",
+                            icon: "success"
+                        });
+                        getAllEspecies(); // Refresh the list after deletion
+                    } else {
+                        console.warn('HTTP Status:', respuesta.status);
+                    }
                 } catch (error) {
-                    console.error('Error deleting especie:', error);
+                    console.error('Error deleting especie:', error.response?.status || error.message);
                 }
             }
         });

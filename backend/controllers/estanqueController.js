@@ -6,18 +6,29 @@ import logger from "../middleware/logger.js";
 export const getAllEstanque = async (req, res) => {
     try {
         const estanques = await EstanqueModel.findAll();
-        logger.info('Todos los estanques obtenidos exitosamente');
-        res.json(estanques);
+
+        if (estanques.length > 0) {
+            logger.info('Todos los estanques obtenidos exitosamente');
+            return res.status(200).json(estanques);
+        }
+
+        res.status(400).json({ message: 'No hay estanques' });
     } catch (error) {
         logger.error("Error al obtener todos los estanques:", error);
         console.error("Error al obtener todos los estanques:", error);
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Error al obtener estanques' });
     }
 };
 
 // Obtener un estanque por ID
 export const getEstanque = async (req, res) => {
     const { Id_Estanque } = req.params;
+
+    if (!Id_Estanque) {
+        logger.warn('Id_Estanque es requerido');
+        return res.status(400).json({ message: 'Id_Estanque es requerido' });
+    }
+
     try {
         const estanque = await EstanqueModel.findOne({
             where: { Id_Estanque }
@@ -37,7 +48,6 @@ export const getEstanque = async (req, res) => {
     }
 };
 
-// Crear un estanque
 // Crear un estanque
 export const createEstanque = async (req, res) => {
     const { Id_Estanque, Nom_Estanque, Esp_Agua, Tip_Estanque, Lar_Estanque, Anc_Estanque, Des_Estanque, Rec_Agua } = req.body;
@@ -82,10 +92,9 @@ export const createEstanque = async (req, res) => {
     }
 };
 
-
 // Actualizar un estanque
 export const updateEstanque = async (req, res) => {
-    const { Id_Estanque, Nom_Estanque, Esp_Agua, Tip_Estanque, Lar_Estanque, Anc_Estanque, Des_Estanque, Img_Estanque, Rec_Agua } = req.body;
+    const { Id_Estanque, Nom_Estanque, Esp_Agua, Tip_Estanque, Lar_Estanque, Anc_Estanque, Des_Estanque, Rec_Agua } = req.body;
     const foto = req.file ? req.file.filename : null;
 
     if (!Id_Estanque || !Nom_Estanque || !Esp_Agua || !Tip_Estanque || !Lar_Estanque || !Anc_Estanque || !Des_Estanque || !Rec_Agua) {
@@ -101,13 +110,14 @@ export const updateEstanque = async (req, res) => {
             return res.status(404).json({ message: 'Estanque no encontrado' });
         }
 
+        // Actualizar los campos
         estanque.Nom_Estanque = Nom_Estanque;
         estanque.Esp_Agua = Esp_Agua;
         estanque.Tip_Estanque = Tip_Estanque;
         estanque.Lar_Estanque = Lar_Estanque;
         estanque.Anc_Estanque = Anc_Estanque;
         estanque.Des_Estanque = Des_Estanque;
-        estanque.Img_Estanque = foto || Img_Estanque;
+        estanque.Img_Estanque = foto || estanque.Img_Estanque; // Usar la imagen nueva si existe, de lo contrario mantener la actual
         estanque.Rec_Agua = Rec_Agua;
 
         await estanque.save();
@@ -124,6 +134,11 @@ export const updateEstanque = async (req, res) => {
 // Borrar un estanque
 export const deleteEstanque = async (req, res) => {
     const { Id_Estanque } = req.params;
+
+    if (!Id_Estanque) {
+        logger.warn('Id_Estanque es requerido');
+        return res.status(400).json({ message: 'Id_Estanque es requerido' });
+    }
 
     try {
         const result = await EstanqueModel.destroy({
@@ -148,13 +163,12 @@ export const deleteEstanque = async (req, res) => {
 export const getQueryEstanque = async (req, res) => {
     const { Id_Estanque } = req.params;
     logger.info(`Consulta de Estanque: ${req.params.Id_Estanque}`);
-    console.log("Id_Estanque recibido:", Id_Estanque);
-    
+
     if (!Id_Estanque) {
         logger.warn('Id_Estanque es requerido');
         return res.status(400).json({ message: "Id_Estanque es requerido" });
     }
-    
+
     try {
         const estanque = await EstanqueModel.findAll({
             where: {
@@ -163,11 +177,12 @@ export const getQueryEstanque = async (req, res) => {
                 }
             }
         });
+
         logger.info(`Consulta de estanque con ID ${Id_Estanque} realizada exitosamente`);
-        res.json(estanque);
+        return res.json(estanque);
     } catch (error) {
         logger.error("Error al consultar Estanque:", error);
         console.error("Error al consultar estanque por ID:", error);
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 };

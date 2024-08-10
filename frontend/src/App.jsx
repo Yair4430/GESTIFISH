@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import {Routes, Route, NavLink} from 'react-router-dom'
+//import dotenv from 'dotenv'
 
 import Home from './home/Home.jsx'
-
 import CrudAlimento from './Alimento/crudALimento'
 import CrudResponsable from './Responsables/CrudResponsable'
 import CrudEstanque from './Estanque/crudEstanque.jsx'
@@ -11,6 +11,8 @@ import CrudTraslado from './Traslado/CrudTraslado.jsx'
 
 import imagen_logo from './IMG/LOGO_GESTIFISH.png'
 import "../src/App.css"
+
+//dotenv.config()
 
 const App = () => {
   return (
