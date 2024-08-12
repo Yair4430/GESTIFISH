@@ -3,9 +3,9 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import FormActividad from './formActividad.jsx';
-import FromQueryActividad from './formQueryActividad.jsx';
+import FormQueryActividad from './formQueryActividad.jsx';
 
-const URI = 'http://localhost:3001/Actividad';
+const URI = 'http://localhost:3001/Actividad/';
 
 const CrudActividad = () => {
     const [ActividadList, setActividadList] = useState([]);
@@ -34,16 +34,17 @@ const CrudActividad = () => {
         }
     };
 
-    const getActividad = async (Id_Actividad) => {
-        setButtonForm('Enviar');
-        try {
-            const respuesta = await axios.get(URI + Id_Actividad);
-            setButtonForm('Actualizar');
-            setActividad({ ...respuesta.data });
-        } catch (error) {
-            console.error('Error fetching actividad:', error);
-        }
-    };
+ const getActividad = async (Id_Actividad) => {
+    setButtonForm('Enviar');
+    try {
+        const respuesta = await axios.get(`${URI}/${Id_Actividad}`); // Corregido
+        setButtonForm('Actualizar');
+        setActividad({ ...respuesta.data });
+    } catch (error) {
+        console.error('Error fetching actividad:', error);
+    }
+};
+
 
     const updateTextButton = (texto) => {
         setButtonForm(texto);
@@ -61,7 +62,7 @@ const CrudActividad = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(URI + Id_Actividad);
+                    await axios.delete(`${URI}/${Id_Actividad}`);
                     Swal.fire({
                         title: "¡Borrado!",
                         text: "Borrado exitosamente",
@@ -115,7 +116,7 @@ const CrudActividad = () => {
             <hr />
             <FormActividad buttonForm={buttonForm} actividad={actividad} URI={URI} updateTextButton={updateTextButton} getAllActividad={getAllActividad} />
             <hr />
-            <FromQueryActividad URI={URI} getActividad={getActividad} deleteActividad={deleteActividad} buttonForm={buttonForm} />
+            <FormQueryActividad URI={URI} getActividad={getActividad} deleteActividad={deleteActividad} buttonForm={buttonForm} />
         </>
     );
 }

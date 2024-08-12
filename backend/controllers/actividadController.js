@@ -54,12 +54,13 @@ export const getActividad = async (req, res) => {
 export const createActividad = async (req, res) => {
     const { Nom_Actividad, Des_Actividad, Id_Responsable, Fec_Actividad, Hor_Actividad, Fas_Produccion, Id_Estanque } = req.body;
 
-    // if (!Nom_Actividad || !Des_Actividad || !Id_Responsable || !Fec_Actividad || !Hor_Actividad || !Fas_Produccion || !Id_Estanque) {
-    //     logger.warn('Todos los campos son obligatorios');
-    //     return res.status(400).json({ message: 'Todos los campos son obligatorios' });
-    // }
+    if (!Nom_Actividad || !Des_Actividad || !Id_Responsable || !Fec_Actividad || !Hor_Actividad || !Fas_Produccion || !Id_Estanque) {
+        logger.warn('Todos los campos son obligatorios');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
 
     try {
+        console.log(req.body)
         const respuesta = await ActividadModel.create(req.body);
         logger.info('Datos enviados a la base de datos:', respuesta);
 
@@ -84,9 +85,10 @@ export const createActividad = async (req, res) => {
 
 // Actualizar una actividad
 export const updateActividad = async (req, res) => {
+    
     const { Id_Actividad, Nom_Actividad, Des_Actividad, Id_Responsable, Fec_Actividad, Hor_Actividad, Fas_Produccion, Id_Estanque } = req.body;
 
-    if (!Id_Actividad || !Nom_Actividad || !Des_Actividad || !Id_Responsable || !Fec_Actividad || !Hor_Actividad || !Fas_Produccion || !Id_Estanque) {
+    if (!Nom_Actividad || !Des_Actividad || !Id_Responsable || !Fec_Actividad || !Hor_Actividad || !Fas_Produccion || !Id_Estanque) {
         logger.warn('Todos los campos son obligatorios');
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
@@ -120,6 +122,7 @@ export const updateActividad = async (req, res) => {
 
 // Borrar una actividad
 export const deleteActividad = async (req, res) => {
+    console.log(req.body)
     const { Id_Actividad } = req.params;
 
     try {
@@ -143,23 +146,23 @@ export const deleteActividad = async (req, res) => {
 
 // Consultar actividad por nombre
 export const getQueryActividad = async (req, res) => {
-    const { Nom_Actividad } = req.params;
+    const { Fec_Actividad } = req.params;
 
-    if (!Nom_Actividad) {
-        logger.warn('Nom_Actividad es requerido');
-        return res.status(400).json({ message: 'Nom_Actividad es requerido' });
+    if (!Fec_Actividad) {
+        logger.warn('Fec_Actividad es requerido');
+        return res.status(400).json({ message: 'Fec_Actividad es requerido' });
     }
 
     try {
         const actividades = await ActividadModel.findAll({
-            where: { Nom_Actividad: { [Op.like]: `%${Nom_Actividad}%` } }
+            where: { Fec_Actividad: { [Op.like]: `%${Fec_Actividad}%` } }
         });
 
         if (actividades.length > 0) {
-            logger.info(`Consulta de actividades con nombre ${Nom_Actividad} realizada exitosamente`);
+            logger.info(`Consulta de actividades con nombre ${Fec_Actividad} realizada exitosamente`);
             return res.status(200).json(actividades);
         } else {
-            logger.warn(`No se encontraron actividades con nombre ${Nom_Actividad}`);
+            logger.warn(`No se encontraron actividades con nombre ${Fec_Actividad}`);
             return res.status(404).json({ message: 'No se encontraron actividades' });
         }
     } catch (error) {

@@ -40,9 +40,12 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
 
     const sendFormA = async (e) => {
         e.preventDefault();
+
         try {
             if (buttonForm === 'Actualizar') {
-                await axios.put(`${URI}${actividad.Id_Actividad}`,{
+                console.log('Actualizando actividad con ID:', Id_Actividad);
+                await axios.put(`${URI}${actividad.Id_Actividad}`, {
+                    Id_Actividad,
                     Nom_Actividad,
                     Des_Actividad,
                     Fec_Actividad,
@@ -60,8 +63,8 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                 clearFormA();
                 getAllActividad();
             } else if (buttonForm === 'Enviar') {
-                const respuestaApi = await axios.post(URI,{
-
+                const respuestaApi = await axios.post(URI, {
+                    // Id_Actividad,
                     Nom_Actividad,
                     Des_Actividad,
                     Fec_Actividad,
@@ -81,7 +84,6 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                     getAllActividad();
                 }
             }
-            
         } catch (error) {
             console.error('Error al enviar el formulario:', error);
             Swal.fire({
@@ -91,6 +93,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
             });
         }
     };
+    
 
     const clearFormA = () => {
         setId_Actividad('');
@@ -105,12 +108,12 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
 
     const setDataA = () => {
         setId_Actividad(actividad.Id_Actividad);
-        setNom_Actividad(actividad.Nom_Actividad );
-        setDes_Actividad(actividad.Des_Actividad );
-        setFec_Actividad(actividad.Fec_Actividad );
-        setHor_Actividad(actividad.Hor_Actividad );
-        setFas_Produccion(actividad.Fas_Produccion );
-        setId_Responsable(actividad.Id_Responsable );
+        setNom_Actividad(actividad.Nom_Actividad);
+        setDes_Actividad(actividad.Des_Actividad);
+        setFec_Actividad(actividad.Fec_Actividad);
+        setHor_Actividad(actividad.Hor_Actividad);
+        setFas_Produccion(actividad.Fas_Produccion);
+        setId_Responsable(actividad.Id_Responsable);
         setId_Estanque(actividad.Id_Estanque );
     };
 
@@ -138,7 +141,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                     <input type="text" id="Hor_Actividad" value={Hor_Actividad} onChange={(e) => setHor_Actividad(e.target.value)} />
                     <br />
                     <label htmlFor="Fas_Produccion" className="m-2">Fase de Producción:</label>
-                    <input type="text" id="Fas_Produccion" value={Fas_Produccion} onChange={(e) => setFas_Produccion(e.target.value)} />
+                    <input type="number" id="Fas_Produccion" value={Fas_Produccion} onChange={(e) => setFas_Produccion(e.target.value)} />
                     <br />
                     <label htmlFor="Id_Responsable" className="m-2">Responsable de la Actividad:</label>
                     <select id="Id_Responsable" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)}>

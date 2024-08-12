@@ -22,7 +22,7 @@ routerActividad.get('/:Id_Actividad', getActividad);
 routerActividad.post('/', createActividad);
 routerActividad.put('/:Id_Actividad', updateActividad);
 routerActividad.delete('/:Id_Actividad', deleteActividad);
-routerActividad.get('/Fec_Actividad/:Fec_Actividad', getQueryActividad );
+routerActividad.get('/fec_Actividad/:fec_Actividad', getQueryActividad );
 
 
 // Middleware para manejar errores
