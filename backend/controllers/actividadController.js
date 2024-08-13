@@ -171,3 +171,6 @@ export const getQueryActividad = async (req, res) => {
         return res.status(500).json({ message: 'Error al consultar actividad', error: error.message });
     }
 };
+
+
+

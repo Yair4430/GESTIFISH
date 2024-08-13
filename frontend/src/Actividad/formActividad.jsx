@@ -138,10 +138,14 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                     <input type="date" id="Fec_Actividad" value={Fec_Actividad} onChange={(e) => setFec_Actividad(e.target.value)} />
                     <br />
                     <label htmlFor="Hor_Actividad" className="m-2">Duración de la Actividad:</label>
-                    <input type="text" id="Hor_Actividad" value={Hor_Actividad} onChange={(e) => setHor_Actividad(e.target.value)} />
+                    <input type="time" id="Hor_Actividad" value={Hor_Actividad} onChange={(e) => setHor_Actividad(e.target.value)} />
                     <br />
                     <label htmlFor="Fas_Produccion" className="m-2">Fase de Producción:</label>
-                    <input type="number" id="Fas_Produccion" value={Fas_Produccion} onChange={(e) => setFas_Produccion(e.target.value)} />
+                    <select id="Fas_Produccion" value={Fas_Produccion} onChange={(e) => setFas_Produccion(e.target.value)}>
+                    <option value="">-- Seleccione --</option>
+                    <option value="Antes de la cosecha">Antes de la cosecha</option>
+                    <option value="Despues de la cosecha">Después de la cosecha</option>
+                    </select>
                     <br />
                     <label htmlFor="Id_Responsable" className="m-2">Responsable de la Actividad:</label>
                     <select id="Id_Responsable" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)}>

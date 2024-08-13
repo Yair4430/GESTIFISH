@@ -10,7 +10,7 @@ const ActividadModel = db.define('actividad', {
   Id_Responsable: DataTypes.INTEGER,
   Fec_Actividad: DataTypes.DATE,
   Hor_Actividad: DataTypes.TIME,
-  Fas_Produccion: DataTypes.STRING,
+  Fas_Produccion: DataTypes.ENUM(['Antes de la cosecha', 'Despues de la cosecha']),
   Id_Estanque: DataTypes.INTEGER,
 }, {
   timestamps: false,
@@ -18,3 +18,5 @@ const ActividadModel = db.define('actividad', {
 });
 
 export default ActividadModel;
+
+  
