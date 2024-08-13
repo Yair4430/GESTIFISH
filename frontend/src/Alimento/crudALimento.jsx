@@ -106,5 +106,3 @@ const CrudAlimento = () => {
         </>
     )
 }
-
-export  default CrudAlimento

@@ -9,9 +9,14 @@ const FromQueryResponsable = ({ URI, getResponsable, deleteResponsable, buttonFo
         if (Doc_Responsable) {
             try {
                 const respuesta = await axios.get(`${URI}Doc_Responsable/${Doc_Responsable}`);
-                setResponsableQuery(respuesta.data);
+                if (respuesta.status >= 200 && respuesta.status < 300) {
+                    setResponsableQuery(respuesta.data);
+                } else {
+                    console.warn('HTTP Status:', respuesta.status);
+                    setResponsableQuery([]);
+                }
             } catch (error) {
-                console.error(error);
+                console.error('Error fetching responsable:', error.response?.status || error.message);
                 setResponsableQuery([]);
             }
         } else {
@@ -80,3 +85,4 @@ const FromQueryResponsable = ({ URI, getResponsable, deleteResponsable, buttonFo
 }
 
 export default FromQueryResponsable;
+

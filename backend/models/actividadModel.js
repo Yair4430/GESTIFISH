@@ -19,4 +19,3 @@ const ActividadModel = db.define('actividad', {
 
 export default ActividadModel;
 
-  
