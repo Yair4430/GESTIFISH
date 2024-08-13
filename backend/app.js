@@ -8,6 +8,7 @@ import routerResponsable from './routes/routerResponsable.js';
 import routerEstanque from './routes/routerEstanque.js';
 import routerEspecie from './routes/routerEspecie.js';
 import routerTraslado from './routes/routerTraslado.js';
+import routerAuth from './routes/routerAuth.js';
 
 import errorHandler from './middleware/handlerbar.js'; // Ajusta la ruta según tu estructura de archivos
 
@@ -15,7 +16,7 @@ import errorHandler from './middleware/handlerbar.js'; // Ajusta la ruta según 
 import ResponsableModel from './models/responsableModel.js';
 import TrasladoModel from './models/trasladosModel.js';
 
-dotenv.config();
+dotenv.config({ path: './.env'});
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -29,6 +30,8 @@ app.use('/responsable', routerResponsable); // Verifica esta línea
 app.use('/estanque', routerEstanque);
 app.use('/especie', routerEspecie)
 app.use('/traslado', routerTraslado)
+
+app.use('/auth', routerAuth)
 
 // Middleware de manejo de errores
 app.use(errorHandler);

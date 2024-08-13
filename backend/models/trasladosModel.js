@@ -4,7 +4,7 @@ import ResponsableModel from './responsableModel.js';
 
 const TrasladoModel = db.define('traslados', {
     Id_Traslado: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false},
-    Fec_Traslado: {type: DataTypes.DATE, allowNull: false },
+    Fec_Traslado: {type: DataTypes.DATEONLY, allowNull: false },
     Can_Peces: {type: DataTypes.INTEGER, allowNull: false},
     Id_Responsable: {type: DataTypes.INTEGER,
         references: {

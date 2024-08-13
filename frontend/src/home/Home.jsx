@@ -15,6 +15,8 @@ const Home = () => {
       <center>
       <img src={imgtodo} alt="Logo" style={{ width: '465px', height: '340px' }}/>
       </center>
+
+      
       <br />
       <br />
       </section>

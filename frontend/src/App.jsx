@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import {Routes, Route, NavLink} from 'react-router-dom'
+import { useEffect ,useState } from 'react'
+import {Routes, Route, NavLink, Navigate, useNavigate} from 'react-router-dom'
+import axios from 'axios'
 //import dotenv from 'dotenv'
 
 import Home from './home/Home.jsx'
@@ -9,12 +10,47 @@ import CrudEstanque from './Estanque/crudEstanque.jsx'
 import CrudEspecie from './Especie/CrudEspecie.jsx'
 import CrudTraslado from './Traslado/CrudTraslado.jsx'
 
+import Auth from './Auth/auth.jsx'
+import ResetPassword from './Auth/resetPassword.jsx'
+
 import imagen_logo from './IMG/LOGO_GESTIFISH.png'
 import "../src/App.css"
 
+const URL_AUTH = process.env.ROUTER_PRINCIPAL + '/auth/'
+
 //dotenv.config()
 
-const App = () => {
+function App () {
+  const [isAuth, setIsAuth ] = useState(false)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('usuario'))
+
+    if (!user){
+      setIsAuth(false)
+    }else{
+
+      axios.get(URL_AUTH + 'verify', {
+        headers : { Authorization: `Bearer ${user.tokenUser}`}
+
+      }).then(response => {
+        if (response.status === 200){
+          setIsAuth(true)
+        }
+
+      }).catch(() => {
+        setIsAuth(false)
+      })
+    }
+  }, [])
+
+  const logOutUser = () => {
+    localStorage.removeItem('usuario')
+    setIsAuth(false)
+    navigate("/auth")
+  }
+
   return (
     <>
       {/* <body className='bs-body-color-red'></body> */}
@@ -65,16 +101,49 @@ const App = () => {
               )}
             </NavLink>
           </li>
+
+          {!isAuth ?  
+            <li className='nav-item'>
+              <NavLink className='nav-link fs-5' to="/Auth">
+                {({ isActive }) => (
+                  <span className={isActive ? 'active' : ''}>Inicio De Sesion</span>
+                )}
+              </NavLink>
+             </li>
+             : ''
+          }
+
+          {isAuth ?
+            <li>
+              <button onClick={() => logOutUser()} className='btn btn-secondary'><i className='fa-solid fa-door-closed'></i>Cerrar Sesion</button>
+            </li>: ''
+          }
+
         </ul>
       </nav>
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/Alimentacion' element={<CrudAlimento />} />
-        <Route path='/Responsable' element={<CrudResponsable/>}/>
-        <Route path='/Estanque' element={<CrudEstanque/>}/>
-        <Route path='/Especie' element={<CrudEspecie/>}/>
-        <Route path='/Traslado' element={<CrudTraslado/>}/>
-      </Routes>
+
+    <Routes>
+      {isAuth ?
+        <>  
+          <Route path='/' element={<Home />} />
+          <Route path='/Alimentacion' element={<CrudAlimento />} />
+          <Route path='/Responsable' element={<CrudResponsable/>}/>
+          <Route path='/Estanque' element={<CrudEstanque/>}/>
+          <Route path='/Especie' element={<CrudEspecie/>}/>
+          <Route path='/Traslado' element={<CrudTraslado/>}/>
+        </>
+        :
+        <Route path='*' element={<Navigate to="/" />} />
+      }
+
+      {!isAuth ?
+        <Route path='/auth' element={<Auth/>} />
+        :''
+      }
+
+      <Route path='/reset-password' element={<ResetPassword/>}/>
+
+     </Routes>
     </>
   );
 };
