@@ -40,4 +40,11 @@ if (process.env.NODE_ENV !== 'production') {
     }));
 }
 
+// // Middleware para manejar errores en routerSiembra.js
+// routerSiembra.use((err, req, res, next) => {
+//     logger.error(`${req.method} ${req.url} - ${err.message}`);
+//     res.status(500).json({ error: 'An error occurred' });
+// });
+
+
 export default logger;

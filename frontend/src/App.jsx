@@ -1,10 +1,13 @@
-import { useState } from 'react'
+         import { useState } from 'react'
 import {Routes, Route, NavLink} from 'react-router-dom'
 
 import Home from './home/Home.jsx'
-import CrudAlimento from './alimento/crudALimento'
+import CrudAlimento from './Alimento/crudALimento'
 import CrudResponsable from './Responsables/CrudResponsable'
+import CrudEstanque from './Estanque/crudEstanque.jsx'
+import CrudEspecie from './Especie/CrudEspecie.jsx'
 // import Responsable from './home/Responsable'
+import CrudSiembra from './Siembra/crudSiembra.jsx'
 
 import imagen_logo from './IMG/LOGO_GESTIFISH.png'
 import "../src/App.css"
@@ -46,12 +49,36 @@ const App = () => {
               )}
             </NavLink>
           </li>
+          <li className='nav-item'>
+            <NavLink className='nav-link fs-5' to="/Estanque">
+              {({ isActive }) => (
+                <span className={isActive ? 'active' : ''}>Estanque</span>
+              )}
+            </NavLink>
+          </li>
+          <li className='nav-item'>
+            <NavLink className='nav-link fs-5' to="/Especie">
+              {({ isActive }) => (
+                <span className={isActive ? 'active' : ''}>Especie</span>
+              )}
+            </NavLink>
+          </li>
+          <li className='nav-item'>
+            <NavLink className='nav-link fs-5' to="/Siembra">
+              {({ isActive }) => (
+                <span className={isActive ? 'active' : ''}>Siembra</span>
+              )}
+            </NavLink>
+          </li>
         </ul>
       </nav>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/Alimentacion' element={<CrudAlimento />} />
         <Route path='/Responsable' element={<CrudResponsable/>}/>
+        <Route path='/Estanque' element={<CrudEstanque/>}/>
+        <Route path='/Especie' element={<CrudEspecie/>}/>
+        <Route path='/Siembra' element={<CrudSiembra/>} />
       </Routes>
     </>
   );
