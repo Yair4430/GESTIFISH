@@ -13,8 +13,8 @@ const ActividadModel = db.define('actividad', {
   Fas_Produccion: DataTypes.ENUM(['Antes de la cosecha', 'Despues de la cosecha']),
   Id_Estanque: DataTypes.INTEGER,
 }, {
-  timestamps: false,
   freezeTableName: true,
+  timestamps: false
 });
 
 export default ActividadModel;

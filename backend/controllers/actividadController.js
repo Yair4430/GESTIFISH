@@ -31,9 +31,23 @@ export const getAllActividad = async (req, res) => {
 export const getActividad = async (req, res) => {
     const { Id_Actividad } = req.params;
 
+    if (!Id_Actividad) {
+        logger.warn('Id_Actividad es requerido');
+        return res.status(400).json({ message: 'Id_Actividad es requerido' });
+    }
+
     try {
-        const actividad = await ActividadModel.findOne({
-            where: { Id_Actividad }
+        const actividad = await ActividadModel.findByPk(Id_Actividad, {
+            include: [
+                {
+                    model: ResponsableModel,
+                    as: 'responsable'
+                },
+                {
+                    model: EstanqueModel,
+                    as: 'estanque'
+                }
+            ]
         });
 
         if (actividad) {
@@ -144,30 +158,45 @@ export const deleteActividad = async (req, res) => {
     }
 };
 
-// Consultar actividad por nombre
-export const getQueryActividad = async (req, res) => {
-    const { Fec_Actividad } = req.params;
 
-    if (!Fec_Actividad) {
+export const getQueryActividad = async (req, res) => {
+    const { FechaActividad } = req.params;
+
+    if (!FechaActividad) {
+        logger.info(`Consultando actividades con fecha ${FechaActividad}`);
         logger.warn('Fec_Actividad es requerido');
         return res.status(400).json({ message: 'Fec_Actividad es requerido' });
     }
 
     try {
+        // Buscar actividades por fecha exacta
         const actividades = await ActividadModel.findAll({
-            where: { Fec_Actividad: { [Op.like]: `%${Fec_Actividad}%` } }
+            where: Sequelize.where(
+                Sequelize.fn('DATE', Sequelize.col('Fec_Actividad')),
+                FechaActividad
+            ),
+
+            include: [
+                {
+                    model: ResponsableModel,
+                    as: 'responsable'
+                },
+                {
+                    model: EstanqueModel,
+                    as: 'estanque'
+                }]
         });
 
         if (actividades.length > 0) {
-            logger.info(`Consulta de actividades con nombre ${Fec_Actividad} realizada exitosamente`);
+            logger.info(`Consulta de actividades con fecha ${FechaActividad} realizada exitosamente`);
             return res.status(200).json(actividades);
         } else {
-            logger.warn(`No se encontraron actividades con nombre ${Fec_Actividad}`);
+            logger.warn(`No se encontraron actividades con fecha ${FechaActividad}`);
             return res.status(404).json({ message: 'No se encontraron actividades' });
         }
     } catch (error) {
-        logger.error('Error al consultar actividad por nombre:', error);
-        console.error('Error al consultar actividad por nombre:', error);
+        logger.error('Error al consultar actividad por fecha:', error);
+        console.error('Error al consultar actividad por fecha:', error);
         return res.status(500).json({ message: 'Error al consultar actividad', error: error.message });
     }
 };

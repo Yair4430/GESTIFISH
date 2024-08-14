@@ -1,4 +1,4 @@
-import express from "express";
+import express from 'express';
 import { createActividad, deleteActividad, getAllActividad, getActividad, updateActividad , getQueryActividad } from "../controllers/actividadController.js";
 
 import winston from 'winston';
@@ -22,7 +22,8 @@ routerActividad.get('/:Id_Actividad', getActividad);
 routerActividad.post('/', createActividad);
 routerActividad.put('/:Id_Actividad', updateActividad);
 routerActividad.delete('/:Id_Actividad', deleteActividad);
-routerActividad.get('/Fec_Actividad/:Fec_Actividad', getQueryActividad );
+routerActividad.get('/FechaActividad/:FechaActividad', getQueryActividad);
+
 
 
 // Middleware para manejar errores
