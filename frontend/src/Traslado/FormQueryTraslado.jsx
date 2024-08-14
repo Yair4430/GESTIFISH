@@ -9,7 +9,7 @@ const FormQueryTraslado = ({ URI, getTraslado, deleteTraslado, buttonForm }) => 
 
     const getResponsable = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/responsable');
+            const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/');
             setDatosResponsable(response.data);
         } catch (error) {
             console.error('Error al obtener responsables:', error);

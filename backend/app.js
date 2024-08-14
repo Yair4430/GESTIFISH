@@ -8,7 +8,7 @@ import routerEstanque from './routes/routerEstanque.js';
 import routerEspecie from './routes/routerEspecie.js';
 import routerTraslado from './routes/routerTraslado.js';
 import routerAuth from './routes/routerAuth.js';
-import routerAlimento from './routes/routerActividad.js';
+import routerAlimentacion from './routes/routerAlimentacion.js';
 import routerActividad from './routes/routerActividad.js';
 
 import errorHandler from './middleware/handlerbar.js'; // Ajusta la ruta según tu estructura de archivos
@@ -28,7 +28,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/public/uploads', express.static('public/uploads'));
 
-app.use('/alimentacion', routerAlimento);
+app.use('/alimentacion', routerAlimentacion);
 app.use('/responsable', routerResponsable); // Verifica esta línea
 app.use('/estanque', routerEstanque);
 app.use('/especie', routerEspecie)
