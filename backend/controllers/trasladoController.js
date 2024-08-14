@@ -1,3 +1,4 @@
+import { Sequelize, Op } from "sequelize";
 import TrasladoModel from '../models/trasladosModel.js';
 import logger from '../middleware/logger.js';
 import { ResponsableModel } from '../app.js';

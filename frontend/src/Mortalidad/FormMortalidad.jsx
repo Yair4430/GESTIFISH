@@ -2,27 +2,28 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
-const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTraslados }) => {
-    const [Fec_Traslado, setFec_Traslado] = useState('');
+const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllMortalidades }) => {
+    const [Fec_Mortalidad, setFec_Mortalidad] = useState('');
     const [Can_Peces, setCan_Peces] = useState('');
+    const [Mot_Mortalidad, setMot_Mortalidad] = useState('');
+    const [Id_Siembra, setId_Siembra] = useState('');
     const [Id_Responsable, setId_Responsable] = useState('');
-    const [Obs_Traslado, setObs_Traslado] = useState('');
-    const [Hor_Traslado, setHor_Traslado] = useState('');
     const [DatosResponsable, setDatosResponsable] = useState([]);
+    const [DatosSiembra, setDatosSiembra] = useState([]);
 
     const sendForm = async (e) => {
         e.preventDefault();
         try {
             const data = {
-                Fec_Traslado,
+                Fec_Mortalidad,
                 Can_Peces,
-                Id_Responsable,
-                Obs_Traslado,
-                Hor_Traslado
+                Mot_Mortalidad,
+                Id_Siembra,
+                Id_Responsable
             };
 
             if (buttonForm === 'Actualizar') {
-                await axios.put(`${URI}${traslado.Id_Traslado}`, data);
+                await axios.put(`${URI}${mortalidad.Id_Mortalidad}`, data);
                 Swal.fire({
                     title: 'Actualizado',
                     text: '¡Registro actualizado exitosamente!',
@@ -41,61 +42,84 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
                 }
             }
 
-            getAllTraslados(); // Refrescar la lista después de la operación
+            getAllMortalidades(); // Refrescar la lista después de la operación
         } catch (error) {
             console.error('Error al enviar el formulario:', error);
             Swal.fire({
                 title: 'Error',
-                text: 'No se pudo guardar el traslado.',
+                text: 'No se pudo guardar el registro de mortalidad.',
                 icon: 'error'
             });
         }
     };
 
     const clearForm = () => {
-        setFec_Traslado('');
+        setFec_Mortalidad('');
         setCan_Peces('');
+        setMot_Mortalidad('');
+        setId_Siembra('');
         setId_Responsable('');
-        setObs_Traslado('');
-        setHor_Traslado('');
     };
 
     const setData = () => {
-        setFec_Traslado(traslado.Fec_Traslado);
-        setCan_Peces(traslado.Can_Peces);
-        setId_Responsable(traslado.Id_Responsable);
-        setObs_Traslado(traslado.Obs_Traslado);
-        setHor_Traslado(traslado.Hor_Traslado);
+        setFec_Mortalidad(mortalidad.Fec_Mortalidad);
+        setCan_Peces(mortalidad.Can_Peces);
+        setMot_Mortalidad(mortalidad.Mot_Mortalidad);
+        setId_Siembra(mortalidad.Id_Siembra);
+        setId_Responsable(mortalidad.Id_Responsable);
     };
 
     useEffect(() => {
         const getResponsable = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/responsable');
+                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/');
                 setDatosResponsable(response.data);
             } catch (error) {
                 console.error('Error al obtener responsables:', error);
             }
         };
 
+        const getSiembras = async () => {
+            try {
+                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/siembra/');
+                setDatosSiembra(response.data);
+            } catch (error) {
+                console.error('Error al obtener siembras:', error);
+            }
+        };
+
         getResponsable();
+        getSiembras();
     }, []);
 
     useEffect(() => {
-        if (traslado) {
+        if (mortalidad) {
             setData();
         }
-    }, [traslado]);
+    }, [mortalidad]);
 
     return (
         <div className="d-flex flex-column align-items-center">
-            <h1 className="fs-1 fw-bold d-flex">Registrar Traslado</h1>
-            <form id="trasladoForm" onSubmit={sendForm} className="fw-bold m-2">
-                <label htmlFor="Fec_Traslado" className="m-2">Fecha de Traslado:</label>
-                <input type="date" id="Fec_Traslado" value={Fec_Traslado} onChange={(e) => setFec_Traslado(e.target.value)} />
+            <h1 className="fs-1 fw-bold d-flex">Registrar Mortalidad</h1>
+            <form id="mortalidadForm" onSubmit={sendForm} className="fw-bold m-2">
+                <label htmlFor="Fec_Mortalidad" className="m-2">Fecha de Mortalidad:</label>
+                <input type="date" id="Fec_Mortalidad" value={Fec_Mortalidad} onChange={(e) => setFec_Mortalidad(e.target.value)} />
                 <br />
                 <label htmlFor="Can_Peces" className="m-2">Cantidad de Peces:</label>
                 <input type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => setCan_Peces(e.target.value)} />
+                <br />
+                <label htmlFor="Mot_Mortalidad" className="m-2">Motivo de Mortalidad:</label>
+                <input type="text" id="Mot_Mortalidad" value={Mot_Mortalidad} onChange={(e) => setMot_Mortalidad(e.target.value)} />
+                <br />
+                <label htmlFor="Id_SiembraSelect" className="m-2">ID de Siembra:</label>
+                <select id="Id_SiembraSelect" value={Id_Siembra} onChange={(e) => setId_Siembra(e.target.value)}>
+                    <option value="">Selecciona uno...</option>
+                    {DatosSiembra.map((siembra) => (
+                        <option key={siembra.Id_Siembra} value={siembra.Id_Siembra}>
+                            {siembra.Id_Siembra}
+                        </option>
+                    ))}
+                </select>
                 <br />
                 <label htmlFor="Id_ResponsableSelect" className="m-2">Responsable de la Actividad:</label>
                 <select id="Id_ResponsableSelect" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)}>
@@ -107,16 +131,10 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
                     ))}
                 </select>
                 <br />
-                <label htmlFor="Obs_Traslado" className="m-2">Observaciones:</label>
-                <input type="text" id="Obs_Traslado" value={Obs_Traslado} onChange={(e) => setObs_Traslado(e.target.value)} />
-                <br />
-                <label htmlFor="Hor_Traslado" className="m-2">Hora de Traslado:</label>
-                <input type="time" id="Hor_Traslado" value={Hor_Traslado} onChange={(e) => setHor_Traslado(e.target.value)} />
-                <br />
                 <input type="submit" id="boton" value={buttonForm} className="btn btn-success m-2" />
             </form>
         </div>
     );
 };
 
-export default FormTraslado;
+export default FormMortalidad;

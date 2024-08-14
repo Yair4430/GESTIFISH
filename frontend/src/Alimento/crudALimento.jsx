@@ -8,7 +8,7 @@ import Swal from 'sweetalert2'
 import FormQueryAlimento from './formQueryAlimento.jsx'
 
 
-const URI = 'http://localhost:8000/alimentacion/'
+const URI = process.env.ROUTER_PRINCIPAL + '/alimentacion/'
 
 const CrudAlimento = () => {
         //Uso del hook useState

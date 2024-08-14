@@ -9,6 +9,11 @@ import CrudResponsable from './Responsables/CrudResponsable'
 import CrudEstanque from './Estanque/crudEstanque.jsx'
 import CrudEspecie from './Especie/CrudEspecie.jsx'
 import CrudTraslado from './Traslado/CrudTraslado.jsx'
+import CrudActividad from './Actividad/crudActividad.jsx'
+import CrudMuestreo from './Muestreo/crudMuestreo.jsx'
+import CrudCosecha from './Cosecha/CrudCosecha.jsx'
+import CrudMortalidad from './Mortalidad/CrudMortalidad.jsx'
+import CrudSiembra from './Siembra/CrudSiembra.jsx'
 
 import Auth from './Auth/auth.jsx'
 import ResetPassword from './Auth/resetPassword.jsx'
@@ -101,6 +106,41 @@ function App () {
               )}
             </NavLink>
           </li>
+          <li className='nav-item'>
+            <NavLink className='nav-link fs-5' to="/Actividad">
+              {({ isActive }) => (
+                <span className={isActive ? 'active' : ''}>Actividad</span>
+              )}
+            </NavLink>
+          </li>
+          <li className='nav-item'>
+            <NavLink className='nav-link fs-5' to="/Muestreo">
+              {({ isActive }) => (
+                <span className={isActive ? 'active' : ''}>Muestreo</span>
+              )}
+            </NavLink>
+          </li>
+          <li className='nav-item'>
+            <NavLink className='nav-link fs-5' to="/Cosecha">
+              {({ isActive }) => (
+                <span className={isActive ? 'active' : ''}>Cosecha</span>
+              )}
+            </NavLink>
+          </li>
+          <li className='nav-item'>
+            <NavLink className='nav-link fs-5' to="/Mortalidad">
+              {({ isActive }) => (
+                <span className={isActive ? 'active' : ''}>Mortalidad</span>
+              )}
+            </NavLink>
+          </li>
+          <li className='nav-item'>
+            <NavLink className='nav-link fs-5' to="/Siembra">
+              {({ isActive }) => (
+                <span className={isActive ? 'active' : ''}>Siembra</span>
+              )}
+            </NavLink>
+          </li>
 
           {!isAuth ?  
             <li className='nav-item'>
@@ -131,6 +171,11 @@ function App () {
           <Route path='/Estanque' element={<CrudEstanque/>}/>
           <Route path='/Especie' element={<CrudEspecie/>}/>
           <Route path='/Traslado' element={<CrudTraslado/>}/>
+          <Route path='/Actividad' element={<CrudActividad/>}/>
+          <Route path='/Muestreo' element={<CrudMuestreo/>}/>
+          <Route path='/Cosecha' element={<CrudCosecha/>}/>
+          <Route path='/Mortalidad' element={<CrudMortalidad/>}/>
+          <Route path='/Siembra' element={<CrudSiembra/>}/>
         </>
         :
         <Route path='*' element={<Navigate to="/" />} />
