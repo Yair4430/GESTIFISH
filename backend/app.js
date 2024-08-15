@@ -28,6 +28,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/public/uploads', express.static('public/uploads'));
 
+app.use('/auth', routerAuth)
 app.use('/alimentacion', routerAlimentacion);
 app.use('/responsable', routerResponsable); // Verifica esta línea
 app.use('/estanque', routerEstanque);
@@ -35,7 +36,6 @@ app.use('/especie', routerEspecie)
 app.use('/traslado', routerTraslado)
 app.use('/actividad', routerActividad)
 
-app.use('/auth', routerAuth)
 
 // Middleware de manejo de errores
 app.use(errorHandler);
