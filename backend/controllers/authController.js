@@ -3,9 +3,6 @@ import UsuarioModel from '../models/usuarioModel.js';
 import jwt from 'jsonwebtoken';
 import { sendPassworResetEmail } from '../servicios/emailService.js';
 
-
-// const SECRET_KEY = process.env.JWT_LLAVE 'idbhaosuydbfoyaebfuyopjw'
-
 export const createUser = async (req, res) => {
     try {
         const { Nom_Usuario, Ape_Usuario, Cor_Usuario, Con_Usuario } = req.body;
@@ -33,11 +30,19 @@ export const createUser = async (req, res) => {
         const newUser = await UsuarioModel.create({
             Nom_Usuario,
             Ape_Usuario,
-            Cor_Usuario,
+            Cor_Usuario,  // Guardar Cor_Usuario en texto plano
             Con_Usuario: passHash,
         });
 
-        const tokenUser = jwt.sign({ user: { Cor_Usuario: newUser.Cor_Usuario } }, process.env.JWT_LLAVE, { expiresIn: '1h' });
+        // Encriptar el Cor_Usuario y Id_Usuario para el token
+        const encryptedEmail = await bcryptjs.hash(newUser.Cor_Usuario, 8);
+        const encryptedId = await bcryptjs.hash(newUser.Id_Usuario.toString(), 8);
+
+        const tokenUser = jwt.sign(
+            { user: { Cor_Usuario: encryptedEmail, Id_Usuario: encryptedId } },
+            process.env.JWT_LLAVE,
+            { expiresIn: '1h' }
+        );
         res.json({ tokenUser });
 
     } catch (error) {
@@ -47,9 +52,9 @@ export const createUser = async (req, res) => {
 
 export const logInUser = async (req, res) => {
     try {
-    const { Cor_Usuario, Con_Usuario } = req.body;
+        const { Cor_Usuario, Con_Usuario } = req.body;
 
-    // Busca el usuario en la base de datos usando el correo en texto claro
+        // Busca el usuario en la base de datos usando el correo en texto claro
         const usuario = await UsuarioModel.findOne({ where: { Cor_Usuario } });
 
         if (!usuario) {
@@ -60,7 +65,15 @@ export const logInUser = async (req, res) => {
         const usuarioValido = await bcryptjs.compare(Con_Usuario, usuario.Con_Usuario);
 
         if (usuarioValido) {
-            const token = jwt.sign({ id: usuario.Id_Usuario }, process.env.JWT_LLAVE, { expiresIn: '1h' });
+            // Encriptar el Cor_Usuario y Id_Usuario para el token
+            const encryptedEmail = await bcryptjs.hash(usuario.Cor_Usuario, 8);
+            const encryptedId = await bcryptjs.hash(usuario.Id_Usuario.toString(), 8);
+
+            const token = jwt.sign(
+                { user: { Cor_Usuario: encryptedEmail, Id_Usuario: encryptedId } },
+                process.env.JWT_LLAVE,
+                { expiresIn: '1h' }
+            );
             res.json({ tokenUser: token });
         } else {
             res.status(401).json({ error: "Contraseña incorrecta" });

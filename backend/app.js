@@ -12,14 +12,15 @@ import routerAlimentacion from './routes/routerAlimentacion.js';
 import routerActividad from './routes/routerActividad.js';
 
 import errorHandler from './middleware/handlerbar.js'; // Ajusta la ruta según tu estructura de archivos
+import { authenticateToken } from './middleware/authMiddleware.js'; // Importa el middleware
 
-//Se llama por las laves foraneas
+// Se llama por las llaves foráneas
 import ResponsableModel from './models/responsableModel.js';
 import ActividadModel from './models/actividadModel.js';
 import EstanqueModel from './models/estanqueModel.js';
 import TrasladoModel from './models/trasladosModel.js';
 
-dotenv.config({ path: './.env'});
+dotenv.config({ path: './.env' });
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -28,14 +29,16 @@ app.use(cors());
 app.use(express.json());
 app.use('/public/uploads', express.static('public/uploads'));
 
-app.use('/auth', routerAuth)
-app.use('/alimentacion', routerAlimentacion);
-app.use('/responsable', routerResponsable); // Verifica esta línea
-app.use('/estanque', routerEstanque);
-app.use('/especie', routerEspecie)
-app.use('/traslado', routerTraslado)
-app.use('/actividad', routerActividad)
+// Rutas públicas (no requieren autenticación)
+app.use('/auth', routerAuth);
 
+// Rutas protegidas (requieren autenticación)
+app.use('/alimentacion', authenticateToken, routerAlimentacion);
+app.use('/responsable', authenticateToken, routerResponsable);
+app.use('/estanque', authenticateToken, routerEstanque);
+app.use('/especie', authenticateToken, routerEspecie);
+app.use('/traslado', authenticateToken, routerTraslado);
+app.use('/actividad', authenticateToken, routerActividad);
 
 // Middleware de manejo de errores
 app.use(errorHandler);
@@ -48,9 +51,9 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-//Relaciones
-ResponsableModel.hasMany(TrasladoModel,{foreignKey:"Id_Responsable", as : "responsableTraslado"})
-TrasladoModel.belongsTo(ResponsableModel,{foreignKey:"Id_Responsable" ,as : "responsable"})
+// Relaciones
+ResponsableModel.hasMany(TrasladoModel, { foreignKey: "Id_Responsable", as: "responsableTraslado" });
+TrasladoModel.belongsTo(ResponsableModel, { foreignKey: "Id_Responsable", as: "responsable" });
 
 ResponsableModel.hasMany(ActividadModel, { foreignKey: 'Id_Responsable', as: 'actividades' });
 ActividadModel.belongsTo(ResponsableModel, { foreignKey: 'Id_Responsable', as: 'responsable' });
@@ -58,5 +61,5 @@ ActividadModel.belongsTo(ResponsableModel, { foreignKey: 'Id_Responsable', as: '
 EstanqueModel.hasMany(ActividadModel, { foreignKey: 'Id_Estanque', as: 'actividades' });
 ActividadModel.belongsTo(EstanqueModel, { foreignKey: 'Id_Estanque', as: 'estanque' });
 
-//Exportacion de los modelos con las relaciones ya establecidas
-export {TrasladoModel, ResponsableModel, ActividadModel, EstanqueModel } 
+// Exportación de los modelos con las relaciones ya establecidas
+export { TrasladoModel, ResponsableModel, ActividadModel, EstanqueModel };
