@@ -34,7 +34,7 @@ const FormQueryActividad = ({ URI, getActividad, deleteActividad, buttonForm }) 
         console.log(Fec_Actividad);
         if (Fec_Actividad) {
             try {
-                const respuesta = await axios.get(`${URI}FechaActividad/${Fec_Actividad}`);
+                const respuesta = await axios.get(`${URI}Fec_Actividad/${Fec_Actividad}`);
                 setActividadQuery(respuesta.data);
         } catch (error) {
             console.error(error); 

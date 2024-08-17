@@ -26,7 +26,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
 
     const getEstanque = async () => {
         try {
-            const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/traslado/');
+            const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/estanque/');
             setDatosEstanque(response.data);
         } catch (error) {
             console.error('Error al obtener estanques:', error);

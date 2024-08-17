@@ -18,6 +18,12 @@ export const getAllActividad = async (req, res) => {
                 }
             ]
         });
+
+        if (actividades.length == 0) {
+            logger.warn('No se encontraron actividades');
+            return res.status(404).json({ message: 'No se encontraron actividades' });
+        }
+
         logger.info('Todas las actividades obtenidas exitosamente');
         res.json(actividades);
     } catch (error) {
@@ -26,33 +32,23 @@ export const getAllActividad = async (req, res) => {
     }
 };
 
-// esto 
 // Obtener una actividad por ID
 export const getActividad = async (req, res) => {
     const { Id_Actividad } = req.params;
 
-    if (!Id_Actividad) {
-        logger.warn('Id_Actividad es requerido');
-        return res.status(400).json({ message: 'Id_Actividad es requerido' });
+    if (!Id_Actividad || Id_Actividad.length === 0) {
+        logger.warn('Id_Actividad es requerido y no puede estar vacío');
+        return res.status(400).json({ message: 'Id_Actividad es requerido y no puede estar vacío' });
     }
 
     try {
-        const actividad = await ActividadModel.findByPk(Id_Actividad, {
-            include: [
-                {
-                    model: ResponsableModel,
-                    as: 'responsable'
-                },
-                {
-                    model: EstanqueModel,
-                    as: 'estanque'
-                }
-            ]
+        const actividad = await ActividadModel.findOne({
+            where: { Id_Actividad }
         });
-
-        if (actividad) {
+    
+        if (actividad > 0) {
             logger.info(`Actividad con ID ${Id_Actividad} obtenida exitosamente`);
-            return res.status(200).json(actividad);
+            return res.status(200).json(actividad[0]);
         } else {
             logger.warn(`Actividad con ID ${Id_Actividad} no encontrada`);
             return res.status(404).json({ message: 'Actividad no encontrada' });
@@ -64,17 +60,23 @@ export const getActividad = async (req, res) => {
     }
 };
 
+
 // Crear una actividad
 export const createActividad = async (req, res) => {
     const { Nom_Actividad, Des_Actividad, Id_Responsable, Fec_Actividad, Hor_Actividad, Fas_Produccion, Id_Estanque } = req.body;
 
-    if (!Nom_Actividad || !Des_Actividad || !Id_Responsable || !Fec_Actividad || !Hor_Actividad || !Fas_Produccion || !Id_Estanque) {
-        logger.warn('Todos los campos son obligatorios');
-        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    if (!Nom_Actividad || !Nom_Actividad.length ||
+        !Des_Actividad || !Des_Actividad.length ||
+        !Id_Responsable || !Id_Responsable.length ||
+        !Fec_Actividad || !Fec_Actividad.length ||
+        !Hor_Actividad || !Hor_Actividad.length ||
+        !Fas_Produccion || !Fas_Produccion.length ||
+        !Id_Estanque || !Id_Estanque.length) {
+        logger.warn('Todos los campos son obligatorios y no deben estar vacíos');
+        return res.status(400).json({ message: 'Todos los campos son obligatorios y no deben estar vacíos' });
     }
 
     try {
-        console.log(req.body)
         const respuesta = await ActividadModel.create(req.body);
         logger.info('Datos enviados a la base de datos:', respuesta);
 
@@ -92,8 +94,7 @@ export const createActividad = async (req, res) => {
         }
 
         logger.error('Error al crear actividad:', error);
-        console.error('Error al crear actividad:', error);
-        res.status(500).json({ message: 'Error al crear actividad', error: error.message });
+        return res.status(500).json({ message: 'Error al crear actividad', error: error.message });
     }
 };
 
@@ -136,8 +137,12 @@ export const updateActividad = async (req, res) => {
 
 // Borrar una actividad
 export const deleteActividad = async (req, res) => {
-    console.log(req.body)
     const { Id_Actividad } = req.params;
+
+    if (!Id_Actividad || !Id_Actividad.length) {
+        logger.warn('Id_Actividad es requerido');
+        return res.status(400).json({ message: 'Id_Actividad es requerido' });
+    }
 
     try {
         const result = await ActividadModel.destroy({
@@ -153,50 +158,33 @@ export const deleteActividad = async (req, res) => {
         }
     } catch (error) {
         logger.error('Error al eliminar actividad:', error);
-        console.error('Error al eliminar actividad:', error);
         return res.status(500).json({ message: 'Error al eliminar actividad', error: error.message });
     }
 };
 
-
+// Consultar actividad por nombre
 export const getQueryActividad = async (req, res) => {
-    const { FechaActividad } = req.params;
+    const { Fec_Actividad } = req.params;
 
-    if (!FechaActividad) {
-        logger.info(`Consultando actividades con fecha ${FechaActividad}`);
+    if (!Fec_Actividad || !Fec_Actividad.length) {
         logger.warn('Fec_Actividad es requerido');
         return res.status(400).json({ message: 'Fec_Actividad es requerido' });
     }
 
     try {
-        // Buscar actividades por fecha exacta
         const actividades = await ActividadModel.findAll({
-            where: Sequelize.where(
-                Sequelize.fn('DATE', Sequelize.col('Fec_Actividad')),
-                FechaActividad
-            ),
-
-            include: [
-                {
-                    model: ResponsableModel,
-                    as: 'responsable'
-                },
-                {
-                    model: EstanqueModel,
-                    as: 'estanque'
-                }]
-        });
+            where: { Fec_Actividad: Fec_Actividad }
+        });        
 
         if (actividades.length > 0) {
-            logger.info(`Consulta de actividades con fecha ${FechaActividad} realizada exitosamente`);
-            return res.status(200).json(actividades);
+            logger.info(`Consulta de actividades con nombre ${Fec_Actividad} realizada exitosamente`);
+            return res.status(200).json(actividades[0]);
         } else {
-            logger.warn(`No se encontraron actividades con fecha ${FechaActividad}`);
+            logger.warn(`No se encontraron actividades con nombre ${Fec_Actividad}`);
             return res.status(404).json({ message: 'No se encontraron actividades' });
         }
     } catch (error) {
-        logger.error('Error al consultar actividad por fecha:', error);
-        console.error('Error al consultar actividad por fecha:', error);
+        logger.error('Error al consultar actividad por nombre:', error);
         return res.status(500).json({ message: 'Error al consultar actividad', error: error.message });
     }
 };

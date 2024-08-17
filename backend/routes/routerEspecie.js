@@ -1,18 +1,3 @@
-<<<<<<< HEAD
-import express from "express";
-import { createEspecie, deleteEspecie, getAllEspecie, getEspecie, updateEspecie } from "../controllers/especieController.js";
-
-const router = express.Router();
-
-// Rutas para Especie
-router.get('/especie', getAllEspecie);
-router.get('/especie/:id', getEspecie);
-router.post('/especie', createEspecie);
-router.put('/especie/:id', updateEspecie);
-router.delete('/especie/:id', deleteEspecie);
-
-export default router;
-=======
 // Importa las librerías necesarias
 import express from "express";
 import { 
@@ -67,4 +52,3 @@ routerEspecie.use((err, req, res, next) => {
 
 // Exporta el router para usarlo en tu aplicación principal
 export default routerEspecie;
->>>>>>> d696cfa811b94258594715c1cb43b7b48cd9c34d

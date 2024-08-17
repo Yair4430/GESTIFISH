@@ -5,95 +5,131 @@ import { Link } from 'react-router-dom';
 const URI = process.env.ROUTER_PRINCIPAL + '/auth/';
 
 const Auth = () => {
-
     const [Nom_Usuario, setNom_Usuario] = useState("");
     const [Ape_Usuario, setApe_Usuario] = useState("");
     const [Cor_Usuario, setCor_Usuario] = useState("");
     const [Con_Usuario, setCon_Usuario] = useState("");
 
-    const [buttonForm, setbuttonForm] = useState('Registrar');
-    const [singnInOrLogIn, setSingnInOrLogIn] = useState('signIn');
+    const [isRegistering, setIsRegistering] = useState(true);
     const [resetPass, setResetPass] = useState(false);
 
-    const sendForm = async (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
-
-        if (buttonForm === 'Registrar') {
-            console.log('Preparado para enviar la solicitud...');
-            await axios.post(URI, {
-                Nom_Usuario: Nom_Usuario,
-                Ape_Usuario: Ape_Usuario,
-                Cor_Usuario: Cor_Usuario,
-                Con_Usuario: Con_Usuario
-            }).then(response => {
-                if (response.data.tokenUser) {
-                    localStorage.setItem('usuario', JSON.stringify(response.data));
-                }
+        try {
+            const response = await axios.post(URI, {
+                Nom_Usuario,
+                Ape_Usuario,
+                Cor_Usuario,
+                Con_Usuario
             });
 
-        }else if (buttonForm === 'Iniciar Sesion') {
-                console.log('Iniciando sesión...');
-                await axios.post(URI + 'login', {
-                    Cor_Usuario: Cor_Usuario,
-                    Con_Usuario: Con_Usuario
-                }).then(response => {
-                    if (response.data.tokenUser) {
-                        localStorage.setItem('usuario', JSON.stringify(response.data));
-                        let miHost = window.location.host;
-                        console.log(miHost);
-                        // Redirige con el esquema adecuado
-                        window.location.href = process.env.ROUTER_WINDOW + miHost;
-                    }
-                });
+            if (response.data.tokenUser) {
+                localStorage.setItem('usuario', JSON.stringify(response.data));
+                alert('User registered successfully');
+
             }
-            
+        } catch (error) {
+            console.error("Error al registrar:", error);
+        }
     };
 
-    const switchForm = (opcion) => {
-        setSingnInOrLogIn(opcion);
+    const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+        const response = await axios.post(URI + 'login', {
+            Cor_Usuario,
+            Con_Usuario
+        });
+
+        if (response.data.tokenUser) {
+            localStorage.setItem('token', response.data.tokenUser);
+            window.location.href = process.env.ROUTER_WINDOW + window.location.host;
+            alert('Login successful');
+        }
+    } catch (error) {
+        console.error("Error al iniciar sesión:", error);
+    }
+};
+
+    const toggleForm = () => {
+        setIsRegistering(!isRegistering);
     };
+
+    
 
     return (
         <>
-            {resetPass === false ?
-                singnInOrLogIn === 'signIn'
-                    ? <button className="btn btn-primary" onClick={() => { switchForm('logIn'); setbuttonForm('Iniciar Sesion') }}>Iniciar Sesion</button>
-                    : <span className="btn btn-primary" onClick={() => { switchForm('signIn'); setbuttonForm('Registrar') }}>Registrarse</span>
-                : ''}
-            {resetPass === false ?
+            {!resetPass ? (
                 <>
-                    <form onSubmit={sendForm}>
-                        {singnInOrLogIn === 'signIn'
-                            ? <>
+                    <button 
+                        className="btn btn-primary" 
+                        onClick={toggleForm}>
+                        {isRegistering ? "Iniciar Sesión" : "Registrarse"}
+                    </button>
+                    <form onSubmit={isRegistering ? handleRegister : handleLogin}>
+                        {isRegistering && (
+                            <>
                                 <label htmlFor="Nom_Usuario"> Nombres completos: </label>
-                                <input type="text" id="Nom_Usuario" value={Nom_Usuario} onChange={(e) => setNom_Usuario(e.target.value)} />
+                                <input 
+                                    type="text" 
+                                    id="Nom_Usuario" 
+                                    value={Nom_Usuario} 
+                                    onChange={(e) => setNom_Usuario(e.target.value)} 
+                                />
                                 <br />
                                 <label htmlFor="Ape_Usuario"> Apellidos completos: </label>
-                                <input type="text" id="Ape_Usuario" value={Ape_Usuario} onChange={(e) => setApe_Usuario(e.target.value)} />
+                                <input 
+                                    type="text" 
+                                    id="Ape_Usuario" 
+                                    value={Ape_Usuario} 
+                                    onChange={(e) => setApe_Usuario(e.target.value)} 
+                                />
                                 <br />
                             </>
-                            : ''}
+                        )}
                         <label htmlFor="Cor_Usuario"> Correo electrónico: </label>
-                        <input type="text" id="Cor_Usuario" value={Cor_Usuario} onChange={(e) => setCor_Usuario(e.target.value)} />
+                        <input 
+                            type="text" 
+                            id="Cor_Usuario" 
+                            value={Cor_Usuario} 
+                            onChange={(e) => setCor_Usuario(e.target.value)} 
+                        />
                         <br />
                         <label htmlFor="Con_Usuario"> Contraseña: </label>
-                        <input type="password" id="Con_Usuario" value={Con_Usuario} onChange={(e) => setCon_Usuario(e.target.value)} />
+                        <input 
+                            type="password" 
+                            id="Con_Usuario" 
+                            value={Con_Usuario} 
+                            onChange={(e) => setCon_Usuario(e.target.value)} 
+                        />
                         <br />
-                        <input type="submit" value={buttonForm} className="btn btn-success" />
+
+
+                        
+                        <button 
+                            
+                            value={isRegistering ? "Registrar" : "Iniciar Sesión"} 
+                            className="btn btn-success" 
+                        ></button>
                     </form>
-                    <Link to="#" onClick={() => { setResetPass(!resetPass) }}>Restablecer Contraseña</Link>
+                    <Link to="#" onClick={() => setResetPass(true)}>Restablecer Contraseña</Link>
                 </>
-                :
+            ) : (
                 <>
                     <form>
                         <label htmlFor="Cor_Usuario"> Correo electrónico: </label>
-                        <input type="text" id="Cor_Usuario" value={Cor_Usuario} onChange={(e) => setCor_Usuario(e.target.value)} />
+                        <input 
+                            type="text" 
+                            id="Cor_Usuario" 
+                            value={Cor_Usuario} 
+                            onChange={(e) => setCor_Usuario(e.target.value)} 
+                        />
                         <br />
                         <input type="submit" value="Enviar" />
                     </form>
-                    <Link to="#" onClick={() => { setResetPass(!resetPass) }}>Volver</Link>
+                    <Link to="#" onClick={() => setResetPass(false)}>Volver</Link>
                 </>
-            }
+            )}
         </>
     );
 };

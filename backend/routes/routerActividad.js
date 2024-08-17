@@ -1,11 +1,8 @@
-import express from 'express';
+import express from "express";
 import { createActividad, deleteActividad, getAllActividad, getActividad, updateActividad , getQueryActividad } from "../controllers/actividadController.js";
 
 import winston from 'winston';
-
-
 const routerActividad = express.Router();
-
 
 // Configura el logger con winston
 const logger = winston.createLogger({
@@ -22,8 +19,7 @@ routerActividad.get('/:Id_Actividad', getActividad);
 routerActividad.post('/', createActividad);
 routerActividad.put('/:Id_Actividad', updateActividad);
 routerActividad.delete('/:Id_Actividad', deleteActividad);
-routerActividad.get('/FechaActividad/:FechaActividad', getQueryActividad);
-
+routerActividad.get('/Fec_Actividad/:Fec_Actividad', getQueryActividad );
 
 
 // Middleware para manejar errores
@@ -33,4 +29,3 @@ routerActividad.use((err, req, res, next) => {
 });
 
 export default routerActividad;
-

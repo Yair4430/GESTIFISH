@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import FormActividad from './formActividad.jsx';
 import FormQueryActividad from './formQueryActividad.jsx';
 
-const URI = process.env.ROUTER_PRINCIPAL + '/Actividad/';
+const URI =process.env.ROUTER_PRINCIPAL + '/actividad/';
 
 const CrudActividad = () => {
     const [ActividadList, setActividadList] = useState([]);

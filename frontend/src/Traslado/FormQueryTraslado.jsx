@@ -5,6 +5,20 @@ import Swal from 'sweetalert2';
 const FormQueryTraslado = ({ URI, getTraslado, deleteTraslado, buttonForm }) => {
     const [trasladoQuery, setTrasladoQuery] = useState([]);
     const [Fec_Traslado, setFec_Traslado] = useState('');
+    const [DatosResponsable, setDatosResponsable] = useState([]);
+
+    const getResponsable = async () => {
+        try {
+            const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/');
+            setDatosResponsable(response.data);
+        } catch (error) {
+            console.error('Error al obtener responsables:', error);
+        }
+    };
+    useEffect(() => {
+        getResponsable();
+    }, []);
+
 
     const sendFormQuery = async (Fec_Traslado) => {
         if (Fec_Traslado) {

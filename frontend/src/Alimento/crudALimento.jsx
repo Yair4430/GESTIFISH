@@ -1,29 +1,35 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import Swal from 'sweetalert2'
+// import { Link } from 'react-router-dom'
 import FormAlimento from './formALimento.jsx'
+// import '../estilo.css';
+
+import Swal from 'sweetalert2'
 import FormQueryAlimento from './formQueryAlimento.jsx'
 
 
-const URI = 'http://localhost:3001/alimentacion/'
+const URI = process.env.ROUTER_PRINCIPAL + '/alimentacion/'
 
 const CrudAlimento = () => {
+        //Uso del hook useState
         const [alimentoList, setalimentoList] = useState([])
+
         const [buttonForm, setbuttonForm] = useState('Enviar')
+        
         const[Alimento, setAlimento] = useState({
-            Id_Alimentacion:"",
-            Fec_Alimentacion: "",
+            id: "",
+            fec_alimento: "",
             cant_racionkg:"",
             tipo_alimento: "",
             hor_alimento:"",
             vlr_alimento:"",
         }) 
-        const getAlimento = async(Id_Alimentacion) =>{
+        const getAlimento = async(idAlimento) =>{
         
             setbuttonForm('Enviar')
-            console.log('hola' + Id_Alimentacion)
+            console.log('hola' + idAlimento)
     
-            const respuesta = await axios.get(URI+ Id_Alimentacion)
+            const respuesta = await axios.get(URI+ idAlimento)
     
             setbuttonForm('Actualizar')
             setAlimento({
@@ -34,7 +40,7 @@ const CrudAlimento = () => {
             setbuttonForm(texto)
         }
 
-        const deleteAlimento = (Id_Alimentacion)=>{
+        const deleteAlimento = (idAlimento)=>{
             Swal.fire({
                 title: "Estás Seguro?",
                 text: "No podrás revertir esto!",
@@ -45,7 +51,7 @@ const CrudAlimento = () => {
                 confirmButtonText: "Si, borrar!"
               }).then(async (result) => {
                     if (result.isConfirmed) {
-                        await axios.delete(URI + Id_Alimentacion)
+                        await axios.delete(URI + idAlimento)
                         Swal.fire({
                             title: "Borrado!",
                             text: "El registro ha sido borrado.",
@@ -67,25 +73,26 @@ const CrudAlimento = () => {
     
     return(
         <>
-        <table className='table table-bordered border-info text-center mt-4' style={{ maxWidth: '3px solid' }}>
+        <h1 className='text-bg-success d-flex justify-content-center p-3'>CRUD TABLA DE ALIMENTACION GESTI-FISH </h1>
+        <table className='mx-auto text-center p-3 table table-striped' style={{ maxWidth: '99.1%' }}>
             <thead>
-                <tr>
-                    <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha</th>
-                    <th className='border-info align-middle' style={{ border: "3px solid" }}>Cantidad</th>
-                    <th className='border-info align-middle' style={{ border: "3px solid" }}>Tipo</th>
-                    <th className='border-info align-middle' style={{ border: "3px solid" }}>hora</th>
-                    <th className='border-info align-middle' style={{ border: "3px solid" }}>valor</th>
-                    <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
+                <tr className='table-secondary'>
+                    <th>Fecha</th>
+                    <th>Cantidad</th>
+                    <th>Tipo</th>
+                    <th>hora</th>
+                    <th>valor</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody className='mx-auto text-center p-5 table-group-divider'>
                 {alimentoList.map((alimentacion)=>(
                     <tr className='table-Success' key={alimentacion.id}>
-                        <td className='border-info align-middle' style={{ border: "3px solid" }}>{alimentacion.fec_alimento}</td>
-                        <td className='border-info align-middle' style={{ border: "3px solid" }}>{alimentacion.cant_racionkg}</td>
-                        <td className='border-info align-middle' style={{ border: "3px solid" }}>{alimentacion.tipo_alimento}</td>
-                        <td className='border-info align-middle' style={{ border: "3px solid" }}>{alimentacion.hor_alimento}</td> 
-                        <td className='border-info align-middle' style={{ border: "3px solid" }}>{alimentacion.vlr_alimento}</td> 
+                        <td>{alimentacion.fec_alimento}</td>
+                        <td>{alimentacion.cant_racionkg}</td>
+                        <td>{alimentacion.tipo_alimento}</td>
+                        <td>{alimentacion.hor_alimento}</td> 
+                        <td>{alimentacion.vlr_alimento}</td> 
                         <td>
                             <button onClick={() => getAlimento(alimentacion.id)} value="Actualizar" title='Actualizar' className='btn btn-primary'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
@@ -106,3 +113,5 @@ const CrudAlimento = () => {
         </>
     )
 }
+
+export  default CrudAlimento
