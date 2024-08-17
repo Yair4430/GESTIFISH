@@ -82,37 +82,31 @@ const FormAlimento = ({ buttonForm, Alimento, URI, UpdateTextButton })=>{ // Agr
     
     return(
         <>
-        <div className="row">
-            <center>
-          <h1 className="text-bg-success d-flex justify-content-center p-1" style={{ maxWidth: '99.5%' }}>
-          Registrar Y Actualizar
-          </h1>
-          </center>
-        </div>
-        
-        <form className="d-flex align-items-center flex-column" id="alimentoForm" action="" onSubmit={sendForm}>
-            <label className="form-label" htmlFor="Fecha">Fecha</label>
-            <input className="form-control w-25" type="date" id="Fecha" value={fec_alimento} onChange={(e) => setFec_alimento (e.target.value)} />
+        <div className="d-flex flex-column align-items-center">
+          <h1 className="fs-1 fw-bold d-flex">Registrar Alimentacion</h1>
+
+        <form className="fw-bold m-2" id="alimentoForm" action="" onSubmit={sendForm}>
+            <label className="m-2" htmlFor="Fecha">Fecha</label>
+            <input type="date" id="Fecha" value={fec_alimento} onChange={(e) => setFec_alimento (e.target.value)} />
             <br />
-            <label htmlFor="Cantidad">Cantidad</label>
-            <input className="form-control w-25" type="text" id="Cantidad" value={cant_racionkg} onChange={(e) => setCant_racionkg (e.target.value)} />
+            <label className="m-2" htmlFor="Cantidad">Cantidad</label>
+            <input type="text" id="Cantidad" value={cant_racionkg} onChange={(e) => setCant_racionkg (e.target.value)} />
             <br />
-            <label htmlFor="Tipo">Tipo</label>
-            <input className="form-control w-25" type="text" id="Tipo" value={tipo_alimento} onChange={(e) => setTipo_alimento(e.target.value)} />           
+            <label className="m-2" htmlFor="Tipo">Tipo</label>
+            <input type="text" id="Tipo" value={tipo_alimento} onChange={(e) => setTipo_alimento(e.target.value)} />           
             <br />
-            <label htmlFor="hora">hora</label>
-            <input className="form-control w-25" type="time" id="hora" value={hor_alimento} onChange={(e) => setHor_alimento(e.target.value)} />           
+            <label className="m-2" htmlFor="hora">hora</label>
+            <input type="time" id="hora" value={hor_alimento} onChange={(e) => setHor_alimento(e.target.value)} />           
             <br />
-            <label htmlFor="valor">valor</label>
-            <input className="form-control w-25" type="text" id="valor" value={vlr_alimento} onChange={(e) => setVlr_alimento(e.target.value)} />           
+            <label className="m-2" htmlFor="valor">valor</label>
+            <input type="text" id="valor" value={vlr_alimento} onChange={(e) => setVlr_alimento(e.target.value)} />           
             
             <br />
             
-            <input type="submit" id="boton" value={buttonForm} className="btn btn-success" />
+            <input type="submit" id="boton" value={buttonForm} className="btn btn-success m-2" />
         </form>
+        </div>
         </>
-
     )
-
 }
 export default FormAlimento
