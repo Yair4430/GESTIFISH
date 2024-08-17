@@ -1,118 +1,177 @@
-// import axios from "axios"
 import axios from "axios";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
-const FormAlimento = ({ buttonForm, Alimento, URI, UpdateTextButton })=>{ // Agregar como parámetro el boton que llega desde el componente
-    // Hooks para cada uno de los campos del formulario
-    const [fec_alimento, setFec_alimento] = useState('')
-    const [cant_racionkg, setCant_racionkg] = useState('')
-    const [tipo_alimento, setTipo_alimento] = useState('')
-    const [hor_alimento, setHor_alimento] = useState('')
-    const [vlr_alimento, setVlr_alimento] = useState('')
+const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllActividad }) => {
+    const [Id_Actividad, setId_Actividad] = useState('');
+    const [Nom_Actividad, setNom_Actividad] = useState('');
+    const [Des_Actividad, setDes_Actividad] = useState('');
+    const [Fec_Actividad, setFec_Actividad] = useState('');
+    const [Hor_Actividad, setHor_Actividad] = useState('');
+    const [Fas_Produccion, setFas_Produccion] = useState('');
+    const [Id_Responsable, setId_Responsable] = useState('');
+    const [Id_Estanque, setId_Estanque] = useState('');
+    const [DatosResponsable, setDatosResponsable] = useState([]);
+    const [DatosEstanque, setDatosEstanque] = useState([]);
+    
 
-    const sendForm = (e) => {
+    const getResponsable = async () => {
+        try {
+            const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/');
+            setDatosResponsable(response.data);
+        } catch (error) {
+            console.error('Error al obtener responsables:', error);
+        }
+    };
 
+    const getEstanque = async () => {
+        try {
+            const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/traslado/');
+            setDatosEstanque(response.data);
+        } catch (error) {
+            console.error('Error al obtener estanques:', error);
+        }
+    };
+
+    useEffect(() => {
+        getResponsable();
+        getEstanque();
+    }, []);
+
+    const sendFormA = async (e) => {
         e.preventDefault();
-    
-        if (buttonForm === 'Actualizar') {
-            console.log('actualizando ando...');
 
-            axios.put(URI + Alimento.id, {
-                fec_alimento: fec_alimento,
-                cant_racionkg: cant_racionkg,
-                tipo_alimento: tipo_alimento,
-                hor_alimento: hor_alimento,
-                vlr_alimento: vlr_alimento
-            }).then(response => {
-                UpdateTextButton('Enviar');
-                clearForm();
-            }).catch(error => {
-                console.error('Error al guardar:', error);
-                // Manejo de errores si el guardado falla
+        try {
+            if (buttonForm === 'Actualizar') {
+                console.log('Actualizando actividad con ID:', Id_Actividad);
+                await axios.put(`${URI}${actividad.Id_Actividad}`, {
+                    Id_Actividad,
+                    Nom_Actividad,
+                    Des_Actividad,
+                    Fec_Actividad,
+                    Hor_Actividad,
+                    Fas_Produccion,
+                    Id_Responsable,
+                    Id_Estanque
+                });
+                Swal.fire({
+                    title: 'Actualizado',
+                    text: '¡Registro actualizado exitosamente!',
+                    icon: 'success'
+                });
+                updateTextButton('Enviar');
+                clearFormA();
+                getAllActividad();
+            } else if (buttonForm === 'Enviar') {
+                const respuestaApi = await axios.post(URI, {
+                    // Id_Actividad,
+                    Nom_Actividad,
+                    Des_Actividad,
+                    Fec_Actividad,
+                    Hor_Actividad,
+                    Fas_Produccion,
+                    Id_Responsable,
+                    Id_Estanque
+                });
+                Swal.fire({
+                    title: 'Guardado',
+                    text: '¡Registro guardado exitosamente!',
+                    icon: 'success'
+                });
+                if (respuestaApi.status === 201) {
+                    alert(respuestaApi.data.message);
+                    clearFormA();
+                    getAllActividad();
+                }
+            }
+        } catch (error) {
+            console.error('Error al enviar el formulario:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'No se pudo guardar la actividad.',
+                icon: 'error'
             });
-            
-    
-        } else if (buttonForm === 'Enviar') {
-            console.log('guardando ando...');
-            axios.post(URI, {
-                fec_alimento: fec_alimento,
-                cant_racionkg: cant_racionkg,
-                tipo_alimento: tipo_alimento,
-                hor_alimento: hor_alimento,
-                vlr_alimento: vlr_alimento
-            }).then(response => {
-                clearForm();
-            }).catch(error => {
-                console.error('Error al guardar:', error);
-                // Manejo de errores si el guardado falla
-            });
-        }   
+        }
     };
     
-    const clearForm = ()=>{
-        setFec_alimento('')
-        setCant_racionkg('')
-        setTipo_alimento('')
-        setHor_alimento('')
-        setVlr_alimento('')
-    }
-    const setData = () => { // Función que establece
-       
-        setFec_alimento(Alimento.fec_alimento)
-        setCant_racionkg(Alimento.cant_racionkg)
-        setTipo_alimento(Alimento.tipo_alimento)
-        setHor_alimento(Alimento.hor_alimento)
-        setVlr_alimento(Alimento.vlr_alimento)
-    }
-    useEffect(() => { // useEffect escucha los cambios  en el objeto 'player' y se ejecuta la funcion 'setData'
-        setData() 
-    }, [Alimento])
 
-    useEffect(() => { // useEffect escucha los cambios  en el objeto 'player' y se ejecuta la funcion 'setData'
-        if (Alimento) {
-            setFec_alimento(Alimento.fec_alimento || '');
-            setCant_racionkg(Alimento.cant_racionkg || '');
-            setTipo_alimento(Alimento.tipo_alimento || '');
-            setHor_alimento(Alimento.hor_alimento || '');
-            setVlr_alimento(Alimento.vlr_alimento || '');
+    const clearFormA = () => {
+        setId_Actividad('');
+        setNom_Actividad('');
+        setDes_Actividad('');
+        setFec_Actividad('');
+        setHor_Actividad('');
+        setFas_Produccion('');
+        setId_Responsable('');
+        setId_Estanque('');
+    };
+
+    const setDataA = () => {
+        setId_Actividad(actividad.Id_Actividad);
+        setNom_Actividad(actividad.Nom_Actividad);
+        setDes_Actividad(actividad.Des_Actividad);
+        setFec_Actividad(actividad.Fec_Actividad);
+        setHor_Actividad(actividad.Hor_Actividad);
+        setFas_Produccion(actividad.Fas_Produccion);
+        setId_Responsable(actividad.Id_Responsable);
+        setId_Estanque(actividad.Id_Estanque );
+    };
+
+    useEffect(() => {
+        if (actividad) {
+            setDataA();
         }
-    }, [Alimento]);
-    
-    
-    return(
+    }, [actividad]);
+
+    return (
         <>
-        <div className="row">
-            <center>
-          <h1 className="text-bg-success d-flex justify-content-center p-1" style={{ maxWidth: '99.5%' }}>
-          Registrar Y Actualizar
-          </h1>
-          </center>
-        </div>
-        
-        <form className="d-flex align-items-center flex-column" id="alimentoForm" action="" onSubmit={sendForm}>
-            <label className="form-label" htmlFor="Fecha">Fecha</label>
-            <input className="form-control w-25" type="date" id="Fecha" value={fec_alimento} onChange={(e) => setFec_alimento (e.target.value)} />
-            <br />
-            <label htmlFor="Cantidad">Cantidad</label>
-            <input className="form-control w-25" type="text" id="Cantidad" value={cant_racionkg} onChange={(e) => setCant_racionkg (e.target.value)} />
-            <br />
-            <label htmlFor="Tipo">Tipo</label>
-            <input className="form-control w-25" type="text" id="Tipo" value={tipo_alimento} onChange={(e) => setTipo_alimento(e.target.value)} />           
-            <br />
-            <label htmlFor="hora">hora</label>
-            <input className="form-control w-25" type="time" id="hora" value={hor_alimento} onChange={(e) => setHor_alimento(e.target.value)} />           
-            <br />
-            <label htmlFor="valor">valor</label>
-            <input className="form-control w-25" type="text" id="valor" value={vlr_alimento} onChange={(e) => setVlr_alimento(e.target.value)} />           
-            
-            <br />
-            
-            <input type="submit" id="boton" value={buttonForm} className="btn btn-success" />
-        </form>
+            <div className="d-flex flex-column align-items-center">
+                <h1 className="fs-1 fw-bold d-flex">Registrar Actividades</h1>
+                <form id="actividadForm" onSubmit={sendFormA} className="fw-bold m-2">
+                    <label htmlFor="Nom_Actividad" className="m-2">Nombre de la Actividad:</label>
+                    <input type="text" id="Nom_Actividad" value={Nom_Actividad} onChange={(e) => setNom_Actividad(e.target.value)} />
+                    <br />
+                    <label htmlFor="Des_Actividad" className="m-2">Descripción de la Actividad:</label>
+                    <input type="text" id="Des_Actividad" value={Des_Actividad} onChange={(e) => setDes_Actividad(e.target.value)} />
+                    <br />
+                    <label htmlFor="Fec_Actividad" className="m-2">Fecha de la Actividad:</label>
+                    <input type="date" id="Fec_Actividad" value={Fec_Actividad} onChange={(e) => setFec_Actividad(e.target.value)} />
+                    <br />
+                    <label htmlFor="Hor_Actividad" className="m-2">Duración de la Actividad:</label>
+                    <input type="time" id="Hor_Actividad" value={Hor_Actividad} onChange={(e) => setHor_Actividad(e.target.value)} />
+                    <br />
+                    <label htmlFor="Fas_Produccion" className="m-2">Fase de Producción:</label>
+                    <select id="Fas_Produccion" value={Fas_Produccion} onChange={(e) => setFas_Produccion(e.target.value)}>
+                    <option value="">-- Seleccione --</option>
+                    <option value="Antes de la cosecha">Antes de la cosecha</option>
+                    <option value="Despues de la cosecha">Después de la cosecha</option>
+                    </select>
+                    <br />
+                    <label htmlFor="Id_Responsable" className="m-2">Responsable de la Actividad:</label>
+                    <select id="Id_Responsable" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)}>
+                        <option value="">Selecciona uno...</option>
+                        {DatosResponsable.map((responsable) =>
+                            <option key={responsable.Id_Responsable} value={responsable.Id_Responsable}>
+                                {responsable.Nom_Responsable}
+                            </option>
+                        )}
+                    </select>
+                    <br />
+                    <label htmlFor="Id_Estanque" className="m-2">Estanque:</label>
+                    <select id="Id_Estanque" value={Id_Estanque} onChange={(e) => setId_Estanque(e.target.value)}>
+                        <option value="">Selecciona uno...</option>
+                        {DatosEstanque.map((estanque) =>
+                            <option key={estanque.Id_Estanque} value={estanque.Id_Estanque}>
+                                {estanque.Nom_Estanque}
+                            </option>
+                        )}
+                    </select>
+                    <br />
+                    <input type="submit" id="boton" value={buttonForm} className="btn btn-success m-2" />
+                </form>
+            </div>
         </>
+    );
+};
 
-    )
-
-}
-export default FormAlimento
+export default FormActividad;

@@ -1,64 +1,57 @@
-import { useEffect ,useState } from 'react'
-import {Routes, Route, NavLink, Navigate, useNavigate} from 'react-router-dom'
-import axios from 'axios'
-//import dotenv from 'dotenv'
+import { useEffect, useState } from 'react';
+import { Routes, Route, NavLink, Navigate, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-import Home from './home/Home.jsx'
-import CrudAlimento from './Alimento/crudALimento'
-import CrudResponsable from './Responsables/CrudResponsable'
-import CrudEstanque from './Estanque/crudEstanque.jsx'
-import CrudEspecie from './Especie/CrudEspecie.jsx'
-import CrudTraslado from './Traslado/CrudTraslado.jsx'
-import CrudActividad from './Actividad/crudActividad.jsx'
-import CrudMuestreo from './Muestreo/crudMuestreo.jsx'
-import CrudCosecha from './Cosecha/CrudCosecha.jsx'
-import CrudMortalidad from './Mortalidad/CrudMortalidad.jsx'
-import CrudSiembra from './Siembra/CrudSiembra.jsx'
+import Home from './home/Home.jsx';
+import CrudAlimento from './Alimento/crudALimento';
+import CrudResponsable from './Responsables/CrudResponsable';
+import CrudEstanque from './Estanque/crudEstanque.jsx';
+import CrudActividad from './Actividad/crudActividad.jsx';
+import CrudEspecie from './Especie/CrudEspecie.jsx';
+import CrudTraslado from './Traslado/CrudTraslado.jsx';
+import CrudMuestreo from './Muestreo/crudMuestreo.jsx';
+import CrudCosecha from './Cosecha/CrudCosecha.jsx';
+import CrudMortalidad from './Mortalidad/CrudMortalidad.jsx';
+import CrudSiembra from './Siembra/CrudSiembra.jsx';
 
-import Auth from './Auth/auth.jsx'
-import ResetPassword from './Auth/resetPassword.jsx'
+import Auth from './Auth/auth.jsx';
+import ResetPassword from './Auth/resetPassword.jsx';
 
-import imagen_logo from './IMG/LOGO_GESTIFISH.png'
-import "../src/App.css"
+import imagen_logo from './IMG/LOGO_GESTIFISH.png';
+import "../src/App.css";
 
-const URL_AUTH = process.env.ROUTER_PRINCIPAL + '/auth/'
+const URL_AUTH = process.env.ROUTER_PRINCIPAL + '/auth/';
 
-//dotenv.config()
-
-function App () {
-  const [isAuth, setIsAuth ] = useState(false)
-  const navigate = useNavigate()
+function App() {
+  const [isAuth, setIsAuth] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('usuario'))
+    const user = JSON.parse(localStorage.getItem('usuario'));
 
-    if (!user){
-      setIsAuth(false)
-    }else{
-
+    if (!user) {
+      setIsAuth(false);
+    } else {
       axios.get(URL_AUTH + 'verify', {
-        headers : { Authorization: `Bearer ${user.tokenUser}`}
-
+        headers: { Authorization: `Bearer ${user.tokenUser}` }
       }).then(response => {
-        if (response.status === 200){
-          setIsAuth(true)
+        if (response.status === 200) {
+          setIsAuth(true);
         }
-
       }).catch(() => {
-        setIsAuth(false)
-      })
+        setIsAuth(false);
+      });
     }
-  }, [])
+  }, []);
 
   const logOutUser = () => {
-    localStorage.removeItem('usuario')
-    setIsAuth(false)
-    navigate("/auth")
-  }
+    localStorage.removeItem('usuario');
+    setIsAuth(false);
+    navigate("/auth");
+  };
 
   return (
     <>
-      {/* <body className='bs-body-color-red'></body> */}
       <nav className='navbar navbar-expand-lg navbar-light bg-primary py-3 shadow-sm' data-bs-theme="dark">
         <ul className='nav'>
           <li className="navbar-brand">
