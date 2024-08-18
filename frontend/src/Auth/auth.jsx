@@ -6,19 +6,16 @@ const URI = process.env.ROUTER_PRINCIPAL + '/auth/';
 
 const Auth = () => {
     const [message, setMessage] = useState('');
-    const [messageType, setMessageType] = useState(''); // Para manejar el tipo de mensaje
+    const [messageType, setMessageType] = useState('');
     const [Nom_Usuario, setNom_Usuario] = useState("");
     const [Ape_Usuario, setApe_Usuario] = useState("");
     const [Cor_Usuario, setCor_Usuario] = useState("");
     const [Con_Usuario, setCon_Usuario] = useState("");
-
-    const [buttonForm, setbuttonForm] = useState('Registrar');
-    const [singnInOrLogIn, setSingnInOrLogIn] = useState('signIn');
+    const [buttonForm, setButtonForm] = useState('Registrar');
+    const [signInOrLogIn, setSignInOrLogIn] = useState('signIn');
     const [resetPass, setResetPass] = useState(false);
 
-    const validateName = (name) => {
-        return /^[a-zA-Z\s]+$/.test(name);
-    };
+    const validateName = (name) => /^[a-zA-Z\s]+$/.test(name);
 
     const sendForm = async (e) => {
         e.preventDefault();
@@ -41,14 +38,10 @@ const Auth = () => {
                     localStorage.setItem('usuario', JSON.stringify(response.data));
                     setMessageType('success');
                     setMessage('Cuenta creada con éxito');
-                    
-                    // Limpiar campos después de registro exitoso
                     setNom_Usuario('');
                     setApe_Usuario('');
                     setCor_Usuario('');
                     setCon_Usuario('');
-                    
-                    // Ocultar mensaje después de 8 segundos
                     setTimeout(() => {
                         setMessage('');
                     }, 8000);
@@ -76,74 +69,128 @@ const Auth = () => {
         }
     };
 
-    const switchForm = (opcion) => {
-        setSingnInOrLogIn(opcion);
+    const switchForm = (option) => {
+        setSignInOrLogIn(option);
+        setButtonForm(option === 'signIn' ? 'Registrar' : 'Iniciar Sesion');
     };
 
     return (
         <div className="container mt-5">
             <div className="row justify-content-center">
-                <div className="col-md-6">
-                    <div className="card shadow-sm">
+                <div className="col-lg-5 col-md-6">
+                    <div className="card border-0 shadow-lg p-4">
                         <div className="card-body">
-                            <h3 className="card-title text-center mb-4">{singnInOrLogIn === 'signIn' ? 'Registrar' : 'Iniciar Sesión'}</h3>
+                            <h3 className="card-title text-center mb-4">
+                                {signInOrLogIn === 'signIn' ? 'Crea tu cuenta' : 'Iniciar Sesión'}
+                            </h3>
                             {message && (
                                 <div className={`alert ${messageType === 'success' ? 'alert-success' : 'alert-danger'}`}>
                                     {message}
                                 </div>
                             )}
-                            {resetPass === false ? (
+                            {!resetPass ? (
                                 <>
                                     <form onSubmit={sendForm}>
-                                        {singnInOrLogIn === 'signIn' && (
+                                        {signInOrLogIn === 'signIn' && (
                                             <>
-                                                <div className="form-group mb-3">
-                                                    <label htmlFor="Nom_Usuario">Nombres completos:</label>
-                                                    <input type="text" className="form-control" id="Nom_Usuario" value={Nom_Usuario} onChange={(e) => setNom_Usuario(e.target.value)} required />
+                                                <div className="input-group mb-3">
+                                                    <span className="input-group-text">
+                                                        <i className="bi bi-person"></i>
+                                                    </span>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        placeholder="Nombres completos"
+                                                        value={Nom_Usuario}
+                                                        onChange={(e) => setNom_Usuario(e.target.value)}
+                                                        required
+                                                    />
                                                 </div>
-                                                <div className="form-group mb-3">
-                                                    <label htmlFor="Ape_Usuario">Apellidos completos:</label>
-                                                    <input type="text" className="form-control" id="Ape_Usuario" value={Ape_Usuario} onChange={(e) => setApe_Usuario(e.target.value)} required />
+                                                <div className="input-group mb-3">
+                                                    <span className="input-group-text">
+                                                        <i className="bi bi-person"></i>
+                                                    </span>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        placeholder="Apellidos completos"
+                                                        value={Ape_Usuario}
+                                                        onChange={(e) => setApe_Usuario(e.target.value)}
+                                                        required
+                                                    />
                                                 </div>
                                             </>
                                         )}
-                                        <div className="form-group mb-3">
-                                            <label htmlFor="Cor_Usuario">Correo electrónico:</label>
-                                            <input type="email" className="form-control" id="Cor_Usuario" value={Cor_Usuario} onChange={(e) => setCor_Usuario(e.target.value)} required />
+                                        <div className="input-group mb-3">
+                                            <span className="input-group-text">
+                                                <i className="bi bi-envelope"></i>
+                                            </span>
+                                            <input
+                                                type="email"
+                                                className="form-control"
+                                                placeholder="Correo electrónico"
+                                                value={Cor_Usuario}
+                                                onChange={(e) => setCor_Usuario(e.target.value)}
+                                                required
+                                            />
                                         </div>
-                                        <div className="form-group mb-3">
-                                            <label htmlFor="Con_Usuario">Contraseña:</label>
-                                            <input type="password" className="form-control" id="Con_Usuario" value={Con_Usuario} onChange={(e) => setCon_Usuario(e.target.value)} required />
+                                        <div className="input-group mb-3">
+                                            <span className="input-group-text">
+                                                <i className="bi bi-lock"></i>
+                                            </span>
+                                            <input
+                                                type="password"
+                                                className="form-control"
+                                                placeholder="Contraseña"
+                                                value={Con_Usuario}
+                                                onChange={(e) => setCon_Usuario(e.target.value)}
+                                                required
+                                            />
                                         </div>
                                         <div className="d-grid">
-                                            <button type="submit" className="btn btn-success">{buttonForm}</button>
+                                            <button type="submit" className="btn btn-primary btn-block">
+                                                {buttonForm}
+                                            </button>
                                         </div>
                                     </form>
                                     <div className="text-center mt-3">
-                                        <Link to="#" onClick={() => { setResetPass(!resetPass) }}>Restablecer Contraseña</Link>
+                                        <Link to="#" onClick={() => setResetPass(!resetPass)}>¿Olvidaste tu contraseña?</Link>
                                     </div>
                                 </>
                             ) : (
                                 <>
                                     <form>
-                                        <div className="form-group mb-3">
-                                            <label htmlFor="Cor_Usuario">Correo electrónico:</label>
-                                            <input type="email" className="form-control" id="Cor_Usuario" value={Cor_Usuario} onChange={(e) => setCor_Usuario(e.target.value)} required />
+                                        <div className="input-group mb-3">
+                                            <span className="input-group-text">
+                                                <i className="bi bi-envelope"></i>
+                                            </span>
+                                            <input
+                                                type="email"
+                                                className="form-control"
+                                                placeholder="Correo electrónico"
+                                                value={Cor_Usuario}
+                                                onChange={(e) => setCor_Usuario(e.target.value)}
+                                                required
+                                            />
                                         </div>
                                         <div className="d-grid">
-                                            <button type="submit" className="btn btn-primary">Enviar</button>
+                                            <button type="submit" className="btn btn-warning btn-block">Enviar</button>
                                         </div>
                                     </form>
                                     <div className="text-center mt-3">
-                                        <Link to="#" onClick={() => { setResetPass(!resetPass) }}>Volver</Link>
+                                        <Link to="#" onClick={() => setResetPass(!resetPass)}>Volver</Link>
                                     </div>
                                 </>
                             )}
-                            <div className="text-center mt-3">
-                                {singnInOrLogIn === 'signIn' ? (
-                                    <button className="btn btn-link" onClick={() => { switchForm('logIn'); setbuttonForm('Iniciar Sesion') }}>¿Ya tienes cuenta? Iniciar Sesión</button>
+                            <div className="text-center mt-4">
+                                {signInOrLogIn === 'signIn' ? (
+                                    <button className="btn btn-link" onClick={() => switchForm('logIn')}>
+                                        ¿Ya tienes cuenta? Iniciar Sesión
+                                    </button>
                                 ) : (
-                                    <button className="btn btn-link" onClick={() => { switchForm('signIn'); setbuttonForm('Registrar') }}>¿No tienes cuenta? Registrarse</button>
+                                    <button className="btn btn-link" onClick={() => switchForm('signIn')}>
+                                        ¿No tienes cuenta? Registrarse
+                                    </button>
                                 )}
                             </div>
                         </div>
@@ -152,6 +199,6 @@ const Auth = () => {
             </div>
         </div>
     );
-}
+};
 
 export default Auth;

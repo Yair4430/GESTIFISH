@@ -3,7 +3,6 @@ import { useRef, useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
 const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembras, responsables, especies, estanques }) => {
-    const [Id_Siembra, setId_Siembra] = useState('');
     const [Can_Peces, setCan_Peces] = useState('');
     const [Fec_Siembra, setFec_Siembra] = useState('');
     const [Fec_PosibleCosecha, setFec_PosibleCosecha] = useState('');
@@ -19,7 +18,6 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
     const sendForm = async (e) => {
         e.preventDefault();
         const formData = {
-            Id_Siembra,
             Can_Peces,
             Fec_Siembra,
             Fec_PosibleCosecha,
@@ -68,7 +66,6 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
     
 
     const clearForm = () => {
-        setId_Siembra('');
         setCan_Peces('');
         setFec_Siembra('');
         setFec_PosibleCosecha('');
@@ -83,7 +80,6 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
     };
 
     const setData = () => {
-        setId_Siembra(siembra.Id_Siembra);
         setCan_Peces(siembra.Can_Peces);
         setFec_Siembra(siembra.Fec_Siembra);
         setFec_PosibleCosecha(siembra.Fec_PosibleCosecha);
@@ -107,6 +103,9 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
         <div className="d-flex flex-column align-items-center">
             <h1 className="fs-1 fw-bold d-flex">Registrar Siembra</h1>
             <form id="siembraForm" onSubmit={sendForm} className="fw-bold m-2">
+                {/* <label htmlFor="Can_Peces" className="m-2">Numero de Siembra</label>
+                <input type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => setCan_Peces(e.target.value)} required />
+                <br /> */}
                 <label htmlFor="Can_Peces" className="m-2">Cantidad de Peces:</label>
                 <input type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => setCan_Peces(e.target.value)} required />
                 <br />
@@ -141,7 +140,7 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                     <option value="">Seleccione Estanque</option>
                     {estanques.map((estanque) => (
                         <option key={estanque.Id_Estanque} value={estanque.Id_Estanque}>
-                            {estanque.Num_Estanque}
+                            {estanque.Nom_Estanque}
                         </option>
                     ))}
                 </select>

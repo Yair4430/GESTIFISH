@@ -10,6 +10,7 @@ import routerTraslado from './routes/routerTraslado.js';
 import routerAuth from './routes/routerAuth.js';
 import routerAlimentacion from './routes/routerAlimentacion.js';
 import routerActividad from './routes/routerActividad.js';
+import routerSiembra from './routes/routerSiembra.js';
 
 import errorHandler from './middleware/handlerbar.js'; // Ajusta la ruta según tu estructura de archivos
 
@@ -35,6 +36,7 @@ app.use('/estanque', routerEstanque);
 app.use('/especie', routerEspecie)
 app.use('/traslado', routerTraslado)
 app.use('/actividad', routerActividad)
+app.use('/siembra', routerSiembra)
 
 
 // Middleware de manejo de errores
