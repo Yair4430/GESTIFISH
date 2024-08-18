@@ -19,7 +19,6 @@ const FormQueryTraslado = ({ URI, getTraslado, deleteTraslado, buttonForm }) => 
         getResponsable();
     }, []);
 
-
     const sendFormQuery = async (Fec_Traslado) => {
         if (Fec_Traslado) {
             try {
@@ -66,10 +65,10 @@ const FormQueryTraslado = ({ URI, getTraslado, deleteTraslado, buttonForm }) => 
                 <table className="table table-bordered border-info text-center" style={{ border: "3px solid" }}>
                     <thead>
                         <tr>
-                            <th className="border-info" style={{ border: "3px solid" }}>ID Traslado</th>
+                            {/* Eliminar la columna Id_Traslado */}
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Fecha de Traslado</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Cantidad de Peces</th>
-                            <th className="border-info align-middle" style={{ border: "3px solid" }}>ID Responsable</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Responsable</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Observaciones</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Hora de Traslado</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Acciones</th>
@@ -78,10 +77,10 @@ const FormQueryTraslado = ({ URI, getTraslado, deleteTraslado, buttonForm }) => 
                     <tbody>
                         {trasladoQuery.map((traslado) => (
                             <tr key={traslado.Id_Traslado} className="border-info align-middle font-monospace" style={{ border: "3px solid" }}>
-                                <td className="border-info align-middle text-center" style={{ border: "3px solid" }}>{traslado.Id_Traslado}</td>
+                                {/* Eliminar la celda Id_Traslado */}
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{traslado.Fec_Traslado}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{traslado.Can_Peces}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{traslado.Id_Responsable}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{traslado.responsable.Nom_Responsable}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{traslado.Obs_Traslado}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{traslado.Hor_Traslado}</td>
                                 <td>

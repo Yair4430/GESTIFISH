@@ -90,7 +90,6 @@ const CrudEspecie = () => {
             <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
                 <thead>
                     <tr>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>ID</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Características</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Tamaño Promedio</th>
@@ -102,7 +101,6 @@ const CrudEspecie = () => {
                 <tbody>
                     {EspecieList.map((especie) => (
                         <tr key={especie.Id_Especie} className='border-info font-monospace' style={{ border: "3px solid" }}>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{especie.Id_Especie}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{especie.Nom_Especie}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{especie.Car_Especie}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{especie.Tam_Promedio}</td>

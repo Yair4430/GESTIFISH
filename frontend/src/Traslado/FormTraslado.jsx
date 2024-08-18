@@ -97,7 +97,7 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
                 <label htmlFor="Can_Peces" className="m-2">Cantidad de Peces:</label>
                 <input type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => setCan_Peces(e.target.value)} />
                 <br />
-                <label htmlFor="Id_ResponsableSelect" className="m-2">Responsable de la Actividad:</label>
+                <label htmlFor="Id_ResponsableSelect" className="m-2">Responsable:</label>
                 <select id="Id_ResponsableSelect" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)}>
                     <option value="">Selecciona uno...</option>
                     {DatosResponsable.map((responsable) => (
