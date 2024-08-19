@@ -1,4 +1,3 @@
-// models/actividadModel.js
 import { DataTypes } from 'sequelize';
 import db from '../database/db.js';
 

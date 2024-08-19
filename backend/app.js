@@ -11,16 +11,18 @@ import routerAuth from './routes/routerAuth.js';
 import routerAlimentacion from './routes/routerAlimentacion.js';
 import routerActividad from './routes/routerActividad.js';
 import routerSiembra from './routes/routerSiembra.js';
+import routerMortalidad from './routes/routerMortalidad.js';
 
-import errorHandler from './middleware/handlerbar.js'; // Ajusta la ruta según tu estructura de archivos
+import errorHandler from './middleware/handlerbar.js';
 
-//Se llama por las laves foraneas
 import ResponsableModel from './models/responsableModel.js';
 import ActividadModel from './models/actividadModel.js';
 import EstanqueModel from './models/estanqueModel.js';
 import TrasladoModel from './models/trasladosModel.js';
+import SiembraModel from './models/siembraModel.js';
+import MortalidadModel from './models/mortalidadModel.js'; // Importa el modelo de Mortalidad
 
-dotenv.config({ path: './.env'});
+dotenv.config({ path: './.env' });
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -29,15 +31,15 @@ app.use(cors());
 app.use(express.json());
 app.use('/public/uploads', express.static('public/uploads'));
 
-app.use('/auth', routerAuth)
+app.use('/auth', routerAuth);
 app.use('/alimentacion', routerAlimentacion);
-app.use('/responsable', routerResponsable); // Verifica esta línea
+app.use('/responsable', routerResponsable);
 app.use('/estanque', routerEstanque);
-app.use('/especie', routerEspecie)
-app.use('/traslado', routerTraslado)
-app.use('/actividad', routerActividad)
-app.use('/siembra', routerSiembra)
-
+app.use('/especie', routerEspecie);
+app.use('/traslado', routerTraslado);
+app.use('/actividad', routerActividad);
+app.use('/siembra', routerSiembra);
+app.use('/mortalidad', routerMortalidad);
 
 // Middleware de manejo de errores
 app.use(errorHandler);
@@ -50,9 +52,9 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-//Relaciones
-ResponsableModel.hasMany(TrasladoModel,{foreignKey:"Id_Responsable", as : "responsableTraslado"})
-TrasladoModel.belongsTo(ResponsableModel,{foreignKey:"Id_Responsable" ,as : "responsable"})
+// Relaciones
+ResponsableModel.hasMany(TrasladoModel, { foreignKey: "Id_Responsable", as: "responsableTraslado" });
+TrasladoModel.belongsTo(ResponsableModel, { foreignKey: "Id_Responsable", as: "responsable" });
 
 ResponsableModel.hasMany(ActividadModel, { foreignKey: 'Id_Responsable', as: 'actividades' });
 ActividadModel.belongsTo(ResponsableModel, { foreignKey: 'Id_Responsable', as: 'responsable' });
@@ -60,5 +62,17 @@ ActividadModel.belongsTo(ResponsableModel, { foreignKey: 'Id_Responsable', as: '
 EstanqueModel.hasMany(ActividadModel, { foreignKey: 'Id_Estanque', as: 'actividades' });
 ActividadModel.belongsTo(EstanqueModel, { foreignKey: 'Id_Estanque', as: 'estanque' });
 
-//Exportacion de los modelos con las relaciones ya establecidas
-export {TrasladoModel, ResponsableModel, ActividadModel, EstanqueModel } 
+// Relaciones con SiembraModel
+//SiembraModel.hasMany(MortalidadModel, { foreignKey: 'Id_Siembra', as: 'mortalidad' });
+//MortalidadModel.belongsTo(SiembraModel, { foreignKey: 'Id_Siembra', as: 'siembra' });
+
+EstanqueModel.hasMany(SiembraModel, { foreignKey: 'Id_Estanque', as: 'siembrasEstanque' });
+ResponsableModel.hasMany(SiembraModel, { foreignKey: 'Id_Responsable', as: 'siembrasResponsable' });
+
+// En mortalidadModel.js
+MortalidadModel.belongsTo(ResponsableModel, { foreignKey: 'Id_Responsable', as: 'responsable' });
+MortalidadModel.belongsTo(SiembraModel, { foreignKey: 'Id_Siembra', as: 'siembra' });
+
+
+// Exportación de los modelos con las relaciones ya establecidas
+export { TrasladoModel, ResponsableModel, ActividadModel, EstanqueModel, SiembraModel, MortalidadModel };
