@@ -1,112 +1,159 @@
-// import axios from "axios"
-import axios from "axios";
-import { useState } from "react";
-import { useEffect } from "react";
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 
-const FormAlimento = ({ buttonForm, Alimento, URI, UpdateTextButton })=>{ // Agregar como parámetro el boton que llega desde el componente
-    // Hooks para cada uno de los campos del formulario
-    const [fec_alimento, setFec_alimento] = useState('')
-    const [cant_racionkg, setCant_racionkg] = useState('')
-    const [tipo_alimento, setTipo_alimento] = useState('')
-    const [hor_alimento, setHor_alimento] = useState('')
-    const [vlr_alimento, setVlr_alimento] = useState('')
+const FormAlimento = ({ buttonForm, alimento, URI, updateTextButton, getAllAlimentacion }) => {
+    const [Fec_Alimentacion, setFec_Alimentacion] = useState('');
+    const [Can_RacionKg, setCan_RacionKg] = useState('');
+    const [Id_Siembra, setId_Siembra] = useState('');
+    const [Id_Responsable, setId_Responsable] = useState('');
+    const [Tip_Alimento, setTip_Alimento] = useState('');
+    const [Hor_Alimentacion, setHor_Alimentacion] = useState('');
+    const [Vlr_Alimentacion, setVlr_Alimentacion] = useState('');
 
-    const sendForm = (e) => {
+    const [DatosResponsable, setDatosResponsable] = useState([]);
+    const [DatosSiembra, setDatosSiembra] = useState([]);
 
+    const sendForm = async (e) => {
         e.preventDefault();
-    
-        if (buttonForm === 'Actualizar') {
-            console.log('actualizando ando...');
+        try {
+            const data = {
+                Fec_Alimentacion,
+                Can_RacionKg,
+                Id_Siembra,
+                Id_Responsable,
+                Tip_Alimento,
+                Hor_Alimentacion,
+                Vlr_Alimentacion
+            };
 
-            axios.put(URI + Alimento.id, {
-                fec_alimento: fec_alimento,
-                cant_racionkg: cant_racionkg,
-                tipo_alimento: tipo_alimento,
-                hor_alimento: hor_alimento,
-                vlr_alimento: vlr_alimento
-            }).then(response => {
-                UpdateTextButton('Enviar');
-                clearForm();
-            }).catch(error => {
-                console.error('Error al guardar:', error);
-                // Manejo de errores si el guardado falla
-            });
-            
-    
-        } else if (buttonForm === 'Enviar') {
-            console.log('guardando ando...');
-            axios.post(URI, {
-                fec_alimento: fec_alimento,
-                cant_racionkg: cant_racionkg,
-                tipo_alimento: tipo_alimento,
-                hor_alimento: hor_alimento,
-                vlr_alimento: vlr_alimento
-            }).then(response => {
-                clearForm();
-            }).catch(error => {
-                console.error('Error al guardar:', error);
-                // Manejo de errores si el guardado falla
-            });
-        }   
-    };
-    
-    const clearForm = ()=>{
-        setFec_alimento('')
-        setCant_racionkg('')
-        setTipo_alimento('')
-        setHor_alimento('')
-        setVlr_alimento('')
-    }
-    const setData = () => { // Función que establece
-       
-        setFec_alimento(Alimento.fec_alimento)
-        setCant_racionkg(Alimento.cant_racionkg)
-        setTipo_alimento(Alimento.tipo_alimento)
-        setHor_alimento(Alimento.hor_alimento)
-        setVlr_alimento(Alimento.vlr_alimento)
-    }
-    useEffect(() => { // useEffect escucha los cambios  en el objeto 'player' y se ejecuta la funcion 'setData'
-        setData() 
-    }, [Alimento])
+            if (buttonForm === 'Actualizar') {
+                await axios.put(`${URI}${alimento.Id_Alimentacion}`, data);
+                Swal.fire({
+                    title: 'Actualizado',
+                    text: '¡Registro actualizado exitosamente!',
+                    icon: 'success'
+                });
+                updateTextButton('Enviar');
+            } else if (buttonForm === 'Enviar') {
+                const respuestaApi = await axios.post(URI, data);
+                Swal.fire({
+                    title: 'Guardado',
+                    text: '¡Registro guardado exitosamente!',
+                    icon: 'success'
+                });
+                if (respuestaApi.status === 201) {
+                    clearForm();
+                }
+            }
 
-    useEffect(() => { // useEffect escucha los cambios  en el objeto 'player' y se ejecuta la funcion 'setData'
-        if (Alimento) {
-            setFec_alimento(Alimento.fec_alimento || '');
-            setCant_racionkg(Alimento.cant_racionkg || '');
-            setTipo_alimento(Alimento.tipo_alimento || '');
-            setHor_alimento(Alimento.hor_alimento || '');
-            setVlr_alimento(Alimento.vlr_alimento || '');
+            getAllAlimentacion(); // Refrescar la lista después de la operación
+        } catch (error) {
+            console.error('Error al enviar el formulario:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'No se pudo guardar el registro de alimentación.',
+                icon: 'error'
+            });
         }
-    }, [Alimento]);
-    
-    
-    return(
-        <>
-        <div className="d-flex flex-column align-items-center">
-          <h1 className="fs-1 fw-bold d-flex">Registrar Alimentacion</h1>
+    };
 
-        <form className="fw-bold m-2" id="alimentoForm" action="" onSubmit={sendForm}>
-            <label className="m-2" htmlFor="Fecha">Fecha</label>
-            <input type="date" id="Fecha" value={fec_alimento} onChange={(e) => setFec_alimento (e.target.value)} />
-            <br />
-            <label className="m-2" htmlFor="Cantidad">Cantidad</label>
-            <input type="text" id="Cantidad" value={cant_racionkg} onChange={(e) => setCant_racionkg (e.target.value)} />
-            <br />
-            <label className="m-2" htmlFor="Tipo">Tipo</label>
-            <input type="text" id="Tipo" value={tipo_alimento} onChange={(e) => setTipo_alimento(e.target.value)} />           
-            <br />
-            <label className="m-2" htmlFor="hora">hora</label>
-            <input type="time" id="hora" value={hor_alimento} onChange={(e) => setHor_alimento(e.target.value)} />           
-            <br />
-            <label className="m-2" htmlFor="valor">valor</label>
-            <input type="text" id="valor" value={vlr_alimento} onChange={(e) => setVlr_alimento(e.target.value)} />           
-            
-            <br />
-            
-            <input type="submit" id="boton" value={buttonForm} className="btn btn-success m-2" />
-        </form>
+    const clearForm = () => {
+        setFec_Alimentacion('');
+        setCan_RacionKg('');
+        setId_Siembra('');
+        setId_Responsable('');
+        setTip_Alimento('');
+        setHor_Alimentacion('');
+        setVlr_Alimentacion('');
+    };
+
+    const setData = () => {
+        setFec_Alimentacion(alimento.Fec_Alimentacion);
+        setCan_RacionKg(alimento.Can_RacionKg);
+        setId_Siembra(alimento.Id_Siembra);
+        setId_Responsable(alimento.Id_Responsable);
+        setTip_Alimento(alimento.Tip_Alimento);
+        setHor_Alimentacion(alimento.Hor_Alimentacion);
+        setVlr_Alimentacion(alimento.Vlr_Alimentacion);
+    };
+
+    useEffect(() => {
+        const getResponsable = async () => {
+            try {
+                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/');
+                setDatosResponsable(response.data);
+            } catch (error) {
+                console.error('Error al obtener responsables:', error);
+            }
+        };
+
+        const getSiembras = async () => {
+            try {
+                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/siembra/');
+                setDatosSiembra(response.data);
+            } catch (error) {
+                console.error('Error al obtener siembras:', error);
+            }
+        };
+
+        getResponsable();
+        getSiembras();
+    }, []);
+
+    useEffect(() => {
+        if (alimento) {
+            setData();
+        }
+    }, [alimento]);
+
+    return (
+        <div className="d-flex flex-column align-items-center">
+            <h1 className="fs-1 fw-bold d-flex">Registrar Alimentación</h1>
+            <form id="alimentoForm" onSubmit={sendForm} className="fw-bold m-2">
+                <label htmlFor="Fec_Alimentacion" className="m-2">Fecha de Alimentación:</label>
+                <input type="date" id="Fec_Alimentacion" value={Fec_Alimentacion} onChange={(e) => setFec_Alimentacion(e.target.value)} />
+                <br />
+                <label htmlFor="Can_RacionKg" className="m-2">Cantidad de Ración (kg):</label>
+                <input type="number" id="Can_RacionKg" value={Can_RacionKg} onChange={(e) => setCan_RacionKg(e.target.value)} />
+                <br />
+                <label htmlFor="Id_SiembraSelect" className="m-2">Siembra:</label>
+                <select id="Id_SiembraSelect" value={Id_Siembra} onChange={(e) => setId_Siembra(e.target.value)}>
+                    <option value="">Selecciona uno...</option>
+                    {DatosSiembra.map((siembra) => (
+                        <option key={siembra.Id_Siembra} value={siembra.Id_Siembra}>
+                            {siembra.Fec_Siembra}
+                        </option>
+                    ))}
+                </select>
+                <br />
+                <label htmlFor="Id_ResponsableSelect" className="m-2">Responsable:</label>
+                <select id="Id_ResponsableSelect" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)}>
+                    <option value="">Selecciona uno...</option>
+                    {DatosResponsable.map((responsable) => (
+                        <option key={responsable.Id_Responsable} value={responsable.Id_Responsable}>
+                            {responsable.Nom_Responsable}
+                        </option>
+                    ))}
+                </select>
+                <br />
+                <label htmlFor="Tip_Alimento" className="m-2">Tipo de Alimento:</label>
+                <select id="Tip_Alimento" value={Tip_Alimento} onChange={(e) => setTip_Alimento(e.target.value)}>
+                    <option value="">Selecciona uno...</option>
+                    <option value="Concentrado">Concentrado</option>
+                    <option value="Sal">Sal</option>
+                </select>
+                <br />
+                <label htmlFor="Hor_Alimentacion" className="m-2">Hora de Alimentación:</label>
+                <input type="time" id="Hor_Alimentacion" value={Hor_Alimentacion} onChange={(e) => setHor_Alimentacion(e.target.value)} />
+                <br />
+                <label htmlFor="Vlr_Alimentacion" className="m-2">Valor:</label>
+                <input type="number" id="Vlr_Alimentacion" value={Vlr_Alimentacion} onChange={(e) => setVlr_Alimentacion(e.target.value)} />
+                <br />
+                <input type="submit" id="boton" value={buttonForm} className="btn btn-success m-2" />
+            </form>
         </div>
-        </>
-    )
-}
-export default FormAlimento
+    );
+};
+
+export default FormAlimento;
