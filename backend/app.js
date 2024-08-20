@@ -12,6 +12,8 @@ import routerAlimentacion from './routes/routerAlimentacion.js';
 import routerActividad from './routes/routerActividad.js';
 import routerSiembra from './routes/routerSiembra.js';
 import routerMortalidad from './routes/routerMortalidad.js';
+import routerCosecha from './routes/routerCosecha.js';
+import routerMuestreo from './routes/routerMuestreo.js';
 
 import errorHandler from './middleware/handlerbar.js';
 
@@ -21,6 +23,8 @@ import EstanqueModel from './models/estanqueModel.js';
 import TrasladoModel from './models/trasladosModel.js';
 import SiembraModel from './models/siembraModel.js';
 import MortalidadModel from './models/mortalidadModel.js'; // Importa el modelo de Mortalidad
+import CosechaModel from './models/cosechaModel.js';
+import MuestreoModel from './models/muestreoModel.js';
 
 dotenv.config({ path: './.env' });
 
@@ -40,6 +44,8 @@ app.use('/traslado', routerTraslado);
 app.use('/actividad', routerActividad);
 app.use('/siembra', routerSiembra);
 app.use('/mortalidad', routerMortalidad);
+app.use('/cosecha', routerCosecha)
+app.use('/muestero', routerMuestreo)
 
 // Middleware de manejo de errores
 app.use(errorHandler);
@@ -73,6 +79,11 @@ ResponsableModel.hasMany(SiembraModel, { foreignKey: 'Id_Responsable', as: 'siem
 MortalidadModel.belongsTo(ResponsableModel, { foreignKey: 'Id_Responsable', as: 'responsable' });
 MortalidadModel.belongsTo(SiembraModel, { foreignKey: 'Id_Siembra', as: 'siembra' });
 
+CosechaModel.belongsTo(ResponsableModel, { foreignKey: 'Id_Responsable', as: 'responsable' });
+CosechaModel.belongsTo(SiembraModel, { foreignKey: 'Id_Siembra', as: 'siembra' });
+
+MuestreoModel.belongsTo(ResponsableModel, { foreignKey: 'Id_Responsable', as: 'responsable' });
+MuestreoModel.belongsTo(SiembraModel, { foreignKey: 'Id_Siembra', as: 'siembra' });
 
 // Exportación de los modelos con las relaciones ya establecidas
-export { TrasladoModel, ResponsableModel, ActividadModel, EstanqueModel, SiembraModel, MortalidadModel };
+export { TrasladoModel, ResponsableModel, ActividadModel, EstanqueModel, SiembraModel, MortalidadModel, CosechaModel, MuestreoModel };

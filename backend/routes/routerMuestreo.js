@@ -1,13 +1,36 @@
-import express from "express";
-import { createMuestreo, deleteMuestreo, getAllMuestreo, getMuestreo, updateMuestreo } from "../controllers/muestreoController.js";
+import express from 'express';
+import {
+  getAllMuestreo,
+  getMuestreoById,
+  createMuestreo,
+  updateMuestreo,
+  deleteMuestreo,
+  getMuestreoByFecha
+} from '../controllers/muestreoController.js';
+import winston from 'winston';
 
-const router = express.Router();
+const routerMuestreo = express.Router();
 
-// Rutas para Muestreo
-router.get('/muestreo', getAllMuestreo);
-router.get('/muestreo/:id', getMuestreo);
-router.post('/muestreo', createMuestreo);
-router.put('/muestreo/:id', updateMuestreo);
-router.delete('/muestreo/:id', deleteMuestreo);
+const logger = winston.createLogger({
+  level: 'error',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.File({ filename: 'error.log' })
+  ],
+});
 
-export default router;
+// Definición de las rutas
+routerMuestreo.get('/', getAllMuestreo);
+routerMuestreo.get('/:Id_Muestreo', getMuestreoById);
+routerMuestreo.post('/', createMuestreo);
+routerMuestreo.put('/:Id_Muestreo', updateMuestreo);
+routerMuestreo.delete('/:Id_Muestreo', deleteMuestreo);
+routerMuestreo.get('/Fec_Muestreo/:Fec_Muestreo', getMuestreoByFecha);
+
+// Middleware para manejo de errores
+routerMuestreo.use((err, req, res, next) => {
+  logger.error(`${req.method} ${req.url} - ${err.message}`);
+  res.status(500).json({ error: 'An error occurred' });
+});
+
+export default routerMuestreo;
