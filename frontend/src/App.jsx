@@ -3,7 +3,7 @@ import { Routes, Route, NavLink, Navigate, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 
 import Home from './home/Home.jsx';
-import CrudAlimento from './Alimento/crudALimento';
+import CrudAlimentacion from './Alimento/CrudAlimentacion.jsx';
 import CrudResponsable from './Responsables/CrudResponsable';
 import CrudEstanque from './Estanque/crudEstanque.jsx';
 import CrudActividad from './Actividad/crudActividad.jsx';
@@ -159,7 +159,7 @@ function App() {
       {isAuth ?
         <>  
           <Route path='/' element={<Home />} />
-          <Route path='/Alimentacion' element={<CrudAlimento />} />
+          <Route path='/Alimentacion' element={<CrudAlimentacion />} />
           <Route path='/Responsable' element={<CrudResponsable/>}/>
           <Route path='/Estanque' element={<CrudEstanque/>}/>
           <Route path='/Especie' element={<CrudEspecie/>}/>
