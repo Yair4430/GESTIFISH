@@ -1,11 +1,10 @@
-// components/CrudActividad.jsx
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import FormActividad from './formActividad.jsx';
 import FormQueryActividad from './formQueryActividad.jsx';
 
-const URI =process.env.ROUTER_PRINCIPAL + '/actividad/';
+const URI = process.env.ROUTER_PRINCIPAL + '/Actividad/';
 
 const CrudActividad = () => {
     const [ActividadList, setActividadList] = useState([]);
@@ -37,7 +36,7 @@ const CrudActividad = () => {
  const getActividad = async (Id_Actividad) => {
     setButtonForm('Enviar');
     try {
-        const respuesta = await axios.get(`${URI}/${Id_Actividad}`); // Corregido
+        const respuesta = await axios.get(`${URI}/${Id_Actividad} }}`); // Corregido
         setButtonForm('Actualizar');
         setActividad({ ...respuesta.data });
     } catch (error) {
