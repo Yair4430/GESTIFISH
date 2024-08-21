@@ -82,7 +82,7 @@ const FormQuerySiembra = ({ URI, getSiembra, deleteSiembra, buttonForm }) => {
                                     <button className="btn btn-info" onClick={() => getSiembra(siembra.Id_Siembra)}>
                                         <i className="fa-solid fa-pen-to-square"></i> Editar
                                     </button>
-                                    <button className="btn btn-info align-middle m-2" onClick={() => deleteSiembra(siembra.Id_Siembra)}>
+                                    <button className='btn btn-info align-middle m-2' onClick={() => deleteSiembra(siembra.Id_Siembra)}>
                                         <i className="fa-solid fa-trash-can"></i> Borrar
                                     </button>
                                 </td>

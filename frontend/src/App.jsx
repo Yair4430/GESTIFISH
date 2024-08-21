@@ -4,7 +4,8 @@ import axios from 'axios';
 
 import Home from './home/Home.jsx';
 import CrudAlimentacion from './Alimento/CrudAlimentacion.jsx';
-import CrudResponsable from './Responsables/CrudResponsable';
+import CrudResponsable from './Responsables/CrudResponsable.jsx';
+// import CrudResponsable from './Responsables/CrudResponsable.jsx';
 import CrudEstanque from './Estanque/crudEstanque.jsx';
 import CrudActividad from './Actividad/crudActividad.jsx';
 import CrudEspecie from './Especie/CrudEspecie.jsx';

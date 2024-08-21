@@ -93,10 +93,10 @@ const FormQueryActividad = ({ URI, getActividad, deleteActividad, buttonForm }) 
                                 <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.Fas_Produccion}</td>
                                 <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.estanque.Nom_Estanque}</td>
                                 <td>
-                                    <button onClick={() => getActividad(actividad.Fec_Actividad)} value="Editar" title="Editar" className="btn btn-primary">
+                                    <button onClick={() => getActividad(actividad.Id_Actividad)} value="Editar" title="Editar" className="btn btn-primary">
                                         <i className="fa-solid fa-pen-to-square"></i>Editar
                                     </button>
-                                    <button onClick={() => deleteActividad(actividad.Fec_Actividad)} className="btn btn-danger">
+                                    <button onClick={() => deleteActividad(actividad.Id_Actividad)} className="btn btn-danger">
                                     <i className="fa-solid fa-trash-can"></i> Borrar
                                     </button>
                                 </td>

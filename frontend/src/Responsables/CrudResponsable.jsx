@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import FormResponsable from './FormResponsable.jsx';
-import FromQueryResponsable from './FromQueryResponsable.jsx';
+import FormQueryResponsable from './FormQueryResponsable.jsx';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/responsable/';
 
@@ -123,7 +123,7 @@ const CrudResponsable = () => {
             <hr />
             <FormResponsable buttonForm={buttonForm} responsable={responsable} URI={URI} updateTextButton={updateTextButton} getAllResponsable={getAllResponsable} />
             <hr />
-            <FromQueryResponsable URI={URI} getResponsable={getResponsable} deleteResponsable={deleteResponsable} buttonForm={buttonForm} />
+            <FormQueryResponsable URI={URI} getResponsable={getResponsable} deleteResponsable={deleteResponsable} buttonForm={buttonForm} />
         </>
     );
 }

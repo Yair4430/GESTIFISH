@@ -40,6 +40,7 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
                     icon: 'success'
                 });
                 updateTextButton('Enviar');
+                clearForm(); // Limpiar el formulario después de la actualización
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, data);
                 Swal.fire({

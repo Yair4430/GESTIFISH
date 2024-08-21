@@ -34,6 +34,7 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
                     icon: 'success'
                 });
                 updateTextButton('Enviar');
+                clearForm(); // Limpiar el formulario después de actualizar
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, data);
                 Swal.fire({
@@ -42,7 +43,7 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
                     icon: 'success'
                 });
                 if (respuestaApi.status === 201) {
-                    clearForm();
+                    clearForm(); // Limpiar el formulario después de guardar
                 }
             }
 
