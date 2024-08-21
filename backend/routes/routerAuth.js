@@ -11,14 +11,17 @@ routerAuth.post('/',
     ], 
     createUser
 );
-
-
-
-
-routerAuth.get('/verify', verifyToken);
+//saca canas jajaja
+routerAuth.get('/verify', (req, res) => {
+    // Aquí debería ir la lógica para verificar el token
+    res.status(200).send('Token Verified');
+  });
 routerAuth.post('/login', logInUser);
 routerAuth.post('/request-password-reset', getResetPassword);
 routerAuth.post('/reset-password', setNewPassword);
+routerAuth.get('/protected-route', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Ruta protegida accesible' });
+});
 
 
 // Rutas protegidas

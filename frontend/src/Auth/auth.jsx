@@ -2,6 +2,8 @@ import axios from "axios";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
 
+
+
 const URI = process.env.ROUTER_PRINCIPAL + '/auth/';
 
 const Auth = () => {
@@ -79,23 +81,7 @@ const Auth = () => {
     const switchForm = (opcion) => {
         setSingnInOrLogIn(opcion);
     };
-
-
-    const fetchProtectedData = async () => {
-        try {
-            const token = JSON.parse(localStorage.getItem('usuario')).tokenUser; // Recupera el token almacenado
-            const response = await axios.get(`${process.env.ROUTER_PRINCIPAL}/auth/protected-route`, {
-                headers: {
-                    'Authorization': `Bearer ${token}` // Envía el token en el encabezado
-                }
-            });
-            console.log(response.data);
-        } catch (error) {
-            console.error('Error al acceder a la ruta protegida:', error.response.data);
-        }
-    };
     
-    fetchProtectedData();
 
 
     return (

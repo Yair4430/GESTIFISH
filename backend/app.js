@@ -39,6 +39,7 @@ app.use('/public/uploads', express.static('public/uploads'));
 // Rutas públicas (no requieren autenticación)
 app.use('/api', routerAuth);
 app.use('/api/auth', routerAuth);
+app.use('/auth', routerAuth);
 
 
 app.use('/alimentacion', routerAlimentacion);
