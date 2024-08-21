@@ -80,6 +80,24 @@ const Auth = () => {
         setSingnInOrLogIn(opcion);
     };
 
+
+    const fetchProtectedData = async () => {
+        try {
+            const token = JSON.parse(localStorage.getItem('usuario')).tokenUser; // Recupera el token almacenado
+            const response = await axios.get(`${process.env.ROUTER_PRINCIPAL}/auth/protected-route`, {
+                headers: {
+                    'Authorization': `Bearer ${token}` // Envía el token en el encabezado
+                }
+            });
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error al acceder a la ruta protegida:', error.response.data);
+        }
+    };
+    
+    fetchProtectedData();
+
+
     return (
         <div className="container mt-5">
             <div className="row justify-content-center">

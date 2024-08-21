@@ -37,9 +37,10 @@ app.use(express.json());
 app.use('/public/uploads', express.static('public/uploads'));
 
 // Rutas públicas (no requieren autenticación)
-app.use('/auth', routerAuth);
+app.use('/api', routerAuth);
+app.use('/api/auth', routerAuth);
 
-// Rutas protegidas (requieren autenticación)
+
 app.use('/alimentacion', routerAlimentacion);
 app.use('/responsable', routerResponsable);
 app.use('/estanque', routerEstanque);
@@ -49,7 +50,6 @@ app.use('/actividad', routerActividad);
 app.use('/siembra', routerSiembra); 
 app.use('/mortalidad', routerMortalidad);// Añade el router de Siembra
 app.use('/muestreo', routerMuestreo);
-
 
 // Middleware de manejo de errores
 app.use(errorHandler);

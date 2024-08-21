@@ -1,18 +1,61 @@
-import express from 'express'
+import express from 'express';
 import { createUser, verifyToken, logInUser, getResetPassword, setNewPassword } from '../controllers/authController.js';
-import { check } from 'express-validator'
-const routerAuth = express.Router()
+import { check } from 'express-validator';
+
+const routerAuth = express.Router();
 
 routerAuth.post('/', 
     [
         check('email', 'por favor digite un email valido').isEmail(),
-        check('contraseña', 'por favor ingrese una contraseña con mas de 8 caracteres').isLength({ min: 8})
-        
-    ],createUser)
+        check('contraseña', 'por favor ingrese una contraseña con mas de 8 caracteres').isLength({ min: 8 })
+    ], 
+    createUser
+);
 
-routerAuth.get('/verify', verifyToken)
-routerAuth.post('/login', logInUser)
-routerAuth.post('/request-password-reset', getResetPassword)
-routerAuth.post('/reset-password', setNewPassword)
 
-export default routerAuth
+
+
+routerAuth.get('/verify', verifyToken);
+routerAuth.post('/login', logInUser);
+routerAuth.post('/request-password-reset', getResetPassword);
+routerAuth.post('/reset-password', setNewPassword);
+
+
+// Rutas protegidas
+routerAuth.get('/alimentacion', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de alimentación' });
+});
+
+routerAuth.get('/responsable', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de responsable' });
+});
+
+routerAuth.get('/estanque', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de estanque' });
+});
+
+routerAuth.get('/especie', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de especie' });
+});
+
+routerAuth.get('/traslado', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de traslado' });
+});
+
+routerAuth.get('/actividad', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de actividad' });
+});
+
+routerAuth.get('/siembra', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de siembra' });
+});
+
+routerAuth.get('/mortalidad', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de mortalidad' });
+});
+
+routerAuth.get('/muestreo', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de muestreo' });
+});
+
+export default routerAuth;
