@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import FormMuestreo from './formMuestreo.jsx';
-import FormQueryMuestreo from './formQueryMuestreo.jsx';
+import FormMuestreo from './formMuestreo'; 
+import FormQueryMuestreo from './formQueryMuestreo'; 
 
 const URI = process.env.ROUTER_PRINCIPAL + '/muestreo/';
 
 const CrudMuestreo = () => {
-    const [MuestreoList, setMuestreoList] = useState([]);
+    const [muestreoList, setMuestreoList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
     const [muestreo, setMuestreo] = useState({
         Id_Muestreo: '',
@@ -18,7 +18,7 @@ const CrudMuestreo = () => {
         Id_Siembra: '',
         Id_Responsable: '',
         Hor_Muestreo: '',
-        Pes_Promedio: ''
+        Pes_Promedio: '',
     });
 
     useEffect(() => {
@@ -34,7 +34,7 @@ const CrudMuestreo = () => {
                 console.warn('HTTP Status:', respuesta.status);
             }
         } catch (error) {
-            console.error('Error fetching muestreos:', error.response?.status || error.message);
+            console.error('Error fetching muestreo:', error.response?.status || error.message);
         }
     };
 
@@ -57,7 +57,7 @@ const CrudMuestreo = () => {
         setButtonForm(texto);
     };
 
-    const deleteMuestreo = (Id_Muestreo) => {
+    const deleteMuestreo = (id_Muestreo) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -69,7 +69,7 @@ const CrudMuestreo = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const respuesta = await axios.delete(`${URI}${Id_Muestreo}`);
+                    const respuesta = await axios.delete(`${URI}${id_Muestreo}`);
                     if (respuesta.status >= 200 && respuesta.status < 300) {
                         Swal.fire({
                             title: "¡Borrado!",
@@ -96,24 +96,22 @@ const CrudMuestreo = () => {
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Número de Peces</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Observaciones</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Peso Esperado</th>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Hora de Muestreo</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha Siembra</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre Responsable</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Hora Muestreo</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Peso Promedio</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {MuestreoList.map((muestreo) => (
+                    {muestreoList.map((muestreo) => (
                         <tr key={muestreo.Id_Muestreo} className='border-info font-monospace' style={{ border: "3px solid" }}>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Fec_Muestreo}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Num_Peces}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Obs_Muestreo}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Pes_Esperado}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.siembra?.Fec_Siembra}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.responsable?.Nom_Responsable}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Hor_Muestreo}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Pes_Promedio}</td>
+                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.siembra.Fec_Siembra}</td>
+                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.responsable.Nom_Responsable}</td>
                             <td>
                                 <button className='btn btn-info align-middle' onClick={() => getMuestreo(muestreo.Id_Muestreo)}>
                                     <i className="fa-solid fa-pen-to-square"></i> Editar

@@ -39,7 +39,7 @@ CREATE TABLE `actividad` (
   KEY `Id_Estanque` (`Id_Estanque`),
   CONSTRAINT `actividad_ibfk_1` FOREIGN KEY (`Id_Responsable`) REFERENCES `responsable` (`Id_Responsable`),
   CONSTRAINT `actividad_ibfk_2` FOREIGN KEY (`Id_Estanque`) REFERENCES `estanque` (`Id_Estanque`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,7 +48,7 @@ CREATE TABLE `actividad` (
 
 LOCK TABLES `actividad` WRITE;
 /*!40000 ALTER TABLE `actividad` DISABLE KEYS */;
-INSERT INTO `actividad` VALUES (7,'BOOOOOooooooooo','FUNCIONEEEEERRRRRRRR',5,'2024-08-02','08:54:00','Despues de la cosecha',1,'2024-08-14 00:53:48','2024-08-14 00:53:48');
+INSERT INTO `actividad` VALUES (7,'BOOOOOooooooooo','FUNCIONEEEEERRRRRRRR',5,'2024-08-02','08:54:00','Despues de la cosecha',1,'2024-08-14 00:53:48','2024-08-14 00:53:48'),(15,'eeeww','ewweelioiiio',15,'2024-08-01','08:15:00','Antes de la cosecha',1,'2024-08-20 23:14:04','2024-08-20 23:14:04');
 /*!40000 ALTER TABLE `actividad` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -60,23 +60,23 @@ DROP TABLE IF EXISTS `alimentacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `alimentacion` (
-  `Id_Alimentación` int NOT NULL AUTO_INCREMENT,
-  `Fec_Alimentación` date NOT NULL,
-  `Can_Racion Kg` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Id_Alimentacion` int NOT NULL AUTO_INCREMENT,
+  `Fec_Alimentacion` date NOT NULL,
+  `Can_RacionKg` int NOT NULL,
   `Id_Siembra` int NOT NULL,
   `Id_Responsable` int NOT NULL,
   `Tip_Alimento` enum('Concentrado','Sal') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `Hor_Alimentación` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `Vlr_Alimentación` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Hor_Alimentacion` time NOT NULL,
+  `Vlr_Alimentacion` int NOT NULL,
   `createdat` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedat` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`Id_Alimentación`),
+  PRIMARY KEY (`Id_Alimentacion`),
   KEY `Id_Resposable` (`Id_Responsable`),
   KEY `Id_Siembra` (`Id_Siembra`),
   KEY `Id_Responsable` (`Id_Responsable`),
   CONSTRAINT `alimentacion_ibfk_1` FOREIGN KEY (`Id_Siembra`) REFERENCES `siembra` (`Id_Siembra`),
   CONSTRAINT `alimentacion_ibfk_2` FOREIGN KEY (`Id_Responsable`) REFERENCES `responsable` (`Id_Responsable`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -85,6 +85,7 @@ CREATE TABLE `alimentacion` (
 
 LOCK TABLES `alimentacion` WRITE;
 /*!40000 ALTER TABLE `alimentacion` DISABLE KEYS */;
+INSERT INTO `alimentacion` VALUES (1,'2024-08-20',15555,6,5,'Concentrado','08:30:00',50000,'2024-08-20 16:11:38','2024-08-20 20:55:31'),(2,'2024-08-20',777777,6,5,'Concentrado','08:30:00',50000,'2024-08-20 21:53:55','2024-08-20 21:53:55'),(4,'2024-08-01',213122221,6,5,'Concentrado','06:57:00',123312,'2024-08-20 22:56:30','2024-08-20 22:56:40');
 /*!40000 ALTER TABLE `alimentacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -99,13 +100,13 @@ CREATE TABLE `cosecha` (
   `Id_Cosecha` int NOT NULL AUTO_INCREMENT,
   `Fec_Cosecha` date NOT NULL,
   `Can_Peces` int NOT NULL,
-  `Pes_Eviscerado` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `Pes_Viscerado` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `Por_Visceras` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Pes_Eviscerado` int NOT NULL,
+  `Pes_Viscerado` int NOT NULL,
+  `Por_Visceras` int NOT NULL,
   `Id_Responsable` int NOT NULL,
   `Id_Siembra` int NOT NULL,
-  `Hor_Cosecha` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `Vlr_Cosecha` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Hor_Cosecha` time NOT NULL,
+  `Vlr_Cosecha` int NOT NULL,
   `Obs_Cosecha` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `createdat` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedat` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -114,7 +115,7 @@ CREATE TABLE `cosecha` (
   KEY `Id_Siembra` (`Id_Siembra`),
   CONSTRAINT `cosecha_ibfk_1` FOREIGN KEY (`Id_Siembra`) REFERENCES `siembra` (`Id_Siembra`),
   CONSTRAINT `cosecha_ibfk_2` FOREIGN KEY (`Id_Responsable`) REFERENCES `responsable` (`Id_Responsable`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,6 +124,7 @@ CREATE TABLE `cosecha` (
 
 LOCK TABLES `cosecha` WRITE;
 /*!40000 ALTER TABLE `cosecha` DISABLE KEYS */;
+INSERT INTO `cosecha` VALUES (3,'2024-08-18',60000000,1500,1800,250,5,6,'08:30:00',200000,'Cosecha exitosa, peces en buen estado.','2024-08-19 04:01:00','2024-08-19 04:01:00');
 /*!40000 ALTER TABLE `cosecha` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -210,7 +212,7 @@ CREATE TABLE `mortalidad` (
   KEY `Id_Siembra` (`Id_Siembra`),
   CONSTRAINT `mortalidad_ibfk_2` FOREIGN KEY (`Id_Responsable`) REFERENCES `responsable` (`Id_Responsable`),
   CONSTRAINT `mortalidad_ibfk_3` FOREIGN KEY (`Id_Siembra`) REFERENCES `siembra` (`Id_Siembra`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -219,6 +221,7 @@ CREATE TABLE `mortalidad` (
 
 LOCK TABLES `mortalidad` WRITE;
 /*!40000 ALTER TABLE `mortalidad` DISABLE KEYS */;
+INSERT INTO `mortalidad` VALUES (2,'2024-08-18',100,'Enfermedad',6,5,'2024-08-18 23:18:57','2024-08-18 23:18:57'),(8,'2024-08-01',2222,'SE LOS COMIERON',6,5,'2024-08-19 00:10:51','2024-08-19 00:10:58'),(9,'2024-08-14',666668888,'23233',6,5,'2024-08-19 00:38:59','2024-08-19 00:39:16');
 /*!40000 ALTER TABLE `mortalidad` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -234,18 +237,19 @@ CREATE TABLE `muestreo` (
   `Fec_Muestreo` date NOT NULL,
   `Num_Peces` int NOT NULL,
   `Obs_Muestreo` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `Pes_Esperado` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Pes_Esperado` float NOT NULL,
   `Id_Siembra` int NOT NULL,
   `Id_Responsable` int NOT NULL,
-  `Hor_Muestreo` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `Pes_Promedio` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Hor_Muestreo` time NOT NULL,
+  `Pes_Promedio` float NOT NULL,
   `createdat` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedat` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`Id_Muestreo`),
   UNIQUE KEY `Id_Responsable` (`Id_Responsable`),
   KEY `Id_Siembra` (`Id_Siembra`),
-  CONSTRAINT `muestreo_ibfk_1` FOREIGN KEY (`Id_Siembra`) REFERENCES `siembra` (`Id_Siembra`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  CONSTRAINT `muestreo_ibfk_1` FOREIGN KEY (`Id_Siembra`) REFERENCES `siembra` (`Id_Siembra`),
+  CONSTRAINT `responsable_ibfk_2` FOREIGN KEY (`Id_Responsable`) REFERENCES `responsable` (`Id_Responsable`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -254,6 +258,7 @@ CREATE TABLE `muestreo` (
 
 LOCK TABLES `muestreo` WRITE;
 /*!40000 ALTER TABLE `muestreo` DISABLE KEYS */;
+INSERT INTO `muestreo` VALUES (6,'2024-08-20',14934311,'Muestreo inicial, todos los peces están saludables.',500,6,5,'10:30:00',888,'2024-08-21 02:03:33','2024-08-21 04:04:35'),(106,'2022-12-12',216,'Observación ejemplo',50.5,11,15,'10:00:00',5.5,'2024-08-21 13:21:42','2024-08-21 13:21:42');
 /*!40000 ALTER TABLE `muestreo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -317,7 +322,7 @@ CREATE TABLE `siembra` (
   CONSTRAINT `siembra_ibfk_1` FOREIGN KEY (`Id_Responsable`) REFERENCES `responsable` (`Id_Responsable`),
   CONSTRAINT `siembra_ibfk_2` FOREIGN KEY (`Id_Estanque`) REFERENCES `estanque` (`Id_Estanque`),
   CONSTRAINT `siembra_ibfk_3` FOREIGN KEY (`Id_Especie`) REFERENCES `especie` (`Id_Especie`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -326,6 +331,7 @@ CREATE TABLE `siembra` (
 
 LOCK TABLES `siembra` WRITE;
 /*!40000 ALTER TABLE `siembra` DISABLE KEYS */;
+INSERT INTO `siembra` VALUES (6,1111222322,'2024-08-01','2024-08-02',5,1,1,21212,'21122','05:25:00',122,2121,'2024-08-18 18:22:42','2024-08-18 18:22:55'),(11,21221,'2024-08-08','2024-07-30',15,1,1,221,'eweeeew','09:20:00',221,12323,'2024-08-20 22:16:11','2024-08-20 22:16:11');
 /*!40000 ALTER TABLE `siembra` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -357,7 +363,7 @@ CREATE TABLE `traslados` (
 
 LOCK TABLES `traslados` WRITE;
 /*!40000 ALTER TABLE `traslados` DISABLE KEYS */;
-INSERT INTO `traslados` VALUES (35,'2024-08-01',1222,5,'ww','00:00:00','2024-08-07 20:44:08','2024-08-10 17:22:57'),(38,'2024-08-07',111111,5,'ww','07:50:00','2024-08-10 21:48:42','2024-08-10 21:48:48');
+INSERT INTO `traslados` VALUES (35,'2024-08-01',1222,5,'wwwww','00:00:00','2024-08-07 20:44:08','2024-08-18 21:14:55'),(38,'2024-08-07',111111,5,'ww','07:50:00','2024-08-10 21:48:42','2024-08-10 21:48:48');
 /*!40000 ALTER TABLE `traslados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -377,7 +383,7 @@ CREATE TABLE `usuario` (
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`Id_Usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -386,7 +392,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (3,'YAIR','CARDENAS','yairguz2523@gmail.com','$2a$08$uV3M9FJHqlxJ1aylf4P9GOyW6aT2vQ60YfzcCClM4JV.hhLS4bGw6','2024-08-14 14:55:31','2024-08-14 14:55:31'),(4,'JORGE','LOPEZ','$2a$08$JXyBkcFG9hQU3H1py8NO9.pmSZuAKdMYFWOn8.Ik2u/Q7wQsSn.7y','$2a$08$Dx3XfipoxfM2J0F4MCcsF.Mo5a85mBb502BH3TDHXAapkEWLZ/dBe','2024-08-15 19:03:52','2024-08-15 19:03:52'),(7,'juandavid','rodriguez','$2a$08$8vNqoIQrExJj/NEnZBO.iO2FXCWZp7RQx.WSMjZf5ciFitTCOzBcO','$2a$08$/pS6pGN0/1gw1Vu/qO8z9eEdEONGs2hW1qYj5wYeph0bx9RiJr9k6','2024-08-15 19:58:46','2024-08-15 19:58:46'),(8,'juandavid','rodriguez','$2a$08$AuqVu7akQUGL86CLzh/3vudFX/SC6Y0jBmzRNxfmhrdQwQNJEU8dK','$2a$08$7r.NuMpCJU82nQYOlbN2.ug4Lj.cwPgtrNWgGo51rRukwB2uFtVHC','2024-08-15 19:58:55','2024-08-15 19:58:55'),(9,'juanito aniñana','kkokkok','$2a$08$jOsQFyBiRTg7dDMp9taM0.7rDWWZzO6Z6IVio1P9mJ2nrTdwe5u0y','$2a$08$iYsdROuyka43XZhfj0Q8leed/BJ5/v1vhPeXrfs0iw/hJIVdoEG9m','2024-08-15 20:23:02','2024-08-15 20:23:02'),(10,'weewna','ewewew','$2a$08$wDIMWVAKbynAFRX9eXFlV.3nVneVfqcPBhzZC6vJQGxzHiihPJLIm','$2a$08$HEA5iFdEiaodRcQYqP4SQuUhy4KENOmp415GWqJWz3dooXfRPuJgG','2024-08-15 20:25:53','2024-08-15 20:25:53');
+INSERT INTO `usuario` VALUES (24,'Yair','Cardenas','yairguz2523@gmail.com','$2a$08$eqJhAYn4XccYzupHt775ZOrmcX8/9ZVulnLdeHyRMmVh5tVp6MLAq','2024-08-18 03:53:05','2024-08-18 03:53:05');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -399,4 +405,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-16 20:14:06
+-- Dump completed on 2024-08-21  9:19:14

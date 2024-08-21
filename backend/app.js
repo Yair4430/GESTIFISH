@@ -46,7 +46,8 @@ app.use('/actividad', routerActividad);
 app.use('/siembra', routerSiembra);
 app.use('/mortalidad', routerMortalidad);
 app.use('/cosecha', routerCosecha)
-app.use('/muestero', routerMuestreo)
+app.use('/muestreo', routerMuestreo);
+
 
 // Middleware de manejo de errores
 app.use(errorHandler);
@@ -83,6 +84,7 @@ MortalidadModel.belongsTo(SiembraModel, { foreignKey: 'Id_Siembra', as: 'siembra
 CosechaModel.belongsTo(ResponsableModel, { foreignKey: 'Id_Responsable', as: 'responsable' });
 CosechaModel.belongsTo(SiembraModel, { foreignKey: 'Id_Siembra', as: 'siembra' });
 
+// En muestreoModel.js
 MuestreoModel.belongsTo(ResponsableModel, { foreignKey: 'Id_Responsable', as: 'responsable' });
 MuestreoModel.belongsTo(SiembraModel, { foreignKey: 'Id_Siembra', as: 'siembra' });
 

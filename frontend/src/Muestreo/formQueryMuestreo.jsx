@@ -8,7 +8,6 @@ const FormQueryMuestreo = ({ URI, getMuestreo, deleteMuestreo, buttonForm }) => 
     const [datosResponsable, setDatosResponsable] = useState([]);
     const [datosSiembra, setDatosSiembra] = useState([]);
 
-    // Obtener responsables y siembras
     const getResponsable = async () => {
         try {
             const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/');
@@ -26,13 +25,12 @@ const FormQueryMuestreo = ({ URI, getMuestreo, deleteMuestreo, buttonForm }) => 
             console.error('Error al obtener siembras:', error);
         }
     };
-
+    
     useEffect(() => {
         getResponsable();
         getSiembra();
     }, []);
 
-    // Consultar muestreo por fecha
     const sendFormQuery = async (Fec_Muestreo) => {
         if (Fec_Muestreo) {
             try {
@@ -83,6 +81,7 @@ const FormQueryMuestreo = ({ URI, getMuestreo, deleteMuestreo, buttonForm }) => 
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Número de Peces</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Observaciones</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Peso Esperado</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Hora de Muestreo</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Fecha Siembra</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Nombre Responsable</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Acciones</th>
@@ -95,8 +94,9 @@ const FormQueryMuestreo = ({ URI, getMuestreo, deleteMuestreo, buttonForm }) => 
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{muestreo.Num_Peces}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{muestreo.Obs_Muestreo}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{muestreo.Pes_Esperado}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{datosSiembra.find(siembra => siembra.Id_Siembra === muestreo.Id_Siembra)?.Fec_Siembra || 'No disponible'}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{datosResponsable.find(responsable => responsable.Id_Responsable === muestreo.Id_Responsable)?.Nom_Responsable || 'No disponible'}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{muestreo.Hor_Muestreo}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{muestreo.siembra.Fec_Siembra}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{muestreo.responsable.Nom_Responsable}</td>
                                 <td>
                                     <button className="btn btn-info align-middle m-2" onClick={() => getMuestreo(muestreo.Id_Muestreo)}>
                                         <i className="fa-solid fa-pen-to-square"></i> Editar

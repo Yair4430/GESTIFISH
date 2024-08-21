@@ -32,7 +32,7 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                 await axios.put(`${URI}${muestreo.Id_Muestreo}`, data);
                 Swal.fire({
                     title: 'Actualizado',
-                    text: '¡Registro de muestreo actualizado exitosamente!',
+                    text: '¡Registro actualizado exitosamente!',
                     icon: 'success'
                 });
                 updateTextButton('Enviar');
@@ -40,7 +40,7 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                 const respuestaApi = await axios.post(URI, data);
                 Swal.fire({
                     title: 'Guardado',
-                    text: '¡Registro de muestreo guardado exitosamente!',
+                    text: '¡Registro guardado exitosamente!',
                     icon: 'success'
                 });
                 if (respuestaApi.status === 201) {
@@ -120,7 +120,7 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                 <label htmlFor="Num_Peces" className="m-2">Número de Peces:</label>
                 <input type="number" id="Num_Peces" value={Num_Peces} onChange={(e) => setNum_Peces(e.target.value)} />
                 <br />
-                <label htmlFor="Obs_Muestreo" className="m-2">Observaciones del Muestreo:</label>
+                <label htmlFor="Obs_Muestreo" className="m-2">Observaciones:</label>
                 <input type="text" id="Obs_Muestreo" value={Obs_Muestreo} onChange={(e) => setObs_Muestreo(e.target.value)} />
                 <br />
                 <label htmlFor="Pes_Esperado" className="m-2">Peso Esperado:</label>
