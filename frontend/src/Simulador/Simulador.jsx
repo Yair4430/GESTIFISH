@@ -5,11 +5,11 @@ import './Simulador.css';
 
 const Simulador = () => {
   const [tableData, setTableData] = useState([]);
-
+  
   const handleSimulate = (formData) => {
-    const { especie } = formData;
+    const { especie, densidad, espejoAgua, precioBulto } = formData;
     let data = [];
-
+    
     if (especie === 'Tilapia') {
       data = [
         { mes: 1, numero: '', peso: 8, tasa: '10%', biomasa: '', alimento: '', concentrado: '', proteina: 45, bultos: '', precio: '' },
@@ -30,8 +30,37 @@ const Simulador = () => {
       ];
     }
 
-    // Procesar los cálculos aquí y actualizar `tableData`
-    setTableData(data);
+    if (espejoAgua && densidad && precioBulto) {
+      let numeroAnimales = Math.round(espejoAgua * densidad * 0.8); // 80% del total
+      const reducciones = [0.10, 0.03, 0.03, 0.02, 0.02];
+
+      data = data.map((row, i) => {
+        const biomasa = Math.round(numeroAnimales * row.peso);
+        const tasaDecimal = parseFloat(row.tasa) / 100;
+        const alimento = Math.round(biomasa * tasaDecimal);
+        const concentradoMensual = alimento * 30;
+        const bultos = Math.round(concentradoMensual / 40);
+        const precioTotal = Math.round(bultos * precioBulto);
+
+        if (i < reducciones.length) {
+          numeroAnimales = Math.round(numeroAnimales - (numeroAnimales * reducciones[i]));
+        }
+
+        return {
+          ...row,
+          numero: numeroAnimales,
+          biomasa: biomasa,
+          alimento: `${alimento} kg`,
+          concentrado: `${concentradoMensual} kg`,
+          bultos: `${bultos} bultos`,
+          precio: `$${precioTotal}`,
+        };
+      });
+
+      setTableData(data);
+    } else {
+      alert('Por favor, ingrese valores válidos para el espejo de agua, la densidad y el precio de bulto.');
+    }
   };
 
   return (

@@ -1,35 +1,64 @@
 import express from 'express';
 import { createUser, verifyToken, logInUser, getResetPassword, setNewPassword } from '../controllers/authController.js';
 import { check } from 'express-validator';
-import winston from 'winston';
 
 const routerAuth = express.Router();
 
-const logger = winston.createLogger({
-  level: 'error',
-  format: winston.format.json(),
-  transports: [
-    new winston.transports.File({ filename: 'error.log' })
-  ],
-});
-
 routerAuth.post('/', 
     [
-        check('email', 'por favor digite un email válido').isEmail(),
-        check('contraseña', 'por favor ingrese una contraseña con más de 8 caracteres').isLength({ min: 8})
+        check('email', 'por favor digite un email valido').isEmail(),
+        check('contraseña', 'por favor ingrese una contraseña con mas de 8 caracteres').isLength({ min: 8 })
     ], 
     createUser
 );
-
-routerAuth.get('/verify', verifyToken);
+//saca canas jajaja
+routerAuth.get('/verify', (req, res) => {
+    // Aquí debería ir la lógica para verificar el token
+    res.status(200).send('Token Verified');
+  });
 routerAuth.post('/login', logInUser);
 routerAuth.post('/request-password-reset', getResetPassword);
 routerAuth.post('/reset-password', setNewPassword);
+routerAuth.get('/protected-route', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Ruta protegida accesible' });
+});
 
-// Middleware para manejo de errores
-routerAuth.use((err, req, res, next) => {
-  logger.error(`${req.method} ${req.url} - ${err.message}`);
-  res.status(500).json({ error: 'An error occurred' });
+
+// Rutas protegidas
+routerAuth.get('/alimentacion', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de alimentación' });
+});
+
+routerAuth.get('/responsable', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de responsable' });
+});
+
+routerAuth.get('/estanque', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de estanque' });
+});
+
+routerAuth.get('/especie', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de especie' });
+});
+
+routerAuth.get('/traslado', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de traslado' });
+});
+
+routerAuth.get('/actividad', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de actividad' });
+});
+
+routerAuth.get('/siembra', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de siembra' });
+});
+
+routerAuth.get('/mortalidad', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de mortalidad' });
+});
+
+routerAuth.get('/muestreo', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de muestreo' });
 });
 
 export default routerAuth;

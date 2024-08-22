@@ -10,11 +10,11 @@ const SimuladorTabla = ({ data }) => {
           <th>Peso promedio</th>
           <th>% Tasa alimentaria</th>
           <th>Biomasa</th>
-          <th>Alimento concentrado kg</th>
-          <th>Concentrado mensual</th>
-          <th>% Proteina</th>
+          <th>Alimento concentrado (kg)</th>
+          <th>Concentrado mensual (kg)</th>
+          <th>% Proteína</th>
           <th>Bultos</th>
-          <th>PRECIO DE BULTOS</th>
+          <th>Precio de Bultos</th>
         </tr>
       </thead>
       <tbody>
