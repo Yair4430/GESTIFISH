@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const SimuladorForm = ({ onSimulate }) => {
   const [espejoAgua, setEspejoAgua] = useState('');
@@ -7,8 +7,19 @@ const SimuladorForm = ({ onSimulate }) => {
   const [densidad, setDensidad] = useState('');
   const [precioBulto, setPrecioBulto] = useState('');
 
+  // UseEffect para actualizar la densidad y la simulación al cambiar la especie
+  useEffect(() => {
+    if (especie === 'Cachama') {
+      setDensidad(2);
+    } else if (especie === 'Tilapia') {
+      setDensidad('');
+    }
+    onSimulate({ espejoAgua, recambio, especie, densidad: especie === 'Cachama' ? 2 : densidad, precioBulto });
+  }, [especie, espejoAgua, recambio, densidad, precioBulto]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Se mantiene para futuras funciones al enviar
     onSimulate({ espejoAgua, recambio, especie, densidad, precioBulto });
     // Limpiar los campos después de enviar
     setEspejoAgua('');
@@ -31,14 +42,21 @@ const SimuladorForm = ({ onSimulate }) => {
       <div className="form-group">
         <label htmlFor="especie">Especie:</label>
         <select id="especie" className="form-control" value={especie} onChange={(e) => setEspecie(e.target.value)}>
-          <option selected disabled>Seleccione uno...</option>
+          <option value="" disabled>Seleccione uno...</option>
           <option value="Tilapia">Tilapia</option>
           <option value="Cachama">Cachama</option>
         </select>
       </div>
       <div className="form-group">
         <label htmlFor="densidad">Densidad:</label>
-        <input type="number" id="densidad" className="form-control" value={densidad} onChange={(e) => setDensidad(e.target.value)} disabled={especie !== 'Tilapia'} />
+        <input
+          type="number"
+          id="densidad"
+          className="form-control"
+          value={especie === 'Cachama' ? 2 : densidad}
+          onChange={(e) => setDensidad(e.target.value)}
+          disabled={especie === 'Cachama'}
+        />
       </div>
       <div className="form-group">
         <label htmlFor="precioBulto">Precio de un bulto:</label>
