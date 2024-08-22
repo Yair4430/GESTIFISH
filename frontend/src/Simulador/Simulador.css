@@ -143,3 +143,14 @@ body {
 .table {
     margin-top: 40px; /* Añadir margen superior */
 }
+.especie-container {
+  position: relative;
+}
+
+.especie-placeholder {
+  position: absolute;
+  top: -1.5em; /* Ajusta este valor según sea necesario */
+  left: 0;
+  font-weight: bold;
+  color: #555;
+}

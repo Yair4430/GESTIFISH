@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const SimuladorForm = ({ onSimulate }) => {
   const [formData, setFormData] = useState({
-    especie: 'Tilapia',
+    especie: '',
     densidad: '',
     espejoAgua: '',
     recambio: '',
@@ -34,7 +34,16 @@ const SimuladorForm = ({ onSimulate }) => {
     <form onSubmit={handleSubmit}>
       <div className="form-group">
         <label htmlFor="especie">Especie</label>
-        <select id="especie" name="especie" value={formData.especie} onChange={handleEspecieChange} className="form-control">
+        <select
+          id="especie"
+          name="especie"
+          value={formData.especie}
+          onChange={handleEspecieChange}
+          className="form-control"
+        >
+          <option value="" disabled>
+            Seleccione uno...
+          </option>
           <option value="Tilapia">Tilapia</option>
           <option value="Cachama">Cachama</option>
         </select>
@@ -53,11 +62,25 @@ const SimuladorForm = ({ onSimulate }) => {
       </div>
       <div className="form-group">
         <label htmlFor="espejoAgua">Espejo de Agua (m²)</label>
-        <input type="number" id="espejoAgua" name="espejoAgua" value={formData.espejoAgua} onChange={handleChange} className="form-control" />
+        <input
+          type="number"
+          id="espejoAgua"
+          name="espejoAgua"
+          value={formData.espejoAgua}
+          onChange={handleChange}
+          className="form-control"
+        />
       </div>
       <div className="form-group">
         <label htmlFor="precioBulto">Precio del Bulto</label>
-        <input type="number" id="precioBulto" name="precioBulto" value={formData.precioBulto} onChange={handleChange} className="form-control" />
+        <input
+          type="number"
+          id="precioBulto"
+          name="precioBulto"
+          value={formData.precioBulto}
+          onChange={handleChange}
+          className="form-control"
+        />
       </div>
       <button type="submit" className="btn btn-primary">Simular</button>
     </form>
