@@ -1,12 +1,5 @@
 import express from 'express';
-import {
-  getAllAlimentacion,
-  getAlimentacionById,
-  createAlimentacion,
-  updateAlimentacion,
-  deleteAlimentacion,
-  getAlimentacionByFecha
-} from '../controllers/alimentacionController.js';
+import { getAllAlimentacion, getAlimentacionById, createAlimentacion, updateAlimentacion, deleteAlimentacion, getAlimentacionByFecha} from '../controllers/alimentacionController.js';
 import winston from 'winston';
 
 const routerAlimentacion = express.Router();

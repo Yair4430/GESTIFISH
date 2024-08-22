@@ -1,12 +1,5 @@
 import express from 'express';
-import {
-  getAllCosecha,
-  getCosechaById,
-  createCosecha,
-  updateCosecha,
-  deleteCosecha,
-  getCosechaByFecha
-} from '../controllers/cosechaController.js';
+import { getAllCosecha, getCosechaById, createCosecha, updateCosecha, deleteCosecha, getCosechaByFecha } from '../controllers/cosechaController.js';
 import winston from 'winston';
 
 const routerCosecha = express.Router();

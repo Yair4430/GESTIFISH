@@ -1,12 +1,5 @@
 import express from 'express';
-import {
-  getAllMortalidad,
-  getMortalidadById,
-  createMortalidad,
-  updateMortalidad,
-  deleteMortalidad,
-  getMortalidadByFecha
-} from '../controllers/mortalidadController.js';
+import { getAllMortalidad, getMortalidadById, createMortalidad, updateMortalidad, deleteMortalidad, getMortalidadByFecha } from '../controllers/mortalidadController.js';
 import winston from 'winston';
 
 const routerMortalidad = express.Router();

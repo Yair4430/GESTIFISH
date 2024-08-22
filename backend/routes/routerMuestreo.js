@@ -1,12 +1,5 @@
 import express from 'express';
-import {
-  getAllMuestreo,
-  getMuestreoById,
-  createMuestreo,
-  updateMuestreo,
-  deleteMuestreo,
-  getMuestreoByFecha
-} from '../controllers/muestreoController.js';
+import { getAllMuestreo, getMuestreoById, createMuestreo, updateMuestreo, deleteMuestreo, getMuestreoByFecha } from '../controllers/muestreoController.js';
 import winston from 'winston';
 
 const routerMuestreo = express.Router();

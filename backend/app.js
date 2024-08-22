@@ -70,10 +70,6 @@ ActividadModel.belongsTo(ResponsableModel, { foreignKey: 'Id_Responsable', as: '
 EstanqueModel.hasMany(ActividadModel, { foreignKey: 'Id_Estanque', as: 'actividades' });
 ActividadModel.belongsTo(EstanqueModel, { foreignKey: 'Id_Estanque', as: 'estanque' });
 
-// Relaciones con SiembraModel
-//SiembraModel.hasMany(MortalidadModel, { foreignKey: 'Id_Siembra', as: 'mortalidad' });
-//MortalidadModel.belongsTo(SiembraModel, { foreignKey: 'Id_Siembra', as: 'siembra' });
-
 EstanqueModel.hasMany(SiembraModel, { foreignKey: 'Id_Estanque', as: 'siembrasEstanque' });
 ResponsableModel.hasMany(SiembraModel, { foreignKey: 'Id_Responsable', as: 'siembrasResponsable' });
 

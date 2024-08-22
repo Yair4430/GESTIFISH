@@ -1,13 +1,6 @@
 // Importa las librerías necesarias
 import express from "express";
-import { 
-  createEspecie, 
-  deleteEspecie, 
-  getAllEspecies, 
-  getEspecie, 
-  updateEspecie, 
-  getQueryEspecie 
-} from "../controllers/especieController.js";
+import { createEspecie, deleteEspecie, getAllEspecies, getEspecie,  updateEspecie, getQueryEspecie } from "../controllers/especieController.js";
 import multer from 'multer';
 import path from 'path';
 import winston from 'winston';
