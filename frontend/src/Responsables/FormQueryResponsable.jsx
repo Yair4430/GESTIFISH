@@ -32,54 +32,82 @@ const FormQueryResponsable = ({ URI, getResponsable, deleteResponsable, buttonFo
     return (
         <>
             <br />
-            <div className="d-flex flex-column align-items-center">
-                <h1 className="fs-1 fw-bold d-flex">Consultar Responsable</h1>
-                <form action="" id="queryForm" className="fw-bold m-2">
-                    <label htmlFor="Doc_ResponsableQuery" className="m-2">Cedula: </label>
-                    <input
-                        type="text"
+            <div className="container card mt-5">
+                <div className="card-header bg-primary text-white">
+                    <h1 className="text-center">Consultar Responsable</h1>
+                </div>
+                <div className="card-body">
+                    <form id="queryForm" >
+                    <div className="form-group">
+                        <label htmlFor="Doc_ResponsableQuery">Número de documento:</label>
+                        <input
+                        type="number"
+                        className="form-control"
                         id="Doc_ResponsableQuery"
                         value={Doc_Responsable}
                         onChange={(e) => { setDoc_Responsable(e.target.value); sendFormQueryR(e.target.value) }}
-                    />
-                </form>
+                        required />
+                    </div>
+                    <br />
+                    <button type="submit" id="botonConsultar" className="btn btn-primary btn-block">
+                        Consultar
+                    </button>
+                    </form>
+                </div>
             </div>
 
-            {ResponsableQuery.length > 0 ? (
-                <table className="table table-bordered border-info text-center" style={{ border: "3px solid" }}>
-                    <thead>
-                        <tr>
-                            <th className='border-info' style={{ border: "3px solid" }}>Documento del Responsable:</th>
-                            <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre</th>
-                            <th className='border-info align-middle' style={{ border: "3px solid" }}>Apellidos</th>
-                            <th className='border-info align-middle' style={{ border: "3px solid" }}>Tipo de Responsable</th>
-                            <th className='border-info align-middle' style={{ border: "3px solid" }}>Correo</th>
-                            <th className='border-info align-middle' style={{ border: "3px solid" }}>Número de Telefono</th>
-                            <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {ResponsableQuery.map((responsable) => (
-                            <tr key={responsable.Id_Responsable} className='border-info align-middle font-monospace' style={{ border: "3px solid" }}>
-                                <td className='border-info align-middle text-center' style={{ border: "3px solid" }}>{responsable.Doc_Responsable}</td>
-                                <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Nom_Responsable}</td>
-                                <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Ape_Responsable}</td>
-                                <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Tip_Responsable}</td>
-                                <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Cor_Responsable}</td>
-                                <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Num_Responsable}</td>
+
+            <div className="container mt-5">
+                {ResponsableQuery.length > 0 ? (
+                    <div className="card">
+                    <div className="card-header bg-primary text-white">
+                        <h1 className="text-center">Responsables Registrados</h1>
+                    </div>
+                    <div className="card-body">
+                        <div className="table-responsive">
+                        <table className="table table-striped table-dynamic mt-4ñ">
+                            <thead>
+                            <tr>
+                                <th>Númro de documento</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Tipo de responsable</th>
+                                <th>Correo</th>
+                                <th>Número de teléfono</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {ResponsableQuery.map((responsable) => (
+                                <tr key={responsable.Doc_Responsable}>
+                                <td>{responsable.Doc_Responsable}</td>
+                                <td>{responsable.Nom_Responsable}</td>
+                                <td>{responsable.Ape_Responsable}</td>
+                                <td>{responsable.Tip_Responsable}</td>
+                                <td>{responsable.Cor_Responsable}</td>
+                                <td>{responsable.Num_Responsable}</td>
                                 <td>
-                                    <button className='btn btn-info' onClick={() => getResponsable(responsable. Id_Responsable)}>
-                                        <i className="fa-solid fa-pen-to-square"></i>Editar
+                                    <button className="editButton btn btn-sm btn-primary" onClick={() => getResponsable(responsable.Doc_Responsable)}>
+                                        <i className="fa-solid fa-pen-to-square"></i> Editar
                                     </button>
-                                    <button className="btn btn-info align-middle m-2" onClick={() => deleteResponsable(responsable.Id_Responsable)}>
+                                    <button className="deleteButton btn btn-sm btn-danger" onClick={() => deleteResponsable(responsable.Doc_Responsable)}>
                                         <i className="fa-solid fa-trash-can"></i> Borrar
                                     </button>
                                 </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            ) : ''}
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                    </div>
+                ) : (
+                    <p>No hay resultados para mostrar.</p>
+                )}
+            </div>
+
+            <br />
+            <br />
         </>
     )
 }

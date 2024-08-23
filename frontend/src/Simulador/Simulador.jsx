@@ -4,6 +4,7 @@ import SimuladorTabla from './SimuladorTabla';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import './Simulador.css';
+import Navbar from '../Menus/Navbar';
 
 const Simulador = () => {
   const [tableData, setTableData] = useState([]);
@@ -131,6 +132,7 @@ const Simulador = () => {
 
   return (
     <>
+    <Navbar/>
       <div className="container mt-4">
         <h2 className="display-4 text-center text-primary font-weight-bold">Simulador</h2>
         <SimuladorForm onSimulate={handleSimulate} />

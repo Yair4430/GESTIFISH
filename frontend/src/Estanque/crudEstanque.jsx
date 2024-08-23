@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import FormEstanque from './formEstanque'
 import FormQueryEstanque from './formQueryEstanque'
 import Swal from 'sweetalert2'
+import NavbarForm from '../Menus/NavbarForm'
 
 const URI = process.env.ROUTER_PRINCIPAL + '/estanque/'
 const PATH_FOTOS = process.env.ROUTER_FOTOS
@@ -91,6 +92,7 @@ const CrudEstanque = () => {
 
     return (
         <>
+        <NavbarForm/>
             <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
                 <thead>
                     <tr>

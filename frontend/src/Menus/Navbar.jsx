@@ -7,7 +7,7 @@ function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-primary py-3 shadow-sm">
       <a className="navbar-brand" href="/">
-        <img src={imagen_logo} alt="Logo" className="logo" />
+        <img src={imagen_logo} alt="Logo" className="Logo" />
         <span className="brand-name">GestiFish</span>
       </a>
       <div className="collapse navbar-collapse" id="navbarNav">
@@ -17,11 +17,10 @@ function Navbar() {
               <i className="fas fa-home"></i>
             </NavLink>
           </li>
-          
           <li className="nav-item">
-            <a className="nav-link" href="../SIMULADORES/Simulador1.html" title="Simulaciones">
+            <NavLink className="nav-link" to="/simulador" end>
               <i className="fas fa-chart-line"></i>
-            </a>
+            </NavLink>
           </li>
         </ul>
       </div>

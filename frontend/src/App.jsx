@@ -16,9 +16,11 @@ import CrudSiembra from './Siembra/CrudSiembra.jsx';
 
 import Navbar from "./Menus/Navbar.jsx";
 import RegistrosMenu from "./Menus/RegistrosMenu.jsx";
+import NavbarForm from './Menus/NavbarForm.jsx';
 
 import Auth from './Auth/auth.jsx';
 import ResetPassword from './Auth/resetPassword.jsx';
+
 
 import Simulador from './Simulador/Simulador.jsx';
 
@@ -65,9 +67,24 @@ function App() {
       
         <Routes>
           <Route path="/auth" element={<Auth />} />
+          <Route path="/simulador" element={<Simulador />} />
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<RegistrosMenu />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/navfor" element={<NavbarForm />} />
+
+          
+          <Route path='/Alimentacion' element={<CrudAlimentacion />} />
+            <Route path='/Responsable' element={<CrudResponsable />} />
+            <Route path='/Estanque' element={<CrudEstanque />} />
+            <Route path='/Especie' element={<CrudEspecie />} />
+            <Route path='/Traslado' element={<CrudTraslado />} />
+            <Route path='/Actividad' element={<CrudActividad />} />
+            <Route path='/Muestreo' element={<CrudMuestreo />} />
+            <Route path='/Cosecha' element={<CrudCosecha />} />
+            <Route path='/Mortalidad' element={<CrudMortalidad />} />
+            <Route path='/Siembra' element={<CrudSiembra />} />
+
         </Routes>
     </>
   );

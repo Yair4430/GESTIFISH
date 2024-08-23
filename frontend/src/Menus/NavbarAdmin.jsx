@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom';
 import imagen_logo from '../IMG/GESTIFISH-.png';
 import React from 'react';
 import RegistrosMenu from './RegistrosMenu';
+import Navbar from './Navbar.jsx';
 
 function NavbarAdmin() {
   return (

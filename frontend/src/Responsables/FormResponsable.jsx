@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import NavbarForm from "../Menus/NavbarForm"
 
 const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAllResponsable }) => {
     const [Id_Responsable, setId_Responsable] = useState('');
@@ -99,34 +100,89 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
 
     return (
         <>
-            <div className="d-flex flex-column align-items-center">
-                <h1 className="fs-1 fw-bold d-flex">Registrar Responsables</h1>
-                <form id="responsableForm" onSubmit={sendFormR} className="fw-bold m-2">
-                    <label htmlFor="Nom_Responsable" className="m-2">Nombre del Responsable:</label>
-                    <input type="text" id="Nom_Responsable" value={Nom_Responsable} onChange={(e) => setNom_Responsable(e.target.value)} />
-                    <br />
-                    <label htmlFor="Ape_Responsable" className="m-2">Apellidos del Responsable:</label>
-                    <input type="text" id="Ape_Responsable" value={Ape_Responsable} onChange={(e) => setApe_Responsable(e.target.value)} />
-                    <br />
-                    <label htmlFor="Doc_Responsable" className="m-2">Documento de Identificación:</label>
-                    <input type="text" id="Doc_Responsable" value={Doc_Responsable} onChange={(e) => setDoc_Responsable(e.target.value)} />
-                    <br />
-                    <label htmlFor="Tip_Responsable" className="m-2">Tipo de Responsable:</label>
-                    <select id="Tip_Responsable" value={Tip_Responsable} onChange={(e) => setTip_Responsable(e.target.value)}>
-                        <option value="">Selecciones uno...</option>
-                        <option value="Instructor">Instructor</option>
-                        <option value="Pasante">Pasante</option>
-                        <option value="Encargado de la Unidad">Encargado de la Unidad</option>
-                    </select>
-                    <br />
-                    <label htmlFor="Cor_Responsable" className="m-2">Correo del Responsable:</label>
-                    <input type="text" id="Cor_Responsable" value={Cor_Responsable} onChange={(e) => setCor_Responsable(e.target.value)} />
-                    <br />
-                    <label htmlFor="Num_Responsable" className="m-2">Número de Telefono:</label>
-                    <input type="number" id="Num_Responsable" value={Num_Responsable} onChange={(e) => setNum_Responsable(e.target.value)} />
-                    <br />
-                    <input type="submit" id="boton" value={buttonForm} className="btn btn-success m-2" />
-                </form>
+           <div className="container mt-5">
+                <div className="card">
+                    <div className="card-header bg-primary text-white">
+                    <h1 className="text-center">Registro de Responsables</h1>
+                    </div>
+                    <div className="card-body">
+                    <form id="responsableForm" onSubmit={sendFormR} className="fw-bold m-2">
+                        <div className="form-group">
+                        <label htmlFor="Nom_Responsable" className="m-2">Nombre del Responsable:</label>
+                        <input
+                            className="form-control"
+                            type="text"
+                            id="Nom_Responsable"
+                            value={Nom_Responsable}
+                            onChange={(e) => setNom_Responsable(e.target.value)}
+                            required
+                        />
+                        </div>
+                        <div className="form-group">
+                        <label htmlFor="Ape_Responsable" className="m-2">Apellidos del Responsable:</label>
+                        <input
+                            className="form-control"
+                            type="text"
+                            id="Ape_Responsable"
+                            value={Ape_Responsable}
+                            onChange={(e) => setApe_Responsable(e.target.value)}
+                            required
+                        />
+                        </div>
+                        <div className="form-group">
+                        <label htmlFor="Doc_Responsable" className="m-2">Documento de Identificación:</label>
+                        <input
+                            className="form-control"
+                            type="text"
+                            id="Doc_Responsable"
+                            value={Doc_Responsable}
+                            onChange={(e) => setDoc_Responsable(e.target.value)}
+                            required
+                        />
+                        </div>
+                        <div className="form-group">
+                        <label htmlFor="Tip_Responsable" className="m-2">Tipo de Responsable:</label>
+                        <select
+                            className="form-control"
+                            id="Tip_Responsable"
+                            value={Tip_Responsable}
+                            onChange={(e) => setTip_Responsable(e.target.value)}
+                            required
+                        >
+                            <option value="">Seleccione uno...</option>
+                            <option value="Instructor">Instructor</option>
+                            <option value="Pasante">Pasante</option>
+                            <option value="Encargado de la Unidad">Encargado de la Unidad</option>
+                        </select>
+                        </div>
+                        <div className="form-group">
+                        <label htmlFor="Cor_Responsable" className="m-2">Correo del Responsable:</label>
+                        <input
+                            className="form-control"
+                            type="email"
+                            id="Cor_Responsable"
+                            value={Cor_Responsable}
+                            onChange={(e) => setCor_Responsable(e.target.value)}
+                            required
+                        />
+                        </div>
+                        <div className="form-group">
+                        <label htmlFor="Num_Responsable" className="m-2">Número de Teléfono:</label>
+                        <input
+                            className="form-control"
+                            type="number"
+                            id="Num_Responsable"
+                            value={Num_Responsable}
+                            onChange={(e) => setNum_Responsable(e.target.value)}
+                            required
+                        />
+                        </div>
+                        <button type="submit" id="boton" className="btn btn-primary btn-block m-2">
+                        {buttonForm}
+                        </button>
+                    </form>
+                    </div>
+                </div>
             </div>
         </>
     );
