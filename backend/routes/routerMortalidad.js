@@ -1,13 +1,36 @@
-import express from "express";
-import { createMortalidad, deleteMortalidad, getAllMortalidad, getMortalidad, updateMortalidad } from "../controllers/mortalidadController.js";
+import express from 'express';
+import {
+  getAllMortalidad,
+  getMortalidadById,
+  createMortalidad,
+  updateMortalidad,
+  deleteMortalidad,
+  getMortalidadByFecha
+} from '../controllers/mortalidadController.js';
+import winston from 'winston';
 
-const router = express.Router();
+const routerMortalidad = express.Router();
 
-// Rutas para Mortalidad
-router.get('/mortalidad', getAllMortalidad);
-router.get('/mortalidad/:id', getMortalidad);
-router.post('/mortalidad', createMortalidad);
-router.put('/mortalidad/:id', updateMortalidad);
-router.delete('/mortalidad/:id', deleteMortalidad);
+const logger = winston.createLogger({
+  level: 'error',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.File({ filename: 'error.log' })
+  ],
+});
 
-export default router;
+// Definición de las rutas
+routerMortalidad.get('/', getAllMortalidad);
+routerMortalidad.get('/:Id_Mortalidad', getMortalidadById);
+routerMortalidad.post('/', createMortalidad);
+routerMortalidad.put('/:Id_Mortalidad', updateMortalidad);
+routerMortalidad.delete('/:Id_Mortalidad', deleteMortalidad);
+routerMortalidad.get('/Fec_Mortalidad/:Fec_Mortalidad', getMortalidadByFecha);
+
+// Middleware para manejo de errores
+routerMortalidad.use((err, req, res, next) => {
+  logger.error(`${req.method} ${req.url} - ${err.message}`);
+  res.status(500).json({ error: 'An error occurred' });
+});
+
+export default routerMortalidad;

@@ -3,20 +3,31 @@ import { useEffect, useState } from 'react';
 
 const FormQuerySiembra = ({ URI, getSiembra, deleteSiembra, buttonForm }) => {
     const [siembraQuery, setSiembraQuery] = useState([]);
-    const [Id_Siembra, setId_Siembra] = useState('');
+    const [Fec_Siembra, setFec_Siembra] = useState('');
 
-    const sendFormQuery = async (Id_Siembra) => {
-        if (Id_Siembra) {
-            const respuesta = await axios.get(`${URI}Id_Siembra/${Id_Siembra}`);
-            setSiembraQuery([respuesta.data]); // Asegurarse de que la respuesta esté en un array
-        } else {
-            setSiembraQuery([]);
+    // Efecto para consultar automáticamente cuando cambia la fecha
+    useEffect(() => {
+        if (Fec_Siembra) {
+            console.log('Consultando siembra para la fecha:', Fec_Siembra);  // Añade este console.log
+            const fetchSiembras = async () => {
+                try {
+                    const response = await axios.get(`${URI}/Fec_Siembra/${Fec_Siembra}`);
+                    setSiembraQuery(response.data);
+                    alert("Consulta realizada con éxito");
+                } catch (error) {
+                    console.error("Error realizando la consulta:", error);
+                    alert("Hubo un error realizando la consulta");
+                }
+            };
+    
+            fetchSiembras();
         }
-    };
+    }, [Fec_Siembra, URI]);
+    
 
     useEffect(() => {
         setSiembraQuery([]);
-        setId_Siembra('');
+        setFec_Siembra('');
     }, [buttonForm]);
 
     return (
@@ -24,25 +35,21 @@ const FormQuerySiembra = ({ URI, getSiembra, deleteSiembra, buttonForm }) => {
             <br />
             <div className="d-flex flex-column align-items-center">
                 <h1 className="fs-1 fw-bold d-flex">Consultar Siembra</h1>
-                <form id="queryForm" className="fw-bold m-2">
-                    <label htmlFor="Id_SiembraQuery" className="m-2">Número:</label>
+                <div className="fw-bold m-2">
+                    <label htmlFor="Fec_SiembraQuery" className="m-2">Fecha de Siembra:</label>
                     <input
-                        type="number"
-                        id="Id_SiembraQuery"
-                        value={Id_Siembra}
-                        onChange={(e) => {
-                            sendFormQuery(e.target.value);
-                            setId_Siembra(e.target.value);
-                        }}
+                        type="date"
+                        id="Fec_SiembraQuery"
+                        value={Fec_Siembra}
+                        onChange={(e) => setFec_Siembra(e.target.value)}
                     />
-                </form>
+                </div>
             </div>
 
             {siembraQuery.length > 0 ? (
                 <table className="table table-bordered border-info text-center" style={{ border: "3px solid" }}>
                     <thead>
                         <tr>
-                            <th className="border-info" style={{ border: "3px solid" }}>Número</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Cantidad de Peces</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Fecha de Siembra</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Fecha Posible de Cosecha</th>
@@ -60,13 +67,12 @@ const FormQuerySiembra = ({ URI, getSiembra, deleteSiembra, buttonForm }) => {
                     <tbody>
                         {siembraQuery.map((siembra) => (
                             <tr key={siembra.Id_Siembra} className="border-info align-middle font-monospace" style={{ border: "3px solid" }}>
-                                <td className="border-info align-middle text-center" style={{ border: "3px solid" }}>{siembra.Id_Siembra}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Can_Peces}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Fec_Siembra}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Fec_PosibleCosecha}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Responsable.Nom_Responsable}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Especie.Nom_Especie}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Estanque.Num_Estanque}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.responsable.Nom_Responsable}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.especie.Nom_Especie}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.estanque.Nom_Estanque}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Pes_Actual}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Obs_Siembra}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Hor_Siembra}</td>

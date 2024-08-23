@@ -23,7 +23,7 @@ const FormQueryMortalidad = ({ URI, getMortalidad, deleteMortalidad, buttonForm 
     const sendFormQuery = async (Fec_Mortalidad) => {
         if (Fec_Mortalidad) {
             try {
-                const respuesta = await axios.get(`${URI}fecha/${Fec_Mortalidad}`);
+                const respuesta = await axios.get(`${URI}Fec_Mortalidad/${Fec_Mortalidad}`);
                 if (respuesta.status >= 200 && respuesta.status < 300) {
                     setMortalidadQuery(Array.isArray(respuesta.data) ? respuesta.data : [respuesta.data]);
                 } else {
@@ -66,24 +66,22 @@ const FormQueryMortalidad = ({ URI, getMortalidad, deleteMortalidad, buttonForm 
                 <table className="table table-bordered border-info text-center" style={{ border: "3px solid" }}>
                     <thead>
                         <tr>
-                            <th className="border-info" style={{ border: "3px solid" }}>ID Mortalidad</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Fecha de Mortalidad</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Cantidad de Peces</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Motivo de Mortalidad</th>
-                            <th className="border-info align-middle" style={{ border: "3px solid" }}>ID Siembra</th>
-                            <th className="border-info align-middle" style={{ border: "3px solid" }}>ID Responsable</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Fecha Siembra</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Nombre Responsable</th>
                             <th className="border-info align-middle" style={{ border: "3px solid" }}>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {mortalidadQuery.map((mortalidad) => (
                             <tr key={mortalidad.Id_Mortalidad} className="border-info align-middle font-monospace" style={{ border: "3px solid" }}>
-                                <td className="border-info align-middle text-center" style={{ border: "3px solid" }}>{mortalidad.Id_Mortalidad}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{mortalidad.Fec_Mortalidad}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{mortalidad.Can_Peces}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{mortalidad.Mot_Mortalidad}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{mortalidad.Id_Siembra}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{mortalidad.Id_Responsable}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{mortalidad.siembra.Fec_Siembra}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{mortalidad.responsable.Nom_Responsable}</td>
                                 <td>
                                     <button className="btn btn-info align-middle m-2" onClick={() => getMortalidad(mortalidad.Id_Mortalidad)}>
                                         <i className="fa-solid fa-pen-to-square"></i> Editar

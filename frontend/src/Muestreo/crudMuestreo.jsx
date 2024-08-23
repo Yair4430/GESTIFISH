@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import FormMuestreo from './formMuestreo.jsx';
-import FromQueryMuestreo from './formQueryMuestreo.jsx';
+import FormMuestreo from './FormMuestreo'; 
+import FormQueryMuestreo from './FormQueryMuestreo'; 
 
 const URI = process.env.ROUTER_PRINCIPAL + '/muestreo/';
 
@@ -22,10 +22,10 @@ const CrudMuestreo = () => {
     });
 
     useEffect(() => {
-        getAllMuestreo();
+        getAllMuestreos();
     }, []);
 
-    const getAllMuestreo = async () => {
+    const getAllMuestreos = async () => {
         try {
             const respuesta = await axios.get(URI);
             if (respuesta.status >= 200 && respuesta.status < 300) {
@@ -41,7 +41,7 @@ const CrudMuestreo = () => {
     const getMuestreo = async (Id_Muestreo) => {
         setButtonForm('Enviar');
         try {
-            const respuesta = await axios.get(URI + Id_Muestreo);
+            const respuesta = await axios.get(`${URI}${Id_Muestreo}`);
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setButtonForm('Actualizar');
                 setMuestreo({ ...respuesta.data });
@@ -59,24 +59,24 @@ const CrudMuestreo = () => {
 
     const deleteMuestreo = (Id_Muestreo) => {
         Swal.fire({
-            title: "Estas Seguro?",
-            text: "No Podras Revertir Esto!",
+            title: "¿Estás seguro?",
+            text: "¡No podrás revertir esto!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Si, Borrar!"
+            confirmButtonText: "Sí, ¡borrar!"
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const respuesta = await axios.delete(URI + Id_Muestreo);
+                    const respuesta = await axios.delete(`${URI}${Id_Muestreo}`);
                     if (respuesta.status >= 200 && respuesta.status < 300) {
                         Swal.fire({
-                            title: "Borrado!!",
-                            text: "Borrado Exitosamente",
+                            title: "¡Borrado!",
+                            text: "Borrado exitosamente",
                             icon: "success"
                         });
-                        getAllMuestreo(); // Refresh the list after deletion
+                        getAllMuestreos(); // Refrescar la lista después de la eliminación
                     } else {
                         console.warn('HTTP Status:', respuesta.status);
                     }
@@ -92,13 +92,13 @@ const CrudMuestreo = () => {
             <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
                 <thead>
                     <tr>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha</th>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha de Muestreo</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Número de Peces</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Observaciones</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Peso Esperado</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Siembra</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Responsable</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Hora</th>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha Siembra</th>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre Responsable</th>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Hora Muestreo</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Peso Promedio</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
                     </tr>
@@ -110,8 +110,8 @@ const CrudMuestreo = () => {
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Num_Peces}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Obs_Muestreo}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Pes_Esperado}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Id_Siembra}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Id_Responsable}</td>
+                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.siembra?.Fec_Siembra}</td>
+                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.responsable?.Nom_Responsable}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Hor_Muestreo}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Pes_Promedio}</td>
                             <td>
@@ -127,11 +127,11 @@ const CrudMuestreo = () => {
                 </tbody>
             </table>
             <hr />
-            <FormMuestreo buttonForm={buttonForm} muestreo={muestreo} URI={URI} updateTextButton={updateTextButton} getAllMuestreo={getAllMuestreo} />
+            <FormMuestreo getAllMuestreos={getAllMuestreos} buttonForm={buttonForm} muestreo={muestreo} URI={URI} updateTextButton={updateTextButton} />
             <hr />
-            <FromQueryMuestreo URI={URI} getMuestreo={getMuestreo} deleteMuestreo={deleteMuestreo} buttonForm={buttonForm} />
+            <FormQueryMuestreo URI={URI} getMuestreo={getMuestreo} deleteMuestreo={deleteMuestreo} buttonForm={buttonForm} />
         </>
     );
-}
+};
 
 export default CrudMuestreo;

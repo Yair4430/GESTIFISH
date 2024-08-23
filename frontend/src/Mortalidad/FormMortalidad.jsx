@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
-const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllMortalidades }) => {
+const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllMortalidad }) => {
     const [Fec_Mortalidad, setFec_Mortalidad] = useState('');
     const [Can_Peces, setCan_Peces] = useState('');
     const [Mot_Mortalidad, setMot_Mortalidad] = useState('');
@@ -42,7 +42,7 @@ const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllM
                 }
             }
 
-            getAllMortalidades(); // Refrescar la lista después de la operación
+            getAllMortalidad(); // Refrescar la lista después de la operación
         } catch (error) {
             console.error('Error al enviar el formulario:', error);
             Swal.fire({
@@ -111,17 +111,17 @@ const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllM
                 <label htmlFor="Mot_Mortalidad" className="m-2">Motivo de Mortalidad:</label>
                 <input type="text" id="Mot_Mortalidad" value={Mot_Mortalidad} onChange={(e) => setMot_Mortalidad(e.target.value)} />
                 <br />
-                <label htmlFor="Id_SiembraSelect" className="m-2">ID de Siembra:</label>
+                <label htmlFor="Id_SiembraSelect" className="m-2">Fecha Siembra:</label>
                 <select id="Id_SiembraSelect" value={Id_Siembra} onChange={(e) => setId_Siembra(e.target.value)}>
                     <option value="">Selecciona uno...</option>
                     {DatosSiembra.map((siembra) => (
                         <option key={siembra.Id_Siembra} value={siembra.Id_Siembra}>
-                            {siembra.Id_Siembra}
+                            {siembra.Fec_Siembra}
                         </option>
                     ))}
                 </select>
                 <br />
-                <label htmlFor="Id_ResponsableSelect" className="m-2">Responsable de la Actividad:</label>
+                <label htmlFor="Id_ResponsableSelect" className="m-2">Nombre Responsable:</label>
                 <select id="Id_ResponsableSelect" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)}>
                     <option value="">Selecciona uno...</option>
                     {DatosResponsable.map((responsable) => (

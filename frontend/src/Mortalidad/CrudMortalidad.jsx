@@ -35,10 +35,10 @@ const CrudMortalidad = () => {
         }
     };
 
-    const getMortalidad = async (id_Mortalidad) => {
+    const getMortalidad = async (Id_Mortalidad) => {
         setButtonForm('Enviar');
         try {
-            const respuesta = await axios.get(`${URI}${id_Mortalidad}`);
+            const respuesta = await axios.get(`${URI}${Id_Mortalidad}`);
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setButtonForm('Actualizar');
                 setMortalidad({ ...respuesta.data });
@@ -89,24 +89,22 @@ const CrudMortalidad = () => {
             <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
                 <thead>
                     <tr>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Id Mortalidad</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha de Mortalidad</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Cantidad de Peces</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Motivo de Mortalidad</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>ID Siembra</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>ID Responsable</th>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha Siembra</th>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre Responsable</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {MortalidadList.map((mortalidad) => (
                         <tr key={mortalidad.Id_Mortalidad} className='border-info font-monospace' style={{ border: "3px solid" }}>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{mortalidad.Id_Mortalidad}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{mortalidad.Fec_Mortalidad}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{mortalidad.Can_Peces}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{mortalidad.Mot_Mortalidad}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{mortalidad.Id_Siembra}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{mortalidad.Id_Responsable}</td>
+                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{mortalidad.siembra.Fec_Siembra}</td>
+                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{mortalidad.responsable.Nom_Responsable}</td>
                             <td>
                                 <button className='btn btn-info align-middle' onClick={() => getMortalidad(mortalidad.Id_Mortalidad)}>
                                     <i className="fa-solid fa-pen-to-square"></i> Editar

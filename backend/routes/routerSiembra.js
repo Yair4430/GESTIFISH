@@ -1,13 +1,20 @@
-import express from "express";
-import { createSiembra, deleteSiembra, getAllSiembra, getSiembra, updateSiembra } from "../controllers/siembraController.js";
+import express from 'express';
+import { 
+    getAllSiembra, 
+    getSiembra, 
+    createSiembra, 
+    updateSiembra, 
+    deleteSiembra, 
+    getSiembraByFechaInicio 
+} from '../controllers/siembraController.js';
 
-const router = express.Router();
+const routerSiembra = express.Router();
 
-// Rutas para Siembra
-router.get('/siembra', getAllSiembra);
-router.get('/siembra/:id', getSiembra);
-router.post('/siembra', createSiembra);
-router.put('/siembra/:id', updateSiembra);
-router.delete('/siembra/:id', deleteSiembra);
+routerSiembra.get('/', getAllSiembra);
+routerSiembra.get('/Fec_Siembra/:Fec_Siembra', getSiembraByFechaInicio);  // Ruta para consultar por fecha
+routerSiembra.get('/:Id_Siembra', getSiembra);
+routerSiembra.post('/', createSiembra);
+routerSiembra.put('/:Id_Siembra', updateSiembra);
+routerSiembra.delete('/:Id_Siembra', deleteSiembra);
 
-export default router;
+export default routerSiembra;

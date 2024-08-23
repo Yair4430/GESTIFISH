@@ -40,7 +40,9 @@ const CrudSiembra = () => {
     const getAllSiembras = async () => {
         try {
             const respuesta = await axios.get(URI);
+            console.log(respuesta)
             setSiembraList(respuesta.data);
+            // console.log(siembraList)
         } catch (error) {
             console.error('Error fetching siembras:', error);
         }
@@ -49,6 +51,7 @@ const CrudSiembra = () => {
     const getAllResponsables = async () => {
         try {
             const respuesta = await axios.get(URI_RESPONSABLE);
+            console.log(respuesta.data)
             setResponsables(respuesta.data);
         } catch (error) {
             console.error('Error fetching responsables:', error);
@@ -67,6 +70,7 @@ const CrudSiembra = () => {
     const getAllEstanques = async () => {
         try {
             const respuesta = await axios.get(URI_ESTANQUE);
+            console.log(respuesta.data)
             setEstanques(respuesta.data);
         } catch (error) {
             console.error('Error fetching estanques:', error);
@@ -113,13 +117,12 @@ const CrudSiembra = () => {
             }
         });
     };
-
     return (
         <>
             <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
                 <thead>
                     <tr>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>ID</th>
+                        {/* <th className='border-info align-middle' style={{ border: "3px solid" }}>ID</th> */}
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Cantidad de Peces</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha de Siembra</th>
                         <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha Posible de Cosecha</th>
@@ -135,15 +138,15 @@ const CrudSiembra = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {siembraList.map((siembra) => (
+                    { siembraList.map((siembra) => (
                         <tr key={siembra.Id_Siembra} className='border-info font-monospace' style={{ border: "3px solid" }}>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Id_Siembra}</td>
+                            {/* <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Id_Siembra}</td> */}
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Can_Peces}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Fec_Siembra}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Fec_PosibleCosecha}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Responsable.Nom_Responsable}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Especie.Nom_Especie}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Estanque.Nom_Estanque}</td>
+                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.responsable.Nom_Responsable}</td>
+                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.especie.Nom_Especie}</td>
+                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.estanque.Nom_Estanque}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Pes_Actual}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Obs_Siembra}</td>
                             <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Hor_Siembra}</td>
