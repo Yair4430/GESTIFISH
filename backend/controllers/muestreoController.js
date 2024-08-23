@@ -2,12 +2,12 @@ import { Op } from 'sequelize';
 import MuestreoModel from '../models/muestreoModel.js';
 import ResponsableModel from '../models/responsableModel.js';
 import SiembraModel from '../models/siembraModel.js';
-import logger from '../middleware/logger.js';
 
 // Obtener todos los registros de muestreo
 export const getAllMuestreo = async (req, res) => {
-    logger.info('Intentando obtener todos los registros de muestreo');
+    console.log('Intentando obtener todos los registros de muestreo');
     try {
+        // Buscar todos los registros de muestreo e incluir los datos relacionados
         const muestreo = await MuestreoModel.findAll({
             include: [
                 { model: ResponsableModel, as: 'responsable' },
@@ -16,13 +16,16 @@ export const getAllMuestreo = async (req, res) => {
         });
 
         if (muestreo.length > 0) {
-            logger.info('Todos los registros de muestreo obtenidos exitosamente');
-            return res.status(200).json(muestreo);
+            console.log('Todos los registros de muestreo obtenidos exitosamente');
+            res.status(200).json(muestreo);
+            return;
         }
 
+        // Si no hay registros, devolver un mensaje con status 400
         res.status(400).json({ message: 'No hay registros de muestreo' });
     } catch (error) {
-        logger.error('Error al obtener todos los registros de muestreo:', error);
+        // Manejar errores en caso de fallo en la consulta
+        console.error('Error al obtener todos los registros de muestreo:', error);
         res.status(500).json({ message: 'Error al obtener los registros de muestreo' });
     }
 };
@@ -31,12 +34,15 @@ export const getAllMuestreo = async (req, res) => {
 export const getMuestreoById = async (req, res) => {
     const { Id_Muestreo } = req.params;
 
+    // Verificar que el ID de muestreo está presente
     if (!Id_Muestreo) {
-        logger.warn('Id_Muestreo es requerido');
-        return res.status(400).json({ message: 'Id_Muestreo es requerido' });
+        console.warn('Id_Muestreo es requerido');
+        res.status(400).json({ message: 'Id_Muestreo es requerido' });
+        return;
     }
 
     try {
+        // Buscar el registro de muestreo por su ID e incluir los datos relacionados
         const muestreo = await MuestreoModel.findByPk(Id_Muestreo, {
             include: [
                 { model: ResponsableModel, as: 'responsable' },
@@ -45,14 +51,16 @@ export const getMuestreoById = async (req, res) => {
         });
 
         if (muestreo) {
-            return res.status(200).json(muestreo);
-        } else {
-            logger.warn(`Registro de muestreo con ID ${Id_Muestreo} no encontrado`);
-            return res.status(404).json({ message: 'Registro de muestreo no encontrado.' });
+            res.status(200).json(muestreo);
+            return;
         }
+
+        // Si el registro no se encuentra, devolver un mensaje con status 404
+        res.status(404).json({ message: 'Registro de muestreo no encontrado' });
     } catch (error) {
-        logger.error('Error al recuperar registro de muestreo:', error.message);
-        return res.status(500).json({ message: 'Error al recuperar el registro de muestreo.' });
+        // Manejar errores en caso de fallo en la consulta
+        console.error('Error al recuperar registro de muestreo:', error.message);
+        res.status(500).json({ message: 'Error al recuperar el registro de muestreo.' });
     }
 };
 
@@ -60,12 +68,15 @@ export const getMuestreoById = async (req, res) => {
 export const getMuestreoByFecha = async (req, res) => {
     const { Fec_Muestreo } = req.params;
 
+    // Verificar que la fecha de muestreo está presente
     if (!Fec_Muestreo) {
-        logger.warn('Fecha es requerida');
-        return res.status(400).json({ message: 'Fecha es requerida' });
+        console.warn('Fecha es requerida');
+        res.status(400).json({ message: 'Fecha es requerida' });
+        return;
     }
 
     try {
+        // Buscar los registros de muestreo que coincidan con la fecha e incluir los datos relacionados
         const muestreo = await MuestreoModel.findAll({
             where: {
                 Fec_Muestreo: {
@@ -79,74 +90,78 @@ export const getMuestreoByFecha = async (req, res) => {
         });
 
         if (muestreo.length > 0) {
-            return res.status(200).json(muestreo);
-        } else {
-            logger.warn(`No se encontraron registros de muestreo para la fecha ${Fec_Muestreo}`);
-            return res.status(404).json({ message: 'No se encontraron registros de muestreo.' });
+            res.status(200).json(muestreo);
+            return;
         }
+
+        // Si no se encuentran registros para la fecha, devolver un mensaje con status 404
+        res.status(404).json({ message: 'No hay registros de muestreo para la fecha proporcionada' });
     } catch (error) {
-        logger.error('Error al recuperar registros de muestreo por fecha:', error.message);
-        return res.status(500).json({ message: 'Error al recuperar registros de muestreo por fecha.' });
+        // Manejar errores en caso de fallo en la consulta
+        console.error('Error al recuperar registros de muestreo por fecha:', error.message);
+        res.status(500).json({ message: 'Error al recuperar registros de muestreo por fecha.' });
     }
 };
 
-// Crear un registro de muestreo
+// Crear un nuevo registro de muestreo
 export const createMuestreo = async (req, res) => {
     const { Fec_Muestreo, Num_Peces, Obs_Muestreo, Pes_Esperado, Id_Siembra, Id_Responsable, Hor_Muestreo, Pes_Promedio } = req.body;
 
+    // Verificar que todos los campos obligatorios están presentes
     if (!Fec_Muestreo || !Num_Peces || !Obs_Muestreo || !Pes_Esperado || !Id_Siembra || !Id_Responsable || !Hor_Muestreo || !Pes_Promedio) {
-        logger.warn('Todos los campos son obligatorios');
-        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+        console.warn('Todos los campos son obligatorios');
+        res.status(400).json({ message: 'Todos los campos son obligatorios' });
+        return;
     }
 
     try {
         console.log('Datos recibidos:', req.body);
-        logger.info('Datos recibidos:', req.body);
 
+        // Crear un nuevo registro de muestreo con los datos proporcionados
         const nuevoMuestreo = await MuestreoModel.create({
             Fec_Muestreo,
             Num_Peces,
             Obs_Muestreo,
-            Pes_Esperado: parseFloat(Pes_Esperado), // Asegúrate de convertir a FLOAT si el modelo lo requiere
+            Pes_Esperado: parseFloat(Pes_Esperado), // Convertir a FLOAT si el modelo lo requiere
             Id_Siembra,
             Id_Responsable,
             Hor_Muestreo,
-            Pes_Promedio: parseFloat(Pes_Promedio) // Asegúrate de convertir a FLOAT si el modelo lo requiere
+            Pes_Promedio: parseFloat(Pes_Promedio) // Convertir a FLOAT si el modelo lo requiere
         });
 
         console.log('Registro de muestreo creado exitosamente:', nuevoMuestreo);
-        logger.info('Registro de muestreo creado exitosamente');
-        return res.status(201).json(nuevoMuestreo);
-        
+        res.status(201).json(nuevoMuestreo);
     } catch (error) {
-        console.log(error)
+        // Manejar errores en caso de fallo en la creación
         console.error('Error al crear registro de muestreo:', error);
-        logger.error('Error al crear registro de muestreo:', error);
-        return res.status(500).json({ message: 'Error al crear registro de muestreo', error: error.message });
+        res.status(500).json({ message: 'Error al crear registro de muestreo', error: error.message });
     }
 };
-
-
-
 
 // Actualizar un registro de muestreo
 export const updateMuestreo = async (req, res) => {
     const { Id_Muestreo } = req.params;
     const { Fec_Muestreo, Num_Peces, Obs_Muestreo, Pes_Esperado, Id_Siembra, Id_Responsable, Hor_Muestreo, Pes_Promedio } = req.body;
 
+    // Verificar que el ID de muestreo está presente
     if (!Id_Muestreo) {
-        logger.warn('Id_Muestreo es requerido');
-        return res.status(400).json({ message: 'Id_Muestreo es requerido' });
+        console.warn('Id_Muestreo es requerido');
+        res.status(400).json({ message: 'Id_Muestreo es requerido' });
+        return;
     }
 
+    // Verificar que todos los campos obligatorios están presentes
     if (!Fec_Muestreo || !Num_Peces || !Obs_Muestreo || !Pes_Esperado || !Id_Siembra || !Id_Responsable || !Hor_Muestreo || !Pes_Promedio) {
-        logger.warn('Todos los campos son obligatorios');
-        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+        console.warn('Todos los campos son obligatorios');
+        res.status(400).json({ message: 'Todos los campos son obligatorios' });
+        return;
     }
 
     try {
+        // Buscar el registro de muestreo por su ID
         const muestreo = await MuestreoModel.findByPk(Id_Muestreo);
         if (muestreo) {
+            // Actualizar el registro de muestreo con los datos proporcionados
             await muestreo.update({
                 Fec_Muestreo,
                 Num_Peces,
@@ -157,15 +172,17 @@ export const updateMuestreo = async (req, res) => {
                 Hor_Muestreo,
                 Pes_Promedio
             });
-            logger.info(`Registro de muestreo con ID ${Id_Muestreo} actualizado exitosamente`);
-            return res.status(200).json(muestreo);
-        } else {
-            logger.warn(`Registro de muestreo con ID ${Id_Muestreo} no encontrado`);
-            return res.status(404).json({ message: 'Registro de muestreo no encontrado' });
+            console.log(`Registro de muestreo con ID ${Id_Muestreo} actualizado exitosamente`);
+            res.status(200).json(muestreo);
+            return;
         }
+
+        // Si el registro no se encuentra, devolver un mensaje con status 404
+        res.status(404).json({ message: 'Registro de muestreo no encontrado' });
     } catch (error) {
-        logger.error('Error al actualizar registro de muestreo:', error);
-        return res.status(500).json({ message: 'Error al actualizar registro de muestreo', error: error.message });
+        // Manejar errores en caso de fallo en la actualización
+        console.error('Error al actualizar registro de muestreo:', error);
+        res.status(500).json({ message: 'Error al actualizar registro de muestreo', error: error.message });
     }
 };
 
@@ -173,23 +190,29 @@ export const updateMuestreo = async (req, res) => {
 export const deleteMuestreo = async (req, res) => {
     const { Id_Muestreo } = req.params;
 
+    // Verificar que el ID de muestreo está presente
     if (!Id_Muestreo) {
-        logger.warn('Id_Muestreo es requerido');
-        return res.status(400).json({ message: 'Id_Muestreo es requerido' });
+        console.warn('Id_Muestreo es requerido');
+        res.status(400).json({ message: 'Id_Muestreo es requerido' });
+        return;
     }
 
     try {
+        // Buscar el registro de muestreo por su ID
         const muestreo = await MuestreoModel.findByPk(Id_Muestreo);
         if (muestreo) {
+            // Eliminar el registro de muestreo
             await muestreo.destroy();
-            logger.info(`Registro de muestreo con ID ${Id_Muestreo} eliminado exitosamente`);
-            return res.status(200).json({ message: 'Registro de muestreo eliminado' });
-        } else {
-            logger.warn(`Registro de muestreo con ID ${Id_Muestreo} no encontrado`);
-            return res.status(404).json({ message: 'Registro de muestreo no encontrado' });
+            console.log(`Registro de muestreo con ID ${Id_Muestreo} eliminado exitosamente`);
+            res.status(200).json({ message: 'Registro de muestreo eliminado' });
+            return;
         }
+
+        // Si el registro no se encuentra, devolver un mensaje con status 404
+        res.status(404).json({ message: 'Registro de muestreo no encontrado' });
     } catch (error) {
-        logger.error('Error al eliminar registro de muestreo:', error);
-        return res.status(500).json({ message: 'Error al eliminar registro de muestreo', error: error.message });
+        // Manejar errores en caso de fallo en la eliminación
+        console.error('Error al eliminar registro de muestreo:', error);
+        res.status(500).json({ message: 'Error al eliminar registro de muestreo', error: error.message });
     }
 };
