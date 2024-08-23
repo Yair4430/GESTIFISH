@@ -1,12 +1,5 @@
 import express from 'express';
-import {
-  getAllTraslados,
-  getTraslado,
-  createTraslado,
-  updateTraslado,
-  deleteTraslado,
-  getTrasladosByFecha
-} from '../controllers/trasladoController.js';
+import { getAllTraslados, getTraslado, createTraslado, updateTraslado, deleteTraslado, getTrasladosByFecha } from '../controllers/trasladoController.js';
 import winston from 'winston';
 
 const routerTraslado = express.Router();

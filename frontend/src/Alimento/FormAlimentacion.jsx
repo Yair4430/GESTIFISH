@@ -2,15 +2,14 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
-const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuestreo }) => {
-    const [Fec_Muestreo, setFec_Muestreo] = useState('');
-    const [Num_Peces, setNum_Peces] = useState('');
-    const [Obs_Muestreo, setObs_Muestreo] = useState('');
-    const [Pes_Esperado, setPes_Esperado] = useState('');
+const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, getAllAlimentacion }) => {
+    const [Fec_Alimentacion, setFec_Alimentacion] = useState('');
+    const [Can_RacionKg, setCan_RacionKg] = useState('');
+    const [Tip_Alimento, setTip_Alimento] = useState('');
+    const [Hor_Alimentacion, setHor_Alimentacion] = useState('');
+    const [Vlr_Alimentacion, setVlr_Alimentacion] = useState('');
     const [Id_Siembra, setId_Siembra] = useState('');
     const [Id_Responsable, setId_Responsable] = useState('');
-    const [Hor_Muestreo, setHor_Muestreo] = useState('');
-    const [Pes_Promedio, setPes_Promedio] = useState('');
     const [DatosResponsable, setDatosResponsable] = useState([]);
     const [DatosSiembra, setDatosSiembra] = useState([]);
 
@@ -18,18 +17,17 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
         e.preventDefault();
         try {
             const data = {
-                Fec_Muestreo,
-                Num_Peces,
-                Obs_Muestreo,
-                Pes_Esperado,
+                Fec_Alimentacion,
+                Can_RacionKg,
+                Tip_Alimento,
+                Hor_Alimentacion,
+                Vlr_Alimentacion,
                 Id_Siembra,
-                Id_Responsable,
-                Hor_Muestreo,
-                Pes_Promedio
+                Id_Responsable
             };
 
             if (buttonForm === 'Actualizar') {
-                await axios.put(`${URI}${muestreo.Id_Muestreo}`, data);
+                await axios.put(`${URI}${alimentacion.Id_Alimentacion}`, data);
                 Swal.fire({
                     title: 'Actualizado',
                     text: '¡Registro actualizado exitosamente!',
@@ -49,37 +47,35 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                 }
             }
 
-            getAllMuestreo(); // Refrescar la lista después de la operación
+            getAllAlimentacion(); // Refrescar la lista después de la operación
         } catch (error) {
             console.error('Error al enviar el formulario:', error);
             Swal.fire({
                 title: 'Error',
-                text: 'No se pudo guardar el registro de muestreo.',
+                text: 'No se pudo guardar el registro de alimentación.',
                 icon: 'error'
             });
         }
     };
 
     const clearForm = () => {
-        setFec_Muestreo('');
-        setNum_Peces('');
-        setObs_Muestreo('');
-        setPes_Esperado('');
+        setFec_Alimentacion('');
+        setCan_RacionKg('');
+        setTip_Alimento('');
+        setHor_Alimentacion('');
+        setVlr_Alimentacion('');
         setId_Siembra('');
         setId_Responsable('');
-        setHor_Muestreo('');
-        setPes_Promedio('');
     };
 
     const setData = () => {
-        setFec_Muestreo(muestreo.Fec_Muestreo);
-        setNum_Peces(muestreo.Num_Peces);
-        setObs_Muestreo(muestreo.Obs_Muestreo);
-        setPes_Esperado(muestreo.Pes_Esperado);
-        setId_Siembra(muestreo.Id_Siembra);
-        setId_Responsable(muestreo.Id_Responsable);
-        setHor_Muestreo(muestreo.Hor_Muestreo);
-        setPes_Promedio(muestreo.Pes_Promedio);
+        setFec_Alimentacion(alimentacion.Fec_Alimentacion);
+        setCan_RacionKg(alimentacion.Can_RacionKg);
+        setTip_Alimento(alimentacion.Tip_Alimento);
+        setHor_Alimentacion(alimentacion.Hor_Alimentacion);
+        setVlr_Alimentacion(alimentacion.Vlr_Alimentacion);
+        setId_Siembra(alimentacion.Id_Siembra);
+        setId_Responsable(alimentacion.Id_Responsable);
     };
 
     useEffect(() => {
@@ -106,26 +102,33 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
     }, []);
 
     useEffect(() => {
-        if (muestreo) {
+        if (alimentacion) {
             setData();
         }
-    }, [muestreo]);
+    }, [alimentacion]);
 
     return (
         <div className="d-flex flex-column align-items-center">
-            <h1 className="fs-1 fw-bold d-flex">Registrar Muestreo</h1>
-            <form id="muestreoForm" onSubmit={sendForm} className="fw-bold m-2">
-                <label htmlFor="Fec_Muestreo" className="m-2">Fecha de Muestreo:</label>
-                <input type="date" id="Fec_Muestreo" value={Fec_Muestreo} onChange={(e) => setFec_Muestreo(e.target.value)} />
+            <h1 className="fs-1 fw-bold d-flex">Registrar Alimentación</h1>
+            <form id="alimentacionForm" onSubmit={sendForm} className="fw-bold m-2">
+                <label htmlFor="Fec_Alimentacion" className="m-2">Fecha de Alimentación:</label>
+                <input type="date" id="Fec_Alimentacion" value={Fec_Alimentacion} onChange={(e) => setFec_Alimentacion(e.target.value)} />
                 <br />
-                <label htmlFor="Num_Peces" className="m-2">Número de Peces:</label>
-                <input type="number" id="Num_Peces" value={Num_Peces} onChange={(e) => setNum_Peces(e.target.value)} />
+                <label htmlFor="Can_RacionKg" className="m-2">Cantidad de Ración (Kg):</label>
+                <input type="number" id="Can_RacionKg" value={Can_RacionKg} onChange={(e) => setCan_RacionKg(e.target.value)} />
                 <br />
-                <label htmlFor="Obs_Muestreo" className="m-2">Observaciones:</label>
-                <input type="text" id="Obs_Muestreo" value={Obs_Muestreo} onChange={(e) => setObs_Muestreo(e.target.value)} />
+                <label htmlFor="Tip_Alimento" className="m-2">Tipo de Alimento:</label>
+                <select id="Tip_Alimento" value={Tip_Alimento} onChange={(e) => setTip_Alimento(e.target.value)}>
+                    <option value="">Selecciona uno...</option>
+                    <option value="Concentrado">Concentrado</option>
+                    <option value="Sal">Sal</option>
+                </select>
                 <br />
-                <label htmlFor="Pes_Esperado" className="m-2">Peso Esperado:</label>
-                <input type="number" id="Pes_Esperado" value={Pes_Esperado} onChange={(e) => setPes_Esperado(e.target.value)} />
+                <label htmlFor="Hor_Alimentacion" className="m-2">Hora de Alimentación:</label>
+                <input type="time" id="Hor_Alimentacion" value={Hor_Alimentacion} onChange={(e) => setHor_Alimentacion(e.target.value)} />
+                <br />
+                <label htmlFor="Vlr_Alimentacion" className="m-2">Valor de Alimentación:</label>
+                <input type="number" id="Vlr_Alimentacion" value={Vlr_Alimentacion} onChange={(e) => setVlr_Alimentacion(e.target.value)} />
                 <br />
                 <label htmlFor="Id_SiembraSelect" className="m-2">Fecha Siembra:</label>
                 <select id="Id_SiembraSelect" value={Id_Siembra} onChange={(e) => setId_Siembra(e.target.value)}>
@@ -147,16 +150,10 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                     ))}
                 </select>
                 <br />
-                <label htmlFor="Hor_Muestreo" className="m-2">Hora de Muestreo:</label>
-                <input type="time" id="Hor_Muestreo" value={Hor_Muestreo} onChange={(e) => setHor_Muestreo(e.target.value)} />
-                <br />
-                <label htmlFor="Pes_Promedio" className="m-2">Peso Promedio:</label>
-                <input type="number" id="Pes_Promedio" value={Pes_Promedio} onChange={(e) => setPes_Promedio(e.target.value)} />
-                <br />
                 <input type="submit" id="boton" value={buttonForm} className="btn btn-success m-2" />
             </form>
         </div>
     );
 };
 
-export default FormMuestreo;
+export default FormAlimentacion;

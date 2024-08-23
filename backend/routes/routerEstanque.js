@@ -1,13 +1,6 @@
 // Importa las librerías necesarias
 import express from "express";
-import { 
-  createEstanque, 
-  deleteEstanque, 
-  getAllEstanque, 
-  getEstanque, 
-  updateEstanque, 
-  getQueryEstanque 
-} from "../controllers/estanqueController.js";
+import { createEstanque, deleteEstanque, getAllEstanque, getEstanque, updateEstanque, getQueryEstanque } from "../controllers/estanqueController.js";
 import multer from 'multer';
 import path from 'path';
 import winston from 'winston';

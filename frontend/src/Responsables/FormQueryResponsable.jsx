@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const FromQueryResponsable = ({ URI, getResponsable, deleteResponsable, buttonForm }) => {
+const FormQueryResponsable = ({ URI, getResponsable, deleteResponsable, buttonForm }) => {
     const [ResponsableQuery, setResponsableQuery] = useState([]);
     const [Doc_Responsable, setDoc_Responsable] = useState('');
 
@@ -60,7 +60,7 @@ const FromQueryResponsable = ({ URI, getResponsable, deleteResponsable, buttonFo
                     </thead>
                     <tbody>
                         {ResponsableQuery.map((responsable) => (
-                            <tr key={responsable.Doc_Responsable} className='border-info align-middle font-monospace' style={{ border: "3px solid" }}>
+                            <tr key={responsable.Id_Responsable} className='border-info align-middle font-monospace' style={{ border: "3px solid" }}>
                                 <td className='border-info align-middle text-center' style={{ border: "3px solid" }}>{responsable.Doc_Responsable}</td>
                                 <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Nom_Responsable}</td>
                                 <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Ape_Responsable}</td>
@@ -68,10 +68,10 @@ const FromQueryResponsable = ({ URI, getResponsable, deleteResponsable, buttonFo
                                 <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Cor_Responsable}</td>
                                 <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Num_Responsable}</td>
                                 <td>
-                                    <button className='btn btn-info' onClick={() => getResponsable(responsable.Doc_Responsable)}>
+                                    <button className='btn btn-info' onClick={() => getResponsable(responsable. Id_Responsable)}>
                                         <i className="fa-solid fa-pen-to-square"></i>Editar
                                     </button>
-                                    <button className="btn btn-info align-middle m-2" onClick={() => deleteResponsable(responsable.Doc_Responsable)}>
+                                    <button className="btn btn-info align-middle m-2" onClick={() => deleteResponsable(responsable.Id_Responsable)}>
                                         <i className="fa-solid fa-trash-can"></i> Borrar
                                     </button>
                                 </td>
@@ -84,5 +84,4 @@ const FromQueryResponsable = ({ URI, getResponsable, deleteResponsable, buttonFo
     )
 }
 
-export default FromQueryResponsable;
-
+export default FormQueryResponsable;

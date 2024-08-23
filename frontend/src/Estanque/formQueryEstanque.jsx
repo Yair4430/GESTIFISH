@@ -79,7 +79,9 @@ const FormQueryEstanque = ({ URI, getEstanque, deleteEstanque, buttonForm }) => 
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{estanque.Rec_Agua}</td>
                                 <td>
                                     <button className="btn btn-info" onClick={() => getEstanque(estanque.Id_Estanque)}><i className="fa-solid fa-pen-to-square"></i> Editar</button>
-                                    <button className="btn btn-info align-middle m-2" onClick={() => deleteEstanque(estanque.Id_Estanque)}><i className="fa-solid fa-trash-can"></i> Borrar</button>
+                                    <button className='btn btn-info align-middle m-2' onClick={() => deleteEstanque(estanque.Id_Estanque)}>
+                                    <i className="fa-solid fa-trash-can">Borrar</i> 
+                                </button>
                                 </td>
                             </tr>
                         ))}

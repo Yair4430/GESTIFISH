@@ -1,12 +1,5 @@
 import express from 'express';
-import {
-  getAllMuestreos,
-  getMuestreoById,
-  createMuestreo,
-  updateMuestreo,
-  deleteMuestreo,
-  getMuestreoByFecha
-} from '../controllers/muestreoController.js';
+import { getAllMuestreo, getMuestreoById, createMuestreo, updateMuestreo, deleteMuestreo, getMuestreoByFecha } from '../controllers/muestreoController.js';
 import winston from 'winston';
 
 const routerMuestreo = express.Router();
@@ -20,7 +13,7 @@ const logger = winston.createLogger({
 });
 
 // Definición de las rutas
-routerMuestreo.get('/', getAllMuestreos);
+routerMuestreo.get('/', getAllMuestreo);
 routerMuestreo.get('/:Id_Muestreo', getMuestreoById);
 routerMuestreo.post('/', createMuestreo);
 routerMuestreo.put('/:Id_Muestreo', updateMuestreo);

@@ -3,8 +3,8 @@ import { Routes, Route, NavLink, Navigate, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 
 import Home from './home/Home.jsx';
-import CrudAlimento from './Alimento/crudALimento';
-import CrudResponsable from './Responsables/CrudResponsable';
+import CrudAlimentacion from './Alimento/CrudAlimentacion.jsx';
+import CrudResponsable from './Responsables/CrudResponsable.jsx';
 import CrudEstanque from './Estanque/crudEstanque.jsx';
 import CrudActividad from './Actividad/crudActividad.jsx';
 import CrudEspecie from './Especie/CrudEspecie.jsx';
@@ -16,6 +16,8 @@ import CrudSiembra from './Siembra/CrudSiembra.jsx';
 
 import Auth from './Auth/auth.jsx';
 import ResetPassword from './Auth/resetPassword.jsx';
+
+import Simulador from './Simulador/Simulador.jsx';
 
 import imagen_logo from './IMG/LOGO_GESTIFISH.png';
 import "../src/App.css";
@@ -134,6 +136,13 @@ function App() {
               )}
             </NavLink>
           </li>
+          <li className='nav-item'>
+            <NavLink className='nav-link fs-5' to="/Simulador">
+              {({ isActive }) => (
+                <span className={isActive ? 'active' : ''}>Simulador</span>
+              )}
+            </NavLink>
+          </li>
 
           {!isAuth ?  
             <li className='nav-item'>
@@ -159,7 +168,7 @@ function App() {
       {isAuth ?
         <>  
           <Route path='/' element={<Home />} />
-          <Route path='/Alimentacion' element={<CrudAlimento />} />
+          <Route path='/Alimentacion' element={<CrudAlimentacion />} />
           <Route path='/Responsable' element={<CrudResponsable/>}/>
           <Route path='/Estanque' element={<CrudEstanque/>}/>
           <Route path='/Especie' element={<CrudEspecie/>}/>
@@ -169,6 +178,7 @@ function App() {
           <Route path='/Cosecha' element={<CrudCosecha/>}/>
           <Route path='/Mortalidad' element={<CrudMortalidad/>}/>
           <Route path='/Siembra' element={<CrudSiembra/>}/>
+          <Route path='/Simulador' element={<Simulador/>}/>
         </>
         :
         <Route path='*' element={<Navigate to="/" />} />
