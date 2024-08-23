@@ -19,6 +19,14 @@ const SimuladorForm = ({ onSimulate }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSimulate(formData);
+    // Limpiar el formulario
+    setFormData({
+      especie: '',
+      densidad: '',
+      espejoAgua: '',
+      recambio: '',
+      precioBulto: '',
+    });
   };
 
   const handleEspecieChange = (e) => {
