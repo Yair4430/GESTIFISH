@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const PATH_FOTOS = 'http://localhost:3001/public/uploads';
+const PATH_FOTOS = process.env.ROUTER_FOTOS;
 
 const FormQueryEspecie = ({ URI, getEspecie, deleteEspecie, buttonForm }) => {
     const [especieQuery, setEspecieQuery] = useState([]);
@@ -9,8 +9,16 @@ const FormQueryEspecie = ({ URI, getEspecie, deleteEspecie, buttonForm }) => {
 
     const sendFormQuery = async (Nom_Especie) => {
         if (Nom_Especie) {
-            const respuesta = await axios.get(`${URI}nombre/${Nom_Especie}`);
-            setEspecieQuery(respuesta.data);
+            try {
+                const respuesta = await axios.get(`${URI}nombre/${Nom_Especie}`);
+                if (respuesta.status >= 200 && respuesta.status < 300) {
+                    setEspecieQuery(respuesta.data);
+                } else {
+                    console.warn('HTTP Status:', respuesta.status);
+                }
+            } catch (error) {
+                console.error('Error al consultar la especie:', error.response?.status || error.message);
+            }
         } else {
             setEspecieQuery([]);
         }
@@ -28,7 +36,10 @@ const FormQueryEspecie = ({ URI, getEspecie, deleteEspecie, buttonForm }) => {
                 <h1 className="fs-1 fw-bold d-flex">Consultar Especie</h1>
                 <form action="" id="queryForm" className="fw-bold m-2">
                     <label htmlFor="Nom_EspecieQuery" className="m-2">Nombre:</label>
-                    <input type="text" id="Nom_EspecieQuery" value={Nom_Especie} onChange={(e) => { setNom_Especie(e.target.value); sendFormQuery(e.target.value); }} />
+                    <input type="text" id="Nom_EspecieQuery" value={Nom_Especie} onChange={(e) => { 
+                        setNom_Especie(e.target.value); 
+                        sendFormQuery(e.target.value); 
+                    }} />
                 </form>
             </div>
 
@@ -59,8 +70,12 @@ const FormQueryEspecie = ({ URI, getEspecie, deleteEspecie, buttonForm }) => {
                                     )}
                                 </td>
                                 <td>
-                                    <button className="btn btn-info" onClick={() => getEspecie(especie.Id_Especie)}><i className="fa-solid fa-pen-to-square"></i> Editar</button>
-                                    <button className="btn btn-info align-middle m-2" onClick={() => deleteEspecie(especie.Id_Especie)}><i className="fa-solid fa-trash-can"></i> Borrar</button>
+                                    <button className="btn btn-info" onClick={() => getEspecie(especie.Id_Especie)}>
+                                        <i className="fa-solid fa-pen-to-square"></i> Editar
+                                    </button>
+                                    <button className="btn btn-info align-middle m-2" onClick={() => deleteEspecie(especie.Id_Especie)}>
+                                        <i className="fa-solid fa-trash-can"></i> Borrar
+                                    </button>
                                 </td>
                             </tr>
                         ))}

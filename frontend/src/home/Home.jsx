@@ -1,10 +1,11 @@
-import imgtodo from '../IMG/FOTOGRUPAL.png.jpeg'
-
+import imgtodo from '../IMG/FOTO GRUPAL 1.jpg'
+import Navbar from '../Menus/Navbar.jsx';
 
 
 const Home = () => {
   return (
     <>
+    <Navbar/>
      <section className="seccion active align-items-center mt-4">
       <center>
       <h1>Bienvenido al Software Unidad de Piscicultura</h1>
@@ -15,6 +16,8 @@ const Home = () => {
       <center>
       <img src={imgtodo} alt="Logo" style={{ width: '465px', height: '340px' }}/>
       </center>
+
+      
       <br />
       <br />
       </section>

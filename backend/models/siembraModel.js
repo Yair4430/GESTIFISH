@@ -4,7 +4,7 @@ import { DataTypes } from "sequelize";
 const SiembraModel = db.define('siembra', {
     Id_Siembra: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     Can_Peces: { type: DataTypes.INTEGER },
-    Fec_Siembra: { type: DataTypes.DATE },
+    Fec_Siembra: { type: DataTypes.DATEONLY },
     Fec_PosibleCosecha: { type: DataTypes.DATE },
     Id_Responsable: { type: DataTypes.INTEGER },
     Id_Especie: { type: DataTypes.INTEGER },
@@ -19,10 +19,14 @@ const SiembraModel = db.define('siembra', {
 });
 
 // Asociaciones (Foreign Keys)
-SiembraModel.associate = (models) => {
-    SiembraModel.belongsTo(models.Responsable, { foreignKey: 'Id_Responsable' });
-    SiembraModel.belongsTo(models.Especie, { foreignKey: 'Id_Especie' });
-    SiembraModel.belongsTo(models.Estanque, { foreignKey: 'Id_Estanque' });
-};
+// SiembraModel.associate = (models) => {
+//     // console.log(models)
+//     SiembraModel.belongsTo(models.Responsable, { foreignKey: 'Id_Responsable' });
+//     SiembraModel.belongsTo(models.Especie, { foreignKey: 'Id_Especie' });
+//     SiembraModel.belongsTo(models.Estanque, { foreignKey: 'Id_Estanque' });
+// };
 
+// console.log(SiembraModel.associations);  // Verifica las asociaciones
+
+// console.log(SiembraModel)
 export default SiembraModel;

@@ -16,7 +16,7 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
 
         try {
             if (buttonForm === 'Actualizar') {
-                await axios.put(`${URI}${responsable.Id_Responsable}`, {
+                const respuesta = await axios.put(`${URI}${responsable.Id_Responsable}`, {
                     Id_Responsable,
                     Nom_Responsable,
                     Ape_Responsable,
@@ -25,14 +25,19 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                     Cor_Responsable,
                     Num_Responsable
                 });
-                Swal.fire({
-                    title: 'Actualizado',
-                    text: '¡Registro actualizado exitosamente!',
-                    icon: 'success'
-                });
-                updateTextButton('Enviar');
-                clearFormR();
-                getAllResponsable();
+
+                if (respuesta.status >= 200 && respuesta.status < 300) {
+                    Swal.fire({
+                        title: 'Actualizado',
+                        text: '¡Registro actualizado exitosamente!',
+                        icon: 'success'
+                    });
+                    updateTextButton('Enviar');
+                    clearFormR();
+                    getAllResponsable();
+                } else {
+                    console.warn('HTTP Status:', respuesta.status);
+                }
 
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, {
@@ -43,19 +48,21 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                     Cor_Responsable,
                     Num_Responsable
                 });
-                Swal.fire({
-                    title: 'Guardado',
-                    text: '¡Registro guardado exitosamente!',
-                    icon: 'success'
-                });
+
                 if (respuestaApi.status === 201) {
-                    alert(respuestaApi.data.message);
+                    Swal.fire({
+                        title: 'Guardado',
+                        text: '¡Registro guardado exitosamente!',
+                        icon: 'success'
+                    });
                     clearFormR();
                     getAllResponsable();
+                } else {
+                    console.warn('HTTP Status:', respuestaApi.status);
                 }
             }
         } catch (error) {
-            console.error('Error al enviar el formulario:', error);
+            console.error('Error al enviar el formulario:', error.response?.status || error.message);
             Swal.fire({
                 title: 'Error',
                 text: 'No se pudo guardar el responsable.',

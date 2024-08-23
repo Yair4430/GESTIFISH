@@ -1,85 +1,74 @@
-         import { useState } from 'react'
-import {Routes, Route, NavLink} from 'react-router-dom'
+import { useEffect, useState } from 'react';
+import { Routes, Route, NavLink, Navigate, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-import Home from './home/Home.jsx'
-import CrudAlimento from './Alimento/crudALimento'
-import CrudResponsable from './Responsables/CrudResponsable'
-import CrudEstanque from './Estanque/crudEstanque.jsx'
-import CrudEspecie from './Especie/CrudEspecie.jsx'
-// import Responsable from './home/Responsable'
-import CrudSiembra from './Siembra/crudSiembra.jsx'
+import Home from './home/Home.jsx';
+import CrudAlimentacion from './Alimento/CrudAlimentacion.jsx';
+import CrudResponsable from './Responsables/CrudResponsable.jsx';
+import CrudEstanque from './Estanque/crudEstanque.jsx';
+import CrudActividad from './Actividad/crudActividad.jsx';
+import CrudEspecie from './Especie/CrudEspecie.jsx';
+import CrudTraslado from './Traslado/CrudTraslado.jsx';
+import CrudMuestreo from './Muestreo/crudMuestreo.jsx';
+import CrudCosecha from './Cosecha/CrudCosecha.jsx';
+import CrudMortalidad from './Mortalidad/CrudMortalidad.jsx';
+import CrudSiembra from './Siembra/CrudSiembra.jsx';
 
-import imagen_logo from './IMG/LOGO_GESTIFISH.png'
-import "../src/App.css"
+import Navbar from "./Menus/Navbar.jsx";
+import RegistrosMenu from "./Menus/RegistrosMenu.jsx";
 
-const App = () => {
+import Auth from './Auth/auth.jsx';
+import ResetPassword from './Auth/resetPassword.jsx';
+
+import Simulador from './Simulador/Simulador.jsx';
+
+import imagen_logo from './IMG/GESTIFISH-.png';
+import "../src/App.css";
+
+const URL_AUTH = process.env.ROUTER_PRINCIPAL + '/auth/';
+
+function App() {
+  const [isAuth, setIsAuth] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('usuario'));
+
+    if (!user) {
+      setIsAuth(false);
+    } else {
+      axios.get(URL_AUTH + 'verify', {
+        headers: { Authorization: `Bearer ${user.tokenUser}` }
+      }).then(response => {
+        if (response.status === 200) {
+          setIsAuth(true);
+        }
+      }).catch(() => {
+        setIsAuth(false);
+      });
+    }
+  }, []);
+
+  const logOutUser = () => {
+    localStorage.removeItem('usuario');
+    setIsAuth(false);
+    navigate("/auth");
+  };
+
+  const handleRecordsClick = (e) => {
+    e.preventDefault(); // Evita el comportamiento predeterminado del enlace
+    setShowRecords(!showRecords); // Alterna la visibilidad de la sección de registros
+  };
   return (
     <>
-      {/* <body className='bs-body-color-red'></body> */}
-      <nav className='navbar navbar-expand-lg navbar-light bg-primary py-3 shadow-sm' data-bs-theme="dark">
-        <ul className='nav'>
-          <li className="navbar-brand">
-            <img src={imagen_logo} alt="" style={{ width: '95px', height: '50px' }} />
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/" end>
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Inicio</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Alimentacion">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Alimentacion</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Responsable">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Responsables</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Traslados">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Traslados</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Estanque">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Estanque</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Especie">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Especie</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Siembra">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Siembra</span>
-              )}
-            </NavLink>
-          </li>
-        </ul>
-      </nav>
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/Alimentacion' element={<CrudAlimento />} />
-        <Route path='/Responsable' element={<CrudResponsable/>}/>
-        <Route path='/Estanque' element={<CrudEstanque/>}/>
-        <Route path='/Especie' element={<CrudEspecie/>}/>
-        <Route path='/Siembra' element={<CrudSiembra/>} />
-      </Routes>
+      
+      
+        <Routes>
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={<RegistrosMenu />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+        </Routes>
     </>
   );
 };

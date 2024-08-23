@@ -21,40 +21,39 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
         if (Img_Especie) {
             formData.append('Img_Especie', Img_Especie);
         }
-    
+
         // Verificar el contenido de FormData
         for (let [key, value] of formData.entries()) {
             console.log(`${key}:`, value);
         }
-    
+
         try {
+            let respuestaApi;
             if (buttonForm === 'Actualizar') {
-                await axios.put(`${URI}${especie.Id_Especie}`, formData, {
+                respuestaApi = await axios.put(`${URI}${especie.Id_Especie}`, formData, {
                     headers: { "Content-Type": "multipart/form-data" }
-                });
-                Swal.fire({
-                    title: 'Actualizado',
-                    text: '¡Registro actualizado exitosamente!',
-                    icon: 'success'
                 });
             } else if (buttonForm === 'Enviar') {
-                const respuestaApi = await axios.post(URI, formData, {
+                respuestaApi = await axios.post(URI, formData, {
                     headers: { "Content-Type": "multipart/form-data" }
                 });
+            }
+
+            if (respuestaApi && respuestaApi.status >= 200 && respuestaApi.status < 300) {
                 Swal.fire({
-                    title: 'Guardado',
-                    text: '¡Registro guardado exitosamente!',
+                    title: buttonForm === 'Actualizar' ? 'Actualizado' : 'Guardado',
+                    text: `¡Registro ${buttonForm === 'Actualizar' ? 'actualizado' : 'guardado'} exitosamente!`,
                     icon: 'success'
                 });
-                if (respuestaApi.status === 201) {
-                    alert(respuestaApi.data.message);
-                }
+            } else {
+                console.warn('HTTP Status:', respuestaApi?.status);
             }
+
             clearForm();
             getAllEspecies();
             updateTextButton('Enviar');
         } catch (error) {
-            console.error('Error al enviar el formulario:', error);
+            console.error('Error al enviar el formulario:', error.response?.status || error.message);
             Swal.fire({
                 title: 'Error',
                 text: 'No se pudo guardar la especie.',
@@ -62,9 +61,6 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
             });
         }
     };
-    
-    
-    
 
     const clearForm = () => {
         setNom_Especie('');
@@ -91,29 +87,27 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
     }, [especie]);
 
     return (
-        <>
-            <div className="d-flex flex-column align-items-center">
-                <h1 className="fs-1 fw-bold d-flex">Registrar Especies</h1>
-                <form id="especieForm" onSubmit={sendForm} className="fw-bold m-2">
-                    <label htmlFor="Nom_Especie" className="m-2">Nombre de la Especie:</label>
-                    <input type="text" id="Nom_Especie" value={Nom_Especie} onChange={(e) => setNom_Especie(e.target.value)} />
-                    <br />
-                    <label htmlFor="Car_Especie" className="m-2">Características de la Especie:</label>
-                    <input type="text" id="Car_Especie" value={Car_Especie} onChange={(e) => setCar_Especie(e.target.value)} />
-                    <br />
-                    <label htmlFor="Img_Especie" className="m-2">Imagen:</label>
-                    <input type="file" id="Img_Especie" onChange={(e) => setImg_Especie(e.target.files[0])} ref={inputFoto} />
-                    <br />
-                    <label htmlFor="Tam_Promedio" className="m-2">Tamaño Promedio:</label>
-                    <input type="number" id="Tam_Promedio" value={Tam_Promedio} onChange={(e) => setTam_Promedio(e.target.value)} />
-                    <br />
-                    <label htmlFor="Den_Especie" className="m-2">Densidad de la Especie:</label>
-                    <input type="text" id="Den_Especie" value={Den_Especie} onChange={(e) => setDen_Especie(e.target.value)} />
-                    <br />
-                    <input type="submit" id="boton" value={buttonForm} className="btn btn-success m-2" />
-                </form>
-            </div>
-        </>
+        <div className="d-flex flex-column align-items-center">
+            <h1 className="fs-1 fw-bold d-flex">Registrar Especies</h1>
+            <form id="especieForm" onSubmit={sendForm} className="fw-bold m-2">
+                <label htmlFor="Nom_Especie" className="m-2">Nombre de la Especie:</label>
+                <input type="text" id="Nom_Especie" value={Nom_Especie} onChange={(e) => setNom_Especie(e.target.value)} />
+                <br />
+                <label htmlFor="Car_Especie" className="m-2">Características de la Especie:</label>
+                <input type="text" id="Car_Especie" value={Car_Especie} onChange={(e) => setCar_Especie(e.target.value)} />
+                <br />
+                <label htmlFor="Img_Especie" className="m-2">Imagen:</label>
+                <input type="file" id="Img_Especie" onChange={(e) => setImg_Especie(e.target.files[0])} ref={inputFoto} />
+                <br />
+                <label htmlFor="Tam_Promedio" className="m-2">Tamaño Promedio:</label>
+                <input type="number" id="Tam_Promedio" value={Tam_Promedio} onChange={(e) => setTam_Promedio(e.target.value)} />
+                <br />
+                <label htmlFor="Den_Especie" className="m-2">Densidad de la Especie:</label>
+                <input type="text" id="Den_Especie" value={Den_Especie} onChange={(e) => setDen_Especie(e.target.value)} />
+                <br />
+                <input type="submit" id="boton" value={buttonForm} className="btn btn-success m-2" />
+            </form>
+        </div>
     );
 };
 

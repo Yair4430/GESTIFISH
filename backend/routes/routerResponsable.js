@@ -1,12 +1,5 @@
 import express from "express";
-import {
-    createResponsable,
-    deleteResponsable,
-    getAllResponsable,
-    getResponsable,
-    updateResponsable,
-    getQueryResponsable
-} from "../controllers/responsableController.js";
+import { createResponsable, deleteResponsable, getAllResponsable, getResponsable, updateResponsable, getQueryResponsable } from "../controllers/responsableController.js";
 import winston from 'winston';
 
 // Crea una instancia de express.Router

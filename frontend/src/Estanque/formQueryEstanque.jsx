@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const PATH_FOTOS = 'http://localhost:3001/public/uploads'
+const PATH_FOTOS = process.env.ROUTER_FOTOS
 
 const FormQueryEstanque = ({ URI, getEstanque, deleteEstanque, buttonForm }) => {
     const [estanqueQuery, setEstanqueQuery] = useState([]);
@@ -9,8 +9,19 @@ const FormQueryEstanque = ({ URI, getEstanque, deleteEstanque, buttonForm }) => 
 
     const sendFormQuery = async (Id_Estanque) => {
         if (Id_Estanque) {
-            const respuesta = await axios.get(URI + 'Id_Estanque/' + Id_Estanque);
-            setEstanqueQuery(respuesta.data);
+            try {
+                const respuesta = await axios.get(`${URI}Id_Estanque/${Id_Estanque}`);
+
+                if (respuesta.status === 200) {
+                    setEstanqueQuery(respuesta.data);
+                } else {
+                    console.warn('HTTP Status:', respuesta.status);
+                    setEstanqueQuery([]);
+                }
+            } catch (error) {
+                console.error('Error en la consulta:', error.response?.status || error.message);
+                setEstanqueQuery([]);
+            }
         } else {
             setEstanqueQuery([]);
         }
@@ -20,7 +31,6 @@ const FormQueryEstanque = ({ URI, getEstanque, deleteEstanque, buttonForm }) => 
         setEstanqueQuery([]);
         setId_Estanque('');
     }, [buttonForm]);
-    
 
     return (
         <>
@@ -59,14 +69,19 @@ const FormQueryEstanque = ({ URI, getEstanque, deleteEstanque, buttonForm }) => 
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{estanque.Lar_Estanque}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{estanque.Anc_Estanque}</td>
                                 <td className="border-info align-middle" style={{ border: "3px solid" }}>{estanque.Des_Estanque}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{estanque.Img_Estanque}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{estanque.Rec_Agua}</td>
-                                <td className='border-info align-middle' style={{ border: "3px solid" }}>
-                                    <img width="80px" src={`${PATH_FOTOS}/${estanque.Img_Estanque}`} alt="Imagen del estanque" />
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>
+                                    {estanque.Img_Estanque ? (
+                                        <img width="80px" src={`${PATH_FOTOS}/${estanque.Img_Estanque}`} alt="Imagen del estanque" />
+                                    ) : (
+                                        <span>No Image</span>
+                                    )}
                                 </td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{estanque.Rec_Agua}</td>
                                 <td>
-                                    <button className="btn btn-info" onClick={() => getEstanque(estanque.Id_Estanque)}><i className="fa-solid fa-pen-to-square"></i>Editar</button>
-                                    <button className="btn btn-info align-middle m-2" onClick={() => deleteEstanque(estanque.Id_Estanque)}><i className="fa-solid fa-trash-can"></i> Borrar</button>
+                                    <button className="btn btn-info" onClick={() => getEstanque(estanque.Id_Estanque)}><i className="fa-solid fa-pen-to-square"></i> Editar</button>
+                                    <button className='btn btn-info align-middle m-2' onClick={() => deleteEstanque(estanque.Id_Estanque)}>
+                                    <i className="fa-solid fa-trash-can">Borrar</i> 
+                                </button>
                                 </td>
                             </tr>
                         ))}

@@ -30,35 +30,41 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
     
         try {
             if (buttonForm === 'Actualizar') {
-                await axios.put(`${URI}${estanque.Id_Estanque}`, formData, {
+                const respuesta = await axios.put(`${URI}${estanque.Id_Estanque}`, formData, {
                     headers: { "Content-Type": "multipart/form-data" }
                 });
-                Swal.fire({
-                    title: 'Actualizado',
-                    text: '¡Registro actualizado exitosamente!',
-                    icon: 'success'
-                });
-                updateTextButton('Enviar');
-                clearForm();
-                getAllEstanques()
+
+                if (respuesta.status === 200) {
+                    Swal.fire({
+                        title: 'Actualizado',
+                        text: '¡Registro actualizado exitosamente!',
+                        icon: 'success'
+                    });
+                    updateTextButton('Enviar');
+                    clearForm();
+                    getAllEstanques();
+                } else {
+                    console.warn('HTTP Status:', respuesta.status);
+                }
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, formData, {
                     headers: { "Content-Type": "multipart/form-data" }
                 });
-                Swal.fire({
-                    title: 'Guardado',
-                    text: '¡Registro guardado exitosamente!',
-                    icon: 'success'
-                });
-                if (respuestaApi.status === 201) {
-                    alert(respuestaApi.data.message);
-                    clearForm();
-                    getAllEstanques()
 
+                if (respuestaApi.status === 201) {
+                    Swal.fire({
+                        title: 'Guardado',
+                        text: '¡Registro guardado exitosamente!',
+                        icon: 'success'
+                    });
+                    clearForm();
+                    getAllEstanques();
+                } else {
+                    console.warn('HTTP Status:', respuestaApi.status);
                 }
             }
         } catch (error) {
-            console.error('Error al enviar el formulario:', error);
+            console.error('Error al enviar el formulario:', error.response?.status || error.message);
             Swal.fire({
                 title: 'Error',
                 text: 'No se pudo guardar el estanque.',
@@ -66,7 +72,6 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
             });
         }
     };
-    
 
     const clearForm = () => {
         setId_Estanque('');
