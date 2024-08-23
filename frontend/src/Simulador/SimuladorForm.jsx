@@ -82,6 +82,7 @@ const SimuladorForm = ({ onSimulate }) => {
           className="form-control"
         />
       </div>
+      <br />
       <button type="submit" className="btn btn-primary">Simular</button>
     </form>
   );

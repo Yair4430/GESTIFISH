@@ -22,10 +22,10 @@ const CrudMuestreo = () => {
     });
 
     useEffect(() => {
-        getAllMuestreos();
+        getAllMuestreo();
     }, []);
 
-    const getAllMuestreos = async () => {
+    const getAllMuestreo = async () => {
         try {
             const respuesta = await axios.get(URI);
             if (respuesta.status >= 200 && respuesta.status < 300) {
