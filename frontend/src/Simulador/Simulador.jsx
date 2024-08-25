@@ -3,7 +3,7 @@ import SimuladorForm from './SimuladorForm';
 import SimuladorTabla from './SimuladorTabla';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import './Simulador.css';
+import BarraNavegacionPrivada from '../home/barraNavegacionPrivada';
 
 const Simulador = () => {
   const [tableData, setTableData] = useState([]);
@@ -37,7 +37,7 @@ const Simulador = () => {
     }
 
     if (espejoAgua && densidad && precioBulto) {
-      let numeroAnimales = Math.round(espejoAgua * densidad );
+      let numeroAnimales = Math.round(espejoAgua * densidad);
       const reducciones = [0.20, 0.10, 0.03, 0.03, 0.02, 0.02];
 
       data = data.map((row, i) => {
@@ -71,79 +71,78 @@ const Simulador = () => {
 
   const handleExportPdf = async () => {
     const input = document.getElementById('simulador-content');
-    const dataInputs = document.querySelectorAll('.data-input'); // Suponiendo que los datos están en elementos con la clase 'data-input'
+    const dataInputs = document.querySelectorAll('.data-input');
 
     if (!input) {
-        console.error("Element with ID 'simulador-content' not found.");
-        return;
+      console.error("Element with ID 'simulador-content' not found.");
+      return;
     }
 
-    // Ajustar la escala para mejorar la calidad, pero controlando el tamaño
     const canvas = await html2canvas(input, {
-        scale: 2, // Reducir la escala para disminuir el tamaño del archivo
-        scrollX: -window.scrollX,
-        scrollY: -window.scrollY,
-        windowWidth: document.documentElement.offsetWidth,
-        windowHeight: document.documentElement.offsetHeight,
+      scale: 2,
+      scrollX: -window.scrollX,
+      scrollY: -window.scrollY,
+      windowWidth: document.documentElement.offsetWidth,
+      windowHeight: document.documentElement.offsetHeight,
     });
 
-    const imgData = canvas.toDataURL('image/png', 0.5); // Ajustar la calidad de la imagen
+    const imgData = canvas.toDataURL('image/png', 0.5);
     const pdf = new jsPDF('p', 'mm', 'a4');
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const imgProps = pdf.getImageProperties(imgData);
     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    // Agregar título
     const title = "Informe del Simulador";
     pdf.setFontSize(18);
     pdf.text(title, pdfWidth / 2, 20, { align: 'center' });
 
-    // Espacio entre el título y la imagen
     const spaceBelowTitle = 30;
 
-    // Agregar datos de entrada al PDF
     pdf.setFontSize(12);
-    let yPosition = 25; // Espacio inicial para los datos
+    let yPosition = 25;
 
     dataInputs.forEach((input, index) => {
-        pdf.text(`Dato ${index + 1}: ${input.value}`, 10, yPosition);
-        yPosition += 10; // Espacio entre líneas
+      pdf.text(`Dato ${index + 1}: ${input.value}`, 10, yPosition);
+      yPosition += 10;
     });
 
-    // Agrega la imagen debajo de los datos de entrada
     pdf.addImage(imgData, 'PNG', 0, yPosition + 10, pdfWidth, pdfHeight);
 
     let heightLeft = pdfHeight;
     let position = yPosition + pdfHeight - pdf.internal.pageSize.getHeight();
 
-    // Agregar más páginas si es necesario
     while (heightLeft > pdf.internal.pageSize.getHeight()) {
-        pdf.addPage();
-        position = heightLeft - pdfHeight;
-        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
-        heightLeft -= pdf.internal.pageSize.getHeight();
+      pdf.addPage();
+      position = heightLeft - pdfHeight;
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+      heightLeft -= pdf.internal.pageSize.getHeight();
     }
 
     pdf.save('simulador.pdf');
-}; 
-
-
+  };
 
   return (
     <>
+      <BarraNavegacionPrivada />
       <div className="container mt-4">
-        <h2 className="display-4 text-center text-primary font-weight-bold">Simulador</h2>
+        <h2 className="display-4 text-center" style={{ color: 'black', fontWeight: 'bold' }}>Simulador</h2>
         <SimuladorForm onSimulate={handleSimulate} />
         <div id="simulador-content">
           <SimuladorTabla data={tableData} />
         </div>
-        <button 
-          className="btn btn-success mt-3" 
-          onClick={handleExportPdf}
-          disabled={tableData.length === 0}
-        >
-          Exportar a PDF
-        </button>
+        <div className="d-flex justify-content-center mt-3">
+          {tableData.length > 0 && (
+            <button 
+            className="btn btn-success"
+            onClick={handleExportPdf}
+            style={{
+              transition: 'all 0.3s ease-in-out'
+            }}
+          >
+            Exportar a PDF
+          </button>
+          )}
+        </div>
       </div>
     </>
   );

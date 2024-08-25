@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import FormActividad from './formActividad.jsx';
 import FormQueryActividad from './formQueryActividad.jsx';
+import BarraNavegacionPrivada from '../home/barraNavegacionPrivada.jsx';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/Actividad/';
 
@@ -77,6 +78,7 @@ const CrudActividad = () => {
 
     return (
         <>
+        <BarraNavegacionPrivada />
             <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
                 <thead>
                     <tr>

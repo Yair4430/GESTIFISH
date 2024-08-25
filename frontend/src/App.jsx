@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Routes, Route, NavLink, Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import Home from './home/Home.jsx';
+//Importaciones Formularios
 import CrudAlimentacion from './Alimento/CrudAlimentacion.jsx';
 import CrudResponsable from './Responsables/CrudResponsable.jsx';
 import CrudEstanque from './Estanque/crudEstanque.jsx';
@@ -14,17 +14,23 @@ import CrudCosecha from './Cosecha/CrudCosecha.jsx';
 import CrudMortalidad from './Mortalidad/CrudMortalidad.jsx';
 import CrudSiembra from './Siembra/CrudSiembra.jsx';
 
+//Importacion Simulador
+import Simulador from './Simulador/Simulador.jsx';
+
+//Importaciones Registro, inicio de sesion e recuperar contraseña
 import Auth from './Auth/auth.jsx';
 import ResetPassword from './Auth/resetPassword.jsx';
 
-import Simulador from './Simulador/Simulador.jsx';
-
-import imagen_logo from './IMG/LOGO_GESTIFISH.png';
-import "../src/App.css";
+//Importaciones de estructura del proyecto
+import Home from './home/Home.jsx';
+import BarraNavegacionPrivada from './home/barraNavegacionPrivada';
+import RegistrosMenu from './home/RegistrosMenu.jsx';
 
 const URL_AUTH = process.env.ROUTER_PRINCIPAL + '/auth/';
 
+
 function App() {
+
   const [isAuth, setIsAuth] = useState(false);
   const navigate = useNavigate();
 
@@ -53,121 +59,17 @@ function App() {
   };
 
   return (
-    <>
-      <nav className='navbar navbar-expand-lg navbar-light bg-primary py-3 shadow-sm' data-bs-theme="dark">
-        <ul className='nav'>
-          <li className="navbar-brand">
-            <img src={imagen_logo} alt="" style={{ width: '95px', height: '50px' }} />
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/" end>
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Inicio</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Alimentacion">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Alimentacion</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Responsable">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Responsables</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Traslado">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Traslado</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Estanque">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Estanque</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Especie">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Especie</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Actividad">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Actividad</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Muestreo">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Muestreo</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Cosecha">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Cosecha</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Mortalidad">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Mortalidad</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Siembra">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Siembra</span>
-              )}
-            </NavLink>
-          </li>
-          <li className='nav-item'>
-            <NavLink className='nav-link fs-5' to="/Simulador">
-              {({ isActive }) => (
-                <span className={isActive ? 'active' : ''}>Simulador</span>
-              )}
-            </NavLink>
-          </li>
-
-          {!isAuth ?  
-            <li className='nav-item'>
-              <NavLink className='nav-link fs-5' to="/Auth">
-                {({ isActive }) => (
-                  <span className={isActive ? 'active' : ''}>Inicio De Sesion</span>
-                )}
-              </NavLink>
-             </li>
-             : ''
-          }
-
-          {isAuth ?
-            <li>
-              <button onClick={() => logOutUser()} className='btn btn-secondary'><i className='fa-solid fa-door-closed'></i>Cerrar Sesion</button>
-            </li>: ''
-          }
-
-        </ul>
-      </nav>
-
+    <> 
     <Routes>
       {isAuth ?
         <>  
+          {/*Routes de estructura del proyecto */}
           <Route path='/' element={<Home />} />
+          <Route path='/barraNavegacionPrivada' element={<BarraNavegacionPrivada/>}/>
+          <Route path='/RegistrosMenu' element={<RegistrosMenu/>}/>
+          <Route path='/logOutUser' element={<logOutUser/>}/>
+
+          {/*Routes de componentes formularios y simulador */}
           <Route path='/Alimentacion' element={<CrudAlimentacion />} />
           <Route path='/Responsable' element={<CrudResponsable/>}/>
           <Route path='/Estanque' element={<CrudEstanque/>}/>
@@ -179,6 +81,8 @@ function App() {
           <Route path='/Mortalidad' element={<CrudMortalidad/>}/>
           <Route path='/Siembra' element={<CrudSiembra/>}/>
           <Route path='/Simulador' element={<Simulador/>}/>
+
+          
         </>
         :
         <Route path='*' element={<Navigate to="/" />} />
