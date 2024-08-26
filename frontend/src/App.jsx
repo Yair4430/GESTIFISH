@@ -24,7 +24,9 @@ import ResetPassword from './Auth/resetPassword.jsx';
 //Importaciones de estructura del proyecto
 import Home from './home/Home.jsx';
 import BarraNavegacionPrivada from './home/barraNavegacionPrivada';
+import BarraNavegacionPublica from './home/barraNavegacionPublica.jsx';
 import RegistrosMenu from './home/RegistrosMenu.jsx';
+import HomePublico from './home/HomePublica.jsx';
 
 const URL_AUTH = process.env.ROUTER_PRINCIPAL + '/auth/';
 
@@ -65,7 +67,9 @@ function App() {
         <>  
           {/*Routes de estructura del proyecto */}
           <Route path='/' element={<Home />} />
+
           <Route path='/barraNavegacionPrivada' element={<BarraNavegacionPrivada/>}/>
+          <Route path='/barraNavegacionPublica' element={<BarraNavegacionPublica/>}/>
           <Route path='/RegistrosMenu' element={<RegistrosMenu/>}/>
           <Route path='/logOutUser' element={<logOutUser/>}/>
 
@@ -85,7 +89,7 @@ function App() {
           
         </>
         :
-        <Route path='*' element={<Navigate to="/" />} />
+        <Route path='*' element={<HomePublico/>} />
       }
 
       {!isAuth ?

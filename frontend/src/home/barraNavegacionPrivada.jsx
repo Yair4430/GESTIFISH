@@ -3,7 +3,9 @@ import { NavLink } from 'react-router-dom'; // Importa NavLink
 import Logo from '../IMG/Logo_FondoBlanco.jpeg';
 
 // Definición del componente de barra de navegación privada
-function barraNavegacionPrivada() {
+function barraNavegacionPrivada({ logOutUser }) {
+
+  console.log(logOutUser)
   // Estilos en línea para la barra de navegación
   const styles = {
     navbar: {
@@ -129,10 +131,10 @@ function barraNavegacionPrivada() {
               {/* Elemento de la lista de navegación para el ícono de cerrar sesión */}
               <li className="nav-item">
                 <NavLink
-                  to="/logOutUser"
+                 
                   className="nav-link text-white"
                   style={styles.navLink}
-                  onClick={() => logOutUser()}
+                  onClick={logOutUser}  // Llamar a logOutUser directamente
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'scale(1.1)';
                     e.currentTarget.style.opacity = '0.8';
