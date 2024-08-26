@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import FormEspecie from './FormEspecie';
 import FormQueryEspecie from './FormQueryEspecie';
 import Swal from 'sweetalert2';
-import BarraNavegacionPrivada from '../home/barraNavegacionPrivada';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/especie/';
 const PATH_FOTOS = process.env.ROUTER_FOTOS;
@@ -88,7 +87,6 @@ const CrudEspecie = () => {
 
     return (
         <>
-        <BarraNavegacionPrivada />
             <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
                 <thead>
                     <tr>

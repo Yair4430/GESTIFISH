@@ -1,11 +1,9 @@
 import React from 'react';
 import imgtodo from '../IMG/ImagenGrupalActualizada.jpeg';
-import BarraNavegacionPrivada from './barraNavegacionPrivada';  // Asegúrate de usar el nombre correcto del componente
 
 const Home = () => {
   return (
     <>
-      <BarraNavegacionPrivada />  {/* Usa el nombre correcto del componente */}
       <section className="seccion active align-items-center mt-4">
         <center>
           <h1 style={{

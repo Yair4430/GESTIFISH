@@ -1,12 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import BarraNavegacionPrivada from './barraNavegacionPrivada';
 import './RegistrosMenu.css';  // Asegúrate de que este archivo CSS esté en la misma carpeta
 
 function RegistrosMenu() {
   return (
     <>
-      <BarraNavegacionPrivada />
       <div className="container mt-4">
         <h2 className="main-title">
           Formularios

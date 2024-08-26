@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import FormTraslado from './FormTraslado'; 
 import FormQueryTraslado from './FormQueryTraslado'; 
-import BarraNavegacionPrivada from '../home/barraNavegacionPrivada';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/traslado/';
 
@@ -87,7 +86,6 @@ const CrudTraslado = () => {
 
     return (
         <>
-        <BarraNavegacionPrivada />
             <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
                 <thead>
                     <tr>

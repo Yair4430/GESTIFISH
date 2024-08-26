@@ -3,7 +3,6 @@ import SimuladorForm from './SimuladorForm';
 import SimuladorTabla from './SimuladorTabla';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import BarraNavegacionPrivada from '../home/barraNavegacionPrivada';
 
 const Simulador = () => {
   const [tableData, setTableData] = useState([]);
@@ -123,13 +122,14 @@ const Simulador = () => {
 
   return (
     <>
-      <BarraNavegacionPrivada />
       <div className="container mt-4">
         <h2 className="display-4 text-center" style={{ color: 'black', fontWeight: 'bold' }}>Simulador</h2>
+        <br/>
         <SimuladorForm onSimulate={handleSimulate} />
         <div id="simulador-content">
           <SimuladorTabla data={tableData} />
         </div>
+          <br />
         <div className="d-flex justify-content-center mt-3">
           {tableData.length > 0 && (
             <button 
@@ -138,11 +138,12 @@ const Simulador = () => {
             style={{
               transition: 'all 0.3s ease-in-out'
             }}
-          >
+            >
             Exportar a PDF
           </button>
           )}
         </div>
+          <br />
       </div>
     </>
   );
