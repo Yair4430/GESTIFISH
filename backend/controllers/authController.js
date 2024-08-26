@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken';
 import { sendPassworResetEmail } from '../servicios/emailService.js';
 
 // Crear nuevo usuario
-// Crear nuevo usuario
 export const createUser = async (req, res) => {
     try {
         const { Nom_Usuario, Ape_Usuario, Cor_Usuario, Con_Usuario } = req.body;

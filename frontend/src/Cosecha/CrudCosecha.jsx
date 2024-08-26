@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import FormCosecha from './FormCosecha'; // Asegúrate de tener este componente para el formulario de cosecha
 import FormQueryCosecha from './FormQueryCosecha'; // Asegúrate de tener este componente para consultar cosechas por fecha
-import BarraNavegacionPrivada from '../home/barraNavegacionPrivada';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/cosecha/';
 
@@ -92,7 +91,6 @@ const CrudCosecha = () => {
 
     return (
         <>
-        <BarraNavegacionPrivada />
             <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
                 <thead>
                     <tr>

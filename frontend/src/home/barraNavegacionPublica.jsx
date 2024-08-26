@@ -3,9 +3,7 @@ import { NavLink } from 'react-router-dom'; // Importa NavLink
 import Logo from '../IMG/Logo_FondoBlanco.jpeg';
 
 // Definición del componente de barra de navegación privada
-function barraNavegacionPrivada({ logOutUser }) {
-
-  console.log(logOutUser)
+function barraNavegacionPublica() {
   // Estilos en línea para la barra de navegación
   const styles = {
     navbar: {
@@ -77,7 +75,7 @@ function barraNavegacionPrivada({ logOutUser }) {
               {/* Elemento de la lista de navegación para el ícono de inicio */}
               <li className="nav-item">
                 <NavLink
-                  to="/"
+                  to="/Auth"
                   className="nav-link text-white"
                   style={styles.navLink}
                   onMouseEnter={(e) => {
@@ -92,61 +90,6 @@ function barraNavegacionPrivada({ logOutUser }) {
                   <i className="fas fa-home" style={styles.icon}></i>
                 </NavLink>
               </li>
-              {/* Elemento de la lista de navegación para el ícono de registros */}
-              <li className="nav-item">
-                <NavLink
-                  to="/RegistrosMenu"
-                  className="nav-link text-white"
-                  style={styles.navLink}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.1)';
-                    e.currentTarget.style.opacity = '0.8';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.opacity = '1';
-                  }}
-                >
-                  <i className="fas fa-file-alt" style={styles.icon}></i> {/* Cambiado a ícono de formularios */}
-                </NavLink>
-              </li>
-              {/* Elemento de la lista de navegación para el ícono de gráfico */}
-              <li className="nav-item">
-                <NavLink
-                  to="/Simulador"
-                  className="nav-link text-white"
-                  style={styles.navLink}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.1)';
-                    e.currentTarget.style.opacity = '0.8';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.opacity = '1';
-                  }}
-                >
-                  <i className="fas fa-chart-line" style={styles.icon}></i>
-                </NavLink>
-              </li>
-              {/* Elemento de la lista de navegación para el ícono de cerrar sesión */}
-              <li className="nav-item">
-                <NavLink
-                 
-                  className="nav-link text-white"
-                  style={styles.navLink}
-                  onClick={logOutUser}  // Llamar a logOutUser directamente
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.1)';
-                    e.currentTarget.style.opacity = '0.8';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.opacity = '1';
-                  }}
-                >
-                  <i className="fas fa-sign-out-alt" style={styles.icon}></i>
-                </NavLink>
-              </li>
             </ul>
           </div>
         </div>
@@ -155,4 +98,4 @@ function barraNavegacionPrivada({ logOutUser }) {
   );
 }
 
-export default barraNavegacionPrivada;
+export default barraNavegacionPublica;

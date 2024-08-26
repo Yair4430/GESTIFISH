@@ -1,9 +1,11 @@
 import React from 'react';
 import imgtodo from '../IMG/ImagenGrupalActualizada.jpeg';
+import BarraNavegacionPublica from './barraNavegacionPublica';
 
-const Home = () => {
+const HomePublico = () => {
   return (
     <>
+      < BarraNavegacionPublica/>
       <section className="seccion active align-items-center mt-4">
         <center>
           <h1 style={{
@@ -32,4 +34,4 @@ const Home = () => {
   );
 }
 
-export default Home;
+export default HomePublico;
