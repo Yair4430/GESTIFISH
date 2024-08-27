@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from 'react-router-dom'; // Importa NavLink
 import Logo from '../IMG/Logo_FondoBlanco.jpeg';
 
-// Definición del componente de barra de navegación privada
+// Definición del componente de barra de navegación pública
 function barraNavegacionPublica() {
   // Estilos en línea para la barra de navegación
   const styles = {
@@ -75,7 +75,7 @@ function barraNavegacionPublica() {
               {/* Elemento de la lista de navegación para el ícono de inicio */}
               <li className="nav-item">
                 <NavLink
-                  to="/Auth"
+                  to="*" // Cambia esto si el enlace de inicio es diferente
                   className="nav-link text-white"
                   style={styles.navLink}
                   onMouseEnter={(e) => {
@@ -88,6 +88,42 @@ function barraNavegacionPublica() {
                   }}
                 >
                   <i className="fas fa-home" style={styles.icon}></i>
+                </NavLink>
+              </li>
+              {/* Elemento de la lista de navegación para el ícono de registro */}
+              <li className="nav-item">
+                <NavLink
+                  to="/auth" // Cambia esto si el enlace de registro es diferente
+                  className="nav-link text-white"
+                  style={styles.navLink}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.1)';
+                    e.currentTarget.style.opacity = '0.8';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.opacity = '1';
+                  }}
+                >
+                  <i className="fas fa-user-plus" style={styles.icon}></i>
+                </NavLink>
+              </li>
+              {/* Elemento de la lista de navegación para el ícono de personas */}
+              <li className="nav-item">
+                <NavLink
+                  to="/Usuarios" // Cambia esto si el enlace para los usuarios es diferente
+                  className="nav-link text-white"
+                  style={styles.navLink}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.1)';
+                    e.currentTarget.style.opacity = '0.8';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.opacity = '1';
+                  }}
+                >
+                  <i className="fas fa-users" style={styles.icon}></i>
                 </NavLink>
               </li>
             </ul>
