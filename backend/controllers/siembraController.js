@@ -3,119 +3,82 @@ import ResponsableModel from "../models/responsableModel.js";
 import EspecieModel from "../models/especieModel.js";
 import EstanqueModel from "../models/estanqueModel.js";
 
-// Definición de relaciones
-SiembraModel.belongsTo(ResponsableModel, { foreignKey: 'Id_Responsable' });
-SiembraModel.belongsTo(EspecieModel, { foreignKey: 'Id_Especie' });
-SiembraModel.belongsTo(EstanqueModel, { foreignKey: 'Id_Estanque' });
-
-ResponsableModel.hasMany(SiembraModel, { foreignKey: 'Id_Responsable' });
-EspecieModel.hasMany(SiembraModel, { foreignKey: 'Id_Especie' });
-EstanqueModel.hasMany(SiembraModel, { foreignKey: 'Id_Estanque' });
-
-// Obtener todos los registros
+// Obtener todos los registros de siembras
 export const getAllSiembra = async (req, res) => {
     try {
+        // Buscar todas las siembras e incluir los datos relacionados
         const siembras = await SiembraModel.findAll({
             include: [
-                {
-                    model: ResponsableModel,
-                    attributes: ['Nom_Responsable'],
-                },
-                {
-                    model: EspecieModel,
-                    attributes: ['Nom_Especie'],
-                },
-                {
-                    model: EstanqueModel,
-                    attributes: ['Nom_Estanque'],
-                },
+                { model: ResponsableModel, attributes: ['Nom_Responsable'] },
+                { model: EspecieModel, attributes: ['Nom_Especie'] },
+                { model: EstanqueModel, attributes: ['Nom_Estanque'] },
             ],
         });
-        res.status(200).json(siembras);
+
+        if (siembras.length > 0) {
+            // Si se encuentran siembras, devolverlas con status 200
+            res.status(200).json(siembras);
+            return;
+        }
+
+        // Si no se encuentran siembras, devolver un mensaje con status 404
+        res.status(404).json({ message: 'No se encontraron siembras' });
     } catch (error) {
-        console.error('Error fetching siembras:', error);
-        res.status(500).json({ message: 'Error fetching siembras' });
+        // Manejar errores en caso de fallo en la consulta
+        console.error('Error al obtener siembras:', error);
+        res.status(500).json({ message: 'Error al obtener siembras' });
     }
 };
 
-// Obtener un registro por ID
+// Obtener un registro de siembra por ID
 export const getSiembra = async (req, res) => {
+    const { Id_Siembra } = req.params;
+
+    // Verificar que el ID de siembra está presente
+    if (!Id_Siembra) {
+        res.status(400).json({ message: 'Id_Siembra es requerido' });
+        return;
+    }
+
     try {
-        const siembra = await SiembraModel.findByPk(req.params.Id_Siembra, {
+        // Buscar la siembra por su ID e incluir los datos relacionados
+        const siembra = await SiembraModel.findByPk(Id_Siembra, {
             include: [
                 { model: ResponsableModel, attributes: ['Nom_Responsable'] },
                 { model: EspecieModel, attributes: ['Nom_Especie'] },
                 { model: EstanqueModel, attributes: ['Nom_Estanque'] }
             ]
         });
+
         if (siembra) {
+            // Si se encuentra la siembra, devolverla con status 200
             res.status(200).json(siembra);
-        } else {
-            res.status(404).json({ message: "Registro no encontrado" });
+            return;
         }
+
+        // Si la siembra no se encuentra, devolver un mensaje con status 404
+        res.status(404).json({ message: 'Siembra no encontrada' });
     } catch (error) {
-        console.error('Error fetching siembra:', error);
-        res.status(500).json({ message: 'Error fetching siembra' });
+        // Manejar errores en caso de fallo en la consulta
+        console.error('Error al recuperar siembra:', error);
+        res.status(500).json({ message: 'Error al recuperar siembra' });
     }
 };
 
-// Crear un registro
-export const createSiembra = async (req, res) => {
-    try {
-        const newSiembra = await SiembraModel.create(req.body);
-        res.status(201).json(newSiembra);
-    } catch (error) {
-        console.error('Error creating siembra:', error);
-        res.status(500).json({ message: 'Error al registrar la siembra', error: error.message });
-    }
-};
-
-// Actualizar un registro
-export const updateSiembra = async (req, res) => {
-    try {
-        const updated = await SiembraModel.update(req.body, {
-            where: { Id_Siembra: req.params.Id_Siembra }
-        });
-        if (updated[0] > 0) {
-            res.status(200).json({ message: "¡Registro actualizado exitosamente!" });
-        } else {
-            res.status(404).json({ message: "Registro no encontrado" });
-        }
-    } catch (error) {
-        console.error('Error updating siembra:', error);
-        res.status(500).json({ message: 'Error updating siembra', error: error.message });
-    }
-};
-
-// Borrar un registro
-export const deleteSiembra = async (req, res) => {
-    try {
-        const deleted = await SiembraModel.destroy({
-            where: { Id_Siembra: req.params.Id_Siembra }
-        });
-        if (deleted > 0) {
-            res.status(200).json({ message: "¡Registro borrado exitosamente!" });
-        } else {
-            res.status(404).json({ message: "Registro no encontrado" });
-        }
-    } catch (error) {
-        console.error('Error deleting siembra:', error);
-        res.status(500).json({ message: 'Error deleting siembra', error: error.message });
-    }
-};
-
+// Obtener registros de siembras por fecha de inicio
 export const getSiembraByFechaInicio = async (req, res) => {
     const { Fec_Siembra } = req.params;
 
+    // Verificar que la fecha de siembra está presente
     if (!Fec_Siembra) {
-        return res.status(400).json({ message: 'Fecha es requerida' });
+        res.status(400).json({ message: 'Fecha es requerida' });
+        return;
     }
 
     try {
+        // Buscar siembras que coincidan con la fecha de inicio e incluir los datos relacionados
         const siembras = await SiembraModel.findAll({
-            where: {
-                Fec_Siembra: Fec_Siembra
-            },
+            where: { Fec_Siembra },
             include: [
                 { model: ResponsableModel, attributes: ['Nom_Responsable'] },
                 { model: EspecieModel, attributes: ['Nom_Especie'] },
@@ -124,14 +87,100 @@ export const getSiembraByFechaInicio = async (req, res) => {
         });
 
         if (siembras.length > 0) {
-            return res.status(200).json(siembras);
-        } else {
-            return res.status(404).json({ message: "No se encontraron siembras para la fecha dada" });
+            // Si se encuentran siembras, devolverlas con status 200
+            res.status(200).json(siembras);
+            return;
         }
+
+        // Si no se encuentran siembras, devolver un mensaje con status 404
+        res.status(404).json({ message: 'No se encontraron siembras para la fecha proporcionada' });
     } catch (error) {
-        return res.status(500).json({ message: "Error al recuperar siembras por fecha de inicio." });
+        // Manejar errores en caso de fallo en la consulta
+        console.error('Error al recuperar siembras por fecha de inicio:', error);
+        res.status(500).json({ message: 'Error al recuperar siembras por fecha de inicio' });
     }
 };
 
+// Crear un nuevo registro de siembra
+export const createSiembra = async (req, res) => {
+    try {
+        // Crear una nueva siembra con los datos proporcionados
+        const newSiembra = await SiembraModel.create(req.body);
+        res.status(201).json({ message: '¡Siembra creada exitosamente!', data: newSiembra });
+    } catch (error) {
+        // Manejar errores en caso de fallo en la creación
+        if (error.name === 'SequelizeValidationError') {
+            res.status(400).json({ message: 'Error de validación', errors: error.errors });
+            return;
+        }
 
+        console.error('Error al crear siembra:', error);
+        res.status(500).json({ message: 'Error al crear siembra' });
+    }
+};
 
+// Actualizar un registro de siembra
+export const updateSiembra = async (req, res) => {
+    const { Id_Siembra } = req.params;
+
+    // Verificar que el ID de siembra está presente
+    if (!Id_Siembra) {
+        res.status(400).json({ message: 'Id_Siembra es requerido' });
+        return;
+    }
+
+    try {
+        // Buscar la siembra por su ID
+        const siembra = await SiembraModel.findByPk(Id_Siembra);
+
+        if (siembra) {
+            // Actualizar la siembra con los datos proporcionados
+            await siembra.update(req.body);
+            res.status(200).json({ message: '¡Siembra actualizada exitosamente!', siembra });
+            return;
+        }
+
+        // Si la siembra no se encuentra, devolver un mensaje con status 404
+        res.status(404).json({ message: 'Siembra no encontrada' });
+    } catch (error) {
+        // Manejar errores en caso de fallo en la actualización
+        console.error('Error al actualizar siembra:', error);
+        res.status(500).json({ message: 'Error al actualizar siembra', error: error.message });
+    }
+};
+
+// Borrar un registro de siembra
+export const deleteSiembra = async (req, res) => {
+    const { Id_Siembra } = req.params;
+
+    // Verificar que el ID de siembra está presente
+    if (!Id_Siembra) {
+        res.status(400).json({ message: 'Id_Siembra es requerido' });
+        return;
+    }
+
+    try {
+        // Buscar la siembra por su ID
+        const siembra = await SiembraModel.findByPk(Id_Siembra);
+
+        if (siembra) {
+            // Eliminar la siembra
+            await siembra.destroy();
+            // Verificar si la siembra ha sido eliminada
+            const siembraEliminada = await SiembraModel.findByPk(Id_Siembra);
+
+            if (!siembraEliminada) {
+                res.status(200).json({ message: '¡Siembra eliminada exitosamente!' });
+                return;
+            }
+
+            // Si la siembra aún existe después de intentar eliminar, devolver un mensaje con status 500
+            res.status(500).json({ message: 'Error al eliminar siembra' });
+        }
+        
+    } catch (error) {
+        // Manejar errores en caso de fallo en la eliminación
+        console.error('Error al eliminar siembra:', error);
+        res.status(500).json({ message: 'Error al eliminar siembra', error: error.message });
+    }
+};

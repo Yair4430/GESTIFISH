@@ -61,4 +61,9 @@ routerAuth.get('/muestreo', verifyToken, (req, res) => {
     res.status(200).json({ message: 'Datos de muestreo' });
 });
 
+routerAuth.get('/cosecha', verifyToken, (req, res) => {
+    res.status(200).json({ message: 'Datos de cosecha' });
+});
+
+
 export default routerAuth;

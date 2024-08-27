@@ -26,6 +26,7 @@ import MortalidadModel from './models/mortalidadModel.js'; // Importa el modelo 
 import CosechaModel from './models/cosechaModel.js';
 import MuestreoModel from './models/muestreoModel.js';
 import AlimentacionModel from './models/alimentacionModel.js';
+import EspecieModel from './models/especieModel.js';
 
 dotenv.config({ path: './.env' });
 
@@ -91,6 +92,13 @@ MuestreoModel.belongsTo(SiembraModel, { foreignKey: 'Id_Siembra', as: 'siembra' 
 AlimentacionModel.belongsTo(ResponsableModel, { foreignKey: 'Id_Responsable', as: 'responsable' });
 AlimentacionModel.belongsTo(SiembraModel, { foreignKey: 'Id_Siembra', as: 'siembra' });
 
+SiembraModel.belongsTo(ResponsableModel, { foreignKey: 'Id_Responsable' });
+SiembraModel.belongsTo(EspecieModel, { foreignKey: 'Id_Especie' });
+SiembraModel.belongsTo(EstanqueModel, { foreignKey: 'Id_Estanque' });
+
+ResponsableModel.hasMany(SiembraModel, { foreignKey: 'Id_Responsable' });
+EspecieModel.hasMany(SiembraModel, { foreignKey: 'Id_Especie' });
+EstanqueModel.hasMany(SiembraModel, { foreignKey: 'Id_Estanque' });
 
 // Exportación de los modelos con las relaciones ya establecidas
 export { TrasladoModel, ResponsableModel, ActividadModel, EstanqueModel, SiembraModel, MortalidadModel, CosechaModel, MuestreoModel, AlimentacionModel };

@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+body, h1, h2, h3, p {
+  font-family: 'Poppins', sans-serif;
+}
+
+.main-title {
+  font-weight: 700;  /* Aumenta el grosor de la fuente */
+  font-size: 3.5rem;  /* Tamaño del texto */
+  text-align: center; /* Centra el texto */
+  color: #000;       /* Asegúrate de que el color sea negro */
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.card-title {
+  font-weight: bold; /* Negrita para los títulos */
+  font-size: 1.5rem; /* Tamaño de fuente para los títulos de las tarjetas */
+}
+
+.custom-btn {
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+}
+
+.custom-btn:hover {
+  background-color: #004085;
+  color: #ffffff;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 91, 234, 0.5);
+}
+
+.card {
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 10px 30px rgba(0, 91, 234, 0.7);
+}
+
+.card-body {
+  transition: background-color 0.3s ease-in-out;
+}
+
+.card:hover .card-body {
+  background-color: #f0f8ff;
+}

@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
-// import 'frontend/src/Auth/auth.css'; // Import your custom CSS file
+import BarraNavegacionPublica from "../home/barraNavegacionPublica";
 import './auth.css';
+
 const URI = process.env.ROUTER_PRINCIPAL + '/auth/';
 
 const Auth = () => {
@@ -12,10 +13,10 @@ const Auth = () => {
     const [Ape_Usuario, setApe_Usuario] = useState("");
     const [Cor_Usuario, setCor_Usuario] = useState("");
     const [Con_Usuario, setCon_Usuario] = useState("");
-
     const [buttonForm, setButtonForm] = useState('Iniciar Sesion');
     const [singnInOrLogIn, setSingnInOrLogIn] = useState('logIn');
     const [resetPass, setResetPass] = useState(false);
+    const [isSignUpActive, setIsSignUpActive] = useState(false);
 
     const validateName = (name) => /^[a-zA-Z\s]+$/.test(name);
 
@@ -63,65 +64,78 @@ const Auth = () => {
 
     const switchForm = (opcion) => {
         setSingnInOrLogIn(opcion);
+        setButtonForm(opcion === 'signIn' ? 'Registrar' : 'Iniciar Sesion');
+        setIsSignUpActive(opcion === 'signIn');
     };
 
     return (
-        <div className="auth-container">
-            <div className="auth-content">
-                <div className="auth-left">
-                    <h3>{singnInOrLogIn === 'signIn' ? 'Registrar' : 'Iniciar Sesión'}</h3>
-                    {message && (
-                        <div className={`alert ${messageType === 'success' ? 'alert-success' : 'alert-danger'}`}>
-                            {message}
-                        </div>
-                    )}
-                    {resetPass === false ? (
-                        <>
-                            <form onSubmit={sendForm}>
-                                {singnInOrLogIn === 'signIn' && (
-                                    <>
-                                        <div className="form-group">
-                                            <input type="text" placeholder="Nombres completos" value={Nom_Usuario} onChange={(e) => setNom_Usuario(e.target.value)} required />
-                                        </div>
-                                        <div className="form-group">
-                                            <input type="text" placeholder="Apellidos completos" value={Ape_Usuario} onChange={(e) => setApe_Usuario(e.target.value)} required />
-                                        </div>
-                                    </>
-                                )}
-                                <div className="form-group">
-                                    <input type="email" placeholder="example@gmail.com" value={Cor_Usuario} onChange={(e) => setCor_Usuario(e.target.value)} required />
-                                </div>
-                                <div className="form-group">
-                                    <input type="password" placeholder="Password" value={Con_Usuario} onChange={(e) => setCon_Usuario(e.target.value)} required />
-                                </div>
-                                <div className="d-grid">
-                                    <button type="submit" className="btn-primary">{buttonForm}</button>
-                                </div>
-                            </form>
-                            <div className="text-center mt-3">
-                                <Link to="#" onClick={() => setResetPass(!resetPass)}>Forgot Your Password?</Link>
+        <>
+            <BarraNavegacionPublica />
+            <div className="auth-container">
+                <div className={`auth-content ${isSignUpActive ? 'sign-up-mode' : ''}`}>
+                    <div className="auth-left">
+                        <h3 className="bold-highlight">{singnInOrLogIn === 'signIn' ? 'Registrar' : 'Iniciar Sesión'}</h3>
+                        {message && (
+                            <div className={`alert ${messageType === 'success' ? 'alert-success' : 'alert-danger'}`}>
+                                {message}
                             </div>
-                        </>
-                    ) : (
-                        <>
-                            <form>
-                                <div className="form-group">
-                                    <input type="email" placeholder="Correo electrónico" value={Cor_Usuario} onChange={(e) => setCor_Usuario(e.target.value)} required />
+                        )}
+                        {resetPass === false ? (
+                            <>
+                                <form onSubmit={sendForm}>
+                                    {singnInOrLogIn === 'signIn' && (
+                                        <>
+                                            <div className="form-group">
+                                                <input type="text" placeholder="Nombres completos" value={Nom_Usuario} onChange={(e) => setNom_Usuario(e.target.value)} required />
+                                            </div>
+                                            <div className="form-group">
+                                                <input type="text" placeholder="Apellidos completos" value={Ape_Usuario} onChange={(e) => setApe_Usuario(e.target.value)} required />
+                                            </div>
+                                        </>
+                                    )}
+                                    <div className="form-group">
+                                        <input type="email" placeholder="example@gmail.com" value={Cor_Usuario} onChange={(e) => setCor_Usuario(e.target.value)} required />
+                                    </div>
+                                    <div className="form-group">
+                                        <input type="password" placeholder="Password" value={Con_Usuario} onChange={(e) => setCon_Usuario(e.target.value)} required />
+                                    </div>
+                                    <div className="d-grid">
+                                        <button type="submit" className="btn-primary">{buttonForm}</button>
+                                    </div>
+                                </form>
+                                <div className="text-center mt-3">
+                                    <Link to="#" onClick={() => setResetPass(!resetPass)}>¿Olvidaste tu contraseña?</Link>
                                 </div>
-                                <div className="d-grid">
-                                    <button type="submit" className="btn-primary">Enviar</button>
-                                </div>
-                            </form>
-                            <div className="text-center mt-3">
-                                <Link to="#" onClick={() => setResetPass(!resetPass)}>Volver</Link>
-                            </div>
-                        </>
-                    )}
-                    <div className="text-center mt-3">
-                        {singnInOrLogIn === 'signIn' ? (
-                            <button className="btn-link" onClick={() => { switchForm('logIn'); setButtonForm('Iniciar Sesion') }}>¿Ya tienes cuenta? Iniciar Sesión</button>
+                            </>
                         ) : (
-                            <button className="btn-link" onClick={() => { switchForm('signIn'); setButtonForm('Registrar') }}>¿No tienes cuenta? Registrarse</button>
+                            <>
+                                <form>
+                                    <div className="form-group">
+                                        <input type="email" placeholder="Correo electrónico" value={Cor_Usuario} onChange={(e) => setCor_Usuario(e.target.value)} required />
+                                    </div>
+                                    <div className="d-grid">
+                                        <button type="submit" className="btn-primary">Enviar</button>
+                                    </div>
+                                </form>
+                                <div className="text-center mt-3">
+                                    <Link to="#" onClick={() => setResetPass(!resetPass)}>Volver</Link>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                    <div className="auth-right">
+                        {singnInOrLogIn === 'signIn' ? (
+                            <>
+                                <h2>¡Bienvenido de nuevo a Gestifish!</h2>
+                                <p>Inicia sesión con tu cuenta para continuar</p>
+                                <button className="btn-signup" onClick={() => switchForm('logIn')}>INICIAR SESIÓN</button>
+                            </>
+                        ) : (
+                            <>
+                                <h2>¡Hola, Bienvenido a GestiFish !</h2>
+                                <p>Regístrate con tus datos personales para usar todas las funcionalidades de esta maravillosa herramienta digital</p>
+                                <button className="btn-signup" onClick={() => switchForm('signIn')}>REGÍSTRATE</button>
+                            </>
                         )}
                     </div>
                 </div>
@@ -131,7 +145,7 @@ const Auth = () => {
                     <button className="btn-signup" onClick={() => { switchForm('signIn'); setButtonForm('Registrar') }}>SIGN UP</button>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 
