@@ -27,7 +27,8 @@ import BarraNavegacionPrivada from './home/barraNavegacionPrivada';
 import BarraNavegacionPublica from './home/barraNavegacionPublica.jsx';
 import HomePublico from './home/HomePublica.jsx';
 import RegistrosMenu from './home/RegistrosMenu.jsx';
-import HomePublico from './home/HomePublica.jsx';
+import CaruselContact from './Contact/Carusel-contact.jsx';
+// import HomePublico from './home/HomePublica.jsx';
 
 const URL_AUTH = process.env.ROUTER_PRINCIPAL + '/auth/';
 
@@ -86,7 +87,10 @@ function App() {
           </>
           :
           <Route path='*' element={<HomePublico/>} />
-        } 
+        }
+        {
+          <Route path='/contact' element={<CaruselContact/>} />
+        }
         { !isAuth ?
 
           <Route path='/auth' element={<Auth />} />

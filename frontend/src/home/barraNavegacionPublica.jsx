@@ -111,7 +111,7 @@ function barraNavegacionPublica() {
               {/* Elemento de la lista de navegación para el ícono de personas */}
               <li className="nav-item">
                 <NavLink
-                  to="/Usuarios" // Cambia esto si el enlace para los usuarios es diferente
+                  to="/contact" // Cambia esto si el enlace para los usuarios es diferente
                   className="nav-link text-white"
                   style={styles.navLink}
                   onMouseEnter={(e) => {
