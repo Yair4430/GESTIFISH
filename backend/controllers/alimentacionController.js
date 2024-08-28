@@ -1,13 +1,11 @@
-import { Op } from 'sequelize';
 import AlimentacionModel from '../models/alimentacionModel.js';
 import ResponsableModel from '../models/responsableModel.js';
 import SiembraModel from '../models/siembraModel.js';
-import logger from '../middleware/logger.js';
 
-// Obtener todos los registros de alimentación
+// Obtener todos los registros de alimentación OK
 export const getAllAlimentacion = async (req, res) => {
-    logger.info('Intentando obtener todos los registros de alimentación');
     try {
+        // Buscar todos los registros de alimentación, incluyendo responsables y siembras relacionados
         const alimentacion = await AlimentacionModel.findAll({
             include: [
                 { model: ResponsableModel, as: 'responsable' },
@@ -16,27 +14,31 @@ export const getAllAlimentacion = async (req, res) => {
         });
 
         if (alimentacion.length > 0) {
-            logger.info('Todos los registros de alimentación obtenidos exitosamente');
-            return res.status(200).json(alimentacion);
+            // Si se encuentran registros, devolverlos con status 200
+            res.status(200).json(alimentacion);
+            return;
         }
 
+        // Si no hay registros, devolver un mensaje con status 400
         res.status(400).json({ message: 'No hay registros de alimentación' });
     } catch (error) {
-        logger.error('Error al obtener todos los registros de alimentación:', error);
+        // Manejar errores en caso de fallo en la consulta
         res.status(500).json({ message: 'Error al obtener los registros de alimentación' });
     }
 };
 
-// Obtener un registro de alimentación por ID
+// Obtener un registro de alimentación por ID OK
 export const getAlimentacionById = async (req, res) => {
     const { Id_Alimentacion } = req.params;
 
+    // Verificar que el ID de alimentación está presente
     if (!Id_Alimentacion) {
-        logger.warn('Id_Alimentacion es requerido');
-        return res.status(400).json({ message: 'Id_Alimentacion es requerido' });
+        res.status(400).json({ message: 'Id_Alimentacion es requerido' });
+        return;
     }
 
     try {
+        // Buscar el registro de alimentación por su ID, incluyendo responsables y siembras relacionados
         const alimentacion = await AlimentacionModel.findByPk(Id_Alimentacion, {
             include: [
                 { model: ResponsableModel, as: 'responsable' },
@@ -45,32 +47,34 @@ export const getAlimentacionById = async (req, res) => {
         });
 
         if (alimentacion) {
-            return res.status(200).json(alimentacion);
-        } else {
-            logger.warn(`Registro de alimentación con ID ${Id_Alimentacion} no encontrado`);
-            return res.status(404).json({ message: "Registro de alimentación no encontrado." });
+            // Si se encuentra el registro, devolverlo con status 200
+            res.status(200).json(alimentacion);
+            return;
         }
+
+        // Si el registro no se encuentra, devolver un mensaje con status 404
+        res.status(404).json({ message: 'Registro de alimentación no encontrado' });
     } catch (error) {
-        logger.error("Error al recuperar registro de alimentación:", error.message);
-        return res.status(500).json({ message: "Error al recuperar el registro de alimentación." });
+        // Manejar errores en caso de fallo en la consulta
+        res.status(500).json({ message: "Error al recuperar el registro de alimentación." });
     }
 };
 
-// Obtener registros de alimentación por fecha
+// Obtener registros de alimentación por fecha OK
 export const getAlimentacionByFecha = async (req, res) => {
-    const { Fec_Alimentacion } = req.params;
+    const { Fec_Alimentacion } = req.params; // Obtiene la fecha desde los parámetros de la solicitud
 
+    // Verificar que la fecha está presente
     if (!Fec_Alimentacion) {
-        logger.warn('Fecha es requerida');
-        return res.status(400).json({ message: 'Fecha es requerida' });
+        res.status(400).json({ message: 'Fecha es requerida' });
+        return;
     }
 
     try {
+        // Buscar todos los registros de alimentación que coincidan con la fecha proporcionada
         const alimentacion = await AlimentacionModel.findAll({
             where: {
-                Fec_Alimentacion: {
-                    [Op.eq]: Fec_Alimentacion
-                }
+                Fec_Alimentacion: Fec_Alimentacion
             },
             include: [
                 { model: ResponsableModel, as: 'responsable' },
@@ -79,104 +83,123 @@ export const getAlimentacionByFecha = async (req, res) => {
         });
 
         if (alimentacion.length > 0) {
-            return res.status(200).json(alimentacion);
-        } else {
-            logger.warn(`No se encontraron registros de alimentación para la fecha ${Fec_Alimentacion}`);
-            return res.status(404).json({ message: "No se encontraron registros de alimentación." });
+            // Si se encuentran registros, devolverlos con status 200
+            res.status(200).json(alimentacion);
+            return;
         }
+
+        // Si no se encuentran registros, devolver un mensaje con status 404
+        res.status(404).json({ message: 'No se encontraron registros de alimentación para la fecha proporcionada' });
     } catch (error) {
-        logger.error("Error al recuperar registros de alimentación por fecha:", error.message);
-        return res.status(500).json({ message: "Error al recuperar registros de alimentación por fecha." });
+        // Manejar errores en caso de fallo en la consulta
+        console.error('Error al recuperar registros de alimentación por fecha:', error);
+        res.status(500).json({ message: 'Error al recuperar registros de alimentación por fecha.' });
     }
 };
 
-// Crear un registro de alimentación
+// Crear un registro de alimentación OK
 export const createAlimentacion = async (req, res) => {
     const { Fec_Alimentacion, Can_RacionKg, Id_Siembra, Id_Responsable, Tip_Alimento, Hor_Alimentacion, Vlr_Alimentacion } = req.body;
 
+    // Verificar que todos los campos obligatorios están presentes
     if (!Fec_Alimentacion || !Can_RacionKg || !Id_Siembra || !Id_Responsable || !Tip_Alimento || !Hor_Alimentacion || !Vlr_Alimentacion) {
-        logger.warn('Todos los campos son obligatorios');
-        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+        res.status(400).json({ message: 'Todos los campos son obligatorios' });
+        return;
     }
 
     try {
-        const nuevaAlimentacion = await AlimentacionModel.create({
-            Fec_Alimentacion,
-            Can_RacionKg,
-            Id_Siembra,
-            Id_Responsable,
-            Tip_Alimento,
-            Hor_Alimentacion,
-            Vlr_Alimentacion
-        });
-        logger.info('Registro de alimentación creado exitosamente');
-        return res.status(201).json(nuevaAlimentacion);
+        // Crear un nuevo registro de alimentación con los datos proporcionados
+        const nuevaAlimentacion = await AlimentacionModel.create(req.body);
+
+        if(nuevaAlimentacion) {
+            // Si el registro se crea exitosamente, devolverlo con status 201
+            res.status(201).json({ message: '¡Registro de alimentación creado exitosamente!', data: nuevaAlimentacion });
+            return;
+        }
+
     } catch (error) {
-        logger.error('Error al crear registro de alimentación:', error);
-        return res.status(500).json({ message: 'Error al crear registro de alimentación', error: error.message });
+        // Manejar errores en caso de fallo en la creación
+        if (error.name === 'SequelizeValidationError') {
+            res.status(400).json({ message: 'Error de validación', errors: error.errors });
+            return;
+        }
+
+        res.status(500).json({ message: 'Error al crear registro de alimentación', error: error.message });
+        return;
     }
 };
 
-// Actualizar un registro de alimentación
+// Actualizar un registro de alimentación OK
 export const updateAlimentacion = async (req, res) => {
     const { Id_Alimentacion } = req.params;
     const { Fec_Alimentacion, Can_RacionKg, Id_Siembra, Id_Responsable, Tip_Alimento, Hor_Alimentacion, Vlr_Alimentacion } = req.body;
 
+    // Verificar que el ID de alimentación está presente
     if (!Id_Alimentacion) {
-        logger.warn('Id_Alimentacion es requerido');
-        return res.status(400).json({ message: 'Id_Alimentacion es requerido' });
+        res.status(400).json({ message: 'Id_Alimentacion es requerido' });
+        return;
     }
 
+    // Verificar que todos los campos obligatorios están presentes
     if (!Fec_Alimentacion || !Can_RacionKg || !Id_Siembra || !Id_Responsable || !Tip_Alimento || !Hor_Alimentacion || !Vlr_Alimentacion) {
-        logger.warn('Todos los campos son obligatorios');
-        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+        res.status(400).json({ message: 'Todos los campos son obligatorios' });
+        return;
     }
 
     try {
+        // Buscar el registro de alimentación por su ID
         const alimentacion = await AlimentacionModel.findByPk(Id_Alimentacion);
-        if (alimentacion) {
-            await alimentacion.update({
-                Fec_Alimentacion,
-                Can_RacionKg,
-                Id_Siembra,
-                Id_Responsable,
-                Tip_Alimento,
-                Hor_Alimentacion,
-                Vlr_Alimentacion
-            });
-            logger.info(`Registro de alimentación con ID ${Id_Alimentacion} actualizado exitosamente`);
-            return res.status(200).json(alimentacion);
-        } else {
-            logger.warn(`Registro de alimentación con ID ${Id_Alimentacion} no encontrado`);
-            return res.status(404).json({ message: 'Registro de alimentación no encontrado' });
+
+        if (!alimentacion) {
+            // Si el registro no se encuentra, devolver un mensaje con status 404
+            res.status(404).json({ message: 'Registro de alimentación no encontrado' });
+            return;
         }
+
+        // Actualizar el registro con los datos proporcionados
+        await alimentacion.update(req.body);
+
+        // Devolver el registro actualizado con status 200
+        res.status(200).json({ message: 'Registro de alimentación actualizado con éxito', alimentacion });
+        return;
+
     } catch (error) {
-        logger.error('Error al actualizar registro de alimentación:', error);
-        return res.status(500).json({ message: 'Error al actualizar registro de alimentación', error: error.message });
+        // Manejar errores en caso de fallo en la actualización
+        res.status(500).json({ message: 'Error al actualizar registro de alimentación', error: error.message });
+        return;
     }
 };
 
-// Borrar un registro de alimentación
+// Borrar un registro de alimentación OK
 export const deleteAlimentacion = async (req, res) => {
     const { Id_Alimentacion } = req.params;
 
+    // Verificar que el ID de alimentación está presente
     if (!Id_Alimentacion) {
-        logger.warn('Id_Alimentacion es requerido');
-        return res.status(400).json({ message: 'Id_Alimentacion es requerido' });
+        res.status(400).json({ message: 'Id_Alimentacion es requerido' });
+        return;
     }
 
     try {
+        // Buscar el registro de alimentación por su ID
         const alimentacion = await AlimentacionModel.findByPk(Id_Alimentacion);
+
         if (alimentacion) {
+            // Si el registro se encuentra, eliminarlo
             await alimentacion.destroy();
-            logger.info(`Registro de alimentación con ID ${Id_Alimentacion} eliminado exitosamente`);
-            return res.status(200).json({ message: 'Registro de alimentación eliminado' });
-        } else {
-            logger.warn(`Registro de alimentación con ID ${Id_Alimentacion} no encontrado`);
-            return res.status(404).json({ message: 'Registro de alimentación no encontrado' });
+
+            // Verificar que el registro fue eliminado con éxito
+            const alimentacionEliminado = await AlimentacionModel.findByPk(Id_Alimentacion);
+
+            if (!alimentacionEliminado) {
+                // Devolver un mensaje de éxito si la eliminación fue exitosa
+                res.status(200).json({ message: 'Alimentacion eliminado con éxito' });
+                return;
+            }
         }
     } catch (error) {
-        logger.error('Error al eliminar registro de alimentación:', error);
-        return res.status(500).json({ message: 'Error al eliminar registro de alimentación', error: error.message });
+        // Manejar errores en caso de fallo en la eliminación
+        res.status(500).json({ message: 'Error al eliminar registro de alimentación', error: error.message });
+        return;
     }
 };

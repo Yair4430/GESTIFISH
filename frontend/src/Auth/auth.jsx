@@ -1,26 +1,24 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
-import Navbar from '../Menus/Navbar.jsx';
-
+import BarraNavegacionPublica from "../home/barraNavegacionPublica";
+import './auth.css';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/auth/';
 
 const Auth = () => {
     const [message, setMessage] = useState('');
-    const [messageType, setMessageType] = useState(''); // Para manejar el tipo de mensaje
+    const [messageType, setMessageType] = useState('');
     const [Nom_Usuario, setNom_Usuario] = useState("");
     const [Ape_Usuario, setApe_Usuario] = useState("");
     const [Cor_Usuario, setCor_Usuario] = useState("");
     const [Con_Usuario, setCon_Usuario] = useState("");
-
-    const [buttonForm, setButtonForm] = useState("Registrar");
-    const [signInOrLogIn, setSignInOrLogIn] = useState("signIn");
+    const [buttonForm, setButtonForm] = useState('Iniciar Sesion');
+    const [singnInOrLogIn, setSingnInOrLogIn] = useState('logIn');
     const [resetPass, setResetPass] = useState(false);
+    const [isSignUpActive, setIsSignUpActive] = useState(false);
 
-    const validateName = (name) => {
-        return /^[a-zA-Z\s]+$/.test(name);
-    };
+    const validateName = (name) => /^[a-zA-Z\s]+$/.test(name);
 
     const sendForm = async (e) => {
         e.preventDefault();
@@ -33,27 +31,16 @@ const Auth = () => {
             }
 
             try {
-                const response = await axios.post(URI, {
-                    Nom_Usuario,
-                    Ape_Usuario,
-                    Cor_Usuario,
-                    Con_Usuario
-                });
+                const response = await axios.post(URI, { Nom_Usuario, Ape_Usuario, Cor_Usuario, Con_Usuario });
                 if (response.data.tokenUser) {
                     localStorage.setItem('usuario', JSON.stringify(response.data));
                     setMessageType('success');
                     setMessage('Cuenta creada con éxito');
-                    
-                    // Limpiar campos después de registro exitoso
                     setNom_Usuario('');
                     setApe_Usuario('');
                     setCor_Usuario('');
                     setCon_Usuario('');
-                    
-                    // Ocultar mensaje después de 8 segundos
-                    setTimeout(() => {
-                        setMessage('');
-                    }, 8000);
+                    setTimeout(() => { setMessage(''); }, 3000);
                 }
             } catch (error) {
                 setMessageType('error');
@@ -61,10 +48,7 @@ const Auth = () => {
             }
         } else if (buttonForm === 'Iniciar Sesion') {
             try {
-                const response = await axios.post(URI + 'login', {
-                    Cor_Usuario,
-                    Con_Usuario
-                });
+                const response = await axios.post(URI + 'login', { Cor_Usuario, Con_Usuario });
                 if (response.data.tokenUser) {
                     localStorage.setItem('usuario', JSON.stringify(response.data));
                     setMessageType('success');
@@ -74,172 +58,91 @@ const Auth = () => {
                 }
             } catch (error) {
                 setMessageType('error');
-                setMessage('Hubo un error, por favor intenta nuevamente');
+                setMessage('Las credenciales son incorrectas. Por favor, intenta nuevamente.');
             }
         }
     };
 
-    const switchForm = (option) => {
-        setSignInOrLogIn(option);
-        setButtonForm(option === "signIn" ? "Registrar" : "Iniciar Sesion");
+    const switchForm = (opcion) => {
+        setSingnInOrLogIn(opcion);
+        setButtonForm(opcion === 'signIn' ? 'Registrar' : 'Iniciar Sesion');
+        setIsSignUpActive(opcion === 'signIn');
     };
-    
-
 
     return (
         <>
-    <Navbar/>
-          <div className="container mt-5">
-            <div className="row justify-content-center">
-              <div className="col-lg-5 col-md-6">
-                <div className="card border-0 shadow-lg p-4">
-                  <div className="card-body">
-                    <h3 className="card-title text-center mb-4">
-                      {signInOrLogIn === "signIn"
-                        ? "Crea tu cuenta"
-                        : "Iniciar Sesión"}
-                    </h3>
-                    {message && (
-                      <div
-                        className={`alert ${
-                          messageType === "success"
-                            ? "alert-success"
-                            : "alert-danger"
-                        }`}
-                      >
-                        {message}
-                      </div>
-                    )}
-                    {!resetPass ? (
-                      <>
-                        <form onSubmit={sendForm}>
-                          {signInOrLogIn === "signIn" && (
+            <BarraNavegacionPublica />
+            <div className="auth-container">
+                <div className={`auth-content ${isSignUpActive ? 'sign-up-mode' : ''}`}>
+                    <div className="auth-left">
+                        <h3 className="bold-highlight">{singnInOrLogIn === 'signIn' ? 'Registrar' : 'Iniciar Sesión'}</h3>
+                        {message && (
+                            <div className={`alert ${messageType === 'success' ? 'alert-success' : 'alert-danger'}`}>
+                                {message}
+                            </div>
+                        )}
+                        {resetPass === false ? (
                             <>
-                              <div className="input-group mb-3">
-                                <span className="input-group-text">
-                                  <i className="bi bi-person"></i>
-                                </span>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="Nombres completos"
-                                  value={Nom_Usuario}
-                                  onChange={(e) => setNom_Usuario(e.target.value)}
-                                  required
-                                />
-                              </div>
-                              <div className="input-group mb-3">
-                                <span className="input-group-text">
-                                  <i className="bi bi-person"></i>
-                                </span>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="Apellidos completos"
-                                  value={Ape_Usuario}
-                                  onChange={(e) => setApe_Usuario(e.target.value)}
-                                  required
-                                />
-                              </div>
+                                <form onSubmit={sendForm}>
+                                    {singnInOrLogIn === 'signIn' && (
+                                        <>
+                                            <div className="form-group">
+                                                <input type="text" placeholder="Nombres completos" value={Nom_Usuario} onChange={(e) => setNom_Usuario(e.target.value)} required />
+                                            </div>
+                                            <div className="form-group">
+                                                <input type="text" placeholder="Apellidos completos" value={Ape_Usuario} onChange={(e) => setApe_Usuario(e.target.value)} required />
+                                            </div>
+                                        </>
+                                    )}
+                                    <div className="form-group">
+                                        <input type="email" placeholder="example@gmail.com" value={Cor_Usuario} onChange={(e) => setCor_Usuario(e.target.value)} required />
+                                    </div>
+                                    <div className="form-group">
+                                        <input type="password" placeholder="Password" value={Con_Usuario} onChange={(e) => setCon_Usuario(e.target.value)} required />
+                                    </div>
+                                    <div className="d-grid">
+                                        <button type="submit" className="btn-primary">{buttonForm}</button>
+                                    </div>
+                                </form>
+                                <div className="text-center mt-3">
+                                    <Link to="#" onClick={() => setResetPass(!resetPass)}>¿Olvidaste tu contraseña?</Link>
+                                </div>
                             </>
-                          )}
-                          <div className="input-group mb-3">
-                            <span className="input-group-text">
-                              <i className="bi bi-envelope"></i>
-                            </span>
-                            <input
-                              type="email"
-                              className="form-control"
-                              placeholder="Correo electrónico"
-                              value={Cor_Usuario}
-                              onChange={(e) => setCor_Usuario(e.target.value)}
-                              required
-                            />
-                          </div>
-                          <div className="input-group mb-3">
-                            <span className="input-group-text">
-                              <i className="bi bi-lock"></i>
-                            </span>
-                            <input
-                              type="password"
-                              className="form-control"
-                              placeholder="Contraseña"
-                              value={Con_Usuario}
-                              onChange={(e) => setCon_Usuario(e.target.value)}
-                              required
-                            />
-                          </div>
-                          <div className="d-grid">
-                            <button
-                              type="submit"
-                              className="btn btn-primary btn-block"
-                            >
-                              {buttonForm}
-                            </button>
-                          </div>
-                        </form>
-                        <div className="text-center mt-3">
-                          <Link to="#" onClick={() => setResetPass(!resetPass)}>
-                            ¿Olvidaste tu contraseña?
-                          </Link>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <form>
-                          <div className="input-group mb-3">
-                            <span className="input-group-text">
-                              <i className="bi bi-envelope"></i>
-                            </span>
-                            <input
-                              type="email"
-                              className="form-control"
-                              placeholder="Correo electrónico"
-                              value={Cor_Usuario}
-                              onChange={(e) => setCor_Usuario(e.target.value)}
-                              required
-                            />
-                          </div>
-                          <div className="d-grid">
-                            <button
-                              type="submit"
-                              className="btn btn-warning btn-block"
-                            >
-                              Enviar
-                            </button>
-                          </div>
-                        </form>
-                        <div className="text-center mt-3">
-                          <Link to="#" onClick={() => setResetPass(!resetPass)}>
-                            Volver
-                          </Link>
-                        </div>
-                      </>
-                    )}
-                    <div className="text-center mt-4">
-                      {signInOrLogIn === "signIn" ? (
-                        <button
-                          className="btn btn-link"
-                          onClick={() => switchForm("logIn")}
-                        >
-                          ¿Ya tienes cuenta? Iniciar Sesión
-                        </button>
-                      ) : (
-                        <button
-                          className="btn btn-link"
-                          onClick={() => switchForm("signIn")}
-                        >
-                          ¿No tienes cuenta? Registrarse
-                        </button>
-                      )}
+                        ) : (
+                            <>
+                                <form>
+                                    <div className="form-group">
+                                        <input type="email" placeholder="Correo electrónico" value={Cor_Usuario} onChange={(e) => setCor_Usuario(e.target.value)} required />
+                                    </div>
+                                    <div className="d-grid">
+                                        <button type="submit" className="btn-primary">Enviar</button>
+                                    </div>
+                                </form>
+                                <div className="text-center mt-3">
+                                    <Link to="#" onClick={() => setResetPass(!resetPass)}>Volver</Link>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                    <div className="auth-right">
+                        {singnInOrLogIn === 'signIn' ? (
+                            <>
+                                <h2>¡Bienvenido de nuevo a Gestifish!</h2>
+                                <p>Inicia sesión con tu cuenta para continuar</p>
+                                <button className="btn-signup" onClick={() => switchForm('logIn')}>INICIAR SESIÓN</button>
+                            </>
+                        ) : (
+                            <>
+                                <h2>¡Hola, Bienvenido a GestiFish !</h2>
+                                <p>Regístrate con tus datos personales para usar todas las funcionalidades de esta maravillosa herramienta digital</p>
+                                <button className="btn-signup" onClick={() => switchForm('signIn')}>REGÍSTRATE</button>
+                            </>
+                        )}
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
         </>
-      );
+    );
 }
 
 export default Auth;
