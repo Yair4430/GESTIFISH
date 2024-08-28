@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import FormResponsable from './FormResponsable.jsx';
 import FormQueryResponsable from './FormQueryResponsable.jsx';
-import NavbarForm from '../Menus/NavbarForm.jsx';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/responsable/';
 
@@ -88,66 +87,42 @@ const CrudResponsable = () => {
 
     return (
         <>
-            <NavbarForm />
-            <div className="container mt-5">
-                {ResponsableList.length > 0 ? (
-                    <div className="card">
-                        <div className="card-header bg-primary text-white">
-                            <h1 className="text-center">Responsables Registrados</h1>
-                        </div>
-                        <div className="card-body">
-                            <div className="table-responsive">
-                                <table className="table table-striped table-dynamic mt-4">
-                                    <thead>
-                                        <tr>
-                                            <th className="text-center">Nombre</th>
-                                            <th className="text-center">Apellidos</th>
-                                            <th className="text-center">Documento de Identidad</th>
-                                            <th className="text-center">Tipo de Responsable</th>
-                                            <th className="text-center">Correo</th>
-                                            <th className="text-center">Número de Teléfono</th>
-                                            <th className="text-center">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {ResponsableList.map((responsable) => (
-                                            <tr key={responsable.Id_Responsable}>
-                                                <td className="text-center">{responsable.Nom_Responsable}</td>
-                                                <td className="text-center">{responsable.Ape_Responsable}</td>
-                                                <td className="text-center">{responsable.Doc_Responsable}</td>
-                                                <td className="text-center">{responsable.Tip_Responsable}</td>
-                                                <td className="text-center">{responsable.Cor_Responsable}</td>
-                                                <td className="text-center">{responsable.Num_Responsable}</td>
-                                                <td className="text-center">
-                                                    <button
-                                                        className="btn btn-sm btn-primary m-1"
-                                                        onClick={() => getResponsable(responsable.Id_Responsable)}
-                                                    >
-                                                        <i className="fa-solid fa-pen-to-square"></i> Editar
-                                                    </button>
-                                                    <button
-                                                        className="btn btn-sm btn-danger m-1"
-                                                        onClick={() => deleteResponsable(responsable.Id_Responsable)}
-                                                    >
-                                                        <i className="fa-solid fa-trash-can"></i> Borrar
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="alert alert-info mt-3" role="alert">
-                        No hay resultados para mostrar.
-                    </div>
-                )}
-            </div>
-            
+            <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
+                <thead>
+                    <tr>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre</th>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Apellidos</th>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Documento de Identidad</th>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Tipo de Responsable</th>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Correo</th>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Número de Telefono</th>
+                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {ResponsableList.map((responsable) => (
+                        <tr key={responsable.Id_Responsable} className='border-info font-monospace' style={{ border: "3px solid" }}>
+                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Nom_Responsable}</td>
+                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Ape_Responsable}</td>
+                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Doc_Responsable}</td>
+                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Tip_Responsable}</td>
+                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Cor_Responsable}</td>
+                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{responsable.Num_Responsable}</td>
+                            <td>
+                                <button className='btn btn-info align-middle' onClick={() => getResponsable(responsable.Id_Responsable)}>
+                                    <i className="fa-solid fa-pen-to-square"></i> Editar
+                                </button>
+                                <button className='btn btn-info align-middle m-2' onClick={() => deleteResponsable(responsable.Id_Responsable)}>
+                                    <i className="fa-solid fa-trash-can"></i> Borrar
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            <hr />
             <FormResponsable buttonForm={buttonForm} responsable={responsable} URI={URI} updateTextButton={updateTextButton} getAllResponsable={getAllResponsable} />
-            
+            <hr />
             <FormQueryResponsable URI={URI} getResponsable={getResponsable} deleteResponsable={deleteResponsable} buttonForm={buttonForm} />
         </>
     );

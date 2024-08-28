@@ -122,7 +122,6 @@ const Simulador = () => {
 
   return (
     <>
-    <Navbar/>
       <div className="container mt-4">
         <h2 className="display-4 text-center" style={{ color: 'black', fontWeight: 'bold' }}>Simulador</h2>
         <br/>

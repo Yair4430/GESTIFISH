@@ -53,8 +53,7 @@ const Auth = () => {
                     localStorage.setItem('usuario', JSON.stringify(response.data));
                     setMessageType('success');
                     setMessage('Inicio de sesión exitoso');
-                    window.location.href = 
-                        process.env.ROUTER_WINDOW + window.location.host + '/dashboard';
+                    window.location.href = process.env.ROUTER_WINDOW + window.location.host;
                 }
             } catch (error) {
                 setMessageType('error');
@@ -139,8 +138,8 @@ const Auth = () => {
                             </>
                         )}
                     </div>
-                  </div>
                 </div>
+            </div>
         </>
     );
 }

@@ -59,10 +59,6 @@ function App() {
     navigate("/auth"); // Redirigir después de cerrar sesión
   };
 
-  const handleRecordsClick = (e) => {
-    e.preventDefault(); // Evita el comportamiento predeterminado del enlace
-    setShowRecords(!showRecords); // Alterna la visibilidad de la sección de registros
-  };
   return (
     <> 
       {isAuth && <BarraNavegacionPrivada logOutUser={logOutUser} />} {/* Barra de navegación siempre visible */}
