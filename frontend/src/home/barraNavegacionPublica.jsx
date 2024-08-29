@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from 'react-router-dom'; // Importa NavLink
-import Logo from '../IMG/Logo_FondoBlanco.jpeg';
+import Logo from '../IMG/Logo_FondoBlanco.jpeg'; // Asegúrate de reemplazar esta línea con el logo que quieres usar
 
 // Definición del componente de barra de navegación pública
 function barraNavegacionPublica() {
@@ -17,10 +17,11 @@ function barraNavegacionPublica() {
       marginLeft: '10px', // Espacio a la izquierda del título
     },
     navLink: {
-      marginLeft: '20px', // Espacio a la izquierda de cada enlace
+      marginLeft: '30px', // Espacio a la izquierda de cada enlace
       fontSize: '1.5rem', // Tamaño del texto de los enlaces
       display: 'inline-block', // Asegura que el hover se aplique correctamente
       transition: 'transform 0.3s ease, opacity 0.3s ease', // Transición para escala y opacidad
+      textAlign: 'center', // Centra el texto debajo del ícono
     },
     navbarBrandImg: {
       borderRadius: '50%', // Imagen redonda (círculo)
@@ -31,6 +32,12 @@ function barraNavegacionPublica() {
     },
     icon: {
       fontSize: '2.5rem', // Tamaño de los íconos en la barra de navegación
+    },
+    iconText: {
+      color: 'white', // Color del texto debajo del ícono
+      display: 'block', // Hace que el texto esté en una línea separada
+      fontSize: '1rem', // Tamaño del texto
+      marginTop: '5px', // Espacio encima del texto
     },
   };
 
@@ -75,7 +82,7 @@ function barraNavegacionPublica() {
               {/* Elemento de la lista de navegación para el ícono de inicio */}
               <li className="nav-item">
                 <NavLink
-                  to="*" // Cambia esto si el enlace de inicio es diferente
+                  to="/" // Cambia esto si el enlace de inicio es diferente
                   className="nav-link text-white"
                   style={styles.navLink}
                   onMouseEnter={(e) => {
@@ -87,13 +94,14 @@ function barraNavegacionPublica() {
                     e.currentTarget.style.opacity = '1';
                   }}
                 >
-                  <i className="fas fa-home" style={styles.icon}></i>
+                  <i className="fas fa-home" style={styles.icon}></i> {/* Ícono de inicio */}
+                  <span style={styles.iconText}>Inicio</span>
                 </NavLink>
               </li>
-              {/* Elemento de la lista de navegación para el ícono de registro */}
+              {/* Elemento de la lista de navegación para el ícono de contactos */}
               <li className="nav-item">
                 <NavLink
-                  to="/auth" // Cambia esto si el enlace de registro es diferente
+                  to="/CaruselContact" // Cambia esto si el enlace para contactos es diferente
                   className="nav-link text-white"
                   style={styles.navLink}
                   onMouseEnter={(e) => {
@@ -105,13 +113,14 @@ function barraNavegacionPublica() {
                     e.currentTarget.style.opacity = '1';
                   }}
                 >
-                  <i className="fas fa-user-plus" style={styles.icon}></i>
+                  <i className="fas fa-address-book" style={styles.icon}></i> {/* Ícono de contactos */}
+                  <span style={styles.iconText}>Creadores</span>
                 </NavLink>
               </li>
-              {/* Elemento de la lista de navegación para el ícono de personas */}
+              {/* Elemento de la lista de navegación para el ícono de login */}
               <li className="nav-item">
                 <NavLink
-                  to="/Usuarios" // Cambia esto si el enlace para los usuarios es diferente
+                  to="/auth" // Cambia esto si el enlace de login es diferente
                   className="nav-link text-white"
                   style={styles.navLink}
                   onMouseEnter={(e) => {
@@ -123,7 +132,8 @@ function barraNavegacionPublica() {
                     e.currentTarget.style.opacity = '1';
                   }}
                 >
-                  <i className="fas fa-users" style={styles.icon}></i>
+                  <i className="fas fa-user" style={styles.icon}></i> {/* Ícono de usuario */}
+                  <span style={styles.iconText}>Login</span>
                 </NavLink>
               </li>
             </ul>

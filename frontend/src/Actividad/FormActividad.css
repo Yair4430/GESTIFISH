@@ -1,0 +1,48 @@
+.container {
+    margin-top: 30px;
+}
+
+h1 {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.form-control {
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 0.9rem;
+    max-width: 100%; /* Asegura que los inputs no se expandan más allá del contenedor */
+}
+
+.form-group input,
+.form-group select {
+    max-width: 400px; /* Limita el ancho de los inputs */
+    margin: 0 auto; /* Centra los inputs */
+    display: block; /* Hace que los inputs sean bloques para que la centración funcione */
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 8px;
+    max-width: 200px; /* Limita el ancho del botón */
+    margin: 0 auto; /* Centra el botón */
+    display: block; /* Hace que el botón sea un bloque para que la centración funcione */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}

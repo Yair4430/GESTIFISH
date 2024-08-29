@@ -103,9 +103,11 @@ const Auth = () => {
                                         <button type="submit" className="btn-primary">{buttonForm}</button>
                                     </div>
                                 </form>
-                                <div className="text-center mt-3">
-                                    <Link to="#" onClick={() => setResetPass(!resetPass)}>¿Olvidaste tu contraseña?</Link>
-                                </div>
+                                {singnInOrLogIn === 'logIn' && (
+                                    <div className="text-center mt-3">
+                                        <Link to="#" onClick={() => setResetPass(!resetPass)}>¿Olvidaste tu contraseña?</Link>
+                                    </div>
+                                )}
                             </>
                         ) : (
                             <>
