@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import FormMuestreo from './formMuestreo'; 
-import FormQueryMuestreo from './formQueryMuestreo'; 
+import WriteTable from '../Tables/Data-Tables.jsx';
+import FormMuestreo from './FormMuestreo.jsx';
+import FormQueryMuestreo from './FormQueryMuestreo.jsx';
 
-const URI = process.env.ROUTER_PRINCIPAL + '/muestreo/';
+const URI = `${process.env.ROUTER_PRINCIPAL}/muestreo/`;
 
 const CrudMuestreo = () => {
     const [muestreoList, setMuestreoList] = useState([]);
@@ -22,34 +23,26 @@ const CrudMuestreo = () => {
     });
 
     useEffect(() => {
-        getAllMuestreo();
+        fetchAllMuestreo();
     }, []);
 
-    const getAllMuestreo = async () => {
+    const fetchAllMuestreo = async () => {
         try {
-            const respuesta = await axios.get(URI);
-            if (respuesta.status >= 200 && respuesta.status < 300) {
-                setMuestreoList(respuesta.data);
-            } else {
-                console.warn('HTTP Status:', respuesta.status);
-            }
+            const response = await axios.get(URI);
+            setMuestreoList(response.data);
         } catch (error) {
-            console.error('Error fetching muestreo:', error.response?.status || error.message);
+            console.error('Error fetching muestreos:', error);
         }
     };
 
-    const getMuestreo = async (Id_Muestreo) => {
+    const fetchMuestreo = async (Id_Muestreo) => {
         setButtonForm('Enviar');
         try {
-            const respuesta = await axios.get(`${URI}${Id_Muestreo}`);
-            if (respuesta.status >= 200 && respuesta.status < 300) {
-                setButtonForm('Actualizar');
-                setMuestreo({ ...respuesta.data });
-            } else {
-                console.warn('HTTP Status:', respuesta.status);
-            }
+            const response = await axios.get(`${URI}${Id_Muestreo}`);
+            setButtonForm('Actualizar');
+            setMuestreo({ ...response.data });
         } catch (error) {
-            console.error('Error fetching muestreo:', error.response?.status || error.message);
+            console.error('Error fetching muestreo:', error);
         }
     };
 
@@ -57,7 +50,7 @@ const CrudMuestreo = () => {
         setButtonForm(texto);
     };
 
-    const deleteMuestreo = (id_Muestreo) => {
+    const deleteMuestreo = (Id_Muestreo) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -65,71 +58,74 @@ const CrudMuestreo = () => {
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Sí, ¡borrar!"
+            confirmButtonText: "¡Sí, borrar!"
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const respuesta = await axios.delete(`${URI}${id_Muestreo}`);
-                    if (respuesta.status >= 200 && respuesta.status < 300) {
-                        Swal.fire({
-                            title: "¡Borrado!",
-                            text: "Borrado exitosamente",
-                            icon: "success"
-                        });
-                        getAllMuestreo(); // Refrescar la lista después de la eliminación
-                    } else {
-                        console.warn('HTTP Status:', respuesta.status);
-                    }
+                    await axios.delete(`${URI}${Id_Muestreo}`);
+                    Swal.fire({
+                        title: "¡Borrado!",
+                        text: "Borrado exitosamente",
+                        icon: "success"
+                    });
+                    fetchAllMuestreo(); // Refresh the list after deletion
                 } catch (error) {
-                    console.error('Error deleting muestreo:', error.response?.status || error.message);
+                    console.error('Error deleting muestreo:', error);
                 }
             }
         });
     };
 
+    // Extraer títulos y datos para la tabla
+    const titles = [
+        "Fecha de Muestreo",
+        "Número de Peces",
+        "Observaciones",
+        "Peso Esperado",
+        "Hora de Muestreo",
+        "Fecha Siembra",
+        "Nombre Responsable",
+        "Acciones"
+    ];
+
+    const data = muestreoList.map((muestreo) => [
+        muestreo.Fec_Muestreo,
+        muestreo.Num_Peces,
+        muestreo.Obs_Muestreo,
+        muestreo.Pes_Esperado,
+        muestreo.Hor_Muestreo,
+        muestreo.siembra.Fec_Siembra,
+        muestreo.responsable.Nom_Responsable,
+        <>
+            <button className='btn btn-info align-middle' onClick={() => fetchMuestreo(muestreo.Id_Muestreo)}>
+                <i className="fa-solid fa-pen-to-square"></i> Editar
+            </button>
+            <button className='btn btn-info align-middle m-2' onClick={() => deleteMuestreo(muestreo.Id_Muestreo)}>
+                <i className="fa-solid fa-trash-can"></i> Borrar
+            </button>
+        </>
+    ]);
+
     return (
         <>
-            <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
-                <thead>
-                    <tr>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha de Muestreo</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Número de Peces</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Observaciones</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Peso Esperado</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Hora de Muestreo</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha Siembra</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre Responsable</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {muestreoList.map((muestreo) => (
-                        <tr key={muestreo.Id_Muestreo} className='border-info font-monospace' style={{ border: "3px solid" }}>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Fec_Muestreo}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Num_Peces}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Obs_Muestreo}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Pes_Esperado}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Hor_Muestreo}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.siembra.Fec_Siembra}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.responsable.Nom_Responsable}</td>
-                            <td>
-                                <button className='btn btn-info align-middle' onClick={() => getMuestreo(muestreo.Id_Muestreo)}>
-                                    <i className="fa-solid fa-pen-to-square"></i> Editar
-                                </button>
-                                <button className='btn btn-info align-middle m-2' onClick={() => deleteMuestreo(muestreo.Id_Muestreo)}>
-                                    <i className="fa-solid fa-trash-can"></i> Borrar
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <WriteTable titles={titles} data={data} />
             <hr />
-            <FormMuestreo getAllMuestreo={getAllMuestreo} buttonForm={buttonForm} muestreo={muestreo} URI={URI} updateTextButton={updateTextButton} />
+            <FormMuestreo 
+                buttonForm={buttonForm} 
+                muestreo={muestreo} 
+                URI={URI} 
+                updateTextButton={updateTextButton} 
+                getAllMuestreo={fetchAllMuestreo} 
+            />
             <hr />
-            <FormQueryMuestreo URI={URI} getMuestreo={getMuestreo} deleteMuestreo={deleteMuestreo} buttonForm={buttonForm} />
+            <FormQueryMuestreo 
+                URI={URI} 
+                getMuestreo={fetchMuestreo} 
+                deleteMuestreo={deleteMuestreo} 
+                buttonForm={buttonForm} 
+            />
         </>
     );
-};
+}
 
 export default CrudMuestreo;

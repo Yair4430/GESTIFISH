@@ -13,7 +13,6 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
     const [Id_Estanque, setId_Estanque] = useState('');
     const [DatosResponsable, setDatosResponsable] = useState([]);
     const [DatosEstanque, setDatosEstanque] = useState([]);
-    
 
     const getResponsable = async () => {
         try {
@@ -43,7 +42,6 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
 
         try {
             if (buttonForm === 'Actualizar') {
-                console.log('Actualizando actividad con ID:', Id_Actividad);
                 await axios.put(`${URI}${actividad.Id_Actividad}`, {
                     Id_Actividad,
                     Nom_Actividad,
@@ -64,7 +62,6 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                 getAllActividad();
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, {
-                    // Id_Actividad,
                     Nom_Actividad,
                     Des_Actividad,
                     Fec_Actividad,
@@ -79,13 +76,12 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                     icon: 'success'
                 });
                 if (respuestaApi.status === 201) {
-                    alert(respuestaApi.data.message);
+                    // alert(respuestaApi.data.message);
                     clearFormA();
                     getAllActividad();
                 }
             }
         } catch (error) {
-            console.error('Error al enviar el formulario:', error);
             Swal.fire({
                 title: 'Error',
                 text: 'No se pudo guardar la actividad.',
@@ -93,7 +89,6 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
             });
         }
     };
-    
 
     const clearFormA = () => {
         setId_Actividad('');
@@ -114,7 +109,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
         setHor_Actividad(actividad.Hor_Actividad);
         setFas_Produccion(actividad.Fas_Produccion);
         setId_Responsable(actividad.Id_Responsable);
-        setId_Estanque(actividad.Id_Estanque );
+        setId_Estanque(actividad.Id_Estanque);
     };
 
     useEffect(() => {
@@ -124,53 +119,62 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
     }, [actividad]);
 
     return (
-        <>
-            <div className="d-flex flex-column align-items-center">
-                <h1 className="fs-1 fw-bold d-flex">Registrar Actividades</h1>
-                <form id="actividadForm" onSubmit={sendFormA} className="fw-bold m-2">
-                    <label htmlFor="Nom_Actividad" className="m-2">Nombre de la Actividad:</label>
-                    <input type="text" id="Nom_Actividad" value={Nom_Actividad} onChange={(e) => setNom_Actividad(e.target.value)} />
-                    <br />
-                    <label htmlFor="Des_Actividad" className="m-2">Descripción de la Actividad:</label>
-                    <input type="text" id="Des_Actividad" value={Des_Actividad} onChange={(e) => setDes_Actividad(e.target.value)} />
-                    <br />
-                    <label htmlFor="Fec_Actividad" className="m-2">Fecha de la Actividad:</label>
-                    <input type="date" id="Fec_Actividad" value={Fec_Actividad} onChange={(e) => setFec_Actividad(e.target.value)} />
-                    <br />
-                    <label htmlFor="Hor_Actividad" className="m-2">Duración de la Actividad:</label>
-                    <input type="time" id="Hor_Actividad" value={Hor_Actividad} onChange={(e) => setHor_Actividad(e.target.value)} />
-                    <br />
-                    <label htmlFor="Fas_Produccion" className="m-2">Fase de Producción:</label>
-                    <select id="Fas_Produccion" value={Fas_Produccion} onChange={(e) => setFas_Produccion(e.target.value)}>
-                    <option value="">-- Seleccione --</option>
-                    <option value="Antes de la cosecha">Antes de la cosecha</option>
-                    <option value="Despues de la cosecha">Después de la cosecha</option>
-                    </select>
-                    <br />
-                    <label htmlFor="Id_Responsable" className="m-2">Responsable de la Actividad:</label>
-                    <select id="Id_Responsable" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)}>
-                        <option value="">Selecciona uno...</option>
-                        {DatosResponsable.map((responsable) =>
-                            <option key={responsable.Id_Responsable} value={responsable.Id_Responsable}>
-                                {responsable.Nom_Responsable}
-                            </option>
-                        )}
-                    </select>
-                    <br />
-                    <label htmlFor="Id_Estanque" className="m-2">Estanque:</label>
-                    <select id="Id_Estanque" value={Id_Estanque} onChange={(e) => setId_Estanque(e.target.value)}>
-                        <option value="">Selecciona uno...</option>
-                        {DatosEstanque.map((estanque) =>
-                            <option key={estanque.Id_Estanque} value={estanque.Id_Estanque}>
-                                {estanque.Nom_Estanque}
-                            </option>
-                        )}
-                    </select>
-                    <br />
-                    <input type="submit" id="boton" value={buttonForm} className="btn btn-success m-2" />
-                </form>
+        <div className="container">
+            <div className="row justify-content-center">
+                <div className="col-md-6">
+                    <h1 className="text-center mb-4">{buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}</h1>
+                    <form id="actividadForm" onSubmit={sendFormA} className="fw-bold">
+                        <div className="form-group mb-3">
+                            <label htmlFor="Nom_Actividad">Nombre de la Actividad:</label>
+                            <input type="text" id="Nom_Actividad" className="form-control" value={Nom_Actividad} onChange={(e) => setNom_Actividad(e.target.value)} required />
+                        </div>
+                        <div className="form-group mb-3">
+                            <label htmlFor="Des_Actividad">Descripción de la Actividad:</label>
+                            <input type="text" id="Des_Actividad" className="form-control" value={Des_Actividad} onChange={(e) => setDes_Actividad(e.target.value)} required />
+                        </div>
+                        <div className="form-group mb-3">
+                            <label htmlFor="Fec_Actividad">Fecha de la Actividad:</label>
+                            <input type="date" id="Fec_Actividad" className="form-control" value={Fec_Actividad} onChange={(e) => setFec_Actividad(e.target.value)} required />
+                        </div>
+                        <div className="form-group mb-3">
+                            <label htmlFor="Hor_Actividad">Duración de la Actividad:</label>
+                            <input type="time" id="Hor_Actividad" className="form-control" value={Hor_Actividad} onChange={(e) => setHor_Actividad(e.target.value)} required />
+                        </div>
+                        <div className="form-group mb-3">
+                            <label htmlFor="Fas_Produccion">Fase de Producción:</label>
+                            <select id="Fas_Produccion" className="form-control" value={Fas_Produccion} onChange={(e) => setFas_Produccion(e.target.value)} required>
+                                <option value="">-- Seleccione --</option>
+                                <option value="Antes de la cosecha">Antes de la cosecha</option>
+                                <option value="Despues de la cosecha">Después de la cosecha</option>
+                            </select>
+                        </div>
+                        <div className="form-group mb-3">
+                            <label htmlFor="Id_Responsable">Responsable de la Actividad:</label>
+                            <select id="Id_Responsable" className="form-control" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)} required>
+                                <option value="">Selecciona uno...</option>
+                                {DatosResponsable.map((responsable) =>
+                                    <option key={responsable.Id_Responsable} value={responsable.Id_Responsable}>
+                                        {responsable.Nom_Responsable}
+                                    </option>
+                                )}
+                            </select>
+                        </div>
+                        <div className="form-group mb-4">
+                            <label htmlFor="Id_Estanque">Estanque:</label>
+                            <select id="Id_Estanque" className="form-control" value={Id_Estanque} onChange={(e) => setId_Estanque(e.target.value)} required>
+                                <option value="">Selecciona uno...</option>
+                                {DatosEstanque.map((estanque) =>
+                                    <option key={estanque.Id_Estanque} value={estanque.Id_Estanque}>
+                                        {estanque.Nom_Estanque}
+                                    </option>
+                                )}
+                            </select>
+                        </div>
+                        <button type="submit" className="btn btn-primary w-100">{buttonForm}</button>
+                    </form>
+                </div>
             </div>
-        </>
+        </div>
     );
 };
 

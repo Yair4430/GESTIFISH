@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import WriteTable from '../Tables/Data-Tables.jsx';
 import FormActividad from './formActividad.jsx';
-import FormQueryActividad from './formQueryActividad.jsx';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/Actividad/';
 
@@ -13,11 +13,11 @@ const CrudActividad = () => {
         Id_Actividad: '',
         Nom_Actividad: '',
         Des_Actividad: '',
-        Id_Responsable:'',
+        Id_Responsable: '',
         Fec_Actividad: '',
-        Hor_Actividad : '',
+        Hor_Actividad: '',
         Fas_Produccion: '',
-        Id_Estanque:''
+        Id_Estanque: ''
     });
 
     useEffect(() => {
@@ -33,23 +33,22 @@ const CrudActividad = () => {
         }
     };
 
- const getActividad = async (Id_Actividad) => {
-    setButtonForm('Enviar');
-    try {
-        const respuesta = await axios.get(`${URI}/${Id_Actividad} }}`); // Corregido
-        setButtonForm('Actualizar');
-        setActividad({ ...respuesta.data });
-    } catch (error) {
-        console.error('Error fetching actividad:', error);
-    }
-};
-
+    const getActividad = async (Id_Actividad) => {
+        setButtonForm('Enviar');
+        try {
+            const respuesta = await axios.get(`${URI}/${Id_Actividad}`);
+            setButtonForm('Actualizar');
+            setActividad({ ...respuesta.data });
+        } catch (error) {
+            console.error('Error fetching actividad:', error);
+        }
+    };
 
     const updateTextButton = (texto) => {
         setButtonForm(texto);
     };
 
-    const deleteActividad = (Id_Actividad) => {
+    const deleteActividad = async (Id_Actividad) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -75,49 +74,55 @@ const CrudActividad = () => {
         });
     };
 
+    const handleEdit = (Id_Actividad) => {
+        getActividad(Id_Actividad);
+    };
+
+    const handleDelete = (Id_Actividad) => {
+        deleteActividad(Id_Actividad);
+    };
+
+    const data = ActividadList.map((actividad) => [
+        actividad.Nom_Actividad,
+        actividad.Des_Actividad,
+        actividad.responsable.Nom_Responsable,
+        actividad.Fec_Actividad,
+        actividad.Hor_Actividad,
+        actividad.Fas_Produccion,
+        actividad.estanque.Nom_Estanque,
+        `
+          <button class='btn btn-info align-middle btn-edit' data-id='${actividad.Id_Actividad}'>
+            <i class="fa-solid fa-pen-to-square"></i> Editar
+          </button>
+          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${actividad.Id_Actividad}'>
+            <i class="fa-solid fa-trash-can"></i> Borrar
+          </button>
+        `
+    ]);
+    
+    const titles = [
+        "Nombre", "Descripción", "Responsable", "Fecha", "Hora", "Fase de Producción", "Estanque", "Acciones"
+    ];
+
     return (
         <>
-            <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
-                <thead>
-                    <tr>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Descripción</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Responsable</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Hora</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fase Produccion</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Estanque</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {ActividadList.map((actividad) => (
-                        <tr key={actividad.Id_Actividad} className='border-info font-monospace' style={{ border: "3px solid" }}>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.Nom_Actividad}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.Des_Actividad}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.responsable.Nom_Responsable}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.Fec_Actividad}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.Hor_Actividad}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.Fas_Produccion}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.estanque.Nom_Estanque}</td>
-                            <td>
-                                <button className='btn btn-info align-middle' onClick={() => getActividad(actividad.Id_Actividad)}>
-                                    <i className="fa-solid fa-pen-to-square"></i> Editar
-                                </button>
-                                <button className='btn btn-info align-middle m-2' onClick={() => deleteActividad(actividad.Id_Actividad)}>
-                                    <i className="fa-solid fa-trash-can"></i> Borrar
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <WriteTable 
+                titles={titles} 
+                data={data} 
+                onEditClick={handleEdit} 
+                onDeleteClick={handleDelete} 
+            />
             <hr />
-            <FormActividad buttonForm={buttonForm} actividad={actividad} URI={URI} updateTextButton={updateTextButton} getAllActividad={getAllActividad} />
+            <FormActividad 
+                buttonForm={buttonForm} 
+                actividad={actividad} 
+                URI={URI} 
+                updateTextButton={updateTextButton} 
+                getAllActividad={getAllActividad} 
+            />
             <hr />
-            <FormQueryActividad URI={URI} getActividad={getActividad} deleteActividad={deleteActividad} buttonForm={buttonForm} />
         </>
     );
-}
+};
 
 export default CrudActividad;

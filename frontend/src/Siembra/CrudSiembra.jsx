@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import FormQuerySiembra from './FormQuerySiembra.jsx';
+import WriteTable from '../Tables/Data-Tables.jsx';
 import FormSiembra from './FormSiembra.jsx';
+import FormQuerySiembra from './FormQuerySiembra.jsx';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/siembra/';
-const URI_RESPONSABLE = process.env.ROUTER_PRINCIPAL + '/responsable/'
+const URI_RESPONSABLE = process.env.ROUTER_PRINCIPAL + '/responsable/';
 const URI_ESPECIE = process.env.ROUTER_PRINCIPAL + '/especie/';
 const URI_ESTANQUE = process.env.ROUTER_PRINCIPAL + '/estanque/';
 
@@ -37,52 +38,26 @@ const CrudSiembra = () => {
         getAllEstanques();
     }, []);
 
-    const getAllSiembras = async () => {
+    const fetchData = async (uri, setState) => {
         try {
-            const respuesta = await axios.get(URI);
-            console.log(respuesta)
-            setSiembraList(respuesta.data);
-            // console.log(siembraList)
+            const response = await axios.get(uri);
+            setState(response.data);
         } catch (error) {
-            console.error('Error fetching siembras:', error);
+            console.error(`Error fetching data from ${uri}:`, error);
         }
     };
 
-    const getAllResponsables = async () => {
-        try {
-            const respuesta = await axios.get(URI_RESPONSABLE);
-            console.log(respuesta.data)
-            setResponsables(respuesta.data);
-        } catch (error) {
-            console.error('Error fetching responsables:', error);
-        }
-    };
-
-    const getAllEspecies = async () => {
-        try {
-            const respuesta = await axios.get(URI_ESPECIE);
-            setEspecies(respuesta.data);
-        } catch (error) {
-            console.error('Error fetching especies:', error);
-        }
-    };
-
-    const getAllEstanques = async () => {
-        try {
-            const respuesta = await axios.get(URI_ESTANQUE);
-            console.log(respuesta.data)
-            setEstanques(respuesta.data);
-        } catch (error) {
-            console.error('Error fetching estanques:', error);
-        }
-    };
+    const getAllSiembras = () => fetchData(URI, setSiembraList);
+    const getAllResponsables = () => fetchData(URI_RESPONSABLE, setResponsables);
+    const getAllEspecies = () => fetchData(URI_ESPECIE, setEspecies);
+    const getAllEstanques = () => fetchData(URI_ESTANQUE, setEstanques);
 
     const getSiembra = async (Id_Siembra) => {
         setButtonForm('Enviar');
         try {
-            const respuesta = await axios.get(URI + Id_Siembra);
+            const response = await axios.get(`${URI}${Id_Siembra}`);
             setButtonForm('Actualizar');
-            setSiembra({ ...respuesta.data });
+            setSiembra(response.data);
         } catch (error) {
             console.error('Error fetching siembra:', error);
         }
@@ -94,20 +69,20 @@ const CrudSiembra = () => {
 
     const deleteSiembra = (Id_Siembra) => {
         Swal.fire({
-            title: "Estas Seguro?",
-            text: "No Podras Revertir Esto!",
+            title: "¿Estás seguro?",
+            text: "¡No podrás revertir esto!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Si, Borrar!"
+            confirmButtonText: "¡Sí, borrar!"
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(URI + Id_Siembra);
+                    await axios.delete(`${URI}${Id_Siembra}`);
                     Swal.fire({
-                        title: "Borrado!!",
-                        text: "Borrado Exitosamente",
+                        title: "¡Borrado!",
+                        text: "Borrado exitosamente",
                         icon: "success"
                     });
                     getAllSiembras(); // Refresh the list after deletion
@@ -117,56 +92,50 @@ const CrudSiembra = () => {
             }
         });
     };
+
+    // Extraer títulos y datos para la tabla
+    const titles = [
+        "Cantidad de Peces",
+        "Fecha de Siembra",
+        "Fecha Posible de Cosecha",
+        "Responsable",
+        "Especie",
+        "Estanque",
+        "Peso Actual",
+        "Observaciones",
+        "Hora de Siembra",
+        "Ganancia de Peso",
+        "Valor de Siembra",
+        "Acciones"
+    ];
+
+    const data = siembraList.map((siembra) => [
+        siembra.Can_Peces,
+        siembra.Fec_Siembra,
+        siembra.Fec_PosibleCosecha,
+        siembra.responsable?.Nom_Responsable || 'No disponible',
+        siembra.especie?.Nom_Especie || 'No disponible',
+        siembra.estanque?.Nom_Estanque || 'No disponible',
+        siembra.Pes_Actual,
+        siembra.Obs_Siembra,
+        siembra.Hor_Siembra,
+        siembra.Gan_Peso,
+        siembra.Vlr_Siembra,
+        <>
+            <button className='btn btn-info align-middle' onClick={() => getSiembra(siembra.Id_Siembra)}>
+                <i className="fa-solid fa-pen-to-square"></i> Editar
+            </button>
+            <button className='btn btn-info align-middle m-2' onClick={() => deleteSiembra(siembra.Id_Siembra)}>
+                <i className="fa-solid fa-trash-can"></i> Borrar
+            </button>
+        </>
+    ]);
+
     return (
         <>
-            <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
-                <thead>
-                    <tr>
-                        {/* <th className='border-info align-middle' style={{ border: "3px solid" }}>ID</th> */}
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Cantidad de Peces</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha de Siembra</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha Posible de Cosecha</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Responsable</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Especie</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Estanque</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Peso Actual</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Observaciones</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Hora de Siembra</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Ganancia de Peso</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Valor de Siembra</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    { siembraList.map((siembra) => (
-                        <tr key={siembra.Id_Siembra} className='border-info font-monospace' style={{ border: "3px solid" }}>
-                            {/* <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Id_Siembra}</td> */}
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Can_Peces}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Fec_Siembra}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Fec_PosibleCosecha}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.responsable.Nom_Responsable}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.especie.Nom_Especie}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.estanque.Nom_Estanque}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Pes_Actual}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Obs_Siembra}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Hor_Siembra}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Gan_Peso}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{siembra.Vlr_Siembra}</td>
-                            <td>
-                                <button className='btn btn-info align-middle' onClick={() => getSiembra(siembra.Id_Siembra)}>
-                                    <i className="fa-solid fa-pen-to-square"></i> Editar
-                                </button>
-                                <button className='btn btn-info align-middle m-2' onClick={() => deleteSiembra(siembra.Id_Siembra)}>
-                                    <i className="fa-solid fa-trash-can"></i> Borrar
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <WriteTable titles={titles} data={data} />
             <hr />
             <FormSiembra 
-                getAllSiembras={getAllSiembras} 
                 buttonForm={buttonForm} 
                 siembra={siembra} 
                 responsables={responsables} 
@@ -174,6 +143,7 @@ const CrudSiembra = () => {
                 estanques={estanques} 
                 URI={URI} 
                 updateTextButton={updateTextButton} 
+                getAllSiembras={getAllSiembras} 
             />
             <hr />
             <FormQuerySiembra 

@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import FormTraslado from './FormTraslado'; 
-import FormQueryTraslado from './FormQueryTraslado'; 
+import WriteTable from '../Tables/Data-Tables.jsx';
+import FormTraslado from './FormTraslado.jsx';
+import FormQueryTraslado from './FormQueryTraslado.jsx';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/traslado/';
 
 const CrudTraslado = () => {
-    const [TrasladoList, setTrasladoList] = useState([]);
+    const [trasladoList, setTrasladoList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
     const [traslado, setTraslado] = useState({
         Id_Traslado: '',
@@ -35,10 +36,10 @@ const CrudTraslado = () => {
         }
     };
 
-    const getTraslado = async (id_Traslado) => {
+    const getTraslado = async (Id_Traslado) => {
         setButtonForm('Enviar');
         try {
-            const respuesta = await axios.get(`${URI}${id_Traslado}`);
+            const respuesta = await axios.get(`${URI}${Id_Traslado}`);
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setButtonForm('Actualizar');
                 setTraslado({ ...respuesta.data });
@@ -54,7 +55,7 @@ const CrudTraslado = () => {
         setButtonForm(texto);
     };
 
-    const deleteTraslado = (id_Traslado) => {
+    const deleteTraslado = async (Id_Traslado) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -66,7 +67,7 @@ const CrudTraslado = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const respuesta = await axios.delete(`${URI}${id_Traslado}`);
+                    const respuesta = await axios.delete(`${URI}${Id_Traslado}`);
                     if (respuesta.status >= 200 && respuesta.status < 300) {
                         Swal.fire({
                             title: "¡Borrado!",
@@ -84,45 +85,50 @@ const CrudTraslado = () => {
         });
     };
 
+    // Extraer títulos y datos para la tabla
+    const titles = [
+        "Fecha de Traslado",
+        "Cantidad de Peces",
+        "Responsable",
+        "Observaciones",
+        "Hora de Traslado",
+        "Acciones"
+    ];
+
+    const data = trasladoList.map((traslado) => [
+        traslado.Fec_Traslado,
+        traslado.Can_Peces,
+        traslado.responsable?.Nom_Responsable || 'No disponible',
+        traslado.Obs_Traslado,
+        traslado.Hor_Traslado,
+        <>
+            <button className='btn btn-info align-middle' onClick={() => getTraslado(traslado.Id_Traslado)}>
+                <i className="fa-solid fa-pen-to-square"></i> Editar
+            </button>
+            <button className='btn btn-info align-middle m-2' onClick={() => deleteTraslado(traslado.Id_Traslado)}>
+                <i className="fa-solid fa-trash-can"></i> Borrar
+            </button>
+        </>
+    ]);
+
     return (
         <>
-            <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
-                <thead>
-                    <tr>
-                        {/* Eliminar la columna Id_Traslado */}
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha de Traslado</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Cantidad de Peces</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Responsable</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Observaciones</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Hora de Traslado</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {TrasladoList.map((traslado) => (
-                        <tr key={traslado.Id_Traslado} className='border-info font-monospace' style={{ border: "3px solid" }}>
-                            {/* Eliminar la celda Id_Traslado */}
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{traslado.Fec_Traslado}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{traslado.Can_Peces}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{traslado.responsable.Nom_Responsable}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{traslado.Obs_Traslado}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{traslado.Hor_Traslado}</td>
-                            <td>
-                                <button className='btn btn-info align-middle' onClick={() => getTraslado(traslado.Id_Traslado)}>
-                                    <i className="fa-solid fa-pen-to-square"></i> Editar
-                                </button>
-                                <button className='btn btn-info align-middle m-2' onClick={() => deleteTraslado(traslado.Id_Traslado)}>
-                                    <i className="fa-solid fa-trash-can"></i> Borrar
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <WriteTable titles={titles} data={data} />
             <hr />
-            <FormTraslado getAllTraslados={getAllTraslados} buttonForm={buttonForm} traslado={traslado} URI={URI} updateTextButton={updateTextButton} />
+            <FormTraslado 
+                buttonForm={buttonForm} 
+                traslado={traslado} 
+                URI={URI} 
+                updateTextButton={updateTextButton} 
+                getAllTraslados={getAllTraslados} 
+            />
             <hr />
-            <FormQueryTraslado URI={URI} getTraslado={getTraslado} deleteTraslado={deleteTraslado} buttonForm={buttonForm} />
+            <FormQueryTraslado 
+                URI={URI} 
+                getTraslado={getTraslado} 
+                deleteTraslado={deleteTraslado} 
+                buttonForm={buttonForm} 
+            />
         </>
     );
 };

@@ -103,9 +103,11 @@ const Auth = () => {
                                         <button type="submit" className="btn-primary">{buttonForm}</button>
                                     </div>
                                 </form>
-                                <div className="text-center mt-3">
-                                    <Link to="#" onClick={() => setResetPass(!resetPass)}>¿Olvidaste tu contraseña?</Link>
-                                </div>
+                                {singnInOrLogIn === 'logIn' && (
+                                    <div className="text-center mt-3">
+                                        <Link to="#" onClick={() => setResetPass(!resetPass)}>¿Olvidaste tu contraseña?</Link>
+                                    </div>
+                                )}
                             </>
                         ) : (
                             <>
@@ -138,11 +140,6 @@ const Auth = () => {
                             </>
                         )}
                     </div>
-                </div>
-                <div className="auth-right">
-                    <h2>Hello, Friend!</h2>
-                    <p>Register with your personal details to use all of site features</p>
-                    <button className="btn-signup" onClick={() => { switchForm('signIn'); setButtonForm('Registrar') }}>SIGN UP</button>
                 </div>
             </div>
         </>
