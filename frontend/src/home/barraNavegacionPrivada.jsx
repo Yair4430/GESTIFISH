@@ -116,7 +116,7 @@ function barraNavegacionPrivada({ logOutUser }) {
                   }}
                 >
                   <i className="fas fa-file-alt" style={styles.icon}></i> {/* Ícono de formularios */}
-                  <span style={styles.iconText}>Formularios</span>
+                  <span style={styles.iconText}>Registros</span>
                 </NavLink>
               </li>
               {/* Elemento de la lista de navegación para el ícono de simulador */}

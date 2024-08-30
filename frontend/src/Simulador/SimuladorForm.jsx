@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const SimuladorForm = ({ onSimulate }) => {
+const SimuladorForm = ({ onSimulate, onClear }) => {
   const [formData, setFormData] = useState({
     especie: '',
     densidad: '',
@@ -19,12 +19,6 @@ const SimuladorForm = ({ onSimulate }) => {
     e.preventDefault();
     if (formData.especie && formData.densidad && formData.espejoAgua && formData.precioBulto) {
       onSimulate(formData);
-      setFormData({
-        especie: '',
-        densidad: '',
-        espejoAgua: '',
-        precioBulto: '',
-      });
     } else {
       alert('Por favor complete todos los campos en el orden correcto.');
     }
@@ -36,9 +30,17 @@ const SimuladorForm = ({ onSimulate }) => {
       ...formData,
       especie: value,
       densidad: value === 'Cachama' ? 2 : '',
+    });
+  };
+
+  const handleReset = () => {
+    setFormData({
+      especie: '',
+      densidad: '',
       espejoAgua: '',
       precioBulto: '',
     });
+    onClear();
   };
 
   return (
@@ -126,6 +128,7 @@ const SimuladorForm = ({ onSimulate }) => {
         </div>
         <div className="col-md-12 text-center">
           <button type="submit" className="btn btn-primary">Simular</button>
+          <button type="button" className="btn btn-secondary ms-2" onClick={handleReset}>Limpiar Campos</button>
         </div>
       </form>
     </>
