@@ -1,13 +1,14 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import WriteTable from '../Tables/Data-Tables.jsx';
 import FormTraslado from './FormTraslado'; 
 import FormQueryTraslado from './FormQueryTraslado'; 
 
 const URI = process.env.ROUTER_PRINCIPAL + '/traslado/';
 
 const CrudTraslado = () => {
-    const [TrasladoList, setTrasladoList] = useState([]);
+    const [trasladoList, setTrasladoList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
     const [traslado, setTraslado] = useState({
         Id_Traslado: '',
@@ -25,28 +26,19 @@ const CrudTraslado = () => {
     const getAllTraslados = async () => {
         try {
             const respuesta = await axios.get(URI);
-            if (respuesta.status >= 200 && respuesta.status < 300) {
-                setTrasladoList(respuesta.data);
-            } else {
-                console.warn('HTTP Status:', respuesta.status);
-            }
+            setTrasladoList(respuesta.data);
         } catch (error) {
-            console.error('Error fetching traslados:', error.response?.status || error.message);
+            console.error('Error fetching traslados:', error);
         }
     };
 
     const getTraslado = async (id_Traslado) => {
-        setButtonForm('Enviar');
+        setButtonForm('Actualizar');
         try {
             const respuesta = await axios.get(`${URI}${id_Traslado}`);
-            if (respuesta.status >= 200 && respuesta.status < 300) {
-                setButtonForm('Actualizar');
-                setTraslado({ ...respuesta.data });
-            } else {
-                console.warn('HTTP Status:', respuesta.status);
-            }
+            setTraslado({ ...respuesta.data });
         } catch (error) {
-            console.error('Error fetching traslado:', error.response?.status || error.message);
+            console.error('Error fetching traslado:', error);
         }
     };
 
@@ -54,7 +46,7 @@ const CrudTraslado = () => {
         setButtonForm(texto);
     };
 
-    const deleteTraslado = (id_Traslado) => {
+    const deleteTraslado = async (id_Traslado) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -62,67 +54,72 @@ const CrudTraslado = () => {
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Sí, ¡borrar!"
+            confirmButtonText: "¡Sí, borrar!"
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const respuesta = await axios.delete(`${URI}${id_Traslado}`);
-                    if (respuesta.status >= 200 && respuesta.status < 300) {
-                        Swal.fire({
-                            title: "¡Borrado!",
-                            text: "Borrado exitosamente",
-                            icon: "success"
-                        });
-                        getAllTraslados(); // Refrescar la lista después de la eliminación
-                    } else {
-                        console.warn('HTTP Status:', respuesta.status);
-                    }
+                    await axios.delete(`${URI}${id_Traslado}`);
+                    Swal.fire({
+                        title: "¡Borrado!",
+                        text: "Borrado exitosamente",
+                        icon: "success"
+                    });
+                    // getAllTraslados(); // Refrescar la lista después de la eliminación
                 } catch (error) {
-                    console.error('Error deleting traslado:', error.response?.status || error.message);
+                    console.error('Error deleting traslado:', error);
                 }
+            }else{
+                getAllTraslados();
             }
         });
     };
 
+    
+    const handleEdit = (id_Traslado) => {
+        getTraslado(id_Traslado);
+    };
+
+    const handleDelete = (id_Traslado) => {
+        deleteTraslado(id_Traslado);
+    };
+
+    const data = trasladoList.map((traslado) => [
+        traslado.Fec_Traslado,
+        traslado.Can_Peces,
+        traslado.responsable.Nom_Responsable,
+        traslado.Obs_Traslado,
+        traslado.Hor_Traslado,
+        `
+        <button class='btn btn-info align-middle btn-edit' data-id='${traslado.id_Traslado}'>
+          <i class="fa-solid fa-pen-to-square"></i> Editar
+        </button>
+        <button class='btn btn-info align-middle m-2 btn-delete' data-id='${traslado.id_Traslado}'>
+          <i class="fa-solid fa-trash-can"></i> Borrar
+        </button>
+      `
+    ]);
+
+    const titles = [
+        "Fecha de Traslado", "Cantidad de Peces", "Responsable", "Observaciones", "Hora de Traslado", "Acciones"
+    ];
+
     return (
         <>
-            <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
-                <thead>
-                    <tr>
-                        {/* Eliminar la columna Id_Traslado */}
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha de Traslado</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Cantidad de Peces</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Responsable</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Observaciones</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Hora de Traslado</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {TrasladoList.map((traslado) => (
-                        <tr key={traslado.Id_Traslado} className='border-info font-monospace' style={{ border: "3px solid" }}>
-                            {/* Eliminar la celda Id_Traslado */}
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{traslado.Fec_Traslado}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{traslado.Can_Peces}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{traslado.responsable.Nom_Responsable}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{traslado.Obs_Traslado}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{traslado.Hor_Traslado}</td>
-                            <td>
-                                <button className='btn btn-info align-middle' onClick={() => getTraslado(traslado.Id_Traslado)}>
-                                    <i className="fa-solid fa-pen-to-square"></i> Editar
-                                </button>
-                                <button className='btn btn-info align-middle m-2' onClick={() => deleteTraslado(traslado.Id_Traslado)}>
-                                    <i className="fa-solid fa-trash-can"></i> Borrar
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <WriteTable 
+                titles={titles} 
+                data={data} 
+                onEditClick={handleEdit} 
+                onDeleteClick={handleDelete} 
+            />
             <hr />
-            <FormTraslado getAllTraslados={getAllTraslados} buttonForm={buttonForm} traslado={traslado} URI={URI} updateTextButton={updateTextButton} />
+            <FormTraslado 
+                buttonForm={buttonForm} 
+                traslado={traslado} 
+                URI={URI} 
+                updateTextButton={updateTextButton} 
+                getAllTraslados={getAllTraslados} 
+            />
             <hr />
-            <FormQueryTraslado URI={URI} getTraslado={getTraslado} deleteTraslado={deleteTraslado} buttonForm={buttonForm} />
         </>
     );
 };

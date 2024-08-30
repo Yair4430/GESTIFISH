@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import "./FormActividad.css";
 
 const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllActividad }) => {
     const [Id_Actividad, setId_Actividad] = useState('');
