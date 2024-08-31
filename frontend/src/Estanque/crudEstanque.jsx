@@ -1,16 +1,15 @@
-import axios from 'axios'
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import FormEstanque from './formEstanque'
-import FormQueryEstanque from './formQueryEstanque'
-import Swal from 'sweetalert2'
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
+import WriteTable from '../Tables/Data-Tables.jsx';
+import FormEstanque from './formEstanque.jsx';
 
-const URI = process.env.ROUTER_PRINCIPAL + '/estanque/'
-const PATH_FOTOS = process.env.ROUTER_FOTOS
+const URI = process.env.ROUTER_PRINCIPAL + '/estanque/';
+const PATH_FOTOS = process.env.ROUTER_FOTOS;
 
 const CrudEstanque = () => {
-    const [EstanqueList, setEstanqueList] = useState([])
-    const [buttonForm, setButtonForm] = useState('Enviar')
+    const [EstanqueList, setEstanqueList] = useState([]);
+    const [buttonForm, setButtonForm] = useState('Enviar');
     const [estanque, setEstanque] = useState({
         Id_Estanque: '',
         Nom_Estanque: '',
@@ -21,45 +20,37 @@ const CrudEstanque = () => {
         Des_Estanque: '',
         Img_Estanque: null,
         Rec_Agua: ''
-    })
+    });
 
     useEffect(() => {
         getAllEstanques();
     }, []);
-    
+
     const getAllEstanques = async () => {
         try {
-            const respuesta = await axios.get(URI)
-            if (respuesta.status === 200) {
-                setEstanqueList(respuesta.data)
-            } else {
-                console.warn('HTTP Status:', respuesta.status);
-            }
+            const respuesta = await axios.get(URI);
+            setEstanqueList(respuesta.data);
         } catch (error) {
-            console.error('Error fetching estanques:', error.response?.status || error.message);
+            console.error('Error fetching estanques:', error);
         }
-    }    
+    };
 
     const getEstanque = async (Id_Estanque) => {
         setButtonForm('Enviar');
         try {
-            const respuesta = await axios.get(URI + Id_Estanque);
-            if (respuesta.status === 200) {
-                setButtonForm('Actualizar');
-                setEstanque({ ...respuesta.data });
-            } else {
-                console.warn('HTTP Status:', respuesta.status);
-            }
+            const respuesta = await axios.get(`${URI}${Id_Estanque}`);
+            setButtonForm('Actualizar');
+            setEstanque({ ...respuesta.data });
         } catch (error) {
-            console.error('Error fetching estanque:', error.response?.status || error.message);
+            console.error('Error fetching estanque:', error);
         }
     };
 
     const updateTextButton = (texto) => {
-        setButtonForm(texto)
-    }
+        setButtonForm(texto);
+    };
 
-    const deleteEstanque = (Id_Estanque) => {
+    const deleteEstanque = async (Id_Estanque) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -67,77 +58,77 @@ const CrudEstanque = () => {
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Sí, borrar!"
+            confirmButtonText: "¡Sí, borrar!"
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const respuesta = await axios.delete(URI + Id_Estanque);
-                    if (respuesta.status === 200) {
-                        Swal.fire({
-                            title: "¡Borrado!",
-                            text: "Borrado exitosamente",
-                            icon: "success"
-                        });
-                        getAllEstanques(); // Refresh the list after deletion
-                    } else {
-                        console.warn('HTTP Status:', respuesta.status);
-                    }
+                    await axios.delete(`${URI}${Id_Estanque}`);
+                    Swal.fire({
+                        title: "¡Borrado!",
+                        text: "Borrado exitosamente",
+                        icon: "success"
+                    });
+                    // getAllEstanques(); // Refresh the list after deletion
                 } catch (error) {
-                    console.error('Error deleting estanque:', error.response?.status || error.message);
+                    console.error('Error deleting estanque:', error);
                 }
+            }else{
+                getAllEstanques();
             }
         });
     };
 
+    const handleEdit = (Id_Estanque) => {
+        getEstanque(Id_Estanque);
+    };
+
+    const handleDelete = (Id_Estanque) => {
+        deleteEstanque(Id_Estanque);
+    };
+
+    const data = EstanqueList.map((estanque) => [
+        estanque.Id_Estanque,
+        estanque.Nom_Estanque,
+        estanque.Esp_Agua,
+        estanque.Tip_Estanque,
+        estanque.Lar_Estanque,
+        estanque.Anc_Estanque,
+        estanque.Des_Estanque,
+        `<img width="80px" src="${PATH_FOTOS}/${estanque.Img_Estanque}" alt="Imagen del estanque" />`,
+        estanque.Rec_Agua,
+        `
+          <button class='btn btn-info align-middle btn-edit' data-id='${estanque.Id_Estanque}'>
+            <i class="fa-solid fa-pen-to-square"></i> Editar
+          </button>
+          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${estanque.Id_Estanque}'>
+            <i class="fa-solid fa-trash-can"></i> Borrar
+          </button>
+        `
+    ]);
+    
+    const titles = [
+        "Número", "Nombre", "Espejo de Agua", "Tipo", "Largo", "Ancho", "Descripción", "Imagen", "Recambio de agua", "Acciones"
+    ];
+
     return (
         <>
-            <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
-                <thead>
-                    <tr>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Número</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Espejo de Agua</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Tipo</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Largo</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Ancho</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Descripción</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Imagen</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Recambio de agua</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {EstanqueList.map((estanque) => (
-                        <tr key={estanque.Id_Estanque} className='border-info font-monospace' style={{ border: "3px solid" }}>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Id_Estanque}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Nom_Estanque}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Esp_Agua}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Tip_Estanque}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Lar_Estanque}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Anc_Estanque}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Des_Estanque}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>
-                                <img width="80px" src={`${PATH_FOTOS}/${estanque.Img_Estanque}`} alt="Imagen del estanque" />
-                            </td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Rec_Agua}</td>
-                            <td>
-                                <button className='btn btn-info align-middle' onClick={() => getEstanque(estanque.Id_Estanque)}>
-                                    <i className="fa-solid fa-pen-to-square"></i> Editar
-                                </button>
-                                <button className='btn btn-info align-middle m-2' onClick={() => deleteEstanque(estanque.Id_Estanque)}>
-                                    <i className="fa-solid fa-trash-can"></i> Borrar
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <WriteTable 
+                titles={titles} 
+                data={data} 
+                onEditClick={handleEdit} 
+                onDeleteClick={handleDelete} 
+            />
             <hr />
-            <FormEstanque  getAllEstanques={getAllEstanques} buttonForm={buttonForm} estanque={estanque} URI={URI} updateTextButton={updateTextButton} />
+            <FormEstanque 
+                buttonForm={buttonForm} 
+                estanque={estanque} 
+                URI={URI} 
+                updateTextButton={updateTextButton} 
+                getAllEstanques={getAllEstanques} 
+            />
             <hr />
-            <FormQueryEstanque URI={URI} getEstanque={getEstanque} deleteEstanque={deleteEstanque} buttonForm={buttonForm} />
         </>
-    )
-}
+    );
+};
 
-export default CrudEstanque
+export default CrudEstanque;

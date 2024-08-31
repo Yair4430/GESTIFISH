@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import WriteTable from '../Tables/Data-Tables.jsx'; // Asegúrate de tener este componente para la tabla de datos
 import FormCosecha from './FormCosecha'; // Asegúrate de tener este componente para el formulario de cosecha
 import FormQueryCosecha from './FormQueryCosecha'; // Asegúrate de tener este componente para consultar cosechas por fecha
 
@@ -41,11 +42,10 @@ const CrudCosecha = () => {
     };
 
     const getCosecha = async (Id_Cosecha) => {
-        setButtonForm('Enviar');
+        setButtonForm('Actualizar');
         try {
             const respuesta = await axios.get(`${URI}${Id_Cosecha}`);
             if (respuesta.status >= 200 && respuesta.status < 300) {
-                setButtonForm('Actualizar');
                 setCosecha({ ...respuesta.data });
             } else {
                 console.warn('HTTP Status:', respuesta.status);
@@ -59,7 +59,7 @@ const CrudCosecha = () => {
         setButtonForm(texto);
     };
 
-    const deleteCosecha = (id_Cosecha) => {
+    const deleteCosecha = async (Id_Cosecha) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -71,71 +71,80 @@ const CrudCosecha = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const respuesta = await axios.delete(`${URI}${id_Cosecha}`);
-                    if (respuesta.status >= 200 && respuesta.status < 300) {
-                        Swal.fire({
-                            title: "¡Borrado!",
-                            text: "Borrado exitosamente",
-                            icon: "success"
-                        });
-                        getAllCosecha(); // Refrescar la lista después de la eliminación
-                    } else {
-                        console.warn('HTTP Status:', respuesta.status);
-                    }
+                    await axios.delete(`${URI}${Id_Cosecha}`);
+                    Swal.fire({
+                        title: "¡Borrado!",
+                        text: "Borrado exitosamente",
+                        icon: "success"
+                    });
+                    // getAllCosecha(); // Refrescar la lista después de la eliminación
                 } catch (error) {
                     console.error('Error deleting cosecha:', error.response?.status || error.message);
                 }
+            }else{
+                getAllCosecha();
             }
         });
     };
 
+    const handleEdit = (Id_Cosecha) => {
+        getCosecha(Id_Cosecha);
+    };
+
+    const handleDelete = (Id_Cosecha) => {
+        deleteCosecha(Id_Cosecha);
+    };
+
+    const data = CosechaList.map((cosecha) => [
+        cosecha.Fec_Cosecha,
+        cosecha.Can_Peces,
+        cosecha.Pes_Eviscerado,
+        cosecha.Pes_Viscerado,
+        cosecha.Por_Visceras,
+        cosecha.siembra.Fec_Siembra,
+        cosecha.Hor_Cosecha,
+        cosecha.Vlr_Cosecha,
+        cosecha.Obs_Cosecha,
+        cosecha.responsable.Nom_Responsable,
+        `
+          <button class='btn btn-info align-middle btn-edit' data-id='${cosecha.Id_Cosecha}'>
+            <i class="fa-solid fa-pen-to-square"></i> Editar
+          </button>
+          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${cosecha.Id_Cosecha}'>
+            <i class="fa-solid fa-trash-can"></i> Borrar
+          </button>
+        `
+    ]);
+
+    const titles = [
+        "Fecha de Cosecha", "Cantidad de Peces", "Peso Eviscerado", "Peso Viscerado",
+        "Porcentaje de Vísperas", "Fecha Siembra", "Hora de Cosecha", "Valor de Cosecha",
+        "Observaciones", "Nombre Responsable", "Acciones"
+    ];
+
     return (
         <>
-            <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
-                <thead>
-                    <tr>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha de Cosecha</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Cantidad de Peces</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Peso Eviscerado</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Peso Viscerado</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Porcentaje de Vísperas</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha Siembra</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Hora de Cosecha</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Valor de Cosecha</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Observaciones</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre Responsable</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {CosechaList.map((cosecha) => (
-                        <tr key={cosecha.Id_Cosecha} className='border-info font-monospace' style={{ border: "3px solid" }}>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Fec_Cosecha}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Can_Peces}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Pes_Eviscerado}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Pes_Viscerado}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Por_Visceras}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.siembra.Fec_Siembra}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Hor_Cosecha}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Vlr_Cosecha}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Obs_Cosecha}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.responsable.Nom_Responsable}</td>
-                            <td>
-                                <button className='btn btn-info align-middle' onClick={() => getCosecha(cosecha.Id_Cosecha)}>
-                                    <i className="fa-solid fa-pen-to-square"></i> Editar
-                                </button>
-                                <button className='btn btn-info align-middle m-2' onClick={() => deleteCosecha(cosecha.Id_Cosecha)}>
-                                    <i className="fa-solid fa-trash-can"></i> Borrar
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <WriteTable
+                titles={titles}
+                data={data}
+                onEditClick={handleEdit}
+                onDeleteClick={handleDelete}
+            />
             <hr />
-            <FormCosecha getAllCosecha={getAllCosecha} buttonForm={buttonForm} cosecha={cosecha} URI={URI} updateTextButton={updateTextButton} />
+            <FormCosecha
+                getAllCosecha={getAllCosecha}
+                buttonForm={buttonForm}
+                cosecha={cosecha}
+                URI={URI}
+                updateTextButton={updateTextButton}
+            />
             <hr />
-            <FormQueryCosecha URI={URI} getCosecha={getCosecha} deleteCosecha={deleteCosecha} buttonForm={buttonForm} />
+            <FormQueryCosecha
+                URI={URI}
+                getCosecha={getCosecha}
+                deleteCosecha={deleteCosecha}
+                buttonForm={buttonForm}
+            />
         </>
     );
 };

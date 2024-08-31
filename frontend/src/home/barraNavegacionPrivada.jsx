@@ -1,11 +1,11 @@
 import React from "react";
 import { NavLink } from 'react-router-dom'; // Importa NavLink
-import Logo from '../IMG/Logo_FondoBlanco.jpeg';
+import Logo from '../IMG/Logo_FondoBlanco.jpeg'; // Asegúrate de reemplazar esta línea con el logo que quieres usar
 
 // Definición del componente de barra de navegación privada
 function barraNavegacionPrivada({ logOutUser }) {
 
-  console.log(logOutUser)
+  console.log(logOutUser);
   // Estilos en línea para la barra de navegación
   const styles = {
     navbar: {
@@ -21,7 +21,9 @@ function barraNavegacionPrivada({ logOutUser }) {
     navLink: {
       marginLeft: '20px', // Espacio a la izquierda de cada enlace
       fontSize: '1.5rem', // Tamaño del texto de los enlaces
-      display: 'inline-block', // Asegura que el hover se aplique correctamente
+      display: 'flex', // Usa flexbox para alinear íconos y texto
+      flexDirection: 'column', // Alinea los íconos y el texto en columna
+      alignItems: 'center', // Centra el contenido en el eje transversal
       transition: 'transform 0.3s ease, opacity 0.3s ease', // Transición para escala y opacidad
     },
     navbarBrandImg: {
@@ -33,6 +35,11 @@ function barraNavegacionPrivada({ logOutUser }) {
     },
     icon: {
       fontSize: '2.5rem', // Tamaño de los íconos en la barra de navegación
+      marginBottom: '5px', // Espacio entre el ícono y el texto
+    },
+    iconText: {
+      color: 'white', // Color del texto debajo del ícono
+      fontSize: '1rem', // Tamaño del texto
     },
   };
 
@@ -89,10 +96,11 @@ function barraNavegacionPrivada({ logOutUser }) {
                     e.currentTarget.style.opacity = '1';
                   }}
                 >
-                  <i className="fas fa-home" style={styles.icon}></i>
+                  <i className="fas fa-home" style={styles.icon}></i> {/* Ícono de inicio */}
+                  <span style={styles.iconText}>Inicio</span>
                 </NavLink>
               </li>
-              {/* Elemento de la lista de navegación para el ícono de registros */}
+              {/* Elemento de la lista de navegación para el ícono de formularios */}
               <li className="nav-item">
                 <NavLink
                   to="/RegistrosMenu"
@@ -107,10 +115,11 @@ function barraNavegacionPrivada({ logOutUser }) {
                     e.currentTarget.style.opacity = '1';
                   }}
                 >
-                  <i className="fas fa-file-alt" style={styles.icon}></i> {/* Cambiado a ícono de formularios */}
+                  <i className="fas fa-file-alt" style={styles.icon}></i> {/* Ícono de formularios */}
+                  <span style={styles.iconText}>Registros</span>
                 </NavLink>
               </li>
-              {/* Elemento de la lista de navegación para el ícono de gráfico */}
+              {/* Elemento de la lista de navegación para el ícono de simulador */}
               <li className="nav-item">
                 <NavLink
                   to="/Simulador"
@@ -125,13 +134,14 @@ function barraNavegacionPrivada({ logOutUser }) {
                     e.currentTarget.style.opacity = '1';
                   }}
                 >
-                  <i className="fas fa-chart-line" style={styles.icon}></i>
+                  <i className="fas fa-chart-line" style={styles.icon}></i> {/* Ícono de simulador */}
+                  <span style={styles.iconText}>Simulador</span>
                 </NavLink>
               </li>
               {/* Elemento de la lista de navegación para el ícono de cerrar sesión */}
               <li className="nav-item">
                 <NavLink
-                 
+                  to="#"
                   className="nav-link text-white"
                   style={styles.navLink}
                   onClick={logOutUser}  // Llamar a logOutUser directamente
@@ -144,7 +154,8 @@ function barraNavegacionPrivada({ logOutUser }) {
                     e.currentTarget.style.opacity = '1';
                   }}
                 >
-                  <i className="fas fa-sign-out-alt" style={styles.icon}></i>
+                  <i className="fas fa-sign-out-alt" style={styles.icon}></i> {/* Ícono de cerrar sesión */}
+                  <span style={styles.iconText}>Cerrar Sesión</span>
                 </NavLink>
               </li>
             </ul>

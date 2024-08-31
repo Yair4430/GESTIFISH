@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -28,7 +28,7 @@ import BarraNavegacionPublica from './home/barraNavegacionPublica.jsx';
 import HomePublico from './home/HomePublica.jsx';
 import RegistrosMenu from './home/RegistrosMenu.jsx';
 import CaruselContact from './Contact/Carusel-contact.jsx';
-// import HomePublico from './home/HomePublica.jsx';
+import Sidebar from './home/Sidebar.jsx'; // Asegúrate de usar la ruta correcta
 
 const URL_AUTH = process.env.ROUTER_PRINCIPAL + '/auth/';
 
@@ -38,72 +38,103 @@ function App() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('usuario'));
+    const lastPath = localStorage.getItem('lastPath');
 
     if (!user) {
       setIsAuth(false);
     } else {
-      axios.get(URL_AUTH + 'verify', {
-        headers: { Authorization: `Bearer ${user.tokenUser}` }
-      }).then(response => {
-        if (response.status === 200) {
-          setIsAuth(true);
-          navigate('/'); // Redirigir a Home después de autenticarse
-        }
-      }).catch(() => {
-        setIsAuth(false);
-      });
+      axios
+        .get(URL_AUTH + 'verify', {
+          headers: { Authorization: `Bearer ${user.tokenUser}` },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            setIsAuth(true);
+            if (lastPath) {
+              navigate(lastPath); // Redirigir a la última ruta guardada después de autenticarse
+            } else {
+              navigate('/'); // Redirigir a Home si no hay una última ruta guardada
+            }
+          }
+        })
+        .catch(() => {
+          setIsAuth(false);
+        });
     }
   }, []);
 
+  useEffect(() => {
+    // Guardar la ruta actual cada vez que cambia
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isAuth]);
+
+  const handleBeforeUnload = () => {
+    localStorage.setItem('lastPath', window.location.pathname);
+  };
+
   const logOutUser = () => {
     localStorage.removeItem('usuario');
+    localStorage.removeItem('lastPath');
     setIsAuth(false);
-    navigate("/auth"); // Redirigir después de cerrar sesión
+    navigate('/auth'); // Redirigir después de cerrar sesión
   };
 
   return (
-    <> 
-      {isAuth && <BarraNavegacionPrivada logOutUser={logOutUser} />} {/* Barra de navegación siempre visible */}
+    <>
+      {/* Renderiza la barra de navegación privada solo si no estás en la ruta de registros */}
+      {isAuth && !window.location.pathname.includes('/RegistrosMenu') && (
+        <BarraNavegacionPrivada logOutUser={logOutUser} />
+      )}
+
       <Routes>
-        {isAuth ?
-          <>  
+        {isAuth ? (
+          <>
             {/* Routes de estructura del proyecto */}
             <Route path='/' element={<Home />} />
-            <Route path='/RegistrosMenu' element={<RegistrosMenu/>}/>
+
+            {/* Agrega la ruta del sidebar personalizado solo en RegistrosMenu */}
+            <Route
+              path='/RegistrosMenu'
+              element={
+                <>
+                  <Sidebar /> {/* Renderiza el Sidebar en lugar de la barra de navegación */}
+                  <div style={{ marginLeft: '280px' }}>
+                    {' '}
+                    {/* Ajuste de margen para que el contenido no se superponga con el sidebar */}
+                    <RegistrosMenu />
+                  </div>
+                </>
+              }
+            />
 
             {/* Routes de componentes formularios y simulador */}
             <Route path='/Alimentacion' element={<CrudAlimentacion />} />
-            <Route path='/Responsable' element={<CrudResponsable/>}/>
-            <Route path='/Estanque' element={<CrudEstanque/>}/>
-            <Route path='/Especie' element={<CrudEspecie/>}/>
-            <Route path='/Traslado' element={<CrudTraslado/>}/>
-            <Route path='/Actividad' element={<CrudActividad/>}/>
-            <Route path='/Muestreo' element={<CrudMuestreo/>}/>
-            <Route path='/Cosecha' element={<CrudCosecha/>}/>
-            <Route path='/Mortalidad' element={<CrudMortalidad/>}/>
-            <Route path='/Siembra' element={<CrudSiembra/>}/>
-            <Route path='/Simulador' element={<Simulador/>}/>
-
+            <Route path='/Responsable' element={<CrudResponsable />} />
+            <Route path='/Estanque' element={<CrudEstanque />} />
+            <Route path='/Especie' element={<CrudEspecie />} />
+            <Route path='/Traslado' element={<CrudTraslado />} />
+            <Route path='/Actividad' element={<CrudActividad />} />
+            <Route path='/Muestreo' element={<CrudMuestreo />} />
+            <Route path='/Cosecha' element={<CrudCosecha />} />
+            <Route path='/Mortalidad' element={<CrudMortalidad />} />
+            <Route path='/Siembra' element={<CrudSiembra />} />
+            <Route path='/Simulador' element={<Simulador />} />
           </>
-          :
-          <Route path='*' element={<HomePublico/>} />
-        }
-        {
-          <Route path='/contact' element={<CaruselContact/>} />
-        }
-        { !isAuth ?
+        ) : (
+          <Route path='*' element={<HomePublico />} />
+        )}
+        {!isAuth ? <Route path='/auth' element={<Auth />} /> : ''}
 
-          <Route path='/auth' element={<Auth />} />
-        :''
-        }
-
-        <Route path='/reset-password' element={<ResetPassword/>}/>
-        <Route path='/barraNavegacionPublica' element={<BarraNavegacionPublica/>}/>
-        
+        <Route path='/reset-password' element={<ResetPassword />} />
+        <Route path='/barraNavegacionPublica' element={<BarraNavegacionPublica />} />
+        <Route path='/CaruselContact' element={<CaruselContact />} />
       </Routes>
     </>
   );
-};
+}
 
 export default App;
-
