@@ -1,14 +1,15 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import FormMortalidad from './FormMortalidad'; 
-import FormQueryMortalidad from './FormQueryMortalidad'; 
+import FormMortalidad from './FormMortalidad';
+import FormQueryMortalidad from './FormQueryMortalidad';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/mortalidad/';
 
 const CrudMortalidad = () => {
     const [MortalidadList, setMortalidadList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [mortalidad, setMortalidad] = useState({
         Id_Mortalidad: '',
         Fec_Mortalidad: '',
@@ -84,44 +85,84 @@ const CrudMortalidad = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            setMortalidad({
+                Fec_Mortalidad: '',
+                Can_Peces: '',
+                Mot_Mortalidad: '',
+                Id_Siembra: '',
+                Id_Responsable: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
     return (
         <>
-            <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
-                <thead>
-                    <tr>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha de Mortalidad</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Cantidad de Peces</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Motivo de Mortalidad</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha Siembra</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre Responsable</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {MortalidadList.map((mortalidad) => (
-                        <tr key={mortalidad.Id_Mortalidad} className='border-info font-monospace' style={{ border: "3px solid" }}>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{mortalidad.Fec_Mortalidad}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{mortalidad.Can_Peces}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{mortalidad.Mot_Mortalidad}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{mortalidad.siembra.Fec_Siembra}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{mortalidad.responsable.Nom_Responsable}</td>
-                            <td>
-                                <button className='btn btn-info align-middle' onClick={() => getMortalidad(mortalidad.Id_Mortalidad)}>
-                                    <i className="fa-solid fa-pen-to-square"></i> Editar
-                                </button>
-                                <button className='btn btn-info align-middle m-2' onClick={() => deleteMortalidad(mortalidad.Id_Mortalidad)}>
-                                    <i className="fa-solid fa-trash-can"></i> Borrar
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <hr />
-            <FormMortalidad getAllMortalidad={getAllMortalidad} buttonForm={buttonForm} mortalidad={mortalidad} URI={URI} updateTextButton={updateTextButton} />
-            <hr />
-            <FormQueryMortalidad URI={URI} getMortalidad={getMortalidad} deleteMortalidad={deleteMortalidad} buttonForm={buttonForm} />
+            <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Mortalidad'}
+                </button>
+
+                {MortalidadList.length > 0 ? (
+                    <div className="card">
+                        <div className="card-header bg-primary text-white">
+                            <h1 className="text-center">Mortalidades Registradas</h1>
+                        </div>
+                        <div className="card-body">
+                            <div className="table-responsive">
+                                <table className="table table-striped mt-4 text-center">
+                                    <thead>
+                                        <tr>
+                                            <th className='align-middle'>Fecha de Mortalidad</th>
+                                            <th className='align-middle'>Cantidad de Peces</th>
+                                            <th className='align-middle'>Motivo de Mortalidad</th>
+                                            <th className='align-middle'>Fecha de Siembra</th>
+                                            <th className='align-middle'>Nombre Responsable</th>
+                                            <th className='align-middle'>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {MortalidadList.map((mortalidad) => (
+                                            <tr key={mortalidad.Id_Mortalidad}>
+                                                <td className='align-middle'>{mortalidad.Fec_Mortalidad}</td>
+                                                <td className='align-middle'>{mortalidad.Can_Peces}</td>
+                                                <td className='align-middle'>{mortalidad.Mot_Mortalidad}</td>
+                                                <td className='align-middle'>{mortalidad.siembra.Fec_Siembra}</td>
+                                                <td className='align-middle'>{mortalidad.responsable.Nom_Responsable}</td>
+                                                <td className='align-middle'>
+                                                    <button className='btn btn-sm btn-primary m-1' onClick={() => getMortalidad(mortalidad.Id_Mortalidad)}>
+                                                        <i className="fa-solid fa-pen-to-square"></i> Editar
+                                                    </button>
+                                                    <button className='btn btn-sm btn-danger m-1' onClick={() => deleteMortalidad(mortalidad.Id_Mortalidad)}>
+                                                        <i className="fa-solid fa-trash-can"></i> Borrar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="alert alert-info mt-3" role="alert">
+                        No hay resultados para mostrar.
+                    </div>
+                )}
+
+                {showForm && (
+                    <>
+                        <FormMortalidad getAllMortalidad={getAllMortalidad} buttonForm={buttonForm} mortalidad={mortalidad} URI={URI} updateTextButton={updateTextButton} />
+                    </>
+                )}
+                <FormQueryMortalidad URI={URI} getMortalidad={getMortalidad} deleteMortalidad={deleteMortalidad} buttonForm={buttonForm} />
+            </div>
         </>
+
     );
 };
 

@@ -3,12 +3,14 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import FormAlimentacion from './FormAlimentacion';
 import FormQueryAlimentacion from './FormQueryAlimentacion';
+import './Alimentacion.css'
 
 const URI = process.env.ROUTER_PRINCIPAL + '/alimentacion/';
 
 const CrudAlimentacion = () => {
     const [AlimentacionList, setAlimentacionList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [alimentacion, setAlimentacion] = useState({
         Id_Alimentacion: '',
         Fec_Alimentacion: '',
@@ -86,48 +88,94 @@ const CrudAlimentacion = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            setAlimentacion({
+                Id_Alimentacion: '',
+                Fec_Alimentacion: '',
+                Can_RacionKg: '',
+                Tip_Alimento: '',
+                Hor_Alimentacion: '',
+                Vlr_Alimentacion: '',
+                Fec_Siembra: '',
+                Id_Responsable: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
+
     return (
         <>
-            <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
-                <thead>
-                    <tr>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha de Alimentación</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Cantidad de Ración (Kg)</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Tipo de Alimento</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Hora de Alimentación</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Valor Alimentación</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha Siembra</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre Responsable</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {AlimentacionList.map((alimentacion) => (
-                        <tr key={alimentacion.Id_Alimentacion} className='border-info font-monospace' style={{ border: "3px solid" }}>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{alimentacion.Fec_Alimentacion}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{alimentacion.Can_RacionKg}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{alimentacion.Tip_Alimento}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{alimentacion.Hor_Alimentacion}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{alimentacion.Vlr_Alimentacion}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{alimentacion.siembra.Fec_Siembra}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{alimentacion.responsable.Nom_Responsable}</td>
-                            <td>
-                                <button className='btn btn-info align-middle' onClick={() => getAlimentacion(alimentacion.Id_Alimentacion)}>
-                                    <i className="fa-solid fa-pen-to-square"></i> Editar
-                                </button>
-                                <button className='btn btn-info align-middle m-2' onClick={() => deleteAlimentacion(alimentacion.Id_Alimentacion)}>
-                                    <i className="fa-solid fa-trash-can"></i> Borrar
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <hr />
-            <FormAlimentacion getAllAlimentacion={getAllAlimentacion} buttonForm={buttonForm} alimentacion={alimentacion} URI={URI} updateTextButton={updateTextButton} />
-            <hr />
-            <FormQueryAlimentacion URI={URI} getAlimentacion={getAlimentacion} deleteAlimentacion={deleteAlimentacion} buttonForm={buttonForm} />
+            <div className="container mt-5">
+                <button className="btn btn-primary mb-4 btn-custom" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Alimentación'}
+                </button>
+
+                {AlimentacionList.length > 0 ? (
+                    <div className="card">
+                        <div className="card-header bg-primary text-white">
+                            <h1 className="text-center">Alimentaciones Registradas</h1>
+                        </div>
+                        <div className="card-body">
+                            <div className="table-responsive">
+                                <table className="table table-striped mt-4 text-center">
+                                    <thead>
+                                        <tr>
+                                            <th className='align-middle'>Fecha de Alimentación</th>
+                                            <th className='align-middle'>Cantidad de Ración (Kg)</th>
+                                            <th className='align-middle'>Tipo de Alimento</th>
+                                            <th className='align-middle'>Hora de Alimentación</th>
+                                            <th className='align-middle'>Valor Alimentación</th>
+                                            <th className='align-middle'>Fecha Siembra</th>
+                                            <th className='align-middle'>Nombre Responsable</th>
+                                            <th className='align-middle'>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {AlimentacionList.map((alimentacion) => (
+                                            <tr key={alimentacion.Id_Alimentacion}>
+                                                <td className='align-middle'>{alimentacion.Fec_Alimentacion}</td>
+                                                <td className='align-middle'>{alimentacion.Can_RacionKg}</td>
+                                                <td className='align-middle'>{alimentacion.Tip_Alimento}</td>
+                                                <td className='align-middle'>{alimentacion.Hor_Alimentacion}</td>
+                                                <td className='align-middle'>{alimentacion.Vlr_Alimentacion}</td>
+                                                <td className='align-middle'>{alimentacion.siembra.Fec_Siembra}</td>
+                                                <td className='align-middle'>{alimentacion.responsable.Nom_Responsable}</td>
+                                                <td className='align-middle'>
+                                                    <button className='btn btn-sm btn-primary m-1' onClick={() => getAlimentacion(alimentacion.Id_Alimentacion)}>
+                                                        <i className="fa-solid fa-pen-to-square"></i> Editar
+                                                    </button>
+                                                    <button className='btn btn-sm btn-danger m-1' onClick={() => deleteAlimentacion(alimentacion.Id_Alimentacion)}>
+                                                        <i className="fa-solid fa-trash-can"></i> Borrar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="alert alert-info mt-3" role="alert">
+                        No hay resultados para mostrar.
+                    </div>
+                )}
+
+                {showForm && (
+                    <>
+                        <FormAlimentacion getAllAlimentacion={getAllAlimentacion} buttonForm={buttonForm} alimentacion={alimentacion} URI={URI} updateTextButton={updateTextButton} />
+                    </>
+                )}
+
+                <FormQueryAlimentacion URI={URI} getAlimentacion={getAlimentacion} deleteAlimentacion={deleteAlimentacion} buttonForm={buttonForm} />
+            </div>
+
         </>
+
     );
 };
 

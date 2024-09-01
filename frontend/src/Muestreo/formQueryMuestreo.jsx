@@ -25,7 +25,7 @@ const FormQueryMuestreo = ({ URI, getMuestreo, deleteMuestreo, buttonForm }) => 
             console.error('Error al obtener siembras:', error);
         }
     };
-    
+
     useEffect(() => {
         getResponsable();
         getSiembra();
@@ -56,63 +56,87 @@ const FormQueryMuestreo = ({ URI, getMuestreo, deleteMuestreo, buttonForm }) => 
 
     return (
         <>
-            <br />
-            <div className="d-flex flex-column align-items-center">
-                <h1 className="fs-1 fw-bold d-flex">Consultar Muestreo</h1>
-                <form action="" id="queryForm" className="fw-bold m-2">
-                    <label htmlFor="Fec_MuestreoQuery" className="m-2">Fecha de Muestreo:</label>
-                    <input 
-                        type="date" 
-                        id="Fec_MuestreoQuery" 
-                        value={Fec_Muestreo} 
-                        onChange={(e) => {
-                            setFec_Muestreo(e.target.value);
-                            sendFormQuery(e.target.value);
-                        }} 
-                    />
-                </form>
-            </div>
+            <div className="container mt-5">
+                <div className="card">
+                    <div className="card-header bg-primary text-white">
+                        <h1 className="text-center">Consultar Muestreo</h1>
+                    </div>
+                    <div className="card-body">
+                        <form className="fw-bold m-2 d-flex flex-column align-items-center">
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Fec_MuestreoQuery" className="col-sm-5 col-form-label text-end">Fecha de Muestreo:</label>
+                                <div className="col-sm-6">
+                                    <input
+                                        type="date"
+                                        id="Fec_MuestreoQuery"
+                                        className="form-control"
+                                        value={Fec_Muestreo}
+                                        onChange={(e) => {
+                                            setFec_Muestreo(e.target.value);
+                                            sendFormQuery(e.target.value);
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
-            {muestreoQuery.length > 0 ? (
-                <table className="table table-bordered border-info text-center" style={{ border: "3px solid" }}>
-                    <thead>
-                        <tr>
-                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Fecha de Muestreo</th>
-                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Número de Peces</th>
-                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Observaciones</th>
-                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Peso Esperado</th>
-                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Hora de Muestreo</th>
-                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Fecha Siembra</th>
-                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Nombre Responsable</th>
-                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {muestreoQuery.map((muestreo) => (
-                            <tr key={muestreo.Id_Muestreo} className="border-info align-middle font-monospace" style={{ border: "3px solid" }}>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{muestreo.Fec_Muestreo}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{muestreo.Num_Peces}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{muestreo.Obs_Muestreo}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{muestreo.Pes_Esperado}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{muestreo.Hor_Muestreo}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{muestreo.siembra.Fec_Siembra}</td>
-                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{muestreo.responsable.Nom_Responsable}</td>
-                                <td>
-                                    <button className="btn btn-info align-middle m-2" onClick={() => getMuestreo(muestreo.Id_Muestreo)}>
-                                        <i className="fa-solid fa-pen-to-square"></i> Editar
-                                    </button>
-                                    <button className="btn btn-info align-middle m-2" onClick={() => deleteMuestreo(muestreo.Id_Muestreo)}>
-                                        <i className="fa-solid fa-trash-can"></i> Borrar
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            ) : (
-                <p className="text-center">No se encontraron resultados</p>
-            )}
+                <br />
+
+                {muestreoQuery.length > 0 ? (
+                    <div className="card">
+                        <div className="card-header bg-primary text-white">
+                            <h1 className="text-center">Muestreos Registrados</h1>
+                        </div>
+                        <div className="card-body">
+                            <div className="table-responsive">
+                                <table className="table table-striped table-dynamic mt-4">
+                                    <thead>
+                                        <tr>
+                                            <th className="align-middle">Fecha de Muestreo</th>
+                                            <th className="align-middle">Número de Peces</th>
+                                            <th className="align-middle">Observaciones</th>
+                                            <th className="align-middle">Peso Esperado</th>
+                                            <th className="align-middle">Hora de Muestreo</th>
+                                            <th className="align-middle">Fecha Siembra</th>
+                                            <th className="align-middle">Nombre Responsable</th>
+                                            <th className="align-middle">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {muestreoQuery.map((muestreo) => (
+                                            <tr key={muestreo.Id_Muestreo}>
+                                                <td className="align-middle">{muestreo.Fec_Muestreo}</td>
+                                                <td className="align-middle">{muestreo.Num_Peces}</td>
+                                                <td className="align-middle">{muestreo.Obs_Muestreo}</td>
+                                                <td className="align-middle">{muestreo.Pes_Esperado}</td>
+                                                <td className="align-middle">{muestreo.Hor_Muestreo}</td>
+                                                <td className="align-middle">{muestreo.siembra.Fec_Siembra}</td>
+                                                <td className="align-middle">{muestreo.responsable.Nom_Responsable}</td>
+                                                <td>
+                                                    <button className="btn btn-sm btn-primary m-1" onClick={() => getMuestreo(muestreo.Id_Muestreo)}>
+                                                        <i className="fa-solid fa-pen-to-square"></i> Editar
+                                                    </button>
+                                                    <button className="btn btn-sm btn-danger m-1" onClick={() => deleteMuestreo(muestreo.Id_Muestreo)}>
+                                                        <i className="fa-solid fa-trash-can"></i> Borrar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="alert alert-info mt-3" role="alert">
+                        No se encontraron resultados.
+                    </div>
+                )}
+            </div>
         </>
+
     );
 };
 

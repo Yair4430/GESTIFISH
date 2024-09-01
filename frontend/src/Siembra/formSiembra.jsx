@@ -30,7 +30,7 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
             Gan_Peso,
             Vlr_Siembra
         };
-    
+
         try {
             if (buttonForm === 'Actualizar') {
                 await axios.put(`${URI}${siembra.Id_Siembra}`, formData);
@@ -63,7 +63,7 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
             });
         }
     };
-    
+
 
     const clearForm = () => {
         setCan_Peces('');
@@ -100,69 +100,112 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
     }, [siembra]);
 
     return (
-        <div className="d-flex flex-column align-items-center">
-            <h1 className="fs-1 fw-bold d-flex">Registrar Siembra</h1>
-            <form id="siembraForm" onSubmit={sendForm} className="fw-bold m-2">
-                {/* <label htmlFor="Can_Peces" className="m-2">Numero de Siembra</label>
-                <input type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => setCan_Peces(e.target.value)} required />
-                <br /> */}
-                <label htmlFor="Can_Peces" className="m-2">Cantidad de Peces:</label>
-                <input type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => setCan_Peces(e.target.value)} required />
-                <br />
-                <label htmlFor="Fec_Siembra" className="m-2">Fecha de Siembra:</label>
-                <input type="date" id="Fec_Siembra" value={Fec_Siembra} onChange={(e) => setFec_Siembra(e.target.value)} required />
-                <br />
-                <label htmlFor="Fec_PosibleCosecha" className="m-2">Fecha Posible de Cosecha:</label>
-                <input type="date" id="Fec_PosibleCosecha" value={Fec_PosibleCosecha} onChange={(e) => setFec_PosibleCosecha(e.target.value)} required />
-                <br />
-                <label htmlFor="Id_Responsable" className="m-2">Responsable:</label>
-                <select id="Id_Responsable" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)} required>
-                    <option value="">Seleccione Responsable</option>
-                    {responsables.map((responsable) => (
-                        <option key={responsable.Id_Responsable} value={responsable.Id_Responsable}>
-                            {responsable.Nom_Responsable}
-                        </option>
-                    ))}
-                </select>
-                <br />
-                <label htmlFor="Id_Especie" className="m-2">Especie:</label>
-                <select id="Id_Especie" value={Id_Especie} onChange={(e) => setId_Especie(e.target.value)} required>
-                    <option value="">Seleccione Especie</option>
-                    {especies.map((especie) => (
-                        <option key={especie.Id_Especie} value={especie.Id_Especie}>
-                            {especie.Nom_Especie}
-                        </option>
-                    ))}
-                </select>
-                <br />
-                <label htmlFor="Id_Estanque" className="m-2">Estanque:</label>
-                <select id="Id_Estanque" value={Id_Estanque} onChange={(e) => setId_Estanque(e.target.value)} required>
-                    <option value="">Seleccione Estanque</option>
-                    {estanques.map((estanque) => (
-                        <option key={estanque.Id_Estanque} value={estanque.Id_Estanque}>
-                            {estanque.Nom_Estanque}
-                        </option>
-                    ))}
-                </select>
-                <br />
-                <label htmlFor="Pes_Actual" className="m-2">Peso Actual:</label>
-                <input type="number" id="Pes_Actual" value={Pes_Actual} onChange={(e) => setPes_Actual(e.target.value)} required />
-                <br />
-                <label htmlFor="Obs_Siembra" className="m-2">Observaciones:</label>
-                <input type="text" id="Obs_Siembra" value={Obs_Siembra} onChange={(e) => setObs_Siembra(e.target.value)} />
-                <br />
-                <label htmlFor="Hor_Siembra" className="m-2">Hora de Siembra:</label>
-                <input type="time" id="Hor_Siembra" value={Hor_Siembra} onChange={(e) => setHor_Siembra(e.target.value)} />
-                <br />
-                <label htmlFor="Gan_Peso" className="m-2">Ganancia de Peso:</label>
-                <input type="number" id="Gan_Peso" value={Gan_Peso} onChange={(e) => setGan_Peso(e.target.value)} />
-                <br />
-                <label htmlFor="Vlr_Siembra" className="m-2">Valor de Siembra:</label>
-                <input type="number" id="Vlr_Siembra" value={Vlr_Siembra} onChange={(e) => setVlr_Siembra(e.target.value)} required />
-                <br />
-                <input type="submit" id="boton" value={buttonForm} className="btn btn-success m-2" />
-            </form>
-        </div>
+        <>
+            <div className="container mt-5">
+                <div className="card">
+                    <div className="card-header bg-primary text-white">
+                        <h1 className="text-center">Registrar Siembra</h1>
+                    </div>
+                    <div className="card-body">
+                        <form id="siembraForm" onSubmit={sendForm} className="fw-bold m-2">
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Can_Peces" className="col-sm-5 col-form-label text-end">Cantidad de Peces:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => setCan_Peces(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Fec_Siembra" className="col-sm-5 col-form-label text-end">Fecha de Siembra:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="date" id="Fec_Siembra" value={Fec_Siembra} onChange={(e) => setFec_Siembra(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Fec_PosibleCosecha" className="col-sm-5 col-form-label text-end">Fecha Posible de Cosecha:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="date" id="Fec_PosibleCosecha" value={Fec_PosibleCosecha} onChange={(e) => setFec_PosibleCosecha(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Id_Responsable" className="col-sm-5 col-form-label text-end">Responsable:</label>
+                                <div className="col-sm-4">
+                                    <select className="form-control" id="Id_Responsable" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)} required>
+                                        <option value="">Seleccione Responsable</option>
+                                        {responsables.map((responsable) => (
+                                            <option key={responsable.Id_Responsable} value={responsable.Id_Responsable}>
+                                                {responsable.Nom_Responsable}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Id_Especie" className="col-sm-5 col-form-label text-end">Especie:</label>
+                                <div className="col-sm-4">
+                                    <select className="form-control" id="Id_Especie" value={Id_Especie} onChange={(e) => setId_Especie(e.target.value)} required>
+                                        <option value="">Seleccione Especie</option>
+                                        {especies.map((especie) => (
+                                            <option key={especie.Id_Especie} value={especie.Id_Especie}>
+                                                {especie.Nom_Especie}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Id_Estanque" className="col-sm-5 col-form-label text-end">Estanque:</label>
+                                <div className="col-sm-4">
+                                    <select className="form-control" id="Id_Estanque" value={Id_Estanque} onChange={(e) => setId_Estanque(e.target.value)} required>
+                                        <option value="">Seleccione Estanque</option>
+                                        {estanques.map((estanque) => (
+                                            <option key={estanque.Id_Estanque} value={estanque.Id_Estanque}>
+                                                {estanque.Nom_Estanque}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Pes_Actual" className="col-sm-5 col-form-label text-end">Peso Actual:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="number" id="Pes_Actual" value={Pes_Actual} onChange={(e) => setPes_Actual(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Obs_Siembra" className="col-sm-5 col-form-label text-end">Observaciones:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="text" id="Obs_Siembra" value={Obs_Siembra} onChange={(e) => setObs_Siembra(e.target.value)} />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Hor_Siembra" className="col-sm-5 col-form-label text-end">Hora de Siembra:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="time" id="Hor_Siembra" value={Hor_Siembra} onChange={(e) => setHor_Siembra(e.target.value)} />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Gan_Peso" className="col-sm-5 col-form-label text-end">Ganancia de Peso:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="number" id="Gan_Peso" value={Gan_Peso} onChange={(e) => setGan_Peso(e.target.value)} />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Vlr_Siembra" className="col-sm-5 col-form-label text-end">Valor de Siembra:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="number" id="Vlr_Siembra" value={Vlr_Siembra} onChange={(e) => setVlr_Siembra(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="text-center">
+                                <button type="submit" id="boton" className="btn btn-success btn-block m-2">
+                                    {buttonForm}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </>
+
     );
 };
 

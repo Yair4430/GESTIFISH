@@ -1,14 +1,15 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import FormMuestreo from './formMuestreo'; 
-import FormQueryMuestreo from './formQueryMuestreo'; 
+import FormMuestreo from './formMuestreo';
+import FormQueryMuestreo from './formQueryMuestreo';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/muestreo/';
 
 const CrudMuestreo = () => {
     const [muestreoList, setMuestreoList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [muestreo, setMuestreo] = useState({
         Id_Muestreo: '',
         Fec_Muestreo: '',
@@ -87,48 +88,95 @@ const CrudMuestreo = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            // Reinicia los valores del formulario de muestreo
+            setMuestreo({
+                Id_Muestreo: '',
+                Fec_Muestreo: '',
+                Num_Peces: '',
+                Obs_Muestreo: '',
+                Pes_Esperado: '',
+                Id_Siembra: '',
+                Id_Responsable: '',
+                Hor_Muestreo: '',
+                Pes_Promedio: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
+
     return (
         <>
-            <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
-                <thead>
-                    <tr>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha de Muestreo</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Número de Peces</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Observaciones</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Peso Esperado</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Hora de Muestreo</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha Siembra</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre Responsable</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {muestreoList.map((muestreo) => (
-                        <tr key={muestreo.Id_Muestreo} className='border-info font-monospace' style={{ border: "3px solid" }}>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Fec_Muestreo}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Num_Peces}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Obs_Muestreo}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Pes_Esperado}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.Hor_Muestreo}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.siembra.Fec_Siembra}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{muestreo.responsable.Nom_Responsable}</td>
-                            <td>
-                                <button className='btn btn-info align-middle' onClick={() => getMuestreo(muestreo.Id_Muestreo)}>
-                                    <i className="fa-solid fa-pen-to-square"></i> Editar
-                                </button>
-                                <button className='btn btn-info align-middle m-2' onClick={() => deleteMuestreo(muestreo.Id_Muestreo)}>
-                                    <i className="fa-solid fa-trash-can"></i> Borrar
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <hr />
-            <FormMuestreo getAllMuestreo={getAllMuestreo} buttonForm={buttonForm} muestreo={muestreo} URI={URI} updateTextButton={updateTextButton} />
-            <hr />
-            <FormQueryMuestreo URI={URI} getMuestreo={getMuestreo} deleteMuestreo={deleteMuestreo} buttonForm={buttonForm} />
+            <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Muestreo'}
+                </button>
+
+                {muestreoList.length > 0 ? (
+                    <div className="card">
+                        <div className="card-header bg-primary text-white">
+                            <h1 className="text-center">Muestreos Registrados</h1>
+                        </div>
+                        <div className="card-body">
+                            <div className="table-responsive">
+                                <table className="table table-striped mt-4 text-center">
+                                    <thead>
+                                        <tr>
+                                            <th className='align-middle'>Fecha de Muestreo</th>
+                                            <th className='align-middle'>Número de Peces</th>
+                                            <th className='align-middle'>Peso Esperado</th>
+                                            <th className='align-middle'>Observaciones</th>
+                                            <th className='align-middle'>Hora de Muestreo</th>
+                                            <th className='align-middle'>Fecha de Siembra</th>
+                                            <th className='align-middle'>Responsable</th>
+                                            <th className='align-middle'>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {muestreoList.map((muestreo) => (
+                                            <tr key={muestreo.Id_Muestreo}>
+                                                <td className='align-middle'>{muestreo.Fec_Muestreo}</td>
+                                                <td className='align-middle'>{muestreo.Num_Peces}</td>
+                                                <td className='align-middle'>{muestreo.Pes_Esperado}</td>
+                                                <td className='align-middle'>{muestreo.Obs_Muestreo}</td>
+                                                <td className='align-middle'>{muestreo.Hor_Muestreo}</td>
+                                                <td className='align-middle'>{muestreo.siembra.Fec_Siembra}</td>
+                                                <td className='align-middle'>{muestreo.responsable.Nom_Responsable}</td>
+                                                <td className='align-middle'>
+                                                    <button className='btn btn-sm btn-info m-1' onClick={() => getMuestreo(muestreo.Id_Muestreo)}>
+                                                        <i className="fa-solid fa-pen-to-square"></i> Editar
+                                                    </button>
+                                                    <button className='btn btn-sm btn-danger m-1' onClick={() => deleteMuestreo(muestreo.Id_Muestreo)}>
+                                                        <i className="fa-solid fa-trash-can"></i> Borrar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="alert alert-info mt-3" role="alert">
+                        No hay resultados para mostrar.
+                    </div>
+                )}
+
+                {showForm && (
+                    <>
+                        <FormMuestreo getAllMuestreo={getAllMuestreo} buttonForm={buttonForm} muestreo={muestreo} URI={URI} updateTextButton={updateTextButton} />
+                    </>
+                )}
+
+                <FormQueryMuestreo URI={URI} getMuestreo={getMuestreo} deleteMuestreo={deleteMuestreo} buttonForm={buttonForm} />
+            </div>
         </>
+
     );
 };
 

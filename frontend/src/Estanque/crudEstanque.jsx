@@ -11,6 +11,7 @@ const PATH_FOTOS = process.env.ROUTER_FOTOS
 const CrudEstanque = () => {
     const [EstanqueList, setEstanqueList] = useState([])
     const [buttonForm, setButtonForm] = useState('Enviar')
+    const [showForm, setShowForm] = useState(false);
     const [estanque, setEstanque] = useState({
         Id_Estanque: '',
         Nom_Estanque: '',
@@ -26,7 +27,7 @@ const CrudEstanque = () => {
     useEffect(() => {
         getAllEstanques();
     }, []);
-    
+
     const getAllEstanques = async () => {
         try {
             const respuesta = await axios.get(URI)
@@ -38,7 +39,7 @@ const CrudEstanque = () => {
         } catch (error) {
             console.error('Error fetching estanques:', error.response?.status || error.message);
         }
-    }    
+    }
 
     const getEstanque = async (Id_Estanque) => {
         setButtonForm('Enviar');
@@ -89,55 +90,116 @@ const CrudEstanque = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            setEstanque({
+                Id_Estanque: '',
+                Nom_Estanque: '',
+                Esp_Agua: '',
+                Tip_Estanque: '',
+                Lar_Estanque: '',
+                Anc_Estanque: '',
+                Des_Estanque: '',
+                Img_Estanque: '',
+                Rec_Agua: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
     return (
         <>
-            <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
-                <thead>
-                    <tr>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Número</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Espejo de Agua</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Tipo</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Largo</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Ancho</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Descripción</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Imagen</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Recambio de agua</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {EstanqueList.map((estanque) => (
-                        <tr key={estanque.Id_Estanque} className='border-info font-monospace' style={{ border: "3px solid" }}>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Id_Estanque}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Nom_Estanque}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Esp_Agua}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Tip_Estanque}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Lar_Estanque}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Anc_Estanque}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Des_Estanque}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>
-                                <img width="80px" src={`${PATH_FOTOS}/${estanque.Img_Estanque}`} alt="Imagen del estanque" />
-                            </td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{estanque.Rec_Agua}</td>
-                            <td>
-                                <button className='btn btn-info align-middle' onClick={() => getEstanque(estanque.Id_Estanque)}>
-                                    <i className="fa-solid fa-pen-to-square"></i> Editar
-                                </button>
-                                <button className='btn btn-info align-middle m-2' onClick={() => deleteEstanque(estanque.Id_Estanque)}>
-                                    <i className="fa-solid fa-trash-can"></i> Borrar
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <hr />
-            <FormEstanque  getAllEstanques={getAllEstanques} buttonForm={buttonForm} estanque={estanque} URI={URI} updateTextButton={updateTextButton} />
-            <hr />
-            <FormQueryEstanque URI={URI} getEstanque={getEstanque} deleteEstanque={deleteEstanque} buttonForm={buttonForm} />
+            <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Estanque'}
+                </button>
+
+                {EstanqueList.length > 0 ? (
+                    <div className="card">
+                        <div className="card-header bg-primary text-white">
+                            <h1 className="text-center">Estanques Registrados</h1>
+                        </div>
+                        <div className="card-body">
+                            <div className="table-responsive">
+                                <table className="table table-striped mt-4">
+                                    <thead>
+                                        <tr>
+                                            <th className='text-center'>Número</th>
+                                            <th className='text-center'>Nombre</th>
+                                            <th className='text-center'>Espejo de Agua</th>
+                                            <th className='text-center'>Tipo</th>
+                                            <th className='text-center'>Largo</th>
+                                            <th className='text-center'>Ancho</th>
+                                            <th className='text-center'>Descripción</th>
+                                            <th className='text-center'>Imagen</th>
+                                            <th className='text-center'>Recambio de Agua</th>
+                                            <th className='text-center'>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {EstanqueList.map((estanque) => (
+                                            <tr key={estanque.Id_Estanque}>
+                                                <td className='text-center'>{estanque.Id_Estanque}</td>
+                                                <td className='text-center'>{estanque.Nom_Estanque}</td>
+                                                <td className='text-center'>{estanque.Esp_Agua}</td>
+                                                <td className='text-center'>{estanque.Tip_Estanque}</td>
+                                                <td className='text-center'>{estanque.Lar_Estanque}</td>
+                                                <td className='text-center'>{estanque.Anc_Estanque}</td>
+                                                <td className='text-center'>{estanque.Des_Estanque}</td>
+                                                <td className='text-center'>
+                                                    {estanque.Img_Estanque ? (
+                                                        <img width="80px" src={`${PATH_FOTOS}/${estanque.Img_Estanque}`} alt="Imagen del estanque" />
+                                                    ) : (
+                                                        <span>No Image</span>
+                                                    )}
+                                                </td>
+                                                <td className='text-center'>{estanque.Rec_Agua}</td>
+                                                <td className='text-center'>
+                                                    <button className='btn btn-sm btn-primary m-1' onClick={() => getEstanque(estanque.Id_Estanque)}>
+                                                        <i className="fa-solid fa-pen-to-square"></i> Editar
+                                                    </button>
+                                                    <button className='btn btn-sm btn-danger m-1' onClick={() => deleteEstanque(estanque.Id_Estanque)}>
+                                                        <i className="fa-solid fa-trash-can"></i> Borrar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="alert alert-info mt-3" role="alert">
+                        No hay resultados para mostrar.
+                    </div>
+                )}
+
+                {showForm && (
+                    <>
+                        <hr />
+                        <FormEstanque
+                            getAllEstanques={getAllEstanques}
+                            buttonForm={buttonForm}
+                            estanque={estanque}
+                            URI={URI}
+                            updateTextButton={updateTextButton}
+                        />
+                        <hr />
+                    </>
+                )}
+
+                <FormQueryEstanque
+                    URI={URI}
+                    getEstanque={getEstanque}
+                    deleteEstanque={deleteEstanque}
+                    buttonForm={buttonForm}
+                />
+            </div>
         </>
-    )
+    );
 }
 
 export default CrudEstanque

@@ -1,0 +1,5 @@
+.btn-custom {
+    font-size: 15px; /* Ajusta el tamaño de la fuente para que coincida con el título */
+    font-weight: bold; /* Ajusta el peso de la fuente */
+    font-family: 'Roboto', sans-serif; /* Ajusta la familia de la fuente para que coincida */
+}

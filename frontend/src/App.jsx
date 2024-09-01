@@ -13,6 +13,7 @@ import CrudMuestreo from './Muestreo/crudMuestreo.jsx';
 import CrudCosecha from './Cosecha/CrudCosecha.jsx';
 import CrudMortalidad from './Mortalidad/CrudMortalidad.jsx';
 import CrudSiembra from './Siembra/CrudSiembra.jsx';
+// import Tabla from './Tablas/Tablas.jsx'
 
 // Importación Simulador
 import Simulador from './Simulador/Simulador.jsx';
@@ -82,6 +83,7 @@ function App() {
             <Route path='/Mortalidad' element={<CrudMortalidad/>}/>
             <Route path='/Siembra' element={<CrudSiembra/>}/>
             <Route path='/Simulador' element={<Simulador/>}/>
+            {/* <Route path='/Tablas' element={<Tabla/>}/> */}
 
           </>
           :

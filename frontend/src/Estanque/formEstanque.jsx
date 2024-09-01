@@ -27,7 +27,7 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
         formData.append('Des_Estanque', Des_Estanque);
         formData.append('Img_Estanque', Img_Estanque);
         formData.append('Rec_Agua', Rec_Agua);
-    
+
         try {
             if (buttonForm === 'Actualizar') {
                 const respuesta = await axios.put(`${URI}${estanque.Id_Estanque}`, formData, {
@@ -108,43 +108,81 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
 
     return (
         <>
-            <div className="d-flex flex-column align-items-center">
-                <h1 className="fs-1 fw-bold d-flex">Registrar Estanques</h1>
-                <form id="estanqueForm" onSubmit={sendForm} className="fw-bold m-2">
-                    <label htmlFor="Id_Estanque" className="m-2">Número del Estanque:</label>
-                    <input type="number" id="Id_Estanque" value={Id_Estanque} onChange={(e) => setId_Estanque(e.target.value)} />
-                    <br />
-                    <label htmlFor="Nom_Estanque" className="m-2">Nombre del Estanque:</label>
-                    <input type="text" id="Nom_Estanque" value={Nom_Estanque} onChange={(e) => setNom_Estanque(e.target.value)} />
-                    <br />
-                    <label htmlFor="Esp_Agua" className="m-2">Espejo de Agua:</label>
-                    <input type="number" id="Esp_Agua" value={Esp_Agua} onChange={(e) => setEsp_Agua(e.target.value)} />
-                    <br />
-                    <label htmlFor="Tip_Estanque" className="m-2">Tipo de Estanque:</label>
-                    <select id="Tip_Estanque" value={Tip_Estanque} onChange={(e) => setTip_Estanque(e.target.value)}>
-                        <option value="">Selecciona uno...</option>
-                        <option value="Estanque">Estanque</option>
-                        <option value="Lago">Lago</option>
-                    </select>
-                    <br />
-                    <label htmlFor="Lar_Estanque" className="m-2">Largo:</label>
-                    <input type="number" id="Lar_Estanque" value={Lar_Estanque} onChange={(e) => setLar_Estanque(e.target.value)} />
-                    <br />
-                    <label htmlFor="Anc_Estanque" className="m-2">Ancho:</label>
-                    <input type="number" id="Anc_Estanque" value={Anc_Estanque} onChange={(e) => setAnc_Estanque(e.target.value)} />
-                    <br />
-                    <label htmlFor="Des_Estanque" className="m-2">Descripción:</label>
-                    <input type="text" id="Des_Estanque" value={Des_Estanque} onChange={(e) => setDes_Estanque(e.target.value)} />
-                    <br />
-                    <label htmlFor="Img_Estanque" className="m-2">Imagen:</label>
-                    <input type="file" id="Img_Estanque" onChange={(e) => setImg_Estanque(e.target.files[0])} ref={inputFoto} />
-                    <br />
-                    <label htmlFor="Rec_Agua" className="m-2">Recambio de Agua:</label>
-                    <input type="number" id="Rec_Agua" value={Rec_Agua} onChange={(e) => setRec_Agua(e.target.value)} />
-                    <br />
-                    <input type="submit" id="boton" value={buttonForm} className="btn btn-success m-2" />
-                </form>
+            <div className="container mt-5">
+                <div className="card">
+                    <div className="card-header bg-primary text-white">
+                        <h1 className="text-center">Registrar Estanques</h1>
+                    </div>
+                    <div className="card-body">
+                        <form id="estanqueForm" onSubmit={sendForm} className="fw-bold m-2 form-no-hover">
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Id_Estanque" className="col-sm-5 col-form-label text-end">Número del Estanque:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="number" id="Id_Estanque" value={Id_Estanque} onChange={(e) => setId_Estanque(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Nom_Estanque" className="col-sm-5 col-form-label text-end">Nombre del Estanque:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="text" id="Nom_Estanque" value={Nom_Estanque} onChange={(e) => setNom_Estanque(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Esp_Agua" className="col-sm-5 col-form-label text-end">Espejo de Agua:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="number" id="Esp_Agua" value={Esp_Agua} onChange={(e) => setEsp_Agua(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Tip_Estanque" className="col-sm-5 col-form-label text-end">Tipo de Estanque:</label>
+                                <div className="col-sm-4">
+                                    <select className="form-control" id="Tip_Estanque" value={Tip_Estanque} onChange={(e) => setTip_Estanque(e.target.value)} required>
+                                        <option value="">Selecciona uno...</option>
+                                        <option value="Estanque">Estanque</option>
+                                        <option value="Lago">Lago</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Lar_Estanque" className="col-sm-5 col-form-label text-end">Largo:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="number" id="Lar_Estanque" value={Lar_Estanque} onChange={(e) => setLar_Estanque(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Anc_Estanque" className="col-sm-5 col-form-label text-end">Ancho:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="number" id="Anc_Estanque" value={Anc_Estanque} onChange={(e) => setAnc_Estanque(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Des_Estanque" className="col-sm-5 col-form-label text-end">Descripción:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="text" id="Des_Estanque" value={Des_Estanque} onChange={(e) => setDes_Estanque(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Img_Estanque" className="col-sm-5 col-form-label text-end">Imagen:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="file" id="Img_Estanque" onChange={(e) => setImg_Estanque(e.target.files[0])} ref={inputFoto} />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Rec_Agua" className="col-sm-5 col-form-label text-end">Recambio de Agua:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="number" id="Rec_Agua" value={Rec_Agua} onChange={(e) => setRec_Agua(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="text-center">
+                                <button type="submit" id="boton" className="btn btn-success btn-block m-2">
+                                    {buttonForm}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
+
         </>
     );
 };

@@ -66,6 +66,12 @@
   align-items: center; /* Alinea verticalmente el logo con el texto */
 }
 
+/* En tu archivo CSS, por ejemplo App.css */
+.form-no-hover:hover {
+  transform: none;
+  box-shadow: none;
+  background-color: transparent;
+}
 
 
 

@@ -9,6 +9,7 @@ const URI = process.env.ROUTER_PRINCIPAL + '/cosecha/';
 const CrudCosecha = () => {
     const [CosechaList, setCosechaList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [cosecha, setCosecha] = useState({
         Id_Cosecha: '',
         Fec_Cosecha: '',
@@ -89,54 +90,113 @@ const CrudCosecha = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            setCosecha({
+                Id_Cosecha: '',
+                Fec_Cosecha: '',
+                Can_Peces: '',
+                Pes_Eviscerado: '',
+                Pes_Viscerado: '',
+                Por_Visceras: '',
+                Id_Responsable: '',
+                Id_Siembra: '',
+                Hor_Cosecha: '',
+                Vlr_Cosecha: '',
+                Obs_Cosecha: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
+
     return (
         <>
-            <table className="table table-bordered border-info text-center mt-4" style={{ border: "3px solid" }}>
-                <thead>
-                    <tr>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha de Cosecha</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Cantidad de Peces</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Peso Eviscerado</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Peso Viscerado</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Porcentaje de Vísperas</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha Siembra</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Hora de Cosecha</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Valor de Cosecha</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Observaciones</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre Responsable</th>
-                        <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {CosechaList.map((cosecha) => (
-                        <tr key={cosecha.Id_Cosecha} className='border-info font-monospace' style={{ border: "3px solid" }}>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Fec_Cosecha}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Can_Peces}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Pes_Eviscerado}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Pes_Viscerado}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Por_Visceras}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.siembra.Fec_Siembra}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Hor_Cosecha}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Vlr_Cosecha}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.Obs_Cosecha}</td>
-                            <td className='border-info align-middle' style={{ border: "3px solid" }}>{cosecha.responsable.Nom_Responsable}</td>
-                            <td>
-                                <button className='btn btn-info align-middle' onClick={() => getCosecha(cosecha.Id_Cosecha)}>
-                                    <i className="fa-solid fa-pen-to-square"></i> Editar
-                                </button>
-                                <button className='btn btn-info align-middle m-2' onClick={() => deleteCosecha(cosecha.Id_Cosecha)}>
-                                    <i className="fa-solid fa-trash-can"></i> Borrar
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <hr />
-            <FormCosecha getAllCosecha={getAllCosecha} buttonForm={buttonForm} cosecha={cosecha} URI={URI} updateTextButton={updateTextButton} />
-            <hr />
-            <FormQueryCosecha URI={URI} getCosecha={getCosecha} deleteCosecha={deleteCosecha} buttonForm={buttonForm} />
+            <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Cosecha'}
+                </button>
+
+                {CosechaList.length > 0 ? (
+                    <div className="card">
+                        <div className="card-header bg-primary text-white">
+                            <h1 className="text-center">Cosechas Registradas</h1>
+                        </div>
+                        <div className="card-body">
+                            <div className="table-responsive">
+                                <table className="table table-striped mt-4 text-center">
+                                    <thead>
+                                        <tr>
+                                            <th className='align-middle'>Fecha de Cosecha</th>
+                                            <th className='align-middle'>Cantidad de Peces</th>
+                                            <th className='align-middle'>Peso Eviscerado</th>
+                                            <th className='align-middle'>Peso Viscerado</th>
+                                            <th className='align-middle'>Porcentaje de Vísperas</th>
+                                            <th className='align-middle'>Fecha Siembra</th>
+                                            <th className='align-middle'>Hora de Cosecha</th>
+                                            <th className='align-middle'>Valor de Cosecha</th>
+                                            <th className='align-middle'>Observaciones</th>
+                                            <th className='align-middle'>Nombre Responsable</th>
+                                            <th className='align-middle'>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {CosechaList.map((cosecha) => (
+                                            <tr key={cosecha.Id_Cosecha}>
+                                                <td className='align-middle'>{cosecha.Fec_Cosecha}</td>
+                                                <td className='align-middle'>{cosecha.Can_Peces}</td>
+                                                <td className='align-middle'>{cosecha.Pes_Eviscerado}</td>
+                                                <td className='align-middle'>{cosecha.Pes_Viscerado}</td>
+                                                <td className='align-middle'>{cosecha.Por_Visceras}</td>
+                                                <td className='align-middle'>{cosecha.siembra.Fec_Siembra}</td>
+                                                <td className='align-middle'>{cosecha.Hor_Cosecha}</td>
+                                                <td className='align-middle'>{cosecha.Vlr_Cosecha}</td>
+                                                <td className='align-middle'>{cosecha.Obs_Cosecha}</td>
+                                                <td className='align-middle'>{cosecha.responsable.Nom_Responsable}</td>
+                                                <td className='align-middle'>
+                                                    <button className='btn btn-sm btn-primary m-1' onClick={() => getCosecha(cosecha.Id_Cosecha)}>
+                                                        <i className="fa-solid fa-pen-to-square"></i> Editar
+                                                    </button>
+                                                    <button className='btn btn-sm btn-danger m-1' onClick={() => deleteCosecha(cosecha.Id_Cosecha)}>
+                                                        <i className="fa-solid fa-trash-can"></i> Borrar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="alert alert-info mt-3" role="alert">
+                        No hay resultados para mostrar.
+                    </div>
+                )}
+
+                {showForm && (
+                    <>
+                        <FormCosecha
+                            getAllCosecha={getAllCosecha}
+                            buttonForm={buttonForm}
+                            cosecha={cosecha}
+                            URI={URI}
+                            updateTextButton={updateTextButton}
+                        />
+                    </>
+                )}
+
+                <FormQueryCosecha
+                    URI={URI}
+                    getCosecha={getCosecha}
+                    deleteCosecha={deleteCosecha}
+                    buttonForm={buttonForm}
+                />
+            </div>
         </>
+
     );
 };
 
