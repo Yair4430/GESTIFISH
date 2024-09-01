@@ -1,15 +1,15 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
-import FormMuestreo from './FormMuestreo.jsx';
-import FormQueryMuestreo from './FormQueryMuestreo.jsx';
+import FormMuestreo from './formMuestreo';
 
-const URI = `${process.env.ROUTER_PRINCIPAL}/muestreo/`;
+const URI = process.env.ROUTER_PRINCIPAL + '/muestreo/';
 
 const CrudMuestreo = () => {
     const [muestreoList, setMuestreoList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [muestreo, setMuestreo] = useState({
         Id_Muestreo: '',
         Fec_Muestreo: '',
@@ -23,24 +23,24 @@ const CrudMuestreo = () => {
     });
 
     useEffect(() => {
-        fetchAllMuestreo();
+        getAllMuestreo();
     }, []);
 
-    const fetchAllMuestreo = async () => {
+    const getAllMuestreo = async () => {
         try {
-            const response = await axios.get(URI);
-            setMuestreoList(response.data);
+            const respuesta = await axios.get(URI);
+            setMuestreoList(respuesta.data);
         } catch (error) {
-            console.error('Error fetching muestreos:', error);
+            console.error('Error fetching muestreo:', error);
         }
     };
 
-    const fetchMuestreo = async (Id_Muestreo) => {
+    const getMuestreo = async (Id_Muestreo) => {
         setButtonForm('Enviar');
         try {
-            const response = await axios.get(`${URI}${Id_Muestreo}`);
+            const respuesta = await axios.get(`${URI}${Id_Muestreo}`);
             setButtonForm('Actualizar');
-            setMuestreo({ ...response.data });
+            setMuestreo({ ...respuesta.data });
         } catch (error) {
             console.error('Error fetching muestreo:', error);
         }
@@ -50,7 +50,7 @@ const CrudMuestreo = () => {
         setButtonForm(texto);
     };
 
-    const deleteMuestreo = (Id_Muestreo) => {
+    const deleteMuestreo = async (Id_Muestreo) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -68,25 +68,43 @@ const CrudMuestreo = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    fetchAllMuestreo(); // Refresh the list after deletion
+                    // getAllMuestreo(); // Refresh the list after deletion
                 } catch (error) {
                     console.error('Error deleting muestreo:', error);
                 }
+            }else{
+                getAllMuestreo();
             }
         });
     };
+    
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
 
-    // Extraer títulos y datos para la tabla
-    const titles = [
-        "Fecha de Muestreo",
-        "Número de Peces",
-        "Observaciones",
-        "Peso Esperado",
-        "Hora de Muestreo",
-        "Fecha Siembra",
-        "Nombre Responsable",
-        "Acciones"
-    ];
+        if (!showForm) {
+            // Reinicia los valores del formulario de muestreo
+            setMuestreo({
+                Id_Muestreo: '',
+                Fec_Muestreo: '',
+                Num_Peces: '',
+                Obs_Muestreo: '',
+                Pes_Esperado: '',
+                Id_Siembra: '',
+                Id_Responsable: '',
+                Hor_Muestreo: '',
+                Pes_Promedio: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
+    const handleEdit = (Id_Muestreo) => {
+        getMuestreo(Id_Muestreo);
+    };
+
+    const handleDelete = (Id_Muestreo) => {
+        deleteMuestreo(Id_Muestreo);
+    };
 
     const data = muestreoList.map((muestreo) => [
         muestreo.Fec_Muestreo,
@@ -96,36 +114,42 @@ const CrudMuestreo = () => {
         muestreo.Hor_Muestreo,
         muestreo.siembra.Fec_Siembra,
         muestreo.responsable.Nom_Responsable,
-        <>
-            <button className='btn btn-info align-middle' onClick={() => fetchMuestreo(muestreo.Id_Muestreo)}>
-                <i className="fa-solid fa-pen-to-square"></i> Editar
-            </button>
-            <button className='btn btn-info align-middle m-2' onClick={() => deleteMuestreo(muestreo.Id_Muestreo)}>
-                <i className="fa-solid fa-trash-can"></i> Borrar
-            </button>
-        </>
+        `
+          <button class='btn btn-info align-middle btn-edit' data-id='${muestreo.Id_Muestreo}'>
+            <i class="fa-solid fa-pen-to-square"></i> Editar
+          </button>
+          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${muestreo.Id_Muestreo}'>
+            <i class="fa-solid fa-trash-can"></i> Borrar
+          </button>
+        `
     ]);
+    
+    const titles = [
+        "Fecha de Muestreo", "Número de Peces", "Observaciones", "Peso Esperado", "Hora de Muestreo", "Fecha Siembra", "Nombre Responsable", "Acciones"
+    ];
 
     return (
         <>
-            <WriteTable titles={titles} data={data} />
+                    <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Muestreo'}
+                </button>
+                </div>
+
             <hr />
-            <FormMuestreo 
-                buttonForm={buttonForm} 
-                muestreo={muestreo} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllMuestreo={fetchAllMuestreo} 
-            />
-            <hr />
-            <FormQueryMuestreo 
-                URI={URI} 
-                getMuestreo={fetchMuestreo} 
-                deleteMuestreo={deleteMuestreo} 
-                buttonForm={buttonForm} 
+            {showForm && (
+                    <>
+                        <FormMuestreo getAllMuestreo={getAllMuestreo} buttonForm={buttonForm} muestreo={muestreo} URI={URI} updateTextButton={updateTextButton} />
+                    </>
+                )}
+                            <WriteTable 
+                titles={titles} 
+                data={data} 
+                onEditClick={handleEdit} 
+                onDeleteClick={handleDelete} 
             />
         </>
     );
-}
+};
 
 export default CrudMuestreo;

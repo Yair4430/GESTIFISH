@@ -1,7 +1,6 @@
-
-import bcryptjs from 'bcryptjs';
 import UsuarioModel from '../models/usuarioModel.js';
 import jwt from 'jsonwebtoken';
+import bcryptjs from 'bcryptjs';
 import { sendPassworResetEmail } from '../servicios/emailService.js';
 
 // Crear nuevo usuario
@@ -20,11 +19,18 @@ export const createUser = async (req, res) => {
             return res.status(400).json({ message: 'El apellido solo puede contener letras y espacios' });
         }
 
+        // Validar correo electrónico y restringir a dominios permitidos
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|outlook\.com|hotmail\.com|soy\.sena\.edu\.co)$/;
+
+        if (!emailRegex.test(Cor_Usuario)) {
+            return res.status(400).json({ message: 'El correo electrónico no es válido o no pertenece a un dominio permitido' });
+        }
+
         // Verificar si el usuario ya existe
         let user = await UsuarioModel.findOne({ where: { Cor_Usuario } });
 
         if (user) {
-            return res.status(400).json({ message: "El usuario ya existe" });
+            return res.status(409).json({ message: 'Ese correo que está registrando ya existe registrado en la base de datos' });
         }
 
         // Crear nuevo usuario
@@ -92,7 +98,6 @@ export const logInUser = async (req, res) => {
         res.status(500).json({ error: "Error del servidor" });
     }
 };
-
 
 // Verificar token
 export const verifyToken = async (req, res, next) => {

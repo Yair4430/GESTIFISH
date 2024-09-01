@@ -1,15 +1,15 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import WriteTable from '../Tables/Data-Tables.jsx';
+import WriteTable from '../Tables/Data-Tables.jsx';  // Reemplaza con la ruta correcta
 import FormResponsable from './FormResponsable.jsx';
-import FormQueryResponsable from './FormQueryResponsable.jsx';
 
-const URI = `${process.env.ROUTER_PRINCIPAL}/responsable/`;
+const URI = process.env.ROUTER_PRINCIPAL + '/responsable/';
 
 const CrudResponsable = () => {
     const [responsableList, setResponsableList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [responsable, setResponsable] = useState({
         Id_Responsable: '',
         Nom_Responsable: '',
@@ -21,26 +21,34 @@ const CrudResponsable = () => {
     });
 
     useEffect(() => {
-        fetchAllResponsable();
+        getAllResponsable();
     }, []);
 
-    const fetchAllResponsable = async () => {
+    const getAllResponsable = async () => {
         try {
-            const response = await axios.get(URI);
-            setResponsableList(response.data);
+            const respuesta = await axios.get(URI);
+            if (respuesta.status >= 200 && respuesta.status < 300) {
+                setResponsableList(respuesta.data);
+            } else {
+                console.warn('HTTP Status:', respuesta.status);
+            }
         } catch (error) {
-            console.error('Error fetching responsables:', error);
+            console.error('Error fetching responsables:', error.response?.status || error.message);
         }
     };
 
-    const fetchResponsable = async (Id_Responsable) => {
+    const getResponsable = async (Id_Responsable) => {
         setButtonForm('Enviar');
         try {
-            const response = await axios.get(`${URI}${Id_Responsable}`);
-            setButtonForm('Actualizar');
-            setResponsable({ ...response.data });
+            const respuesta = await axios.get(`${URI}${Id_Responsable}`);
+            if (respuesta.status >= 200 && respuesta.status < 300) {
+                setButtonForm('Actualizar');
+                setResponsable({ ...respuesta.data });
+            } else {
+                console.warn('HTTP Status:', respuesta.status);
+            }
         } catch (error) {
-            console.error('Error fetching responsable:', error);
+            console.error('Error fetching responsable:', error.response?.status || error.message);
         }
     };
 
@@ -48,7 +56,7 @@ const CrudResponsable = () => {
         setButtonForm(texto);
     };
 
-    const deleteResponsable = (Id_Responsable) => {
+    const deleteResponsable = async (Id_Responsable) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -60,30 +68,44 @@ const CrudResponsable = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(`${URI}${Id_Responsable}`);
-                    Swal.fire({
-                        title: "¡Borrado!",
-                        text: "Borrado exitosamente",
-                        icon: "success"
-                    });
-                    fetchAllResponsable(); // Refresh the list after deletion
+                    const respuesta = await axios.delete(`${URI}${Id_Responsable}`);
+                    if (respuesta.status >= 200 && respuesta.status < 300) {
+                        Swal.fire({
+                            title: "¡Borrado!",
+                            text: "Borrado exitosamente",
+                            icon: "success"
+                        });
+                        // getAllResponsable(); // Refresh the list after deletion
+                    } else {
+                        console.warn('HTTP Status:', respuesta.status);
+                    }
                 } catch (error) {
-                    console.error('Error deleting responsable:', error);
+                    console.error('Error deleting responsable:', error.response?.status || error.message);
                 }
+            }else{
+                getAllResponsable();
             }
         });
     };
 
-    // Extraer títulos y datos para la tabla
-    const titles = [
-        "Nombre",
-        "Apellidos",
-        "Documento de Identidad",
-        "Tipo de Responsable",
-        "Correo",
-        "Número de Teléfono",
-        "Acciones"
-    ];
+    const handleAddClick = () => {
+        // Alterna la visibilidad del formulario
+        setShowForm(prevShowForm => !prevShowForm);
+        
+        // Si el formulario se va a mostrar, reinicia los valores
+        if (!showForm) {
+            setResponsable({
+                Id_Responsable: '',
+                Nom_Responsable: '',
+                Ape_Responsable: '',
+                Doc_Responsable: '',
+                Tip_Responsable: '',
+                Cor_Responsable: '',
+                Num_Responsable: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
 
     const data = responsableList.map((responsable) => [
         responsable.Nom_Responsable,
@@ -92,36 +114,40 @@ const CrudResponsable = () => {
         responsable.Tip_Responsable,
         responsable.Cor_Responsable,
         responsable.Num_Responsable,
-        <>
-            <button className='btn btn-info align-middle' onClick={() => fetchResponsable(responsable.Id_Responsable)}>
-                <i className="fa-solid fa-pen-to-square"></i> Editar
-            </button>
-            <button className='btn btn-info align-middle m-2' onClick={() => deleteResponsable(responsable.Id_Responsable)}>
-                <i className="fa-solid fa-trash-can"></i> Borrar
-            </button>
-        </>
+        `
+          <button class='btn btn-info align-middle btn-edit' data-id='${responsable.Id_Responsable}'>
+            <i class="fa-solid fa-pen-to-square"></i> Editar
+          </button>
+          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${responsable.Id_Responsable}'>
+            <i class="fa-solid fa-trash-can"></i> Borrar
+          </button>
+        `
     ]);
+
+    const titles = [
+        "Nombre", "Apellidos", "Documento de Identidad", "Tipo de Responsable", "Correo", "Número de Teléfono", "Acciones"
+    ];
 
     return (
         <>
-            <WriteTable titles={titles} data={data} />
-            <hr />
-            <FormResponsable 
-                buttonForm={buttonForm} 
-                responsable={responsable} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllResponsable={fetchAllResponsable} 
+         <div className="container mt-5">
+            <button className="btn btn-primary mb-4 " onClick={handleAddClick}>
+                {showForm ? 'Ocultar Formulario' : 'Agregar Responsable'}
+            </button>
+            </div>
+            <WriteTable 
+                titles={titles} 
+                data={data} 
+                onEditClick={(id) => getResponsable(id)} 
+                onDeleteClick={(id) => deleteResponsable(id)} 
             />
             <hr />
-            <FormQueryResponsable 
-                URI={URI} 
-                getResponsable={fetchResponsable} 
-                deleteResponsable={deleteResponsable} 
-                buttonForm={buttonForm} 
-            />
+            {showForm && (
+            <FormResponsable buttonForm={buttonForm} responsable={responsable} URI={URI} updateTextButton={updateTextButton} getAllResponsable={getAllResponsable} />
+        )}
+
         </>
     );
-}
+};
 
 export default CrudResponsable;

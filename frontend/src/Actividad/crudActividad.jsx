@@ -9,6 +9,7 @@ const URI = process.env.ROUTER_PRINCIPAL + '/Actividad/';
 const CrudActividad = () => {
     const [ActividadList, setActividadList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [actividad, setActividad] = useState({
         Id_Actividad: '',
         Nom_Actividad: '',
@@ -66,12 +67,32 @@ const CrudActividad = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    getAllActividad(); // Refresh the list after deletion
+                    // getAllActividad(); // Refresh the list after deletion
                 } catch (error) {
                     console.error('Error deleting actividad:', error);
                 }
+            }else{
+                getAllActividad(); // Refresh the list after deletion
+
             }
         });
+    };
+
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            setActividad({
+                Nom_Actividad: '',
+                Des_Actividad: '',
+                Fec_Actividad: '',
+                Hor_Actividad: '',
+                Fas_Produccion: '',
+                Id_Responsable: '',
+                Id_Estanque: ''
+            });
+            setButtonForm('Enviar');
+        }
     };
 
     const handleEdit = (Id_Actividad) => {
@@ -106,21 +127,23 @@ const CrudActividad = () => {
 
     return (
         <>
+        <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Actividad'}
+                </button>
+                </div>
             <WriteTable 
                 titles={titles} 
                 data={data} 
                 onEditClick={handleEdit} 
                 onDeleteClick={handleDelete} 
             />
-            <hr />
-            <FormActividad 
-                buttonForm={buttonForm} 
-                actividad={actividad} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllActividad={getAllActividad} 
-            />
-            <hr />
+            {showForm && (
+                    <>
+                        <hr />
+                        <FormActividad buttonForm={buttonForm} actividad={actividad} URI={URI} updateTextButton={updateTextButton} getAllActividad={getAllActividad} />
+                    </>
+                )}
         </>
     );
 };

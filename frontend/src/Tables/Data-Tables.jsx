@@ -31,6 +31,7 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
         search: "",
         searchPlaceholder: "Buscar...",
       },
+      
       drawCallback: function () {
         // Asigna eventos a los botones después de que la tabla ha sido redibujada
         $table.find('.btn-edit').off('click').on('click', function () {
@@ -41,40 +42,53 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
         $table.find('.btn-delete').off('click').on('click', function () {
           const id = $(this).data('id');
           onDeleteClick(id);
-        });
-      }
+        //   console.log(this.parentNode.parentNode)
+        // Elimina la fila que contiene el botón
+     // Filtra los elementos que no contienen el id del botón presionado
+     const filteredData = data.filter(row => {
+      // Verifica si el último elemento de la fila (el que contiene los botones) NO tiene el data-id del botón presionado
+      return !row[row.length - 1].includes(`data-id='${id}'`);
     });
 
-    return () => {
-      // Limpia la tabla cuando el componente se desmonta
-      if ($.fn.DataTable.isDataTable($table)) {
-        $table.DataTable().clear().destroy();
-      }
-    };
-  }, [data, titles, onEditClick, onDeleteClick]);
+    // Actualiza la tabla con los datos filtrados
+    table.clear().rows.add(filteredData).draw();
 
-  return (
-    <div className="container">
-      <table className="table table-responsive" id="TableDinamic" ref={tableRef}>
-        <thead>
-          <tr>
-            {titles.map((title, index) => (
-              <th key={index} scope="col">{title}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {row.map((cell, cellIndex) => (
-                <td key={cellIndex} dangerouslySetInnerHTML={{ __html: cell }}></td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+    // Esto actualizará el estado del componente padre si es necesario
+    // setData(filteredData);  // Si estás manejando el estado de `data` en un componente superior
+  });
+}
+});
+
+return () => {
+// Limpia la tabla cuando el componente se desmonta
+if ($.fn.DataTable.isDataTable($table)) {
+  $table.DataTable().clear().destroy();
+}
+};
+}, [data, titles, onEditClick, onDeleteClick]);
+
+return (
+<div className="container">
+<table className="table table-responsive" id="TableDinamic" ref={tableRef}>
+  <thead>
+    <tr>
+      {titles.map((title, index) => (
+        <th key={index} scope="col">{title}</th>
+      ))}
+    </tr>
+  </thead>
+  <tbody>
+    {data.map((row, rowIndex) => (
+      <tr key={rowIndex}>
+        {row.map((cell, cellIndex) => (
+          <td key={cellIndex} dangerouslySetInnerHTML={{ __html: cell }}></td>
+        ))}
+      </tr>
+    ))}
+  </tbody>
+</table>
+</div>
+);
 }
 
 export default WriteTable;

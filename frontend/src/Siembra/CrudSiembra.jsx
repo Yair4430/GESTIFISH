@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormSiembra from './FormSiembra.jsx';
-import FormQuerySiembra from './FormQuerySiembra.jsx';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/siembra/';
 const URI_RESPONSABLE = process.env.ROUTER_PRINCIPAL + '/responsable/';
@@ -13,6 +12,7 @@ const URI_ESTANQUE = process.env.ROUTER_PRINCIPAL + '/estanque/';
 const CrudSiembra = () => {
     const [siembraList, setSiembraList] = useState([]);
     const [responsables, setResponsables] = useState([]);
+    const [showForm, setShowForm] = useState(false);
     const [especies, setEspecies] = useState([]);
     const [estanques, setEstanques] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
@@ -32,32 +32,62 @@ const CrudSiembra = () => {
     });
 
     useEffect(() => {
-        getAllSiembras();
-        getAllResponsables();
-        getAllEspecies();
-        getAllEstanques();
+        const fetchData = async () => {
+            try {
+                await Promise.all([
+                    getAllSiembras(),
+                    getAllResponsables(),
+                    getAllEspecies(),
+                    getAllEstanques()
+                ]);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
     }, []);
 
-    const fetchData = async (uri, setState) => {
+    const getAllSiembras = async () => {
         try {
-            const response = await axios.get(uri);
-            setState(response.data);
+            const { data } = await axios.get(URI);
+            setSiembraList(data);
         } catch (error) {
-            console.error(`Error fetching data from ${uri}:`, error);
+            console.error('Error fetching siembras:', error);
         }
     };
 
-    const getAllSiembras = () => fetchData(URI, setSiembraList);
-    const getAllResponsables = () => fetchData(URI_RESPONSABLE, setResponsables);
-    const getAllEspecies = () => fetchData(URI_ESPECIE, setEspecies);
-    const getAllEstanques = () => fetchData(URI_ESTANQUE, setEstanques);
+    const getAllResponsables = async () => {
+        try {
+            const { data } = await axios.get(URI_RESPONSABLE);
+            setResponsables(data);
+        } catch (error) {
+            console.error('Error fetching responsables:', error);
+        }
+    };
+
+    const getAllEspecies = async () => {
+        try {
+            const { data } = await axios.get(URI_ESPECIE);
+            setEspecies(data);
+        } catch (error) {
+            console.error('Error fetching especies:', error);
+        }
+    };
+
+    const getAllEstanques = async () => {
+        try {
+            const { data } = await axios.get(URI_ESTANQUE);
+            setEstanques(data);
+        } catch (error) {
+            console.error('Error fetching estanques:', error);
+        }
+    };
 
     const getSiembra = async (Id_Siembra) => {
-        setButtonForm('Enviar');
+        setButtonForm('Actualizar');
         try {
-            const response = await axios.get(`${URI}${Id_Siembra}`);
-            setButtonForm('Actualizar');
-            setSiembra(response.data);
+            const { data } = await axios.get(`${URI}${Id_Siembra}`);
+            setSiembra(data);
         } catch (error) {
             console.error('Error fetching siembra:', error);
         }
@@ -67,7 +97,7 @@ const CrudSiembra = () => {
         setButtonForm(texto);
     };
 
-    const deleteSiembra = (Id_Siembra) => {
+    const deleteSiembra = async (Id_Siembra) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -85,73 +115,93 @@ const CrudSiembra = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    getAllSiembras(); // Refresh the list after deletion
+                    // getAllSiembras(); // Refresh the list after deletion
                 } catch (error) {
                     console.error('Error deleting siembra:', error);
                 }
+            }else{
+                getAllSiembras();
             }
         });
     };
 
-    // Extraer títulos y datos para la tabla
-    const titles = [
-        "Cantidad de Peces",
-        "Fecha de Siembra",
-        "Fecha Posible de Cosecha",
-        "Responsable",
-        "Especie",
-        "Estanque",
-        "Peso Actual",
-        "Observaciones",
-        "Hora de Siembra",
-        "Ganancia de Peso",
-        "Valor de Siembra",
-        "Acciones"
-    ];
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+    
+        if (!showForm) {
+            setSiembra({
+                Id_Siembra: '',
+                Can_Peces: '',
+                Fec_Siembra: '',
+                Fec_PosibleCosecha: '',
+                Id_Responsable: '',
+                Id_Especie: '',
+                Id_Estanque: '',
+                Pes_Actual: '',
+                Obs_Siembra: '',
+                Hor_Siembra: '',
+                Gan_Peso: '',
+                Vlr_Siembra: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
+
+    const handleEdit = (Id_Siembra) => {
+        getSiembra(Id_Siembra);
+    };
+
+    const handleDelete = (Id_Siembra) => {
+        deleteSiembra(Id_Siembra);
+    };
 
     const data = siembraList.map((siembra) => [
         siembra.Can_Peces,
         siembra.Fec_Siembra,
         siembra.Fec_PosibleCosecha,
-        siembra.responsable?.Nom_Responsable || 'No disponible',
-        siembra.especie?.Nom_Especie || 'No disponible',
-        siembra.estanque?.Nom_Estanque || 'No disponible',
+        siembra.responsable?.Nom_Responsable || 'N/A',
+        siembra.especie?.Nom_Especie || 'N/A',
+        siembra.estanque?.Nom_Estanque || 'N/A',
         siembra.Pes_Actual,
         siembra.Obs_Siembra,
         siembra.Hor_Siembra,
         siembra.Gan_Peso,
         siembra.Vlr_Siembra,
-        <>
-            <button className='btn btn-info align-middle' onClick={() => getSiembra(siembra.Id_Siembra)}>
-                <i className="fa-solid fa-pen-to-square"></i> Editar
-            </button>
-            <button className='btn btn-info align-middle m-2' onClick={() => deleteSiembra(siembra.Id_Siembra)}>
-                <i className="fa-solid fa-trash-can"></i> Borrar
-            </button>
-        </>
+  `
+          <button class='btn btn-info align-middle btn-edit' data-id='${siembra.Id_Siembra}'>
+            <i class="fa-solid fa-pen-to-square"></i> Editar
+          </button>
+          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${siembra.Id_Siembra}'>
+            <i class="fa-solid fa-trash-can"></i> Borrar
+          </button>
+        `
     ]);
+
+    const titles = [
+        "Cantidad de Peces", "Fecha de Siembra", "Fecha Posible de Cosecha", "Responsable", "Especie", "Estanque", "Peso Actual", "Observaciones", "Hora de Siembra", "Ganancia de Peso", "Valor de Siembra", "Acciones"
+    ];
 
     return (
         <>
-            <WriteTable titles={titles} data={data} />
-            <hr />
-            <FormSiembra 
-                buttonForm={buttonForm} 
-                siembra={siembra} 
-                responsables={responsables} 
-                especies={especies} 
-                estanques={estanques} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllSiembras={getAllSiembras} 
+                    <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Siembra'}
+                </button>
+                </div>
+            <WriteTable
+                titles={titles}
+                data={data}
+                onEditClick={handleEdit}
+                onDeleteClick={handleDelete}
             />
             <hr />
-            <FormQuerySiembra 
-                URI={URI} 
-                getSiembra={getSiembra} 
-                deleteSiembra={deleteSiembra} 
-                buttonForm={buttonForm} 
-            />
+            {showForm && (
+                    <>
+                        <FormSiembra getAllSiembras={getAllSiembras} buttonForm={buttonForm} siembra={siembra} responsables={responsables} especies={especies} estanques={estanques} URI={URI} updateTextButton={updateTextButton}
+                        />
+                    </>
+                )}
         </>
     );
 };

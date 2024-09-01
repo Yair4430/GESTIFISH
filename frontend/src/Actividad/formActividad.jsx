@@ -76,7 +76,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                     icon: 'success'
                 });
                 if (respuestaApi.status === 201) {
-                    // alert(respuestaApi.data.message);
+                    alert(respuestaApi.data.message);
                     clearFormA();
                     getAllActividad();
                 }

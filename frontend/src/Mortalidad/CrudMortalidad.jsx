@@ -1,15 +1,15 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import WriteTable from '../Tables/Data-Tables.jsx';
-import FormMortalidad from './FormMortalidad.jsx';
-import FormQueryMortalidad from './FormQueryMortalidad.jsx';
+import WriteTable from '../Tables/Data-Tables.jsx'; // Asegúrate de que esta ruta sea correcta
+import FormMortalidad from './FormMortalidad.jsx'; // Asegúrate de que esta ruta sea correcta
 
-const URI = `${process.env.ROUTER_PRINCIPAL}/mortalidad/`;
+const URI = process.env.ROUTER_PRINCIPAL + '/mortalidad/';
 
 const CrudMortalidad = () => {
-    const [mortalidadList, setMortalidadList] = useState([]);
+    const [MortalidadList, setMortalidadList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [mortalidad, setMortalidad] = useState({
         Id_Mortalidad: '',
         Fec_Mortalidad: '',
@@ -20,24 +20,24 @@ const CrudMortalidad = () => {
     });
 
     useEffect(() => {
-        fetchAllMortalidad();
+        getAllMortalidad();
     }, []);
 
-    const fetchAllMortalidad = async () => {
+    const getAllMortalidad = async () => {
         try {
-            const response = await axios.get(URI);
-            setMortalidadList(response.data);
+            const respuesta = await axios.get(URI);
+            setMortalidadList(respuesta.data);
         } catch (error) {
             console.error('Error fetching mortalidades:', error);
         }
     };
 
-    const fetchMortalidad = async (Id_Mortalidad) => {
+    const getMortalidad = async (Id_Mortalidad) => {
         setButtonForm('Enviar');
         try {
-            const response = await axios.get(`${URI}${Id_Mortalidad}`);
+            const respuesta = await axios.get(`${URI}${Id_Mortalidad}`);
             setButtonForm('Actualizar');
-            setMortalidad({ ...response.data });
+            setMortalidad({ ...respuesta.data });
         } catch (error) {
             console.error('Error fetching mortalidad:', error);
         }
@@ -47,7 +47,7 @@ const CrudMortalidad = () => {
         setButtonForm(texto);
     };
 
-    const deleteMortalidad = (Id_Mortalidad) => {
+    const deleteMortalidad = async (Id_Mortalidad) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -65,60 +65,80 @@ const CrudMortalidad = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    fetchAllMortalidad(); // Refresh the list after deletion
+                    // getAllMortalidad(); // Refrescar la lista después de la eliminación
                 } catch (error) {
                     console.error('Error deleting mortalidad:', error);
                 }
+            }else{
+                getAllMortalidad();
             }
         });
     };
 
-    // Extraer títulos y datos para la tabla
-    const titles = [
-        "Fecha de Mortalidad",
-        "Cantidad de Peces",
-        "Motivo de Mortalidad",
-        "Fecha Siembra",
-        "Nombre Responsable",
-        "Acciones"
-    ];
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
 
-    const data = mortalidadList.map((mortalidad) => [
+        if (!showForm) {
+            setMortalidad({
+                Fec_Mortalidad: '',
+                Can_Peces: '',
+                Mot_Mortalidad: '',
+                Id_Siembra: '',
+                Id_Responsable: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
+    const handleEdit = (Id_Mortalidad) => {
+        getMortalidad(Id_Mortalidad);
+    };
+
+    const handleDelete = (Id_Mortalidad) => {
+        deleteMortalidad(Id_Mortalidad);
+    };
+
+    const data = MortalidadList.map((mortalidad) => [
         mortalidad.Fec_Mortalidad,
         mortalidad.Can_Peces,
         mortalidad.Mot_Mortalidad,
         mortalidad.siembra.Fec_Siembra,
         mortalidad.responsable.Nom_Responsable,
-        <>
-            <button className='btn btn-info align-middle' onClick={() => fetchMortalidad(mortalidad.Id_Mortalidad)}>
-                <i className="fa-solid fa-pen-to-square"></i> Editar
-            </button>
-            <button className='btn btn-info align-middle m-2' onClick={() => deleteMortalidad(mortalidad.Id_Mortalidad)}>
-                <i className="fa-solid fa-trash-can"></i> Borrar
-            </button>
-        </>
+        `
+          <button class='btn btn-info align-middle btn-edit' data-id='${mortalidad.Id_Mortalidad}'>
+            <i class="fa-solid fa-pen-to-square"></i> Editar
+          </button>
+          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${mortalidad.Id_Mortalidad}'>
+            <i class="fa-solid fa-trash-can"></i> Borrar
+          </button>
+        `
     ]);
+
+    const titles = [
+        "Fecha de Mortalidad", "Cantidad de Peces", "Motivo de Mortalidad", "Fecha Siembra", "Nombre Responsable", "Acciones"
+    ];
 
     return (
         <>
-            <WriteTable titles={titles} data={data} />
-            <hr />
-            <FormMortalidad 
-                buttonForm={buttonForm} 
-                mortalidad={mortalidad} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllMortalidad={fetchAllMortalidad} 
+                    <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Mortalidad'}
+                </button>
+                </div>
+            <WriteTable 
+                titles={titles} 
+                data={data} 
+                onEditClick={handleEdit} 
+                onDeleteClick={handleDelete} 
             />
             <hr />
-            <FormQueryMortalidad 
-                URI={URI} 
-                getMortalidad={fetchMortalidad} 
-                deleteMortalidad={deleteMortalidad} 
-                buttonForm={buttonForm} 
-            />
+            {showForm && (
+                    <>
+                        <FormMortalidad getAllMortalidad={getAllMortalidad} buttonForm={buttonForm} mortalidad={mortalidad} URI={URI} updateTextButton={updateTextButton} />
+                    </>
+                )}
         </>
     );
-}
+};
 
 export default CrudMortalidad;
