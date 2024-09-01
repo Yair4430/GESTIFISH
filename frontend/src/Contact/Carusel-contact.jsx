@@ -4,7 +4,7 @@ import BarraNavegacionPublica from "../home/barraNavegacionPublica";
 const CaruselContact = () => {
   const teamMembers = [
     {
-      img: "/src/IMG/ ",
+      img: "/src/IMG/Yair.jpg",
       alt: "Yair Alexander Cardenas Guzman",
       name: "Yair Alexander Cardenas Guzman",
       title: "Gerente",
@@ -18,7 +18,7 @@ const CaruselContact = () => {
       description: "Tengo 21 años, Soy de Ibague Tolima"
     },
     {
-      img: "/src/IMG/Shirel.jpeg",
+      img: "/src/IMG/Shirel.jpg",
       alt: "Shirel Daniela Oyuela Saavedra",
       name: "Shirel Daniela Oyuela Saavedra",
       title: "Analista y Desarrolladora",
@@ -32,7 +32,7 @@ const CaruselContact = () => {
       description: "Tengo 18 años, Soy de Flandes Tolima"
     },
     {
-      img: "/src/IMG/Saul.jpeg",
+      img: "/src/IMG/Saul.jpg",
       alt: "Saúl Andrés Hernandez Acosta",
       name: "Saúl Andrés Hernandez Acosta",
       title: "Analista y Desarrollador",
