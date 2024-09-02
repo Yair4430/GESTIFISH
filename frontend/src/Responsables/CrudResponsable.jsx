@@ -9,6 +9,7 @@ const URI = process.env.ROUTER_PRINCIPAL + '/responsable/';
 const CrudResponsable = () => {
     const [responsableList, setResponsableList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [responsable, setResponsable] = useState({
         Id_Responsable: '',
         Nom_Responsable: '',
@@ -87,6 +88,25 @@ const CrudResponsable = () => {
         });
     };
 
+    const handleAddClick = () => {
+        // Alterna la visibilidad del formulario
+        setShowForm(prevShowForm => !prevShowForm);
+        
+        // Si el formulario se va a mostrar, reinicia los valores
+        if (!showForm) {
+            setResponsable({
+                Id_Responsable: '',
+                Nom_Responsable: '',
+                Ape_Responsable: '',
+                Doc_Responsable: '',
+                Tip_Responsable: '',
+                Cor_Responsable: '',
+                Num_Responsable: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
     const data = responsableList.map((responsable) => [
         responsable.Nom_Responsable,
         responsable.Ape_Responsable,
@@ -110,6 +130,11 @@ const CrudResponsable = () => {
 
     return (
         <>
+         <div className="container mt-5">
+            <button className="btn btn-primary mb-4 " onClick={handleAddClick}>
+                {showForm ? 'Ocultar Formulario' : 'Agregar Responsable'}
+            </button>
+            </div>
             <WriteTable 
                 titles={titles} 
                 data={data} 
@@ -117,14 +142,10 @@ const CrudResponsable = () => {
                 onDeleteClick={(id) => deleteResponsable(id)} 
             />
             <hr />
-            <FormResponsable 
-                buttonForm={buttonForm} 
-                responsable={responsable} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllResponsable={getAllResponsable} 
-            />
-            <hr />
+            {showForm && (
+            <FormResponsable buttonForm={buttonForm} responsable={responsable} URI={URI} updateTextButton={updateTextButton} getAllResponsable={getAllResponsable} />
+        )}
+
         </>
     );
 };

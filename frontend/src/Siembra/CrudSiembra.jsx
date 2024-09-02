@@ -12,6 +12,7 @@ const URI_ESTANQUE = process.env.ROUTER_PRINCIPAL + '/estanque/';
 const CrudSiembra = () => {
     const [siembraList, setSiembraList] = useState([]);
     const [responsables, setResponsables] = useState([]);
+    const [showForm, setShowForm] = useState(false);
     const [especies, setEspecies] = useState([]);
     const [estanques, setEstanques] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
@@ -124,6 +125,29 @@ const CrudSiembra = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+    
+        if (!showForm) {
+            setSiembra({
+                Id_Siembra: '',
+                Can_Peces: '',
+                Fec_Siembra: '',
+                Fec_PosibleCosecha: '',
+                Id_Responsable: '',
+                Id_Especie: '',
+                Id_Estanque: '',
+                Pes_Actual: '',
+                Obs_Siembra: '',
+                Hor_Siembra: '',
+                Gan_Peso: '',
+                Vlr_Siembra: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
+
     const handleEdit = (Id_Siembra) => {
         getSiembra(Id_Siembra);
     };
@@ -160,6 +184,11 @@ const CrudSiembra = () => {
 
     return (
         <>
+                    <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Siembra'}
+                </button>
+                </div>
             <WriteTable
                 titles={titles}
                 data={data}
@@ -167,17 +196,12 @@ const CrudSiembra = () => {
                 onDeleteClick={handleDelete}
             />
             <hr />
-            <FormSiembra
-                getAllSiembras={getAllSiembras}
-                buttonForm={buttonForm}
-                siembra={siembra}
-                responsables={responsables}
-                especies={especies}
-                estanques={estanques}
-                URI={URI}
-                updateTextButton={updateTextButton}
-            />
-            <hr />
+            {showForm && (
+                    <>
+                        <FormSiembra getAllSiembras={getAllSiembras} buttonForm={buttonForm} siembra={siembra} responsables={responsables} especies={especies} estanques={estanques} URI={URI} updateTextButton={updateTextButton}
+                        />
+                    </>
+                )}
         </>
     );
 };

@@ -9,6 +9,7 @@ const URI = process.env.ROUTER_PRINCIPAL + '/mortalidad/';
 const CrudMortalidad = () => {
     const [MortalidadList, setMortalidadList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [mortalidad, setMortalidad] = useState({
         Id_Mortalidad: '',
         Fec_Mortalidad: '',
@@ -74,6 +75,21 @@ const CrudMortalidad = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            setMortalidad({
+                Fec_Mortalidad: '',
+                Can_Peces: '',
+                Mot_Mortalidad: '',
+                Id_Siembra: '',
+                Id_Responsable: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
     const handleEdit = (Id_Mortalidad) => {
         getMortalidad(Id_Mortalidad);
     };
@@ -104,6 +120,11 @@ const CrudMortalidad = () => {
 
     return (
         <>
+                    <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Mortalidad'}
+                </button>
+                </div>
             <WriteTable 
                 titles={titles} 
                 data={data} 
@@ -111,14 +132,11 @@ const CrudMortalidad = () => {
                 onDeleteClick={handleDelete} 
             />
             <hr />
-            <FormMortalidad 
-                buttonForm={buttonForm} 
-                mortalidad={mortalidad} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllMortalidad={getAllMortalidad} 
-            />
-            <hr />
+            {showForm && (
+                    <>
+                        <FormMortalidad getAllMortalidad={getAllMortalidad} buttonForm={buttonForm} mortalidad={mortalidad} URI={URI} updateTextButton={updateTextButton} />
+                    </>
+                )}
         </>
     );
 };

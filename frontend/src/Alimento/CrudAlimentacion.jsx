@@ -9,6 +9,7 @@ const URI = process.env.ROUTER_PRINCIPAL + '/alimentacion/';
 const CrudAlimentacion = () => {
     const [AlimentacionList, setAlimentacionList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [alimentacion, setAlimentacion] = useState({
         Id_Alimentacion: '',
         Fec_Alimentacion: '',
@@ -76,6 +77,24 @@ const CrudAlimentacion = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            setAlimentacion({
+                Id_Alimentacion: '',
+                Fec_Alimentacion: '',
+                Can_RacionKg: '',
+                Tip_Alimento: '',
+                Hor_Alimentacion: '',
+                Vlr_Alimentacion: '',
+                Fec_Siembra: '',
+                Id_Responsable: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
     const handleEdit = (Id_Alimentacion) => {
         getAlimentacion(Id_Alimentacion);
     };
@@ -93,10 +112,10 @@ const CrudAlimentacion = () => {
         alimentacion.siembra.Fec_Siembra,
         alimentacion.responsable.Nom_Responsable,
         `
-          <button class='btn btn-info align-middle btn-edit' data-id='${alimentacion.Id_Alimentacion}'>
+          <button class='btn btn-primary align-middle btn-edit' data-id='${alimentacion.Id_Alimentacion}'>
             <i class="fa-solid fa-pen-to-square"></i> Editar
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${alimentacion.Id_Alimentacion}'>
+          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${alimentacion.Id_Alimentacion}'>
             <i class="fa-solid fa-trash-can"></i> Borrar
           </button>
         `
@@ -108,6 +127,11 @@ const CrudAlimentacion = () => {
 
     return (
         <>
+        <div className="container mt-5">
+                <button className="btn btn-primary mb-4 btn-custom" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Alimentación'}
+                </button>
+                </div>
             <WriteTable 
                 titles={titles} 
                 data={data} 
@@ -115,13 +139,11 @@ const CrudAlimentacion = () => {
                 onDeleteClick={handleDelete} 
             />
             <hr />
-            <FormAlimentacion 
-                buttonForm={buttonForm} 
-                alimentacion={alimentacion} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllAlimentacion={getAllAlimentacion} 
-            />
+            {showForm && (
+                    <>
+                        <FormAlimentacion getAllAlimentacion={getAllAlimentacion} buttonForm={buttonForm} alimentacion={alimentacion} URI={URI} updateTextButton={updateTextButton} />
+                    </>
+                )}
             <hr />
         </>
     );

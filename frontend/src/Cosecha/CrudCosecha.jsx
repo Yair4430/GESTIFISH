@@ -10,6 +10,7 @@ const URI = process.env.ROUTER_PRINCIPAL + '/cosecha/';
 const CrudCosecha = () => {
     const [CosechaList, setCosechaList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [cosecha, setCosecha] = useState({
         Id_Cosecha: '',
         Fec_Cosecha: '',
@@ -87,6 +88,27 @@ const CrudCosecha = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            setCosecha({
+                Id_Cosecha: '',
+                Fec_Cosecha: '',
+                Can_Peces: '',
+                Pes_Eviscerado: '',
+                Pes_Viscerado: '',
+                Por_Visceras: '',
+                Id_Responsable: '',
+                Id_Siembra: '',
+                Hor_Cosecha: '',
+                Vlr_Cosecha: '',
+                Obs_Cosecha: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
     const handleEdit = (Id_Cosecha) => {
         getCosecha(Id_Cosecha);
     };
@@ -107,10 +129,10 @@ const CrudCosecha = () => {
         cosecha.Obs_Cosecha,
         cosecha.responsable.Nom_Responsable,
         `
-          <button class='btn btn-info align-middle btn-edit' data-id='${cosecha.Id_Cosecha}'>
+          <button class='btn btn-primary align-middle btn-edit' data-id='${cosecha.Id_Cosecha}'>
             <i class="fa-solid fa-pen-to-square"></i> Editar
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${cosecha.Id_Cosecha}'>
+          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${cosecha.Id_Cosecha}'>
             <i class="fa-solid fa-trash-can"></i> Borrar
           </button>
         `
@@ -124,6 +146,11 @@ const CrudCosecha = () => {
 
     return (
         <>
+                    <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Cosecha'}
+                </button>
+                </div>
             <WriteTable
                 titles={titles}
                 data={data}
@@ -131,20 +158,17 @@ const CrudCosecha = () => {
                 onDeleteClick={handleDelete}
             />
             <hr />
-            <FormCosecha
-                getAllCosecha={getAllCosecha}
-                buttonForm={buttonForm}
-                cosecha={cosecha}
-                URI={URI}
-                updateTextButton={updateTextButton}
-            />
-            <hr />
-            <FormQueryCosecha
-                URI={URI}
-                getCosecha={getCosecha}
-                deleteCosecha={deleteCosecha}
-                buttonForm={buttonForm}
-            />
+            {showForm && (
+                    <>
+                        <FormCosecha
+                            getAllCosecha={getAllCosecha}
+                            buttonForm={buttonForm}
+                            cosecha={cosecha}
+                            URI={URI}
+                            updateTextButton={updateTextButton}
+                        />
+                    </>
+                )}
         </>
     );
 };

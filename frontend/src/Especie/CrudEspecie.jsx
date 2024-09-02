@@ -11,6 +11,7 @@ const PATH_FOTOS = process.env.ROUTER_FOTOS;
 const CrudEspecie = () => {
     const [EspecieList, setEspecieList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [especie, setEspecie] = useState({
         Id_Especie: '',
         Nom_Especie: '',
@@ -88,6 +89,24 @@ const CrudEspecie = () => {
         });
     };
 
+    const handleAddClick = () => {
+        // Alterna la visibilidad del formulario
+        setShowForm(prevShowForm => !prevShowForm);
+    
+        // Si el formulario se va a mostrar, reinicia los valores
+        if (!showForm) {
+            setEspecie({
+                Id_Especie: '',
+                Nom_Especie: '',
+                Car_Especie: '',
+                Tam_Promedio: '',
+                Den_Especie: '',
+                Img_Especie: '' // Ajusta esto según cómo manejes la imagen
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
     const data = EspecieList.map((especie) => [
         especie.Nom_Especie,
         especie.Car_Especie,
@@ -114,6 +133,11 @@ const CrudEspecie = () => {
 
     return (
         <>
+                    <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Especie'}
+                </button>
+                </div>
             <WriteTable 
                 titles={titles} 
                 data={data} 
@@ -121,13 +145,15 @@ const CrudEspecie = () => {
                 onDeleteClick={(Id_Especie) => deleteEspecie(Id_Especie)} 
             />
             <hr />
-            <FormEspecie 
-                buttonForm={buttonForm} 
-                especie={especie} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllEspecies={getAllEspecies} 
-            />
+            {showForm && (
+                    <FormEspecie
+                        getAllEspecies={getAllEspecies}
+                        buttonForm={buttonForm}
+                        especie={especie}
+                        URI={URI}
+                        updateTextButton={updateTextButton}
+                    />
+                )}
         </>
     );
 }

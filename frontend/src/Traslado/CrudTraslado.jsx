@@ -10,6 +10,7 @@ const URI = process.env.ROUTER_PRINCIPAL + '/traslado/';
 const CrudTraslado = () => {
     const [trasladoList, setTrasladoList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [traslado, setTraslado] = useState({
         Id_Traslado: '',
         Fec_Traslado: '',
@@ -73,6 +74,21 @@ const CrudTraslado = () => {
             }
         });
     };
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+    
+        if (!showForm) {
+            setTraslado({
+                Id_Traslado: '',
+                Fec_Traslado: '',
+                Can_Peces: '',
+                Id_Responsable: '',
+                Obs_Traslado: '',
+                Hor_Traslado: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
 
     
     const handleEdit = (id_Traslado) => {
@@ -105,6 +121,11 @@ const CrudTraslado = () => {
 
     return (
         <>
+        <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Traslado'}
+                </button>
+                </div>
             <WriteTable 
                 titles={titles} 
                 data={data} 
@@ -112,14 +133,11 @@ const CrudTraslado = () => {
                 onDeleteClick={handleDelete} 
             />
             <hr />
-            <FormTraslado 
-                buttonForm={buttonForm} 
-                traslado={traslado} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllTraslados={getAllTraslados} 
-            />
-            <hr />
+            {showForm && (
+                    <>
+                        <FormTraslado getAllTraslados={getAllTraslados} buttonForm={buttonForm} traslado={traslado} URI={URI} updateTextButton={updateTextButton} />
+                    </>
+                )}
         </>
     );
 };

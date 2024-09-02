@@ -9,6 +9,7 @@ const URI = process.env.ROUTER_PRINCIPAL + '/muestreo/';
 const CrudMuestreo = () => {
     const [muestreoList, setMuestreoList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [muestreo, setMuestreo] = useState({
         Id_Muestreo: '',
         Fec_Muestreo: '',
@@ -76,6 +77,26 @@ const CrudMuestreo = () => {
             }
         });
     };
+    
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            // Reinicia los valores del formulario de muestreo
+            setMuestreo({
+                Id_Muestreo: '',
+                Fec_Muestreo: '',
+                Num_Peces: '',
+                Obs_Muestreo: '',
+                Pes_Esperado: '',
+                Id_Siembra: '',
+                Id_Responsable: '',
+                Hor_Muestreo: '',
+                Pes_Promedio: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
 
     const handleEdit = (Id_Muestreo) => {
         getMuestreo(Id_Muestreo);
@@ -109,21 +130,24 @@ const CrudMuestreo = () => {
 
     return (
         <>
-            <WriteTable 
+                    <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Muestreo'}
+                </button>
+                </div>
+
+            <hr />
+            {showForm && (
+                    <>
+                        <FormMuestreo getAllMuestreo={getAllMuestreo} buttonForm={buttonForm} muestreo={muestreo} URI={URI} updateTextButton={updateTextButton} />
+                    </>
+                )}
+                            <WriteTable 
                 titles={titles} 
                 data={data} 
                 onEditClick={handleEdit} 
                 onDeleteClick={handleDelete} 
             />
-            <hr />
-            <FormMuestreo 
-                buttonForm={buttonForm} 
-                muestreo={muestreo} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllMuestreo={getAllMuestreo} 
-            />
-            <hr />
         </>
     );
 };

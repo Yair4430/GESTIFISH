@@ -10,6 +10,7 @@ const PATH_FOTOS = process.env.ROUTER_FOTOS;
 const CrudEstanque = () => {
     const [EstanqueList, setEstanqueList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [estanque, setEstanque] = useState({
         Id_Estanque: '',
         Nom_Estanque: '',
@@ -78,6 +79,25 @@ const CrudEstanque = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            setEstanque({
+                Id_Estanque: '',
+                Nom_Estanque: '',
+                Esp_Agua: '',
+                Tip_Estanque: '',
+                Lar_Estanque: '',
+                Anc_Estanque: '',
+                Des_Estanque: '',
+                Img_Estanque: '',
+                Rec_Agua: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
     const handleEdit = (Id_Estanque) => {
         getEstanque(Id_Estanque);
     };
@@ -112,6 +132,11 @@ const CrudEstanque = () => {
 
     return (
         <>
+        <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Estanque'}
+                </button>
+                </div>
             <WriteTable 
                 titles={titles} 
                 data={data} 
@@ -119,14 +144,18 @@ const CrudEstanque = () => {
                 onDeleteClick={handleDelete} 
             />
             <hr />
-            <FormEstanque 
-                buttonForm={buttonForm} 
-                estanque={estanque} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllEstanques={getAllEstanques} 
-            />
-            <hr />
+            {showForm && (
+                    <>
+                        <FormEstanque
+                            getAllEstanques={getAllEstanques}
+                            buttonForm={buttonForm}
+                            estanque={estanque}
+                            URI={URI}
+                            updateTextButton={updateTextButton}
+                        />
+                        <hr />
+                    </>
+                )}
         </>
     );
 };

@@ -9,6 +9,7 @@ const URI = process.env.ROUTER_PRINCIPAL + '/Actividad/';
 const CrudActividad = () => {
     const [ActividadList, setActividadList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [actividad, setActividad] = useState({
         Id_Actividad: '',
         Nom_Actividad: '',
@@ -77,6 +78,23 @@ const CrudActividad = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            setActividad({
+                Nom_Actividad: '',
+                Des_Actividad: '',
+                Fec_Actividad: '',
+                Hor_Actividad: '',
+                Fas_Produccion: '',
+                Id_Responsable: '',
+                Id_Estanque: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
     const handleEdit = (Id_Actividad) => {
         getActividad(Id_Actividad);
     };
@@ -94,10 +112,10 @@ const CrudActividad = () => {
         actividad.Fas_Produccion,
         actividad.estanque.Nom_Estanque,
         `
-          <button class='btn btn-info align-middle btn-edit' data-id='${actividad.Id_Actividad}'>
+          <button class='btn btn-primary align-middle btn-edit' data-id='${actividad.Id_Actividad}'>
             <i class="fa-solid fa-pen-to-square"></i> Editar
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${actividad.Id_Actividad}'>
+          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${actividad.Id_Actividad}'>
             <i class="fa-solid fa-trash-can"></i> Borrar
           </button>
         `
@@ -109,21 +127,23 @@ const CrudActividad = () => {
 
     return (
         <>
+        <div className="container mt-5">
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Actividad'}
+                </button>
+                </div>
             <WriteTable 
                 titles={titles} 
                 data={data} 
                 onEditClick={handleEdit} 
                 onDeleteClick={handleDelete} 
             />
-            <hr />
-            <FormActividad 
-                buttonForm={buttonForm} 
-                actividad={actividad} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllActividad={getAllActividad} 
-            />
-            <hr />
+            {showForm && (
+                    <>
+                        <hr />
+                        <FormActividad buttonForm={buttonForm} actividad={actividad} URI={URI} updateTextButton={updateTextButton} getAllActividad={getAllActividad} />
+                    </>
+                )}
         </>
     );
 };

@@ -68,7 +68,10 @@ if ($.fn.DataTable.isDataTable($table)) {
 }, [data, titles, onEditClick, onDeleteClick]);
 
 return (
+  <>
+  <center>
 <div className="container">
+<center>
 <table className="table table-responsive" id="TableDinamic" ref={tableRef}>
   <thead>
     <tr>
@@ -87,7 +90,10 @@ return (
     ))}
   </tbody>
 </table>
+</center>
 </div>
+</center>
+</>
 );
 }
 
