@@ -8,37 +8,43 @@ const CaruselContact = () => {
       alt: "Yair Alexander Cardenas Guzman",
       name: "Yair Alexander Cardenas Guzman",
       title: "Gerente",
-      description: "Tengo 18 años, Soy de Flandes Tolima"
+      birthdate: "2006-05-25", // Fecha de nacimiento en formato YYYY-MM-DD
+      place: "Soy de Flandes Tolima"
     },
     {
       img: "/src/IMG/Valentina.jpg",
       alt: "Paula Valentina Muñoz Duran",
       name: "Paula Valentina Muñoz Duran",
       title: "Sub-Gerente",
-      description: "Tengo 21 años, Soy de Ibague Tolima"
+      birthdate: "2002-12-31",
+      place: "Soy de Ibague Tolima"
     },
     {
       img: "/src/IMG/Shirel.jpg",
       alt: "Shirel Daniela Oyuela Saavedra",
       name: "Shirel Daniela Oyuela Saavedra",
       title: "Analista y Desarrolladora",
-      description: "Tengo 18 años, Soy de Ibague Tolima"
+      birthdate: "2006-09-02",
+      place: "Soy de Ibague Tolima"
     },
     {
       img: "/src/IMG/JuanDavid.jpg",
       alt: "Juan David Rodriguez Barrero",
       name: "Juan David Rodriguez Barrero",
       title: "Analista y Desarrollador",
-      description: "Tengo 19 años, Soy de Flandes Tolima"
+      birthdate:"2005-03-31",
+      place: "Soy de Flandes Tolima"
     },
     {
       img: "/src/IMG/Saul.jpg",
       alt: "Saúl Andrés Hernandez Olaya",
       name: "Saúl Andrés Hernandez Olaya",
       title: "Analista y Desarrollador",
-      description: "Tengo 23 años, Soy de Cajamarca Tolima"
+      birthdate: "2001-08-25",
+      place: "Soy de Cajamarca Tolima"
     }
   ];
+  
 
   return (
     <>
@@ -101,10 +107,7 @@ const CaruselContact = () => {
             />
           </div>
         </div>
-
-        <br/>
-        <br/>
-        <br/>
+        <br/><br/><br/>
 
         {/* Título "Integrantes" */}
         <h2 style={styles.sectionHeader}>Integrantes Del Proyecto</h2>
@@ -156,8 +159,8 @@ const CaruselContact = () => {
                 />
                 <h4 style={styles.memberName}>{member.name}</h4>
                 <h5 style={styles.memberTitle}>{member.title}</h5>
-                <p style={styles.memberDescription}>{member.description}</p>
-              </div>
+                <p style={styles.memberDescription}> Tengo {calculateAge(member.birthdate)} años, {member.place}</p>
+      </div>
             </div>
           ))}
         </div>
@@ -207,7 +210,7 @@ const CaruselContact = () => {
                 />
                 <h4 style={styles.memberName}>{member.name}</h4>
                 <h5 style={styles.memberTitle}>{member.title}</h5>
-                <p style={styles.memberDescription}>{member.description}</p>
+                <p style={styles.memberDescription}>Tengo {calculateAge(member.birthdate)} años, {member.place}</p>
               </div>
             </div>
           ))}
@@ -215,6 +218,18 @@ const CaruselContact = () => {
       </div>
     </>
   );
+};
+const calculateAge = (birthdate) => {
+  const birthDate = new Date(birthdate);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDifference = today.getMonth() - birthDate.getMonth();
+
+  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+
+  return age;
 };
 
 // Estilos en línea
