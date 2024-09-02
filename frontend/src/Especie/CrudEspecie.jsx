@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormEspecie from './FormEspecie';
-import FormQueryEspecie from './FormQueryEspecie';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/especie/';
 const PATH_FOTOS = process.env.ROUTER_FOTOS;
@@ -118,10 +117,10 @@ const CrudEspecie = () => {
             'No Image'
         ),
         `
-          <button class='btn btn-info align-middle btn-edit' data-id='${especie.Id_Especie}'>
+          <button class='btn btn-primary align-middle btn-edit' data-id='${especie.Id_Especie}'>
             <i class="fa-solid fa-pen-to-square"></i> Editar
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${especie.Id_Especie}'>
+          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${especie.Id_Especie}'>
             <i class="fa-solid fa-trash-can"></i> Borrar
           </button>
         `
@@ -133,7 +132,9 @@ const CrudEspecie = () => {
 
     return (
         <>
-                    <div className="container mt-5">
+                    {/* <div className="container mt-5"> */}
+                    <div style={{ marginLeft: '490px', paddingTop: '70px' }} >
+
                 <button className="btn btn-primary mb-4" onClick={handleAddClick}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Especie'}
                 </button>
@@ -144,8 +145,10 @@ const CrudEspecie = () => {
                 onEditClick={(Id_Especie) => getEspecie(Id_Especie)} 
                 onDeleteClick={(Id_Especie) => deleteEspecie(Id_Especie)} 
             />
-            <hr />
             {showForm && (
+                <>
+                <hr />
+
                     <FormEspecie
                         getAllEspecies={getAllEspecies}
                         buttonForm={buttonForm}
@@ -153,6 +156,7 @@ const CrudEspecie = () => {
                         URI={URI}
                         updateTextButton={updateTextButton}
                     />
+                    </>
                 )}
         </>
     );

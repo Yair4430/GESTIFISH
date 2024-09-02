@@ -127,7 +127,9 @@ const CrudAlimentacion = () => {
 
     return (
         <>
-        <div className="container mt-5">
+        {/* <div className="container mt-5"> */}
+        <div style={{ marginLeft: '490px', paddingTop: '70px' }} >
+
                 <button className="btn btn-primary mb-4 btn-custom" onClick={handleAddClick}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Alimentación'}
                 </button>
@@ -138,13 +140,12 @@ const CrudAlimentacion = () => {
                 onEditClick={handleEdit} 
                 onDeleteClick={handleDelete} 
             />
-            <hr />
             {showForm && (
-                    <>
+                <>
+                <hr />
                         <FormAlimentacion getAllAlimentacion={getAllAlimentacion} buttonForm={buttonForm} alimentacion={alimentacion} URI={URI} updateTextButton={updateTextButton} />
                     </>
                 )}
-            <hr />
         </>
     );
 };

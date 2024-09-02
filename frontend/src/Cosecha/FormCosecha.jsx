@@ -120,56 +120,101 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
     }, [cosecha]);
 
     return (
-        <div className="d-flex flex-column align-items-center">
-            <h1 className="fs-1 fw-bold d-flex">Registrar Cosecha</h1>
-            <form id="cosechaForm" onSubmit={sendForm} className="fw-bold m-2">
-                <label htmlFor="Fec_Cosecha" className="m-2">Fecha de Cosecha:</label>
-                <input type="date" id="Fec_Cosecha" value={Fec_Cosecha} onChange={(e) => setFec_Cosecha(e.target.value)} />
-                <br />
-                <label htmlFor="Can_Peces" className="m-2">Cantidad de Peces:</label>
-                <input type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => setCan_Peces(e.target.value)} />
-                <br />
-                <label htmlFor="Pes_Eviscerado" className="m-2">Peso Eviscerado:</label>
-                <input type="number" id="Pes_Eviscerado" value={Pes_Eviscerado} onChange={(e) => setPes_Eviscerado(e.target.value)} />
-                <br />
-                <label htmlFor="Pes_Viscerado" className="m-2">Peso Viscerado:</label>
-                <input type="number" id="Pes_Viscerado" value={Pes_Viscerado} onChange={(e) => setPes_Viscerado(e.target.value)} />
-                <br />
-                <label htmlFor="Por_Visceras" className="m-2">Porcentaje de Vísceras:</label>
-                <input type="number" id="Por_Visceras" value={Por_Visceras} onChange={(e) => setPor_Visceras(e.target.value)} />
-                <br />
-                <label htmlFor="Id_ResponsableSelect" className="m-2">Nombre Responsable:</label>
-                <select id="Id_ResponsableSelect" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)}>
-                    <option value="">Selecciona uno...</option>
-                    {DatosResponsable.map((responsable) => (
-                        <option key={responsable.Id_Responsable} value={responsable.Id_Responsable}>
-                            {responsable.Nom_Responsable}
-                        </option>
-                    ))}
-                </select>
-                <br />
-                <label htmlFor="Id_SiembraSelect" className="m-2">Fecha Siembra:</label>
-                <select id="Id_SiembraSelect" value={Id_Siembra} onChange={(e) => setId_Siembra(e.target.value)}>
-                    <option value="">Selecciona uno...</option>
-                    {DatosSiembra.map((siembra) => (
-                        <option key={siembra.Id_Siembra} value={siembra.Id_Siembra}>
-                            {siembra.Fec_Siembra}
-                        </option>
-                    ))}
-                </select>
-                <br />
-                <label htmlFor="Hor_Cosecha" className="m-2">Hora de Cosecha:</label>
-                <input type="time" id="Hor_Cosecha" value={Hor_Cosecha} onChange={(e) => setHor_Cosecha(e.target.value)} />
-                <br />
-                <label htmlFor="Vlr_Cosecha" className="m-2">Valor de Cosecha:</label>
-                <input type="number" id="Vlr_Cosecha" value={Vlr_Cosecha} onChange={(e) => setVlr_Cosecha(e.target.value)} />
-                <br />
-                <label htmlFor="Obs_Cosecha" className="m-2">Observaciones:</label>
-                <textarea id="Obs_Cosecha" value={Obs_Cosecha} onChange={(e) => setObs_Cosecha(e.target.value)} />
-                <br />
-                <input type="submit" id="boton" value={buttonForm} className="btn btn-success m-2" />
-            </form>
-        </div>
+        <>
+            {/* <div className="container mt-5"> */}
+        <div style={{ marginLeft: '400px', paddingTop: '70px' }}>
+
+                <div className="card">
+                    <div className="card-header bg-primary text-white">
+                        <h1 className="text-center">Registrar Cosecha</h1>
+                    </div>
+                    <div className="card-body">
+                        <form id="cosechaForm" onSubmit={sendForm} className="fw-bold m-2">
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Fec_Cosecha" className="col-sm-5 col-form-label text-end">Fecha de Cosecha:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="date" id="Fec_Cosecha" value={Fec_Cosecha} onChange={(e) => setFec_Cosecha(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Can_Peces" className="col-sm-5 col-form-label text-end">Cantidad de Peces:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => setCan_Peces(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Pes_Eviscerado" className="col-sm-5 col-form-label text-end">Peso Eviscerado:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="number" id="Pes_Eviscerado" value={Pes_Eviscerado} onChange={(e) => setPes_Eviscerado(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Pes_Viscerado" className="col-sm-5 col-form-label text-end">Peso Viscerado:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="number" id="Pes_Viscerado" value={Pes_Viscerado} onChange={(e) => setPes_Viscerado(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Por_Visceras" className="col-sm-5 col-form-label text-end">Porcentaje de Vísceras:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="number" id="Por_Visceras" value={Por_Visceras} onChange={(e) => setPor_Visceras(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Id_ResponsableSelect" className="col-sm-5 col-form-label text-end">Nombre Responsable:</label>
+                                <div className="col-sm-4">
+                                    <select className="form-control" id="Id_ResponsableSelect" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)} required>
+                                        <option value="">Selecciona uno...</option>
+                                        {DatosResponsable.map((responsable) => (
+                                            <option key={responsable.Id_Responsable} value={responsable.Id_Responsable}>
+                                                {responsable.Nom_Responsable}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Id_SiembraSelect" className="col-sm-5 col-form-label text-end">Fecha Siembra:</label>
+                                <div className="col-sm-4">
+                                    <select className="form-control" id="Id_SiembraSelect" value={Id_Siembra} onChange={(e) => setId_Siembra(e.target.value)} required>
+                                        <option value="">Selecciona uno...</option>
+                                        {DatosSiembra.map((siembra) => (
+                                            <option key={siembra.Id_Siembra} value={siembra.Id_Siembra}>
+                                                {siembra.Fec_Siembra}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Hor_Cosecha" className="col-sm-5 col-form-label text-end">Hora de Cosecha:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="time" id="Hor_Cosecha" value={Hor_Cosecha} onChange={(e) => setHor_Cosecha(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Vlr_Cosecha" className="col-sm-5 col-form-label text-end">Valor de Cosecha:</label>
+                                <div className="col-sm-4">
+                                    <input className="form-control" type="number" id="Vlr_Cosecha" value={Vlr_Cosecha} onChange={(e) => setVlr_Cosecha(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="form-group row mb-3 gap-1 align-items-center">
+                                <label htmlFor="Obs_Cosecha" className="col-sm-5 col-form-label text-end">Observaciones:</label>
+                                <div className="col-sm-4">
+                                    <textarea className="form-control" id="Obs_Cosecha" value={Obs_Cosecha} onChange={(e) => setObs_Cosecha(e.target.value)} />
+                                </div>
+                            </div>
+                            <div className="text-center">
+                                <button type="submit" id="boton" className="btn btn-success btn-block m-2">
+                                    {buttonForm}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </>
+
     );
 };
 

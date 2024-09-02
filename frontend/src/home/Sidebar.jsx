@@ -11,14 +11,14 @@ function Sidebar() {
   const sidebarStyle = {
     backgroundColor: '#ffffff',
     color: '#000000',
-    height: 'calc(100vh - 70px)', // Resta la altura de la barra de navegación
-    position: 'fixed',
+    height: 'calc(110vh - 0px)', // Resta la altura de la barra de navegación
+    position: 'absolute', 
     top: '120px', // Ajusta para que comience después de la barra de navegación
     left: '0',
     width: '370px',
     boxShadow: '2px 0 5px rgba(0, 0, 0, 0.1)',
     zIndex: 1000, // Asegura que el sidebar se superponga sobre otros elementos
-    overflowY: 'auto', // Permite scroll en el sidebar si el contenido es largo
+    // overflowY: '20PX', // Permite scroll en el sidebar si el contenido es largo
     paddingTop: '10px'
   };
 

@@ -76,7 +76,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                     icon: 'success'
                 });
                 if (respuestaApi.status === 201) {
-                    alert(respuestaApi.data.message);
+                    // alert(respuestaApi.data.message);
                     clearFormA();
                     getAllActividad();
                 }
@@ -120,7 +120,9 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
 
     return (
         <>
-            <div className="container mt-5">
+            {/* <div className="container mt-5"> */}
+        <div style={{ marginLeft: '400px', paddingTop: '70px' }}>
+
                 <div className="card">
                     <div className="card-header bg-primary text-white">
                         <h1 className="text-center">

@@ -3,6 +3,8 @@ import $ from "jquery";
 import "datatables.net-dt";
 import "datatables.net-responsive-dt";
 import "./Data-Tables.css";
+import Sidebar from '../home/Sidebar.jsx'; // Asegúrate de usar la ruta correcta
+
 
 function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
   const tableRef = useRef(null);
@@ -69,8 +71,9 @@ if ($.fn.DataTable.isDataTable($table)) {
 
 return (
   <>
+        <Sidebar />
   <center>
-<div className="container">
+<div style={{ marginLeft: '490px', paddingTop: '30px' }} >
 <center>
 <table className="table table-responsive" id="TableDinamic" ref={tableRef}>
   <thead>

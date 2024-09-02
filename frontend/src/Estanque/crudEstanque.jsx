@@ -117,10 +117,10 @@ const CrudEstanque = () => {
         `<img width="80px" src="${PATH_FOTOS}/${estanque.Img_Estanque}" alt="Imagen del estanque" />`,
         estanque.Rec_Agua,
         `
-          <button class='btn btn-info align-middle btn-edit' data-id='${estanque.Id_Estanque}'>
+          <button class='btn btn-primary align-middle btn-edit' data-id='${estanque.Id_Estanque}'>
             <i class="fa-solid fa-pen-to-square"></i> Editar
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${estanque.Id_Estanque}'>
+          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${estanque.Id_Estanque}'>
             <i class="fa-solid fa-trash-can"></i> Borrar
           </button>
         `
@@ -132,7 +132,9 @@ const CrudEstanque = () => {
 
     return (
         <>
-        <div className="container mt-5">
+        {/* <div className="container mt-5"> */}
+        <div style={{ marginLeft: '490px', paddingTop: '70px' }}>
+
                 <button className="btn btn-primary mb-4" onClick={handleAddClick}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Estanque'}
                 </button>
@@ -143,9 +145,9 @@ const CrudEstanque = () => {
                 onEditClick={handleEdit} 
                 onDeleteClick={handleDelete} 
             />
-            <hr />
             {showForm && (
-                    <>
+                <>
+                <hr />
                         <FormEstanque
                             getAllEstanques={getAllEstanques}
                             buttonForm={buttonForm}
@@ -153,7 +155,6 @@ const CrudEstanque = () => {
                             URI={URI}
                             updateTextButton={updateTextButton}
                         />
-                        <hr />
                     </>
                 )}
         </>

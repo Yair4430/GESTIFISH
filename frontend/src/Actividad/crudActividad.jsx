@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormActividad from './formActividad.jsx';
 
+
 const URI = process.env.ROUTER_PRINCIPAL + '/Actividad/';
 
 const CrudActividad = () => {
@@ -127,8 +128,9 @@ const CrudActividad = () => {
 
     return (
         <>
-        <div className="container mt-5">
-                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+        {/* <div className="container mt-5"> */}
+        <div style={{ marginLeft: '490px', paddingTop: '70px' }} >
+                <button className="btn btn-primary mb-4" onClick={handleAddClick} >
                     {showForm ? 'Ocultar Formulario' : 'Agregar Actividad'}
                 </button>
                 </div>

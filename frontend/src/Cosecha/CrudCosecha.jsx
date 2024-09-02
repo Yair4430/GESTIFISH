@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx'; // Asegúrate de tener este componente para la tabla de datos
 import FormCosecha from './FormCosecha'; // Asegúrate de tener este componente para el formulario de cosecha
-import FormQueryCosecha from './FormQueryCosecha'; // Asegúrate de tener este componente para consultar cosechas por fecha
 
 const URI = process.env.ROUTER_PRINCIPAL + '/cosecha/';
 
@@ -146,7 +145,9 @@ const CrudCosecha = () => {
 
     return (
         <>
-                    <div className="container mt-5">
+                    {/* <div className="container mt-5"> */}
+        <div style={{ marginLeft: '490px', paddingTop: '70px' }}>
+
                 <button className="btn btn-primary mb-4" onClick={handleAddClick}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Cosecha'}
                 </button>
@@ -157,9 +158,9 @@ const CrudCosecha = () => {
                 onEditClick={handleEdit}
                 onDeleteClick={handleDelete}
             />
-            <hr />
             {showForm && (
-                    <>
+                <>
+                <hr />
                         <FormCosecha
                             getAllCosecha={getAllCosecha}
                             buttonForm={buttonForm}

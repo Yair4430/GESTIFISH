@@ -37,8 +37,7 @@ function App() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('usuario'));
-    const lastPath = localStorage.getItem('lastPath');
-
+  
     if (!user) {
       setIsAuth(false);
     } else {
@@ -49,11 +48,7 @@ function App() {
         .then((response) => {
           if (response.status === 200) {
             setIsAuth(true);
-            if (lastPath) {
-              navigate(lastPath);
-            } else {
-              navigate('/');
-            }
+            navigate('/'); // Redirige al Home después de iniciar sesión correctamente
           }
         })
         .catch(() => {
@@ -61,6 +56,7 @@ function App() {
         });
     }
   }, []);
+  
 
   useEffect(() => {
     window.addEventListener('beforeunload', handleBeforeUnload);

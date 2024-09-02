@@ -105,10 +105,10 @@ const CrudMortalidad = () => {
         mortalidad.siembra.Fec_Siembra,
         mortalidad.responsable.Nom_Responsable,
         `
-          <button class='btn btn-info align-middle btn-edit' data-id='${mortalidad.Id_Mortalidad}'>
+          <button class='btn btn-primary align-middle btn-edit' data-id='${mortalidad.Id_Mortalidad}'>
             <i class="fa-solid fa-pen-to-square"></i> Editar
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${mortalidad.Id_Mortalidad}'>
+          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${mortalidad.Id_Mortalidad}'>
             <i class="fa-solid fa-trash-can"></i> Borrar
           </button>
         `
@@ -120,7 +120,9 @@ const CrudMortalidad = () => {
 
     return (
         <>
-                    <div className="container mt-5">
+                    {/* <div className="container mt-5"> */}
+        <div style={{ marginLeft: '490px', paddingTop: '70px' }}>
+
                 <button className="btn btn-primary mb-4" onClick={handleAddClick}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Mortalidad'}
                 </button>
@@ -131,9 +133,9 @@ const CrudMortalidad = () => {
                 onEditClick={handleEdit} 
                 onDeleteClick={handleDelete} 
             />
-            <hr />
             {showForm && (
-                    <>
+                <>
+                <hr />
                         <FormMortalidad getAllMortalidad={getAllMortalidad} buttonForm={buttonForm} mortalidad={mortalidad} URI={URI} updateTextButton={updateTextButton} />
                     </>
                 )}

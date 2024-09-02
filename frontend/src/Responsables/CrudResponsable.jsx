@@ -115,10 +115,10 @@ const CrudResponsable = () => {
         responsable.Cor_Responsable,
         responsable.Num_Responsable,
         `
-          <button class='btn btn-info align-middle btn-edit' data-id='${responsable.Id_Responsable}'>
+          <button class='btn btn-primary align-middle btn-edit' data-id='${responsable.Id_Responsable}'>
             <i class="fa-solid fa-pen-to-square"></i> Editar
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${responsable.Id_Responsable}'>
+          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${responsable.Id_Responsable}'>
             <i class="fa-solid fa-trash-can"></i> Borrar
           </button>
         `
@@ -130,7 +130,9 @@ const CrudResponsable = () => {
 
     return (
         <>
-         <div className="container mt-5">
+         {/* <div className="container mt-5"> */}
+         <div style={{ marginLeft: '490px', paddingTop: '70px' }}>
+
             <button className="btn btn-primary mb-4 " onClick={handleAddClick}>
                 {showForm ? 'Ocultar Formulario' : 'Agregar Responsable'}
             </button>
@@ -141,9 +143,11 @@ const CrudResponsable = () => {
                 onEditClick={(id) => getResponsable(id)} 
                 onDeleteClick={(id) => deleteResponsable(id)} 
             />
-            <hr />
             {showForm && (
+            <>
+            <hr />
             <FormResponsable buttonForm={buttonForm} responsable={responsable} URI={URI} updateTextButton={updateTextButton} getAllResponsable={getAllResponsable} />
+            </>
         )}
 
         </>

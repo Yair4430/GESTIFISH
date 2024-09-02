@@ -7,7 +7,7 @@ import FormImage from '../IMG/Cachamas.jpeg';
 function RegistrosMenu() {
   return (
     <>
-      <Sidebar />
+    <Sidebar />
       <div style={{ marginLeft: '370px', paddingTop: '70px' }}>
         <div className="container mt-4">
           <div className="header-section">

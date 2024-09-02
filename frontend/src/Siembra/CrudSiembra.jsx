@@ -169,10 +169,10 @@ const CrudSiembra = () => {
         siembra.Gan_Peso,
         siembra.Vlr_Siembra,
   `
-          <button class='btn btn-info align-middle btn-edit' data-id='${siembra.Id_Siembra}'>
+          <button class='btn btn-primary align-middle btn-edit' data-id='${siembra.Id_Siembra}'>
             <i class="fa-solid fa-pen-to-square"></i> Editar
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${siembra.Id_Siembra}'>
+          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${siembra.Id_Siembra}'>
             <i class="fa-solid fa-trash-can"></i> Borrar
           </button>
         `
@@ -184,7 +184,9 @@ const CrudSiembra = () => {
 
     return (
         <>
-                    <div className="container mt-5">
+                    {/* <div className="container mt-5"> */}
+                    <div style={{ marginLeft: '490px', paddingTop: '70px' }}>
+
                 <button className="btn btn-primary mb-4" onClick={handleAddClick}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Siembra'}
                 </button>
@@ -195,9 +197,9 @@ const CrudSiembra = () => {
                 onEditClick={handleEdit}
                 onDeleteClick={handleDelete}
             />
-            <hr />
             {showForm && (
-                    <>
+                <>
+                <hr />
                         <FormSiembra getAllSiembras={getAllSiembras} buttonForm={buttonForm} siembra={siembra} responsables={responsables} especies={especies} estanques={estanques} URI={URI} updateTextButton={updateTextButton}
                         />
                     </>
