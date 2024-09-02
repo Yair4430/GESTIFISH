@@ -36,10 +36,10 @@ const FormQueryActividad = ({ URI, getActividad, deleteActividad, buttonForm }) 
             try {
                 const respuesta = await axios.get(`${URI}FechaActividad/${Fec_Actividad}`);
                 setActividadQuery(respuesta.data);
-            } catch (error) {
-                console.error(error);
-                setActividadQuery([]);
-            }
+        } catch (error) {
+            console.error(error); 
+            setActividadQuery([]);
+        }
         } else {
             setActividadQuery([]);
         }
@@ -52,78 +52,60 @@ const FormQueryActividad = ({ URI, getActividad, deleteActividad, buttonForm }) 
 
     return (
         <>
-            <div className="container mt-5">
-                <div className="card">
-                    <div className="card-header bg-primary text-white">
-                        <h1 className="text-center">Consultar Actividades</h1>
-                    </div>
-                    <div className="card-body">
-                        <form className="fw-bold m-2 d-flex flex-column align-items-center">
-                            <div className="form-group row mb-3 gap-1 align-items-center">
-                                <label htmlFor="Fec_ActividadQuery" className="col-sm-5 col-form-label text-end">Fecha de Actividad:</label>
-                                <div className="col-sm-6">
-                                    <input type="date" id="Fec_ActividadQuery" className="form-control" value={Fec_Actividad} onChange={(e) => setFec_Actividad(e.target.value)} />
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <br />
-
-                {ActividadQuery.length > 0 ? (
-                    <div className="card">
-                        <div className="card-header bg-primary text-white">
-                            <h1 className="text-center">Actividades Registradas</h1>
-                        </div>
-                        <div className="card-body">
-                            <div className="table-responsive">
-                                <table className="table table-striped table-dynamic mt-4 text-center">
-                                    <thead>
-                                        <tr>
-                                            <th className="align-middle">Fecha</th>
-                                            <th className="align-middle">Nombre</th>
-                                            <th className="align-middle">Descripción</th>
-                                            <th className="align-middle">Responsable</th>
-                                            <th className="align-middle">Fecha</th>
-                                            <th className="align-middle">Hora</th>
-                                            <th className="align-middle">Fase Producción</th>
-                                            <th className="align-middle">Estanque</th>
-                                            <th className="align-middle">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {ActividadQuery.map((actividad) => (
-                                            <tr key={actividad.Id_Actividad}>
-                                                <td className="align-middle">{actividad.Fec_Actividad}</td>
-                                                <td className="align-middle">{actividad.Nom_Actividad}</td>
-                                                <td className="align-middle">{actividad.Des_Actividad}</td>
-                                                <td className="align-middle">{actividad.responsable.Nom_Responsable}</td>
-                                                <td className="align-middle">{actividad.Fec_Actividad}</td>
-                                                <td className="align-middle">{actividad.Hor_Actividad}</td>
-                                                <td className="align-middle">{actividad.Fas_Produccion}</td>
-                                                <td className="align-middle">{actividad.estanque.Nom_Estanque}</td>
-                                                <td className="align-middle">
-                                                    <button className="btn btn-sm btn-primary m-1" onClick={() => getActividad(actividad.Id_Actividad)}>
-                                                        <i className="fa-solid fa-pen-to-square"></i> Editar
-                                                    </button>
-                                                    <button className="btn btn-sm btn-danger m-1" onClick={() => deleteActividad(actividad.Id_Actividad)}>
-                                                        <i className="fa-solid fa-trash-can"></i> Borrar
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <p>No hay resultados para mostrar.</p>
-                )}
+            <br />
+            <div className="d-flex flex-column align-items-center">
+                <h1 className="fs-1 fw-bold d-flex">Consultar Actividades</h1>
+                <form className="fw-bold m-2" id="queryForm">
+                        <label className="m-2" htmlFor="fechaQuery">Fecha Inicial</label>
+                        <input className="form-control w-100" type="date"
+                            id="fechaQuery"
+                            value={Fec_Actividad}
+                            onChange={(e) => {
+                                sendFormQuery(e.target.value); setFec_Actividad(e.target.value);}}
+                        />
+                </form>
             </div>
-        </>
 
+            {ActividadQuery.length > 0 ? (
+                <table className="table table-bordered border-info text-center" style={{ border: "3px solid" }}>
+                    <thead>
+                        <tr>
+                            <th className="border-info" style={{ border: "3px solid" }}>Fecha</th>
+                            <th className='border-info align-middle' style={{ border: "3px solid" }}>Nombre</th>
+                            <th className='border-info align-middle' style={{ border: "3px solid" }}>Descripción</th>
+                            <th className='border-info align-middle' style={{ border: "3px solid" }}>Responsable</th>
+                            <th className='border-info align-middle' style={{ border: "3px solid" }}>Fecha</th>
+                            <th className='border-info align-middle' style={{ border: "3px solid" }}>Hora</th>
+                            <th className='border-info align-middle' style={{ border: "3px solid" }}>Fase Produccion</th>
+                            <th className='border-info align-middle' style={{ border: "3px solid" }}>Estanque</th>
+                            <th className='border-info align-middle' style={{ border: "3px solid" }}>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {ActividadQuery.map((actividad) => (
+                            <tr key={actividad.Fec_Actividad} className="border-info align-middle font-monospace" style={{ border: "3px solid" }}>
+                                <td className="border-info align-middle text-center" style={{ border: "3px solid" }}>{actividad.Fec_Actividad}</td>
+                                <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.Nom_Actividad}</td>
+                                <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.Des_Actividad}</td>
+                                <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.responsable.Nom_Responsable}</td>
+                                <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.Fec_Actividad}</td>
+                                <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.Hor_Actividad}</td>
+                                <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.Fas_Produccion}</td>
+                                <td className='border-info align-middle' style={{ border: "3px solid" }}>{actividad.estanque.Nom_Estanque}</td>
+                                <td>
+                                    <button onClick={() => getActividad(actividad.Id_Actividad)} value="Editar" title="Editar" className="btn btn-primary">
+                                        <i className="fa-solid fa-pen-to-square"></i>Editar
+                                    </button>
+                                    <button onClick={() => deleteActividad(actividad.Id_Actividad)} className="btn btn-danger">
+                                    <i className="fa-solid fa-trash-can"></i> Borrar
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : ''}
+        </>
     );
 };
 

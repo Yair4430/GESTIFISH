@@ -15,7 +15,7 @@ const FormQueryMortalidad = ({ URI, getMortalidad, deleteMortalidad, buttonForm 
             console.error('Error al obtener responsables:', error);
         }
     };
-
+    
     useEffect(() => {
         getResponsable();
     }, []);
@@ -45,80 +45,59 @@ const FormQueryMortalidad = ({ URI, getMortalidad, deleteMortalidad, buttonForm 
 
     return (
         <>
-            <div className="container mt-5">
-                {/* Sección de consulta */}
-                <div className="d-flex flex-column align-items-center mb-4">
-                    <h1 className="fs-1 fw-bold text-primary">Consultar Mortalidad</h1>
-                    <form id="queryForm" className="fw-bold m-2 d-flex flex-column align-items-center">
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Fec_MortalidadQuery" className="col-sm-5 col-form-label text-end">
-                                Fecha de Mortalidad:
-                            </label>
-                            <div className="col-sm-4">
-                                <input type="date" id="Fec_MortalidadQuery" className="form-control" value={Fec_Mortalidad} onChange={(e) => { setFec_Mortalidad(e.target.value); sendFormQuery(e.target.value); }}
-                                />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                {/* Resultados de la consulta */}
-                {mortalidadQuery.length > 0 ? (
-                    <div className="card">
-                        <div className="card-header bg-primary text-white">
-                            <h2 className="text-center">Resultados de Mortalidad</h2>
-                        </div>
-                        <div className="card-body">
-                            <div className="table-responsive">
-                                <table className="table table-striped table-bordered text-center">
-                                    <thead className="table-primary">
-                                        <tr>
-                                            <th>Fecha de Mortalidad</th>
-                                            <th>Cantidad de Peces</th>
-                                            <th>Motivo de Mortalidad</th>
-                                            <th>Fecha Siembra</th>
-                                            <th>Nombre Responsable</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {mortalidadQuery.map((mortalidad) => (
-                                            <tr key={mortalidad.Id_Mortalidad}>
-                                                <td>{mortalidad.Fec_Mortalidad}</td>
-                                                <td>{mortalidad.Can_Peces}</td>
-                                                <td>{mortalidad.Mot_Mortalidad}</td>
-                                                <td>{mortalidad.siembra.Fec_Siembra}</td>
-                                                <td>{mortalidad.responsable.Nom_Responsable}</td>
-                                                <td>
-                                                    <button
-                                                        className="btn btn-sm btn-primary m-1"
-                                                        onClick={() => getMortalidad(mortalidad.Id_Mortalidad)}
-                                                    >
-                                                        <i className="fa-solid fa-pen-to-square"></i> Editar
-                                                    </button>
-                                                    <button
-                                                        className="btn btn-sm btn-danger m-1"
-                                                        onClick={() => deleteMortalidad(mortalidad.Id_Mortalidad)}
-                                                    >
-                                                        <i className="fa-solid fa-trash-can"></i> Borrar
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="alert alert-info mt-3 text-center" role="alert">
-                        No se encontraron resultados
-                    </div>
-                )}
+            <br />
+            <div className="d-flex flex-column align-items-center">
+                <h1 className="fs-1 fw-bold d-flex">Consultar Mortalidad</h1>
+                <form action="" id="queryForm" className="fw-bold m-2">
+                    <label htmlFor="Fec_MortalidadQuery" className="m-2">Fecha de Mortalidad:</label>
+                    <input 
+                        type="date" 
+                        id="Fec_MortalidadQuery" 
+                        value={Fec_Mortalidad} 
+                        onChange={(e) => {
+                            setFec_Mortalidad(e.target.value);
+                            sendFormQuery(e.target.value);
+                        }} 
+                    />
+                </form>
             </div>
+
+            {mortalidadQuery.length > 0 ? (
+                <table className="table table-bordered border-info text-center" style={{ border: "3px solid" }}>
+                    <thead>
+                        <tr>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Fecha de Mortalidad</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Cantidad de Peces</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Motivo de Mortalidad</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Fecha Siembra</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Nombre Responsable</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {mortalidadQuery.map((mortalidad) => (
+                            <tr key={mortalidad.Id_Mortalidad} className="border-info align-middle font-monospace" style={{ border: "3px solid" }}>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{mortalidad.Fec_Mortalidad}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{mortalidad.Can_Peces}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{mortalidad.Mot_Mortalidad}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{mortalidad.siembra.Fec_Siembra}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{mortalidad.responsable.Nom_Responsable}</td>
+                                <td>
+                                    <button className="btn btn-info align-middle m-2" onClick={() => getMortalidad(mortalidad.Id_Mortalidad)}>
+                                        <i className="fa-solid fa-pen-to-square"></i> Editar
+                                    </button>
+                                    <button className="btn btn-info align-middle m-2" onClick={() => deleteMortalidad(mortalidad.Id_Mortalidad)}>
+                                        <i className="fa-solid fa-trash-can"></i> Borrar
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p className="text-center">No se encontraron resultados</p>
+            )}
         </>
-
-
     );
 };
 

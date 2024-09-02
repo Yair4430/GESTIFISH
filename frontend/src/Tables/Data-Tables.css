@@ -1,0 +1,46 @@
+.dt-search{
+    text-align: right;
+}
+/* Data-Tables.css */
+
+/* Centrar el contenido de la tabla y ajustar el tamaño */
+.table {
+    margin: 0 auto; /* Centrar la tabla */
+    font-size: 18px; /* Aumentar el tamaño de la fuente */
+    width: 80%; /* Ajustar el ancho de la tabla */
+  }
+  
+  .table th, .table td {
+    padding: 15px; /* Aumentar el espaciado en las celdas */
+    text-align: center; /* Asegurarse de que el contenido esté centrado */
+    vertical-align: middle; /* Alinear el contenido verticalmente */
+  }
+  
+  /* Ajustar el tamaño del encabezado */
+  .table th {
+    font-size: 20px; /* Aumentar el tamaño de la fuente del encabezado */
+    background-color: #007bff; /* Color de fondo del encabezado */
+    color: #ffffff; /* Color del texto del encabezado */
+  }
+  
+  /* Ajustar el tamaño del cuerpo de la tabla */
+  .table td {
+    font-size: 18px; /* Tamaño de fuente del cuerpo de la tabla */
+  }
+  
+  /* Ajustar la tarjeta que contiene la tabla */
+  .card {
+    margin: 0 auto;
+    max-width: 90%; /* Limitar el ancho máximo de la tarjeta */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añadir sombra */
+  }
+  
+  .card-header h1 {
+    font-size: 24px; /* Aumentar el tamaño del título de la tabla */
+  }
+  
+  .alert {
+    font-size: 18px; /* Aumentar el tamaño de la fuente de la alerta */
+    text-align: center; /* Centrar el texto de la alerta */
+  }
+  

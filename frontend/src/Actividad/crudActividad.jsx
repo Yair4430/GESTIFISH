@@ -1,8 +1,9 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import WriteTable from '../Tables/Data-Tables.jsx';
 import FormActividad from './formActividad.jsx';
-import FormQueryActividad from './formQueryActividad.jsx';
+
 
 const URI = process.env.ROUTER_PRINCIPAL + '/Actividad/';
 
@@ -37,7 +38,7 @@ const CrudActividad = () => {
     const getActividad = async (Id_Actividad) => {
         setButtonForm('Enviar');
         try {
-            const respuesta = await axios.get(`${URI}/${Id_Actividad} }}`); // Corregido
+            const respuesta = await axios.get(`${URI}/${Id_Actividad}`);
             setButtonForm('Actualizar');
             setActividad({ ...respuesta.data });
         } catch (error) {
@@ -45,12 +46,11 @@ const CrudActividad = () => {
         }
     };
 
-
     const updateTextButton = (texto) => {
         setButtonForm(texto);
     };
 
-    const deleteActividad = (Id_Actividad) => {
+    const deleteActividad = async (Id_Actividad) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -68,10 +68,13 @@ const CrudActividad = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    getAllActividad(); // Refresh the list after deletion
+                    // getAllActividad(); // Refresh the list after deletion
                 } catch (error) {
                     console.error('Error deleting actividad:', error);
                 }
+            }else{
+                getAllActividad(); // Refresh the list after deletion
+
             }
         });
     };
@@ -93,77 +96,58 @@ const CrudActividad = () => {
         }
     };
 
+    const handleEdit = (Id_Actividad) => {
+        getActividad(Id_Actividad);
+    };
+
+    const handleDelete = (Id_Actividad) => {
+        deleteActividad(Id_Actividad);
+    };
+
+    const data = ActividadList.map((actividad) => [
+        actividad.Nom_Actividad,
+        actividad.Des_Actividad,
+        actividad.responsable.Nom_Responsable,
+        actividad.Fec_Actividad,
+        actividad.Hor_Actividad,
+        actividad.Fas_Produccion,
+        actividad.estanque.Nom_Estanque,
+        `
+          <button class='btn btn-primary align-middle btn-edit' data-id='${actividad.Id_Actividad}'>
+            <i class="fa-solid fa-pen-to-square"></i> Editar
+          </button>
+          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${actividad.Id_Actividad}'>
+            <i class="fa-solid fa-trash-can"></i> Borrar
+          </button>
+        `
+    ]);
+    
+    const titles = [
+        "Nombre", "Descripción", "Responsable", "Fecha", "Hora", "Fase de Producción", "Estanque", "Acciones"
+    ];
 
     return (
         <>
-            <div className="container mt-5">
-                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+        {/* <div className="container mt-5"> */}
+        <div style={{ marginLeft: '490px', paddingTop: '70px' }} >
+                <button className="btn btn-primary mb-4" onClick={handleAddClick} >
                     {showForm ? 'Ocultar Formulario' : 'Agregar Actividad'}
                 </button>
-
-                {ActividadList.length > 0 ? (
-                    <div className="card">
-                        <div className="card-header bg-primary text-white">
-                            <h1 className="text-center">Actividades Registradas</h1>
-                        </div>
-                        <div className="card-body">
-                            <div className="table-responsive">
-                                <table className="table table-striped mt-4 text-center">
-                                    <thead>
-                                        <tr>
-                                            <th className='align-middle'>Nombre</th>
-                                            <th className='align-middle'>Descripción</th>
-                                            <th className='align-middle'>Responsable</th>
-                                            <th className='align-middle'>Fecha</th>
-                                            <th className='align-middle'>Hora</th>
-                                            <th className='align-middle'>Fase Producción</th>
-                                            <th className='align-middle'>Estanque</th>
-                                            <th className='align-middle'>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {ActividadList.map((actividad) => (
-                                            <tr key={actividad.Id_Actividad}>
-                                                <td className='align-middle'>{actividad.Nom_Actividad}</td>
-                                                <td className='align-middle'>{actividad.Des_Actividad}</td>
-                                                <td className='align-middle'>{actividad.responsable.Nom_Responsable}</td>
-                                                <td className='align-middle'>{actividad.Fec_Actividad}</td>
-                                                <td className='align-middle'>{actividad.Hor_Actividad}</td>
-                                                <td className='align-middle'>{actividad.Fas_Produccion}</td>
-                                                <td className='align-middle'>{actividad.estanque.Nom_Estanque}</td>
-                                                <td className='align-middle'>
-                                                    <button className='btn btn-sm btn-primary m-1' onClick={() => getActividad(actividad.Id_Actividad)}>
-                                                        <i className="fa-solid fa-pen-to-square"></i> Editar
-                                                    </button>
-                                                    <button className='btn btn-sm btn-danger m-1' onClick={() => deleteActividad(actividad.Id_Actividad)}>
-                                                        <i className="fa-solid fa-trash-can"></i> Borrar
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="alert alert-info mt-3" role="alert">
-                        No hay resultados para mostrar.
-                    </div>
-                )}
-
-                {showForm && (
+                </div>
+            <WriteTable 
+                titles={titles} 
+                data={data} 
+                onEditClick={handleEdit} 
+                onDeleteClick={handleDelete} 
+            />
+            {showForm && (
                     <>
                         <hr />
                         <FormActividad buttonForm={buttonForm} actividad={actividad} URI={URI} updateTextButton={updateTextButton} getAllActividad={getAllActividad} />
-                        <hr />
                     </>
                 )}
-
-                <FormQueryActividad URI={URI} getActividad={getActividad} deleteActividad={deleteActividad} buttonForm={buttonForm} />
-            </div>
         </>
     );
-}
+};
 
 export default CrudActividad;

@@ -1,0 +1,23 @@
+/* Agrega un prefijo para asegurar que los estilos no se mezclen con otros componentes */
+.sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 22px;
+  color: #000000;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #e0e0e0; /* Fondo gris claro cuando se pasa el ratón sobre el enlace */
+  transform: scale(1.05); /* Aumenta el tamaño del enlace ligeramente en hover */
+  color: #007bff; /* Cambia el color del texto a azul */
+}
+
+.sidebar .nav-link.active {
+  background-color: #f0f0f0; /* Fondo gris claro si el enlace está activo */
+  color: #007bff; /* Color del texto azul si el enlace está activo */
+}

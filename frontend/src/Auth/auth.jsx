@@ -18,20 +18,36 @@ const Auth = () => {
     const [resetPass, setResetPass] = useState(false);
     const [isSignUpActive, setIsSignUpActive] = useState(false);
 
+    // Validar que el nombre y apellido solo contengan letras y espacios
     const validateName = (name) => /^[a-zA-Z\s]+$/.test(name);
+
+    // Validar que el correo tenga un formato válido y que pertenezca a un dominio permitido
+    const validateEmail = (email) => {
+        const regex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|outlook\.com|hotmail\.com|soy\.sena\.edu\.co)$/;
+        return regex.test(email);
+    };
 
     const sendForm = async (e) => {
         e.preventDefault();
 
         if (buttonForm === 'Registrar') {
+            // Validación del nombre y apellido
             if (!validateName(Nom_Usuario) || !validateName(Ape_Usuario)) {
                 setMessageType('error');
                 setMessage('El nombre y los apellidos solo pueden contener letras y espacios');
                 return;
             }
 
+            // Validación del correo electrónico
+            if (!validateEmail(Cor_Usuario)) {
+                setMessageType('error');
+                setMessage('Por favor ingrese un correo válido de los siguientes dominios: @gmail.com, @outlook.com, @hotmail.com, @soy.sena.edu.co');
+                return;
+            }
+
             try {
                 const response = await axios.post(URI, { Nom_Usuario, Ape_Usuario, Cor_Usuario, Con_Usuario });
+
                 if (response.data.tokenUser) {
                     localStorage.setItem('usuario', JSON.stringify(response.data));
                     setMessageType('success');
@@ -43,8 +59,14 @@ const Auth = () => {
                     setTimeout(() => { setMessage(''); }, 3000);
                 }
             } catch (error) {
-                setMessageType('error');
-                setMessage('Hubo un error, por favor intenta nuevamente');
+                if (error.response && error.response.status === 409) {
+                    // Suponiendo que el backend devuelve un 409 cuando el correo ya está registrado
+                    setMessageType('error');
+                    setMessage('Ese correo que está registrando ya existe registrado en la base de datos');
+                } else {
+                    setMessageType('error');
+                    setMessage('Hubo un error, por favor intenta nuevamente');
+                }
             }
         } else if (buttonForm === 'Iniciar Sesion') {
             try {
@@ -128,13 +150,13 @@ const Auth = () => {
                     <div className="auth-right">
                         {singnInOrLogIn === 'signIn' ? (
                             <>
-                                <h2>¡Bienvenido de nuevo a Gestifish!</h2>
+                                <h2>¡Bienvenido de nuevo a GestiFish!</h2>
                                 <p>Inicia sesión con tu cuenta para continuar</p>
                                 <button className="btn-signup" onClick={() => switchForm('logIn')}>INICIAR SESIÓN</button>
                             </>
                         ) : (
                             <>
-                                <h2>¡Hola, Bienvenido a GestiFish !</h2>
+                                <h2>¡Hola, Bienvenido a GestiFish!</h2>
                                 <p>Regístrate con tus datos personales para usar todas las funcionalidades de esta maravillosa herramienta digital</p>
                                 <button className="btn-signup" onClick={() => switchForm('signIn')}>REGÍSTRATE</button>
                             </>

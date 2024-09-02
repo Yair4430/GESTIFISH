@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -13,7 +13,6 @@ import CrudMuestreo from './Muestreo/crudMuestreo.jsx';
 import CrudCosecha from './Cosecha/CrudCosecha.jsx';
 import CrudMortalidad from './Mortalidad/CrudMortalidad.jsx';
 import CrudSiembra from './Siembra/CrudSiembra.jsx';
-// import Tabla from './Tablas/Tablas.jsx'
 
 // Importación Simulador
 import Simulador from './Simulador/Simulador.jsx';
@@ -38,71 +37,77 @@ function App() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('usuario'));
-
+  
     if (!user) {
       setIsAuth(false);
     } else {
-      axios.get(URL_AUTH + 'verify', {
-        headers: { Authorization: `Bearer ${user.tokenUser}` }
-      }).then(response => {
-        if (response.status === 200) {
-          setIsAuth(true);
-          navigate('/'); // Redirigir a Home después de autenticarse
-        }
-      }).catch(() => {
-        setIsAuth(false);
-      });
+      axios
+        .get(URL_AUTH + 'verify', {
+          headers: { Authorization: `Bearer ${user.tokenUser}` },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            setIsAuth(true);
+            navigate('/'); // Redirige al Home después de iniciar sesión correctamente
+          }
+        })
+        .catch(() => {
+          setIsAuth(false);
+        });
     }
   }, []);
+  
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isAuth]);
+
+  const handleBeforeUnload = () => {
+    localStorage.setItem('lastPath', window.location.pathname);
+  };
 
   const logOutUser = () => {
     localStorage.removeItem('usuario');
+    localStorage.removeItem('lastPath');
     setIsAuth(false);
-    navigate("/auth"); // Redirigir después de cerrar sesión
+    navigate('/auth');
   };
 
   return (
-    <> 
-      {isAuth && <BarraNavegacionPrivada logOutUser={logOutUser} />} {/* Barra de navegación siempre visible */}
+    <>
+      {isAuth && <BarraNavegacionPrivada logOutUser={logOutUser} />}
+
       <Routes>
-        {isAuth ?
-          <>  
-            {/* Routes de estructura del proyecto */}
+        {isAuth ? (
+          <>
             <Route path='/' element={<Home />} />
-            <Route path='/RegistrosMenu' element={<RegistrosMenu/>}/>
-
-            {/* Routes de componentes formularios y simulador */}
+            <Route path='/RegistrosMenu' element={<RegistrosMenu />} />
             <Route path='/Alimentacion' element={<CrudAlimentacion />} />
-            <Route path='/Responsable' element={<CrudResponsable/>}/>
-            <Route path='/Estanque' element={<CrudEstanque/>}/>
-            <Route path='/Especie' element={<CrudEspecie/>}/>
-            <Route path='/Traslado' element={<CrudTraslado/>}/>
-            <Route path='/Actividad' element={<CrudActividad/>}/>
-            <Route path='/Muestreo' element={<CrudMuestreo/>}/>
-            <Route path='/Cosecha' element={<CrudCosecha/>}/>
-            <Route path='/Mortalidad' element={<CrudMortalidad/>}/>
-            <Route path='/Siembra' element={<CrudSiembra/>}/>
-            <Route path='/Simulador' element={<Simulador/>}/>
-            {/* <Route path='/Tablas' element={<Tabla/>}/> */}
-
+            <Route path='/Responsable' element={<CrudResponsable />} />
+            <Route path='/Estanque' element={<CrudEstanque />} />
+            <Route path='/Especie' element={<CrudEspecie />} />
+            <Route path='/Traslado' element={<CrudTraslado />} />
+            <Route path='/Actividad' element={<CrudActividad />} />
+            <Route path='/Muestreo' element={<CrudMuestreo />} />
+            <Route path='/Cosecha' element={<CrudCosecha />} />
+            <Route path='/Mortalidad' element={<CrudMortalidad />} />
+            <Route path='/Siembra' element={<CrudSiembra />} />
+            <Route path='/Simulador' element={<Simulador />} />
           </>
-          :
-          <Route path='*' element={<HomePublico/>} />
-        } 
-        { !isAuth ?
-
-          <Route path='/auth' element={<Auth />} />
-        :''
-        }
-
-        <Route path='/reset-password' element={<ResetPassword/>}/>
-        <Route path='/barraNavegacionPublica' element={<BarraNavegacionPublica/>}/>
-        <Route path='/CaruselContact' element={<CaruselContact/>}/>
-        
+        ) : (
+          <Route path='*' element={<HomePublico />} />
+        )}
+        {!isAuth ? <Route path='/auth' element={<Auth />} /> : ''}
+        <Route path='/reset-password' element={<ResetPassword />} />
+        <Route path='/barraNavegacionPublica' element={<BarraNavegacionPublica />} />
+        <Route path='/CaruselContact' element={<CaruselContact />} />
       </Routes>
     </>
   );
-};
+}
 
 export default App;
-

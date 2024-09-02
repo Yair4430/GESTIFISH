@@ -31,83 +31,57 @@ const FormQueryEspecie = ({ URI, getEspecie, deleteEspecie, buttonForm }) => {
 
     return (
         <>
-            <div className="container mt-5">
-                <div className="card">
-                    <div className="card-header bg-primary text-white">
-                        <h1 className="text-center">Consultar Especie</h1>
-                    </div>
-                    <div className="card-body">
-                        <form action="" id="queryForm" className="fw-bold m-2">
-                            <div className="form-group row mb-3 gap-1 align-items-center">
-                                <label htmlFor="Nom_EspecieQuery" className="col-sm-5 col-form-label text-end">Nombre:</label>
-                                <div className="col-sm-4">
-                                    <input type="text" id="Nom_EspecieQuery" className="form-control" value={Nom_Especie} onChange={(e) => {
-                                        setNom_Especie(e.target.value);
-                                        sendFormQuery(e.target.value);
-                                    }} required />
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <br />
-                <br />
-
-                <div className="container mt-5">
-                    {especieQuery.length > 0 ? (
-                        <div className="card">
-                            <div className="card-header bg-primary text-white">
-                                <h1 className="text-center">Especies Registradas</h1>
-                            </div>
-                            <div className="card-body">
-                                <div className="table-responsive">
-                                    <table className="table table-striped table-dynamic mt-4">
-                                        <thead>
-                                            <tr>
-                                                <th>Nombre</th>
-                                                <th>Características</th>
-                                                <th>Tamaño Promedio</th>
-                                                <th>Densidad</th>
-                                                <th>Imagen</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {especieQuery.map((especie) => (
-                                                <tr key={especie.Id_Especie}>
-                                                    <td>{especie.Nom_Especie}</td>
-                                                    <td>{especie.Car_Especie}</td>
-                                                    <td>{especie.Tam_Promedio}</td>
-                                                    <td>{especie.Den_Especie}</td>
-                                                    <td>
-                                                        {especie.Img_Especie ? (
-                                                            <img width="80px" src={`${PATH_FOTOS}/${especie.Img_Especie}`} alt="Imagen de la especie" />
-                                                        ) : (
-                                                            <span>No Image</span>
-                                                        )}
-                                                    </td>
-                                                    <td>
-                                                        <button className="btn btn-sm btn-primary m-1" onClick={() => getEspecie(especie.Id_Especie)}>
-                                                            <i className="fa-solid fa-pen-to-square"></i> Editar
-                                                        </button>
-                                                        <button className="btn btn-sm btn-danger m-1" onClick={() => deleteEspecie(especie.Id_Especie)}>
-                                                            <i className="fa-solid fa-trash-can"></i> Borrar
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
-                        <p>No hay resultados para mostrar.</p>
-                    )}
-                </div>
-
+            <br />
+            <div className="d-flex flex-column align-items-center">
+                <h1 className="fs-1 fw-bold d-flex">Consultar Especie</h1>
+                <form action="" id="queryForm" className="fw-bold m-2">
+                    <label htmlFor="Nom_EspecieQuery" className="m-2">Nombre:</label>
+                    <input type="text" id="Nom_EspecieQuery" value={Nom_Especie} onChange={(e) => { 
+                        setNom_Especie(e.target.value); 
+                        sendFormQuery(e.target.value); 
+                    }} />
+                </form>
             </div>
+
+            {especieQuery.length > 0 ? (
+                <table className="table table-bordered border-info text-center" style={{ border: "3px solid" }}>
+                    <thead>
+                        <tr>
+                            <th className="border-info" style={{ border: "3px solid" }}>Nombre</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Características</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Tamaño Promedio</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Densidad</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Imagen</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {especieQuery.map((especie) => (
+                            <tr key={especie.Id_Especie} className="border-info align-middle font-monospace" style={{ border: "3px solid" }}>
+                                <td className="border-info align-middle text-center" style={{ border: "3px solid" }}>{especie.Nom_Especie}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{especie.Car_Especie}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{especie.Tam_Promedio}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{especie.Den_Especie}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>
+                                    {especie.Img_Especie ? (
+                                        <img width="80px" src={`${PATH_FOTOS}/${especie.Img_Especie}`} alt="Imagen de la especie" />
+                                    ) : (
+                                        <span>No Image</span>
+                                    )}
+                                </td>
+                                <td>
+                                    <button className="btn btn-info" onClick={() => getEspecie(especie.Id_Especie)}>
+                                        <i className="fa-solid fa-pen-to-square"></i> Editar
+                                    </button>
+                                    <button className="btn btn-info align-middle m-2" onClick={() => deleteEspecie(especie.Id_Especie)}>
+                                        <i className="fa-solid fa-trash-can"></i> Borrar
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : ''}
         </>
     );
 }

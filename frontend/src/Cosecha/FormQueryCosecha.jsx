@@ -45,84 +45,69 @@ const FormQueryCosecha = ({ URI, getCosecha, deleteCosecha, buttonForm }) => {
 
     return (
         <>
-            <div className="container mt-5">
-                {/* Card para el formulario de consulta */}
-                <div className="card">
-                    <div className="card-header bg-primary text-white">
-                        <h1 className="text-center">Consultar Cosecha</h1>
-                    </div>
-                    <div className="card-body">
-                        <form id="queryForm" className="fw-bold m-2 d-flex flex-column align-items-center">
-                            <div className="form-group row mb-3 gap-1 align-items-center">
-                                <label htmlFor="Fec_CosechaQuery" className="col-sm-5 col-form-label text-end">Fecha de Cosecha:</label>
-                                <div className="col-sm-6">
-                                    <input type="date" id="Fec_CosechaQuery" className="form-control" value={Fec_Cosecha} onChange={(e) => { setFec_Cosecha(e.target.value); sendFormQuery(e.target.value); }} />
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <br />
-
-                {/* Card para la tabla de resultados */}
-                {cosechaQuery.length > 0 ? (
-                    <div className="card">
-                        <div className="card-header bg-primary text-white">
-                            <h1 className="text-center">Cosechas Registradas</h1>
-                        </div>
-                        <div className="card-body">
-                            <div className="table-responsive">
-                                <table className="table table-bordered table-striped table-dynamic mt-4">
-                                    <thead>
-                                        <tr>
-                                            <th>Fecha de Cosecha</th>
-                                            <th>Cantidad de Peces</th>
-                                            <th>Peso Eviscerado</th>
-                                            <th>Peso Viscerado</th>
-                                            <th>Porcentaje de Vísperas</th>
-                                            <th>Fecha Siembra</th>
-                                            <th>Hora de Cosecha</th>
-                                            <th>Valor de Cosecha</th>
-                                            <th>Observaciones</th>
-                                            <th>Nombre Responsable</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {cosechaQuery.map((cosecha) => (
-                                            <tr key={cosecha.Id_Cosecha}>
-                                                <td>{cosecha.Fec_Cosecha}</td>
-                                                <td>{cosecha.Can_Peces}</td>
-                                                <td>{cosecha.Pes_Eviscerado}</td>
-                                                <td>{cosecha.Pes_Viscerado}</td>
-                                                <td>{cosecha.Por_Visceras}</td>
-                                                <td>{cosecha.siembra?.Fec_Siembra}</td>
-                                                <td>{cosecha.Hor_Cosecha}</td>
-                                                <td>{cosecha.Vlr_Cosecha}</td>
-                                                <td>{cosecha.Obs_Cosecha}</td>
-                                                <td>{cosecha.responsable?.Nom_Responsable}</td>
-                                                <td>
-                                                    <button className="btn btn-sm btn-primary m-1" onClick={() => getCosecha(cosecha.Id_Cosecha)}>
-                                                        <i className="fa-solid fa-pen-to-square"></i> Editar
-                                                    </button>
-                                                    <button className="btn btn-sm btn-danger m-1" onClick={() => deleteCosecha(cosecha.Id_Cosecha)}>
-                                                        <i className="fa-solid fa-trash-can"></i> Borrar
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <p className="text-center">No se encontraron resultados</p>
-                )}
+            <br />
+            <div className="d-flex flex-column align-items-center">
+                <h1 className="fs-1 fw-bold d-flex">Consultar Cosecha</h1>
+                <form action="" id="queryForm" className="fw-bold m-2">
+                    <label htmlFor="Fec_CosechaQuery" className="m-2">Fecha de Cosecha:</label>
+                    <input 
+                        type="date" 
+                        id="Fec_CosechaQuery" 
+                        value={Fec_Cosecha} 
+                        onChange={(e) => {
+                            setFec_Cosecha(e.target.value);
+                            sendFormQuery(e.target.value);
+                        }} 
+                    />
+                </form>
             </div>
-        </>
 
+            {cosechaQuery.length > 0 ? (
+                <table className="table table-bordered border-info text-center" style={{ border: "3px solid" }}>
+                    <thead>
+                        <tr>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Fecha de Cosecha</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Cantidad de Peces</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Peso Eviscerado</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Peso Viscerado</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Porcentaje de Vísperas</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Fecha Siembra</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Hora de Cosecha</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Valor de Cosecha</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Observaciones</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Nombre Responsable</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {cosechaQuery.map((cosecha) => (
+                            <tr key={cosecha.Id_Cosecha} className="border-info align-middle font-monospace" style={{ border: "3px solid" }}>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{cosecha.Fec_Cosecha}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{cosecha.Can_Peces}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{cosecha.Pes_Eviscerado}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{cosecha.Pes_Viscerado}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{cosecha.Por_Visceras}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{cosecha.siembra?.Fec_Siembra}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{cosecha.Hor_Cosecha}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{cosecha.Vlr_Cosecha}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{cosecha.Obs_Cosecha}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{cosecha.responsable?.Nom_Responsable}</td>
+                                <td>
+                                    <button className="btn btn-info align-middle m-2" onClick={() => getCosecha(cosecha.Id_Cosecha)}>
+                                        <i className="fa-solid fa-pen-to-square"></i> Editar
+                                    </button>
+                                    <button className="btn btn-info align-middle m-2" onClick={() => deleteCosecha(cosecha.Id_Cosecha)}>
+                                        <i className="fa-solid fa-trash-can"></i> Borrar
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p className="text-center">No se encontraron resultados</p>
+            )}
+        </>
     );
 };
 

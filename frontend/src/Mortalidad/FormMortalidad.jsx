@@ -101,69 +101,71 @@ const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllM
 
     return (
         <>
-            <div className="container mt-5">
-                <div className="card">
-                    <div className="card-header bg-primary text-white">
-                        <h1 className="text-center">Registrar Mortalidad</h1>
-                    </div>
-                    <div className="card-body">
-                        <form id="mortalidadForm" onSubmit={sendForm} className="fw-bold m-2">
-                            <div className="form-group row mb-3 gap-1 align-items-center">
-                                <label htmlFor="Fec_Mortalidad" className="col-sm-5 col-form-label text-end">Fecha de Mortalidad:</label>
-                                <div className="col-sm-4">
-                                    <input className="form-control" type="date" id="Fec_Mortalidad" value={Fec_Mortalidad} onChange={(e) => setFec_Mortalidad(e.target.value)} required />
-                                </div>
+        {/* <div className="container mt-5"> */}
+        <div style={{ marginLeft: '400px', paddingTop: '70px' }}>
+
+            <div className="card">
+                <div className="card-header bg-primary text-white">
+                    <h1 className="text-center">Registrar Mortalidad</h1>
+                </div>
+                <div className="card-body">
+                    <form id="mortalidadForm" onSubmit={sendForm} className="fw-bold m-2">
+                        <div className="form-group row mb-3 gap-1 align-items-center">
+                            <label htmlFor="Fec_Mortalidad" className="col-sm-5 col-form-label text-end">Fecha de Mortalidad:</label>
+                            <div className="col-sm-4">
+                                <input className="form-control" type="date" id="Fec_Mortalidad" value={Fec_Mortalidad} onChange={(e) => setFec_Mortalidad(e.target.value)} required />
                             </div>
-                            <div className="form-group row mb-3 gap-1 align-items-center">
-                                <label htmlFor="Can_Peces" className="col-sm-5 col-form-label text-end">Cantidad de Peces:</label>
-                                <div className="col-sm-4">
-                                    <input className="form-control" type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => setCan_Peces(e.target.value)} required />
-                                </div>
+                        </div>
+                        <div className="form-group row mb-3 gap-1 align-items-center">
+                            <label htmlFor="Can_Peces" className="col-sm-5 col-form-label text-end">Cantidad de Peces:</label>
+                            <div className="col-sm-4">
+                                <input className="form-control" type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => setCan_Peces(e.target.value)} required />
                             </div>
-                            <div className="form-group row mb-3 gap-1 align-items-center">
-                                <label htmlFor="Mot_Mortalidad" className="col-sm-5 col-form-label text-end">Motivo de Mortalidad:</label>
-                                <div className="col-sm-4">
-                                    <input className="form-control" type="text" id="Mot_Mortalidad" value={Mot_Mortalidad} onChange={(e) => setMot_Mortalidad(e.target.value)} required />
-                                </div>
+                        </div>
+                        <div className="form-group row mb-3 gap-1 align-items-center">
+                            <label htmlFor="Mot_Mortalidad" className="col-sm-5 col-form-label text-end">Motivo de Mortalidad:</label>
+                            <div className="col-sm-4">
+                                <input className="form-control" type="text" id="Mot_Mortalidad" value={Mot_Mortalidad} onChange={(e) => setMot_Mortalidad(e.target.value)} required />
                             </div>
-                            <div className="form-group row mb-3 gap-1 align-items-center">
-                                <label htmlFor="Id_SiembraSelect" className="col-sm-5 col-form-label text-end">Fecha Siembra:</label>
-                                <div className="col-sm-4">
-                                    <select className="form-control" id="Id_SiembraSelect" value={Id_Siembra} onChange={(e) => setId_Siembra(e.target.value)} required>
-                                        <option value="">Selecciona uno...</option>
-                                        {DatosSiembra.map((siembra) => (
-                                            <option key={siembra.Id_Siembra} value={siembra.Id_Siembra}>
-                                                {siembra.Fec_Siembra}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                        </div>
+                        <div className="form-group row mb-3 gap-1 align-items-center">
+                            <label htmlFor="Id_SiembraSelect" className="col-sm-5 col-form-label text-end">Fecha Siembra:</label>
+                            <div className="col-sm-4">
+                                <select className="form-control" id="Id_SiembraSelect" value={Id_Siembra} onChange={(e) => setId_Siembra(e.target.value)} required>
+                                    <option value="">Selecciona uno...</option>
+                                    {DatosSiembra.map((siembra) => (
+                                        <option key={siembra.Id_Siembra} value={siembra.Id_Siembra}>
+                                            {siembra.Fec_Siembra}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
-                            <div className="form-group row mb-3 gap-1 align-items-center">
-                                <label htmlFor="Id_ResponsableSelect" className="col-sm-5 col-form-label text-end">Nombre Responsable:</label>
-                                <div className="col-sm-4">
-                                    <select className="form-control" id="Id_ResponsableSelect" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)} required>
-                                        <option value="">Selecciona uno...</option>
-                                        {DatosResponsable.map((responsable) => (
-                                            <option key={responsable.Id_Responsable} value={responsable.Id_Responsable}>
-                                                {responsable.Nom_Responsable}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                        </div>
+                        <div className="form-group row mb-3 gap-1 align-items-center">
+                            <label htmlFor="Id_ResponsableSelect" className="col-sm-5 col-form-label text-end">Nombre Responsable:</label>
+                            <div className="col-sm-4">
+                                <select className="form-control" id="Id_ResponsableSelect" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)} required>
+                                    <option value="">Selecciona uno...</option>
+                                    {DatosResponsable.map((responsable) => (
+                                        <option key={responsable.Id_Responsable} value={responsable.Id_Responsable}>
+                                            {responsable.Nom_Responsable}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
-                            <div className="text-center">
-                                <button type="submit" id="boton" className="btn btn-success btn-block m-2">
-                                    {buttonForm}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div className="text-center">
+                            <button type="submit" id="boton" className="btn btn-success btn-block m-2">
+                                {buttonForm}
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </>
+        </div>
+    </>
 
-    );
+);
 };
 
 export default FormMortalidad;

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import FormEspecie from './FormEspecie';
-import FormQueryEspecie from './FormQueryEspecie';
 import Swal from 'sweetalert2';
+import WriteTable from '../Tables/Data-Tables.jsx';
+import FormEspecie from './FormEspecie';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/especie/';
 const PATH_FOTOS = process.env.ROUTER_FOTOS;
@@ -75,13 +75,15 @@ const CrudEspecie = () => {
                             text: "Borrado exitosamente",
                             icon: "success"
                         });
-                        getAllEspecies(); // Refresh the list after deletion
+                        // getAllEspecies(); // Refresh the list after deletion
                     } else {
                         console.warn('HTTP Status:', respuesta.status);
                     }
                 } catch (error) {
                     console.error('Error deleting especie:', error.response?.status || error.message);
                 }
+            }else{
+                getAllEspecies();
             }
         });
     };
@@ -103,76 +105,50 @@ const CrudEspecie = () => {
             setButtonForm('Enviar');
         }
     };
-    
+
+    const data = EspecieList.map((especie) => [
+        especie.Nom_Especie,
+        especie.Car_Especie,
+        especie.Tam_Promedio,
+        especie.Den_Especie,
+        especie.Img_Especie ? (
+            `<img width="80px" src="${PATH_FOTOS}/${especie.Img_Especie}" alt="Imagen de la especie" />`
+        ) : (
+            'No Image'
+        ),
+        `
+          <button class='btn btn-primary align-middle btn-edit' data-id='${especie.Id_Especie}'>
+            <i class="fa-solid fa-pen-to-square"></i> Editar
+          </button>
+          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${especie.Id_Especie}'>
+            <i class="fa-solid fa-trash-can"></i> Borrar
+          </button>
+        `
+    ]);
+
+    const titles = [
+        "Nombre", "Características", "Tamaño Promedio", "Densidad", "Imagen", "Acciones"
+    ];
 
     return (
         <>
-            <div className="container mt-5">
+                    {/* <div className="container mt-5"> */}
+                    <div style={{ marginLeft: '490px', paddingTop: '70px' }} >
+
                 <button className="btn btn-primary mb-4" onClick={handleAddClick}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Especie'}
                 </button>
+                </div>
+            <WriteTable 
+                titles={titles} 
+                data={data} 
+                onEditClick={(Id_Especie) => getEspecie(Id_Especie)} 
+                onDeleteClick={(Id_Especie) => deleteEspecie(Id_Especie)} 
+            />
+            {showForm && (
+                <>
+                <hr />
 
-                {EspecieList.length > 0 ? (
-                    <div className="card">
-                        <div className="card-header bg-primary text-white">
-                            <h1 className="text-center">Especies Registradas</h1>
-                        </div>
-                        <div className="card-body">
-                            <div className="table-responsive">
-                                <table className="table table-striped table-dynamic mt-4">
-                                    <thead>
-                                        <tr>
-                                            <th className="text-center">Nombre</th>
-                                            <th className="text-center">Características</th>
-                                            <th className="text-center">Tamaño Promedio</th>
-                                            <th className="text-center">Densidad</th>
-                                            <th className="text-center">Imagen</th>
-                                            <th className="text-center">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {EspecieList.map((especie) => (
-                                            <tr key={especie.Id_Especie}>
-                                                <td className="text-center">{especie.Nom_Especie}</td>
-                                                <td className="text-center">{especie.Car_Especie}</td>
-                                                <td className="text-center">{especie.Tam_Promedio}</td>
-                                                <td className="text-center">{especie.Den_Especie}</td>
-                                                <td className="text-center">
-                                                    {especie.Img_Especie ? (
-                                                        <img width="80px" src={`${PATH_FOTOS}/${especie.Img_Especie}`} alt="Imagen de la especie" />
-                                                    ) : (
-                                                        <span>No Image</span>
-                                                    )}
-                                                </td>
-                                                <td className="text-center">
-                                                    <button
-                                                        className="btn btn-sm btn-primary m-1"
-                                                        onClick={() => getEspecie(especie.Id_Especie)}
-                                                    >
-                                                        <i className="fa-solid fa-pen-to-square"></i> Editar
-                                                    </button>
-                                                    <button
-                                                        className="btn btn-sm btn-danger m-1"
-                                                        onClick={() => deleteEspecie(especie.Id_Especie)}
-                                                    >
-                                                        <i className="fa-solid fa-trash-can"></i> Borrar
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="alert alert-info mt-3" role="alert">
-                        No hay resultados para mostrar.
-                    </div>
-                )}
-
-
-                {showForm && (
                     <FormEspecie
                         getAllEspecies={getAllEspecies}
                         buttonForm={buttonForm}
@@ -180,15 +156,8 @@ const CrudEspecie = () => {
                         URI={URI}
                         updateTextButton={updateTextButton}
                     />
+                    </>
                 )}
-                <FormQueryEspecie
-                    URI={URI}
-                    getEspecie={getEspecie}
-                    deleteEspecie={deleteEspecie}
-                    buttonForm={buttonForm}
-                />
-            </div>
-
         </>
     );
 }

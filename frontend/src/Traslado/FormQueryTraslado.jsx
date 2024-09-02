@@ -44,74 +44,61 @@ const FormQueryTraslado = ({ URI, getTraslado, deleteTraslado, buttonForm }) => 
 
     return (
         <>
-            <div className="container mt-5">
-                <div className="card">
-                    <div className="card-header bg-primary text-white">
-                        <h1 className="text-center">Consultar Traslado</h1>
-                    </div>
-                    <div className="card-body">
-                        <form className="fw-bold m-2 d-flex flex-column align-items-center">
-                            <div className="form-group row mb-3 gap-1 align-items-center">
-                                <label htmlFor="Fec_TrasladoQuery" className="col-sm-5 col-form-label text-end">Fecha de Traslado:</label>
-                                <div className="col-sm-6">
-                                    <input type="date" id="Fec_TrasladoQuery" className="form-control" value={Fec_Traslado} onChange={(e) => { setFec_Traslado(e.target.value); sendFormQuery(e.target.value); }} />
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <br />
-
-                {trasladoQuery.length > 0 ? (
-                    <div className="card">
-                        <div className="card-header bg-primary text-white">
-                            <h1 className="text-center">Traslados Registrados</h1>
-                        </div>
-                        <div className="card-body">
-                            <div className="table-responsive">
-                                <table className="table table-striped mt-4">
-                                    <thead>
-                                        <tr>
-                                            <th className="align-middle">Fecha de Traslado</th>
-                                            <th className="align-middle">Cantidad de Peces</th>
-                                            <th className="align-middle">Responsable</th>
-                                            <th className="align-middle">Observaciones</th>
-                                            <th className="align-middle">Hora de Traslado</th>
-                                            <th className="align-middle">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {trasladoQuery.map((traslado) => (
-                                            <tr key={traslado.Id_Traslado}>
-                                                <td className="align-middle">{traslado.Fec_Traslado}</td>
-                                                <td className="align-middle">{traslado.Can_Peces}</td>
-                                                <td className="align-middle">{traslado.responsable.Nom_Responsable}</td>
-                                                <td className="align-middle">{traslado.Obs_Traslado}</td>
-                                                <td className="align-middle">{traslado.Hor_Traslado}</td>
-                                                <td className="align-middle">
-                                                    <button className="btn btn-sm btn-primary m-1" onClick={() => getTraslado(traslado.Id_Traslado)}>
-                                                        <i className="fa-solid fa-pen-to-square"></i> Editar
-                                                    </button>
-                                                    <button className="btn btn-sm btn-danger m-1" onClick={() => deleteTraslado(traslado.Id_Traslado)}>
-                                                        <i className="fa-solid fa-trash-can"></i> Borrar
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="alert alert-info mt-3 text-center" role="alert">
-                        No se encontraron resultados
-                    </div>
-                )}
+            <br />
+            <div className="d-flex flex-column align-items-center">
+                <h1 className="fs-1 fw-bold d-flex">Consultar Traslado</h1>
+                <form action="" id="queryForm" className="fw-bold m-2">
+                    <label htmlFor="Fec_TrasladoQuery" className="m-2">Fecha de Traslado:</label>
+                    <input 
+                        type="date" 
+                        id="Fec_TrasladoQuery" 
+                        value={Fec_Traslado} 
+                        onChange={(e) => {
+                            setFec_Traslado(e.target.value);
+                            sendFormQuery(e.target.value);
+                        }} 
+                    />
+                </form>
             </div>
-        </>
 
+            {trasladoQuery.length > 0 ? (
+                <table className="table table-bordered border-info text-center" style={{ border: "3px solid" }}>
+                    <thead>
+                        <tr>
+                            {/* Eliminar la columna Id_Traslado */}
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Fecha de Traslado</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Cantidad de Peces</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Responsable</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Observaciones</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Hora de Traslado</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {trasladoQuery.map((traslado) => (
+                            <tr key={traslado.Id_Traslado} className="border-info align-middle font-monospace" style={{ border: "3px solid" }}>
+                                {/* Eliminar la celda Id_Traslado */}
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{traslado.Fec_Traslado}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{traslado.Can_Peces}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{traslado.responsable.Nom_Responsable}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{traslado.Obs_Traslado}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{traslado.Hor_Traslado}</td>
+                                <td>
+                                    <button className="btn btn-info align-middle m-2" onClick={() => getTraslado(traslado.Id_Traslado)}>
+                                        <i className="fa-solid fa-pen-to-square"></i> Editar
+                                    </button>
+                                    <button className="btn btn-info align-middle m-2" onClick={() => deleteTraslado(traslado.Id_Traslado)}>
+                                        <i className="fa-solid fa-trash-can"></i> Borrar
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p className="text-center">No se encontraron resultados</p>
+            )}
+        </>
     );
 };
 

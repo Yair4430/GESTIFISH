@@ -19,11 +19,11 @@ const FormQuerySiembra = ({ URI, getSiembra, deleteSiembra, buttonForm }) => {
                     alert("Hubo un error realizando la consulta");
                 }
             };
-
+    
             fetchSiembras();
         }
     }, [Fec_Siembra, URI]);
-
+    
 
     useEffect(() => {
         setSiembraQuery([]);
@@ -32,84 +32,66 @@ const FormQuerySiembra = ({ URI, getSiembra, deleteSiembra, buttonForm }) => {
 
     return (
         <>
-            <div className="container mt-5">
-                <div className="card">
-                    <div className="card-header bg-primary text-white">
-                        <h1 className="text-center">Consultar Siembra</h1>
-                    </div>
-                    <div className="card-body">
-                        <form className="fw-bold m-2 d-flex flex-column align-items-center">
-                            <div className="form-group row mb-3 gap-1 align-items-center">
-                                <label htmlFor="Fec_SiembraQuery" className="col-sm-5 col-form-label text-end">Fecha de Siembra:</label>
-                                <div className="col-sm-6">
-                                    <input type="date" id="Fec_SiembraQuery" className="form-control" value={Fec_Siembra} onChange={(e) => setFec_Siembra(e.target.value)} />
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+            <br />
+            <div className="d-flex flex-column align-items-center">
+                <h1 className="fs-1 fw-bold d-flex">Consultar Siembra</h1>
+                <div className="fw-bold m-2">
+                    <label htmlFor="Fec_SiembraQuery" className="m-2">Fecha de Siembra:</label>
+                    <input
+                        type="date"
+                        id="Fec_SiembraQuery"
+                        value={Fec_Siembra}
+                        onChange={(e) => setFec_Siembra(e.target.value)}
+                    />
                 </div>
-
-                <br />
-
-                {siembraQuery.length > 0 ? (
-                    <div className="card">
-                        <div className="card-header bg-primary text-white">
-                            <h1 className="text-center">Siembras Registradas</h1>
-                        </div>
-                        <div className="card-body">
-                            <div className="table-responsive">
-                                <table className="table table-striped table-dynamic mt-4">
-                                    <thead>
-                                        <tr>
-                                            <th>Cantidad de Peces</th>
-                                            <th>Fecha de Siembra</th>
-                                            <th>Fecha Posible de Cosecha</th>
-                                            <th>Responsable</th>
-                                            <th>Especie</th>
-                                            <th>Estanque</th>
-                                            <th>Peso Actual</th>
-                                            <th>Observaciones</th>
-                                            <th>Hora de Siembra</th>
-                                            <th>Ganancia de Peso</th>
-                                            <th>Valor de Siembra</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {siembraQuery.map((siembra) => (
-                                            <tr key={siembra.Id_Siembra}>
-                                                <td>{siembra.Can_Peces}</td>
-                                                <td>{siembra.Fec_Siembra}</td>
-                                                <td>{siembra.Fec_PosibleCosecha}</td>
-                                                <td>{siembra.responsable.Nom_Responsable}</td>
-                                                <td>{siembra.especie.Nom_Especie}</td>
-                                                <td>{siembra.estanque.Nom_Estanque}</td>
-                                                <td>{siembra.Pes_Actual}</td>
-                                                <td>{siembra.Obs_Siembra}</td>
-                                                <td>{siembra.Hor_Siembra}</td>
-                                                <td>{siembra.Gan_Peso}</td>
-                                                <td>{siembra.Vlr_Siembra}</td>
-                                                <td>
-                                                    <button className="btn btn-sm btn-primary m-1" onClick={() => getSiembra(siembra.Id_Siembra)}>
-                                                        <i className="fa-solid fa-pen-to-square"></i> Editar
-                                                    </button>
-                                                    <button className="btn btn-sm btn-danger m-1" onClick={() => deleteSiembra(siembra.Id_Siembra)}>
-                                                        <i className="fa-solid fa-trash-can"></i> Borrar
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <p>No hay resultados para mostrar.</p>
-                )}
             </div>
-        </>
 
+            {siembraQuery.length > 0 ? (
+                <table className="table table-bordered border-info text-center" style={{ border: "3px solid" }}>
+                    <thead>
+                        <tr>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Cantidad de Peces</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Fecha de Siembra</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Fecha Posible de Cosecha</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Responsable</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Especie</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Estanque</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Peso Actual</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Observaciones</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Hora de Siembra</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Ganancia de Peso</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Valor de Siembra</th>
+                            <th className="border-info align-middle" style={{ border: "3px solid" }}>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {siembraQuery.map((siembra) => (
+                            <tr key={siembra.Id_Siembra} className="border-info align-middle font-monospace" style={{ border: "3px solid" }}>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Can_Peces}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Fec_Siembra}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Fec_PosibleCosecha}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.responsable.Nom_Responsable}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.especie.Nom_Especie}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.estanque.Nom_Estanque}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Pes_Actual}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Obs_Siembra}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Hor_Siembra}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Gan_Peso}</td>
+                                <td className="border-info align-middle" style={{ border: "3px solid" }}>{siembra.Vlr_Siembra}</td>
+                                <td>
+                                    <button className="btn btn-info" onClick={() => getSiembra(siembra.Id_Siembra)}>
+                                        <i className="fa-solid fa-pen-to-square"></i> Editar
+                                    </button>
+                                    <button className='btn btn-info align-middle m-2' onClick={() => deleteSiembra(siembra.Id_Siembra)}>
+                                        <i className="fa-solid fa-trash-can"></i> Borrar
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : ''}
+        </>
     );
 };
 

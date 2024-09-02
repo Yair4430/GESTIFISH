@@ -121,7 +121,9 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
 
     return (
         <>
-            <div className="container mt-5">
+            {/* <div className="container mt-5"> */}
+        <div style={{ marginLeft: '400px', paddingTop: '70px' }}>
+
                 <div className="card">
                     <div className="card-header bg-primary text-white">
                         <h1 className="text-center">Registrar Cosecha</h1>

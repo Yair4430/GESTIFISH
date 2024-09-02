@@ -30,7 +30,7 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
             Gan_Peso,
             Vlr_Siembra
         };
-
+    
         try {
             if (buttonForm === 'Actualizar') {
                 await axios.put(`${URI}${siembra.Id_Siembra}`, formData);
@@ -63,7 +63,7 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
             });
         }
     };
-
+    
 
     const clearForm = () => {
         setCan_Peces('');
@@ -100,8 +100,10 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
     }, [siembra]);
 
     return (
-        <>
-            <div className="container mt-5">
+<>
+            {/* <div className="container mt-5"> */}
+            <div style={{ marginLeft: '400px', paddingTop: '70px' }}>
+
                 <div className="card">
                     <div className="card-header bg-primary text-white">
                         <h1 className="text-center">Registrar Siembra</h1>

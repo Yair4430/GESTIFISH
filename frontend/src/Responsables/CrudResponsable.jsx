@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import WriteTable from '../Tables/Data-Tables.jsx';  // Reemplaza con la ruta correcta
 import FormResponsable from './FormResponsable.jsx';
-import FormQueryResponsable from './FormQueryResponsable.jsx';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/responsable/';
 
 const CrudResponsable = () => {
-    const [ResponsableList, setResponsableList] = useState([]);
+    const [responsableList, setResponsableList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
     const [showForm, setShowForm] = useState(false);
     const [responsable, setResponsable] = useState({
@@ -40,7 +40,7 @@ const CrudResponsable = () => {
     const getResponsable = async (Id_Responsable) => {
         setButtonForm('Enviar');
         try {
-            const respuesta = await axios.get(URI + Id_Responsable);
+            const respuesta = await axios.get(`${URI}${Id_Responsable}`);
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setButtonForm('Actualizar');
                 setResponsable({ ...respuesta.data });
@@ -56,32 +56,34 @@ const CrudResponsable = () => {
         setButtonForm(texto);
     };
 
-    const deleteResponsable = (Id_Responsable) => {
+    const deleteResponsable = async (Id_Responsable) => {
         Swal.fire({
-            title: "Estas Seguro?",
-            text: "No Podras Revertir Esto!",
+            title: "¿Estás seguro?",
+            text: "¡No podrás revertir esto!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Si, Borrar!"
+            confirmButtonText: "¡Sí, borrar!"
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const respuesta = await axios.delete(URI + Id_Responsable);
+                    const respuesta = await axios.delete(`${URI}${Id_Responsable}`);
                     if (respuesta.status >= 200 && respuesta.status < 300) {
                         Swal.fire({
-                            title: "Borrado!!",
-                            text: "Borrado Exitosamente",
+                            title: "¡Borrado!",
+                            text: "Borrado exitosamente",
                             icon: "success"
                         });
-                        getAllResponsable(); // Refresh the list after deletion
+                        // getAllResponsable(); // Refresh the list after deletion
                     } else {
                         console.warn('HTTP Status:', respuesta.status);
                     }
                 } catch (error) {
                     console.error('Error deleting responsable:', error.response?.status || error.message);
                 }
+            }else{
+                getAllResponsable();
             }
         });
     };
@@ -105,74 +107,51 @@ const CrudResponsable = () => {
         }
     };
 
+    const data = responsableList.map((responsable) => [
+        responsable.Nom_Responsable,
+        responsable.Ape_Responsable,
+        responsable.Doc_Responsable,
+        responsable.Tip_Responsable,
+        responsable.Cor_Responsable,
+        responsable.Num_Responsable,
+        `
+          <button class='btn btn-primary align-middle btn-edit' data-id='${responsable.Id_Responsable}'>
+            <i class="fa-solid fa-pen-to-square"></i> Editar
+          </button>
+          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${responsable.Id_Responsable}'>
+            <i class="fa-solid fa-trash-can"></i> Borrar
+          </button>
+        `
+    ]);
+
+    const titles = [
+        "Nombre", "Apellidos", "Documento de Identidad", "Tipo de Responsable", "Correo", "Número de Teléfono", "Acciones"
+    ];
+
     return (
         <>
-            <div className="container mt-5">
+         {/* <div className="container mt-5"> */}
+         <div style={{ marginLeft: '490px', paddingTop: '70px' }}>
+
             <button className="btn btn-primary mb-4 " onClick={handleAddClick}>
                 {showForm ? 'Ocultar Formulario' : 'Agregar Responsable'}
             </button>
-
-            {ResponsableList.length > 0 ? (
-                <div className="card">
-                    <div className="card-header bg-primary text-white">
-                        <h1 className="text-center">Responsables Registrados</h1>
-                    </div>
-                    <div className="card-body">
-                        <div className="table-responsive">
-                            <table className="table table-striped table-dynamic mt-4">
-                                <thead>
-                                    <tr>
-                                        <th className="text-center">Nombre</th>
-                                        <th className="text-center">Apellidos</th>
-                                        <th className="text-center">Documento de Identidad</th>
-                                        <th className="text-center">Tipo de Responsable</th>
-                                        <th className="text-center">Correo</th>
-                                        <th className="text-center">Número de Teléfono</th>
-                                        <th className="text-center">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {ResponsableList.map((responsable) => (
-                                        <tr key={responsable.Id_Responsable}>
-                                            <td className="text-center">{responsable.Nom_Responsable}</td>
-                                            <td className="text-center">{responsable.Ape_Responsable}</td>
-                                            <td className="text-center">{responsable.Doc_Responsable}</td>
-                                            <td className="text-center">{responsable.Tip_Responsable}</td>
-                                            <td className="text-center">{responsable.Cor_Responsable}</td>
-                                            <td className="text-center">{responsable.Num_Responsable}</td>
-                                            <td className="text-center">
-                                                <button
-                                                    className="btn btn-sm btn-primary m-1"
-                                                    onClick={() => getResponsable(responsable.Id_Responsable)}
-                                                >
-                                                    <i className="fa-solid fa-pen-to-square"></i> Editar
-                                                </button>
-                                                <button
-                                                    className="btn btn-sm btn-danger m-1"
-                                                    onClick={() => deleteResponsable(responsable.Id_Responsable)}
-                                                >
-                                                    <i className="fa-solid fa-trash-can"></i> Borrar
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            ) : (
-                <div className="alert alert-info mt-3" role="alert">
-                    No hay resultados para mostrar.
-                </div>
-            )}
-        </div>
-        {showForm && (
+            </div>
+            <WriteTable 
+                titles={titles} 
+                data={data} 
+                onEditClick={(id) => getResponsable(id)} 
+                onDeleteClick={(id) => deleteResponsable(id)} 
+            />
+            {showForm && (
+            <>
+            <hr />
             <FormResponsable buttonForm={buttonForm} responsable={responsable} URI={URI} updateTextButton={updateTextButton} getAllResponsable={getAllResponsable} />
+            </>
         )}
-            <FormQueryResponsable URI={URI} getResponsable={getResponsable} deleteResponsable={deleteResponsable} buttonForm={buttonForm} />
+
         </>
     );
-}
+};
 
 export default CrudResponsable;

@@ -70,13 +70,47 @@ const Simulador = () => {
 
   const handleExportPdf = async () => {
     const input = document.getElementById('simulador-content');
-    const dataInputs = document.querySelectorAll('.data-input');
-
-    if (!input) {
-      console.error("Element with ID 'simulador-content' not found.");
-      return;
-    }
-
+    const pdf = new jsPDF('landscape', 'mm', 'a4'); // Mantiene orientación horizontal
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+  
+    // Captura de los valores de los campos del formulario
+    const formData = {
+      especie: document.querySelector('#especie').value,
+      densidad: document.querySelector('#densidad').value,
+      espejoAgua: document.querySelector('#espejoAgua').value,
+      precioBulto: document.querySelector('#precioBulto').value,
+    };
+  
+    // Título
+    const title = "Informe del Simulador";
+    pdf.setFontSize(24);
+    pdf.setTextColor(0, 0, 0); // negro
+    pdf.text(title, pdfWidth / 2, 15, { align: 'center' });
+  
+    // Espacio debajo del título
+    let yPosition = 25;
+  
+    // Agregar narrativa al PDF
+    pdf.setFontSize(12);
+    pdf.setTextColor(0, 0, 0); // Negro para el texto
+    pdf.setFont(undefined, 'bold'); // Texto en negrilla
+  
+    const narrativa = `
+    
+    Los datos ingresados en el simulador son los siguientes:
+    
+    Especie: ${formData.especie}
+    Densidad: ${formData.densidad} por metro cuadrado
+    Espejo de agua: ${formData.espejoAgua} m²
+    Precio del Bulto: $${formData.precioBulto}
+    
+    Basado en estos datos, los resultados del simulador son los siguientes:`;
+  
+    const narrativaLineas = pdf.splitTextToSize(narrativa, pdfWidth - 20); // Ajusta el texto para que se ajuste al ancho del PDF
+    pdf.text(narrativaLineas, 10, yPosition);
+    yPosition += narrativaLineas.length * 5; // Ajusta el espacio vertical basado en el número de líneas usadas
+  
+    // Captura de la tabla como imagen
     const canvas = await html2canvas(input, {
       scale: 2,
       scrollX: -window.scrollX,
@@ -84,40 +118,30 @@ const Simulador = () => {
       windowWidth: document.documentElement.offsetWidth,
       windowHeight: document.documentElement.offsetHeight,
     });
-
+  
     const imgData = canvas.toDataURL('image/png', 0.5);
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pdfWidth = pdf.internal.pageSize.getWidth();
     const imgProps = pdf.getImageProperties(imgData);
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-    const title = "Informe del Simulador";
-    pdf.setFontSize(18);
-    pdf.text(title, pdfWidth / 2, 20, { align: 'center' });
-
-    const spaceBelowTitle = 30;
-
-    pdf.setFontSize(12);
-    let yPosition = 25;
-
-    dataInputs.forEach((input, index) => {
-      pdf.text(`Dato ${index + 1}: ${input.value}`, 10, yPosition);
-      yPosition += 10;
-    });
-
-    pdf.addImage(imgData, 'PNG', 0, yPosition + 10, pdfWidth, pdfHeight);
-
+    const pdfHeight = (imgProps.height * (pdfWidth - 20)) / imgProps.width;
+  
+    // Insertar la tabla capturada como imagen
+    pdf.addImage(imgData, 'PNG', 10, yPosition + 10, pdfWidth - 20, pdfHeight); // Ajusta la imagen para que se centre y se ajuste al PDF
+  
+    // Manejo de múltiples páginas si la tabla es muy grande
     let heightLeft = pdfHeight;
     let position = yPosition + pdfHeight - pdf.internal.pageSize.getHeight();
-
+  
     while (heightLeft > pdf.internal.pageSize.getHeight()) {
       pdf.addPage();
       position = heightLeft - pdfHeight;
-      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+      pdf.addImage(imgData, 'PNG', 10, position, pdfWidth - 20, pdfHeight);
       heightLeft -= pdf.internal.pageSize.getHeight();
     }
-
+  
     pdf.save('simulador.pdf');
+  };
+
+  const handleClearTable = () => {
+    setTableData([]); // Esto limpiará los datos de la tabla
   };
 
   return (
@@ -125,25 +149,23 @@ const Simulador = () => {
       <div className="container mt-4">
         <h2 className="display-4 text-center" style={{ color: 'black', fontWeight: 'bold' }}>Simulador</h2>
         <br/>
-        <SimuladorForm onSimulate={handleSimulate} />
+        <SimuladorForm onSimulate={handleSimulate} onClear={handleClearTable} />
         <div id="simulador-content">
           <SimuladorTabla data={tableData} />
         </div>
-          <br />
+        <br />
         <div className="d-flex justify-content-center mt-3">
           {tableData.length > 0 && (
             <button 
-            className="btn btn-success"
-            onClick={handleExportPdf}
-            style={{
-              transition: 'all 0.3s ease-in-out'
-            }}
+              className="btn btn-success"
+              onClick={handleExportPdf}
+              style={{ transition: 'all 0.3s ease-in-out' }}
             >
-            Exportar a PDF
-          </button>
+              Exportar a PDF
+            </button>
           )}
         </div>
-          <br />
+        <br />
       </div>
     </>
   );
