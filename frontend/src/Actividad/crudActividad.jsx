@@ -114,10 +114,10 @@ const CrudActividad = () => {
         actividad.estanque.Nom_Estanque,
         `
           <button class='btn btn-primary align-middle btn-edit' data-id='${actividad.Id_Actividad}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${actividad.Id_Actividad}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${actividad.Id_Actividad}'>
+            <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
     ]);
@@ -129,10 +129,13 @@ const CrudActividad = () => {
     return (
         <>
         {/* <div className="container mt-5"> */}
-        <div style={{ marginLeft: '490px', paddingTop: '70px' }} >
-                <button className="btn btn-primary mb-4" onClick={handleAddClick} >
-                    {showForm ? 'Ocultar Formulario' : 'Agregar Actividad'}
-                </button>
+        <div style={{ marginLeft: '320px', paddingTop: '70px' }} >
+        <button
+            className="btn btn-primary mb-4"
+            onClick={handleAddClick}
+            style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
+    {showForm ? 'Ocultar Formulario' : 'Agregar Actividad'}
+        </button>
                 </div>
             <WriteTable 
                 titles={titles} 
@@ -142,7 +145,7 @@ const CrudActividad = () => {
             />
             {showForm && (
                     <>
-                        <hr />
+                        {/* <hr /> */}
                         <FormActividad buttonForm={buttonForm} actividad={actividad} URI={URI} updateTextButton={updateTextButton} getAllActividad={getAllActividad} />
                     </>
                 )}

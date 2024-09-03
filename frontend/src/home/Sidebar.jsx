@@ -13,17 +13,17 @@ function Sidebar() {
     color: '#000000',
     height: 'calc(110vh - 0px)', // Resta la altura de la barra de navegación
     position: 'absolute', 
-    top: '120px', // Ajusta para que comience después de la barra de navegación
+    top: '122px', // Ajusta para que comience después de la barra de navegación
     left: '0',
-    width: '370px',
-    boxShadow: '2px 0 5px rgba(0, 0, 0, 0.1)',
-    zIndex: 1000, // Asegura que el sidebar se superponga sobre otros elementos
-    // overflowY: '20PX', // Permite scroll en el sidebar si el contenido es largo
+    width: '250px',
+    boxShadow: '4px 0 5px rgba(0, 0, 0, 0.1)',
+    // zIndex: 1000, // Asegura que el sidebar se superponga sobre otros elementos
+    overflowY: '10px', // Permite scroll en el sidebar si el contenido es largo
     paddingTop: '10px'
   };
 
   const sidebarMenuStyle = {
-    padding: '3px 0'
+    padding: '2px 0'
   };
 
   const navItemStyle = {

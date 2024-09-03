@@ -118,10 +118,10 @@ const CrudEstanque = () => {
         estanque.Rec_Agua,
         `
           <button class='btn btn-primary align-middle btn-edit' data-id='${estanque.Id_Estanque}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${estanque.Id_Estanque}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${estanque.Id_Estanque}'>
+            <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
     ]);
@@ -133,9 +133,10 @@ const CrudEstanque = () => {
     return (
         <>
         {/* <div className="container mt-5"> */}
-        <div style={{ marginLeft: '490px', paddingTop: '70px' }}>
+        <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
 
-                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}
+                style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Estanque'}
                 </button>
                 </div>
@@ -147,7 +148,7 @@ const CrudEstanque = () => {
             />
             {showForm && (
                 <>
-                <hr />
+                {/* <hr /> */}
                         <FormEstanque
                             getAllEstanques={getAllEstanques}
                             buttonForm={buttonForm}

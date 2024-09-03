@@ -106,10 +106,10 @@ const CrudTraslado = () => {
         traslado.Hor_Traslado,
         `
         <button class='btn btn-primary' align-middle btn-edit' data-id='${traslado.id_Traslado}'>
-          <i class="fa-solid fa-pen-to-square"></i> Editar
+          <i class="fa-solid fa-pen-to-square"></i> 
         </button>
-        <button class='btn btn-danger' align-middle m-2 btn-delete' data-id='${traslado.id_Traslado}'>
-          <i class="fa-solid fa-trash-can"></i> Borrar
+        <button class='btn btn-danger' align-middle m-1 btn-delete' data-id='${traslado.id_Traslado}'>
+          <i class="fa-solid fa-trash-can"></i> 
         </button>
       `
     ]);
@@ -121,9 +121,10 @@ const CrudTraslado = () => {
     return (
         <>
         {/* <div className="container mt-5"> */}
-        <div style={{ marginLeft: '490px', paddingTop: '70px' }}>
+        <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
 
-                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}
+                style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Traslado'}
                 </button>
                 </div>
@@ -135,7 +136,7 @@ const CrudTraslado = () => {
             />
             {showForm && (
                 <>
-                <hr />
+                {/* <hr /> */}
                         <FormTraslado getAllTraslados={getAllTraslados} buttonForm={buttonForm} traslado={traslado} URI={URI} updateTextButton={updateTextButton} />
                     </>
                 )}

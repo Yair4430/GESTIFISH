@@ -113,10 +113,10 @@ const CrudAlimentacion = () => {
         alimentacion.responsable.Nom_Responsable,
         `
           <button class='btn btn-primary align-middle btn-edit' data-id='${alimentacion.Id_Alimentacion}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${alimentacion.Id_Alimentacion}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${alimentacion.Id_Alimentacion}'>
+            <i class="fa-solid fa-trash-can"></i>
           </button>
         `
     ]);
@@ -128,9 +128,10 @@ const CrudAlimentacion = () => {
     return (
         <>
         {/* <div className="container mt-5"> */}
-        <div style={{ marginLeft: '490px', paddingTop: '70px' }} >
+        <div style={{ marginLeft: '320px', paddingTop: '70px' }} >
 
-                <button className="btn btn-primary mb-4 btn-custom" onClick={handleAddClick}>
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}
+                style={{ width: '143px', height: '45px', padding:'0px', fontSize: '13px'}}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Alimentación'}
                 </button>
                 </div>
@@ -142,7 +143,7 @@ const CrudAlimentacion = () => {
             />
             {showForm && (
                 <>
-                <hr />
+                {/* <hr /> */}
                         <FormAlimentacion getAllAlimentacion={getAllAlimentacion} buttonForm={buttonForm} alimentacion={alimentacion} URI={URI} updateTextButton={updateTextButton} />
                     </>
                 )}

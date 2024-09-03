@@ -73,7 +73,8 @@ return (
   <>
         <Sidebar />
   <center>
-<div style={{ marginLeft: '490px', paddingTop: '30px' }} >
+{/* <div style={{ marginLeft: '490px', paddingTop: '30px' }} > */}
+<div style={{ marginLeft: '300px', paddingTop: '30px' }} >
 <center>
 <table className="table table-responsive" id="TableDinamic" ref={tableRef}>
   <thead>
