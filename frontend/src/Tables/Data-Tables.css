@@ -3,51 +3,96 @@
   text-align: 0px;
   margin-left: 220px;
 }
-/* Centrar el contenido de la tabla y ajustar el tamaño */
+
+
+/* Estilo para el contenedor que rodea la tabla */
+.table-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px; /* Margen inferior para separar del contenido de la tabla */
+}
+
+/* Alineación de la barra de búsqueda */
+.dataTables_filter {
+  display: flex;
+  justify-content: flex-end; /* Alinea el campo de búsqueda a la derecha */
+  margin-right: 10px; /* Espaciado a la derecha */
+  margin-top: -50px; /* Ajusta la posición vertical para alinearlo con la tabla */
+}
+
+.dataTables_filter label {
+  display: flex;
+  align-items: center;
+}
+
+/* Ajusta el estilo del input de búsqueda */
+.dataTables_filter input {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  font-size: 14px;
+  width: 200px; /* Ajusta el ancho del campo de búsqueda */
+}
+
+
+/* Estilo para el contenedor de la tabla */
+.table-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
 .table {
-    width: 100%; /* Ocupa el 100% del contenedor */
-    max-width: 90%; /* Ajusta el máximo ancho para evitar que sea demasiado grande */
-    margin: 0 auto; /* Centra la tabla */
-}
-  
-  /* Ajustar el tamaño del encabezado */
-  .table th {
-    font-size: 15px; /* Aumentar el tamaño de la fuente del encabezado */
-    background-color: #007bff; /* Color de fondo del encabezado */
-    color: #ffffff; /* Color del texto del encabezado */
-  }
-  
-  /* Ajustar el tamaño del cuerpo de la tabla */
-  .table td {
-    font-size: 15px; /* Tamaño de fuente del cuerpo de la tabla */
-  }
-
-  
-  .table-responsive {
-    max-width: 4400px;
-    overflow-x: auto;
-  }
-
-  #sidebar {
-    width: 220px; /* Ajusta el ancho del sidebar */
+  width: 100%;
+  max-width: 90%;
+  margin: 0 auto;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
+.table th {
+  font-size: 15px !important;
+  background-color: #007bff !important;
+  color: #ffffff !important;
+  text-align: center !important;
+  padding: 10px !important;
+  border: 1px solid #ddd !important;
+  font-weight: bold !important;
+}
+
+.table td {
+  font-size: 15px !important;
+  text-align: center !important;
+  padding: 10px !important;
+  border: 1px solid #ddd !important;
+}
+
+.table-responsive {
+  max-width: 4400px;
+  overflow-x: auto;
+}
+
+#sidebar {
+  width: 220px;
+}
 
 .form-container {
-  width: 100%; /* Asegura que el formulario ocupe el 100% del contenedor */
-  max-width: 90%; /* Limita el ancho máximo para evitar que se salga de la pantalla */
-  margin: 0 auto; /* Centra el formulario */
+  width: 100%;
+  max-width: 90%;
+  margin: 0 auto;
 }
-
 
 body, html {
-  overflow-x: hidden; /* Oculta cualquier desbordamiento horizontal */
+  overflow-x: hidden;
 }
+
 .btn-edit, .btn-delete {
   padding: 5px 10px;
   font-size: 12px;
   border-radius: 4px;
-  margin: 0 5px; /* Espaciado entre botones */
+  margin: 0 5px;
 }
 
 .btn-sm {

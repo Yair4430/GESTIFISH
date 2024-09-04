@@ -138,8 +138,8 @@ const CrudCosecha = () => {
     ]);
 
     const titles = [
-        "Fecha de Cosecha", "Cantidad de Peces", "Peso Eviscerado", "Peso Viscerado",
-        "Porcentaje de Vísperas", "Fecha Siembra", "Hora de Cosecha", "Valor de Cosecha",
+        "Fecha Cosecha", "Cantidad Peces", "Peso Eviscerado", "Peso Viscerado",
+        "Porcentaje Viceras", "Fecha Siembra", "Hora Cosecha", "Valor Cosecha",
         "Observaciones", "Nombre Responsable", "Acciones"
     ];
 

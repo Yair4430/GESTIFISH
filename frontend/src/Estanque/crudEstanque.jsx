@@ -127,7 +127,7 @@ const CrudEstanque = () => {
     ]);
     
     const titles = [
-        "Número", "Nombre", "Espejo de Agua", "Tipo", "Largo", "Ancho", "Descripción", "Imagen", "Recambio de agua", "Acciones"
+        "Número", "Nombre", "Espejo Agua", "Tipo", "Largo", "Ancho", "Descripción", "Imagen", "Recambio agua", "Acciones"
     ];
 
     return (

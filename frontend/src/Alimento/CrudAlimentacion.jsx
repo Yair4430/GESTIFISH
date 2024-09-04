@@ -122,7 +122,7 @@ const CrudAlimentacion = () => {
     ]);
     
     const titles = [
-        "Fecha de Alimentación", "Cantidad de Ración (Kg)", "Tipo de Alimento", "Hora de Alimentación", "Valor Alimentación", "Fecha Siembra", "Nombre Responsable", "Acciones"
+        "Fecha Alimentación", "Cantidad Ración (Kg)", "Tipo Alimento", "Hora Alimentación", "Valor Alimentación", "Fecha Siembra", "Nombre Responsable", "Acciones"
     ];
 
     return (

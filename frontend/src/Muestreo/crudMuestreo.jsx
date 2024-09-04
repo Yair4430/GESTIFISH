@@ -125,7 +125,7 @@ const CrudMuestreo = () => {
     ]);
     
     const titles = [
-        "Fecha de Muestreo", "Número de Peces", "Observaciones", "Peso Esperado", "Hora de Muestreo", "Fecha Siembra", "Nombre Responsable", "Acciones"
+        "Fecha Muestreo", "Número Peces", "Observaciones", "Peso Esperado", "Hora Muestreo", "Fecha Siembra", "Nombre Responsable", "Acciones"
     ];
 
     return (

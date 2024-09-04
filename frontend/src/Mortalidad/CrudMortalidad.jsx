@@ -115,7 +115,7 @@ const CrudMortalidad = () => {
     ]);
 
     const titles = [
-        "Fecha de Mortalidad", "Cantidad de Peces", "Motivo de Mortalidad", "Fecha Siembra", "Nombre Responsable", "Acciones"
+        "Fecha Mortalidad", "Cantidad Peces", "Motivo Mortalidad", "Fecha Siembra", "Nombre Responsable", "Acciones"
     ];
 
     return (

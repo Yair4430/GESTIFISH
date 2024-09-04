@@ -123,7 +123,7 @@ const CrudActividad = () => {
     ]);
     
     const titles = [
-        "Nombre", "Descripción", "Responsable", "Fecha", "Hora", "Fase de Producción", "Estanque", "Acciones"
+        "Nombre", "Descripción", "Responsable", "Fecha", "Hora", "Fase Producción", "Estanque", "Acciones"
     ];
 
     return (

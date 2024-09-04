@@ -115,7 +115,7 @@ const CrudTraslado = () => {
     ]);
 
     const titles = [
-        "Fecha de Traslado", "Cantidad de Peces", "Responsable", "Observaciones", "Hora de Traslado", "Acciones"
+        "Fecha Traslado", "Cantidad Peces", "Responsable", "Observaciones", "Hora Traslado", "Acciones"
     ];
 
     return (

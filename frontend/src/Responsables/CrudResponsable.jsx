@@ -125,7 +125,7 @@ const CrudResponsable = () => {
     ]);
 
     const titles = [
-        "Nombre", "Apellidos", "Documento de Identidad", "Tipo de Responsable", "Correo", "Número de Teléfono", "Acciones"
+        "Nombre", "Apellidos", "Numero Documento", "Tipo Responsable", "Correo", "Número Teléfono", "Acciones"
     ];
 
     return (
