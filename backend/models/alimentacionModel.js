@@ -1,38 +1,17 @@
-import db from "../database/db.js";
-import { DataTypes } from "sequelize";
+import { DataTypes } from 'sequelize';
+import db from '../database/db.js';
 
-
-const AlimentoModel = db.define('alimentacion',{
-    Id_Alimentacion: { 
-        type: DataTypes.INTEGER, 
-        primaryKey: true, 
-        autoIncrement: true 
-    },
-    Fec_Alimentacion: { 
-        type: DataTypes.DATEONLY 
-    },
-    Can_Racion_Kg: { 
-        type: DataTypes.STRING(20) 
-    },
-    Id_Siembra: { 
-        type: DataTypes.INTEGER 
-    },
-    Id_Responsable: { 
-        type: DataTypes.INTEGER 
-    },
-    Tip_Alimento: { 
-        type: DataTypes.ENUM('Concentrado', 'Sal') 
-    },
-    Hor_Alimentacion: { 
-        type: DataTypes.STRING(20) 
-    },
-    Vlr_Alimentacion: { 
-        type: DataTypes.STRING(20) 
-    }
+const AlimentacionModel = db.define('alimentacion', {
+  Id_Alimentacion: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  Fec_Alimentacion: { type: DataTypes.DATEONLY, allowNull: false },
+  Can_RacionKg: { type: DataTypes.INTEGER, allowNull: false },
+  Id_Siembra: { type: DataTypes.INTEGER, allowNull: false },
+  Id_Responsable: { type: DataTypes.INTEGER, allowNull: false },
+  Tip_Alimento: { type: DataTypes.ENUM('Concentrado', 'Sal'), allowNull: false },
+  Hor_Alimentacion: { type: DataTypes.TIME, allowNull: false },
+  Vlr_Alimentacion: { type: DataTypes.INTEGER, allowNull: false }
 }, {
-    freezeTableName: true,
-    timestamps: true
+  freezeTableName: true,
 });
 
-
-export default AlimentoModel
+export default AlimentacionModel;

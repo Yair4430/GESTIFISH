@@ -1,13 +1,30 @@
-import express from "express";
-import { createSiembra, deleteSiembra, getAllSiembra, getSiembra, updateSiembra } from "../controllers/siembraController.js";
+import express from 'express';
+import { getAllSiembra, getSiembra, createSiembra, updateSiembra, deleteSiembra, getSiembraByFechaInicio } from '../controllers/siembraController.js';
+import winston from 'winston';
 
-const router = express.Router();
+const routerSiembra = express.Router();
 
-// Rutas para Siembra
-router.get('/siembra', getAllSiembra);
-router.get('/siembra/:id', getSiembra);
-router.post('/siembra', createSiembra);
-router.put('/siembra/:id', updateSiembra);
-router.delete('/siembra/:id', deleteSiembra);
+// Configuración del logger
+const logger = winston.createLogger({
+  level: 'error',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.File({ filename: 'error.log' })
+  ],
+});
 
-export default router;
+// Definición de las rutas
+routerSiembra.get('/', getAllSiembra);
+routerSiembra.get('/Fec_Siembra/:Fec_Siembra', getSiembraByFechaInicio);  // Ruta para consultar por fecha
+routerSiembra.get('/:Id_Siembra', getSiembra);
+routerSiembra.post('/', createSiembra);
+routerSiembra.put('/:Id_Siembra', updateSiembra);
+routerSiembra.delete('/:Id_Siembra', deleteSiembra);
+
+// Middleware para manejo de errores
+routerSiembra.use((err, req, res, next) => {
+  logger.error(`${req.method} ${req.url} - ${err.message}`);
+  res.status(500).json({ error: 'An error occurred' });
+});
+
+export default routerSiembra;
