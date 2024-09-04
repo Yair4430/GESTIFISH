@@ -32,7 +32,14 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
         info: "Página _PAGE_ de _PAGES_",
         infoEmpty: "No hay registros disponibles",
         infoFiltered: "(filtrado de _MAX_ registros en total)",
-        lengthMenu: "Mostrar _MENU_ registros por página"
+        lengthMenu: "Mostrar _MENU_ registros por página",
+        oPaginate: {
+          "sFirst": "Primero",
+          "sLast": "Último",
+          "sNext": "Siguiente",
+          "sPrevious": "Anterior"
+      }
+      
       },
       drawCallback: function () {
         $table.find('.btn-edit').off('click').on('click', function () {

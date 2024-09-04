@@ -113,12 +113,12 @@ const CrudActividad = () => {
         actividad.Fas_Produccion,
         actividad.estanque.Nom_Estanque,
         `
-          <button class='btn btn-primary align-middle btn-edit' data-id='${actividad.Id_Actividad}'>
+          <a class='btn btn-primary align-middle btn-edit' data-id='${actividad.Id_Actividad}'>
             <i class="fa-solid fa-pen-to-square"></i> 
-          </button>
-          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${actividad.Id_Actividad}'>
+          </a>
+          <a class='btn btn-danger align-middle m-1 btn-delete' data-id='${actividad.Id_Actividad}'>
             <i class="fa-solid fa-trash-can"></i> 
-          </button>
+          </a>
         `
     ]);
     
@@ -131,7 +131,7 @@ const CrudActividad = () => {
         {/* <div className="container mt-5"> */}
         <div style={{ marginLeft: '320px', paddingTop: '70px' }} >
         <button
-            className="btn btn-primary mb-4"
+            className="btn btn-success mb-4"
             onClick={handleAddClick}
             style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
     {showForm ? 'Ocultar Formulario' : 'Agregar Actividad'}

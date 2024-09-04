@@ -100,3 +100,15 @@ body, html {
   padding: 3px 7px;
   font-size: 10px;
 }
+
+
+.dt-paging>button{
+  
+  border: none;
+  border-radius: 20px;
+  background-color: cyan;
+  color: red;
+  font-weight: bold;
+
+}
+
