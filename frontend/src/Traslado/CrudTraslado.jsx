@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormTraslado from './FormTraslado'; 
-import FormQueryTraslado from './FormQueryTraslado'; 
 
 const URI = process.env.ROUTER_PRINCIPAL + '/traslado/';
 
@@ -106,23 +105,26 @@ const CrudTraslado = () => {
         traslado.Obs_Traslado,
         traslado.Hor_Traslado,
         `
-        <button class='btn btn-info align-middle btn-edit' data-id='${traslado.id_Traslado}'>
-          <i class="fa-solid fa-pen-to-square"></i> Editar
+        <button class='btn btn-primary' align-middle btn-edit' data-id='${traslado.id_Traslado}'>
+          <i class="fa-solid fa-pen-to-square"></i> 
         </button>
-        <button class='btn btn-info align-middle m-2 btn-delete' data-id='${traslado.id_Traslado}'>
-          <i class="fa-solid fa-trash-can"></i> Borrar
+        <button class='btn btn-danger' align-middle m-1 btn-delete' data-id='${traslado.id_Traslado}'>
+          <i class="fa-solid fa-trash-can"></i> 
         </button>
       `
     ]);
 
     const titles = [
-        "Fecha de Traslado", "Cantidad de Peces", "Responsable", "Observaciones", "Hora de Traslado", "Acciones"
+        "Fecha Traslado", "Cantidad Peces", "Responsable", "Observaciones", "Hora Traslado", "Acciones"
     ];
 
     return (
         <>
-        <div className="container mt-5">
-                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+        {/* <div className="container mt-5"> */}
+        <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}
+                style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Traslado'}
                 </button>
                 </div>
@@ -132,9 +134,9 @@ const CrudTraslado = () => {
                 onEditClick={handleEdit} 
                 onDeleteClick={handleDelete} 
             />
-            <hr />
             {showForm && (
-                    <>
+                <>
+                {/* <hr /> */}
                         <FormTraslado getAllTraslados={getAllTraslados} buttonForm={buttonForm} traslado={traslado} URI={URI} updateTextButton={updateTextButton} />
                     </>
                 )}

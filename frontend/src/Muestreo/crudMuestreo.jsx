@@ -115,39 +115,43 @@ const CrudMuestreo = () => {
         muestreo.siembra.Fec_Siembra,
         muestreo.responsable.Nom_Responsable,
         `
-          <button class='btn btn-info align-middle btn-edit' data-id='${muestreo.Id_Muestreo}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+          <button class='btn btn-primary align-middle btn-edit' data-id='${muestreo.Id_Muestreo}'>
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${muestreo.Id_Muestreo}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${muestreo.Id_Muestreo}'>
+            <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
     ]);
     
     const titles = [
-        "Fecha de Muestreo", "Número de Peces", "Observaciones", "Peso Esperado", "Hora de Muestreo", "Fecha Siembra", "Nombre Responsable", "Acciones"
+        "Fecha Muestreo", "Número Peces", "Observaciones", "Peso Esperado", "Hora Muestreo", "Fecha Siembra", "Nombre Responsable", "Acciones"
     ];
 
     return (
         <>
-                    <div className="container mt-5">
-                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
+                    {/* <div className="container mt-5"> */}
+                    <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}
+                style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Muestreo'}
                 </button>
                 </div>
-
-            <hr />
-            {showForm && (
-                    <>
-                        <FormMuestreo getAllMuestreo={getAllMuestreo} buttonForm={buttonForm} muestreo={muestreo} URI={URI} updateTextButton={updateTextButton} />
-                    </>
-                )}
-                            <WriteTable 
+                <WriteTable 
                 titles={titles} 
                 data={data} 
                 onEditClick={handleEdit} 
                 onDeleteClick={handleDelete} 
             />
+            {showForm && (
+                
+                <>
+                {/* <hr /> */}
+                        <FormMuestreo getAllMuestreo={getAllMuestreo} buttonForm={buttonForm} muestreo={muestreo} URI={URI} updateTextButton={updateTextButton} />
+                    </>
+                )}
+                            
         </>
     );
 };

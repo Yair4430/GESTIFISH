@@ -115,23 +115,26 @@ const CrudResponsable = () => {
         responsable.Cor_Responsable,
         responsable.Num_Responsable,
         `
-          <button class='btn btn-info align-middle btn-edit' data-id='${responsable.Id_Responsable}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+          <button class='btn btn-primary align-middle btn-edit' data-id='${responsable.Id_Responsable}'>
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${responsable.Id_Responsable}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${responsable.Id_Responsable}'>
+            <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
     ]);
 
     const titles = [
-        "Nombre", "Apellidos", "Documento de Identidad", "Tipo de Responsable", "Correo", "Número de Teléfono", "Acciones"
+        "Nombre", "Apellidos", "Numero Documento", "Tipo Responsable", "Correo", "Número Teléfono", "Acciones"
     ];
 
     return (
         <>
-         <div className="container mt-5">
-            <button className="btn btn-primary mb-4 " onClick={handleAddClick}>
+         {/* <div className="container mt-5"> */}
+         <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+
+            <button className="btn btn-primary mb-4 " onClick={handleAddClick}
+            style={{ width: '144px', height: '45px', padding:'0px', fontSize: '15px'}}>
                 {showForm ? 'Ocultar Formulario' : 'Agregar Responsable'}
             </button>
             </div>
@@ -141,9 +144,11 @@ const CrudResponsable = () => {
                 onEditClick={(id) => getResponsable(id)} 
                 onDeleteClick={(id) => deleteResponsable(id)} 
             />
-            <hr />
             {showForm && (
+            <>
+            {/* <hr /> */}
             <FormResponsable buttonForm={buttonForm} responsable={responsable} URI={URI} updateTextButton={updateTextButton} getAllResponsable={getAllResponsable} />
+            </>
         )}
 
         </>

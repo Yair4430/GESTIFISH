@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 // Importaciones Formularios
@@ -37,7 +37,6 @@ function App() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('usuario'));
-    const lastPath = localStorage.getItem('lastPath');
 
     if (!user) {
       setIsAuth(false);
@@ -49,10 +48,11 @@ function App() {
         .then((response) => {
           if (response.status === 200) {
             setIsAuth(true);
-            if (lastPath) {
-              navigate(lastPath);
+            const lastPath = localStorage.getItem('lastPath') || '/';
+            if (lastPath === '/auth' || lastPath === '/') {
+              navigate('/'); 
             } else {
-              navigate('/');
+              navigate(lastPath); 
             }
           }
         })
@@ -83,11 +83,10 @@ function App() {
 
   return (
     <>
-      {isAuth && <BarraNavegacionPrivada logOutUser={logOutUser} />}
-
-      <Routes>
-        {isAuth ? (
-          <>
+      {isAuth ? (
+        <>
+          <BarraNavegacionPrivada logOutUser={logOutUser} />
+          <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/RegistrosMenu' element={<RegistrosMenu />} />
             <Route path='/Alimentacion' element={<CrudAlimentacion />} />
@@ -101,15 +100,20 @@ function App() {
             <Route path='/Mortalidad' element={<CrudMortalidad />} />
             <Route path='/Siembra' element={<CrudSiembra />} />
             <Route path='/Simulador' element={<Simulador />} />
-          </>
-        ) : (
-          <Route path='*' element={<HomePublico />} />
-        )}
-        {!isAuth ? <Route path='/auth' element={<Auth />} /> : ''}
-        <Route path='/reset-password' element={<ResetPassword />} />
-        <Route path='/barraNavegacionPublica' element={<BarraNavegacionPublica />} />
-        <Route path='/CaruselContact' element={<CaruselContact />} />
-      </Routes>
+          </Routes>
+        </>
+      ) : (
+        <>
+          <BarraNavegacionPublica />
+          <Routes>
+            <Route path='/' element={<HomePublico />} />
+            <Route path='/CaruselContact' element={<CaruselContact />} />
+            <Route path='/SimuladorPublico' element={<Simulador />} />
+            <Route path='/auth' element={<Auth />} />
+            <Route path='/reset-password' element={<ResetPassword />} />
+          </Routes>
+        </>
+      )}
     </>
   );
 }

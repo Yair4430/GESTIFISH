@@ -1,3 +1,98 @@
-.dt-search{
-    text-align: right;
+/* Estilo para el contenedor de la tabla */
+.table-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px; /* Margen inferior para separar del contenido de la tabla */
+}
+
+/* Alineación de la barra de búsqueda */
+.dataTables_filter {
+  display: flex;
+  justify-content: flex-end; /* Alinea el campo de búsqueda a la derecha */
+  margin-right: 10px; /* Espaciado a la derecha */
+}
+
+.dataTables_filter label {
+  display: flex;
+  align-items: center;
+}
+
+/* Ajusta el estilo del input de búsqueda */
+.dataTables_filter input {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  font-size: 14px;
+  width: 200px; /* Ajusta el ancho del campo de búsqueda */
+}
+
+/* Estilo para la tabla */
+.table {
+  width: 100%;
+  max-width: 90%;
+  margin: 0 auto;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table th {
+  font-size: 15px;
+  background-color: #007bff;
+  color: #ffffff;
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  font-weight: bold;
+}
+
+.table td {
+  font-size: 15px;
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.table-responsive {
+  max-width: 100%; /* Ajustado para evitar desbordamiento */
+  overflow-x: auto;
+}
+
+/* Estilo para los botones */
+.btn-edit, .btn-delete {
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  margin: 0 5px;
+}
+
+.btn-sm {
+  padding: 3px 7px;
+  font-size: 10px;
+}
+
+/* Estilo para los botones de paginación */
+.dt-paging > button {
+  border: none;
+  border-radius: 20px;
+  background-color: cyan;
+  color: red;
+  font-weight: bold;
+}
+
+/* Estilo para el sidebar */
+#sidebar {
+  width: 220px;
+}
+
+/* Estilo para el contenedor de formularios */
+.form-container {
+  width: 100%;
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+/* Ajuste para evitar el desbordamiento horizontal */
+body, html {
+  overflow-x: hidden;
 }

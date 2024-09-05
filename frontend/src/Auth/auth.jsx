@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
-import BarraNavegacionPublica from "../home/barraNavegacionPublica";
+// import BarraNavegacionPublica from "../home/barraNavegacionPublica";
 import './auth.css';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/auth/';
@@ -92,7 +92,7 @@ const Auth = () => {
 
     return (
         <>
-            <BarraNavegacionPublica />
+            {/* <BarraNavegacionPublica /> */}
             <div className="auth-container">
                 <div className={`auth-content ${isSignUpActive ? 'sign-up-mode' : ''}`}>
                     <div className="auth-left">
