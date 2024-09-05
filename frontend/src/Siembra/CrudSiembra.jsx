@@ -12,6 +12,7 @@ const URI_ESTANQUE = process.env.ROUTER_PRINCIPAL + '/estanque/';
 const CrudSiembra = () => {
     const [siembraList, setSiembraList] = useState([]);
     const [responsables, setResponsables] = useState([]);
+    const [showForm, setShowForm] = useState(false);
     const [especies, setEspecies] = useState([]);
     const [estanques, setEstanques] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
@@ -124,6 +125,29 @@ const CrudSiembra = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+    
+        if (!showForm) {
+            setSiembra({
+                Id_Siembra: '',
+                Can_Peces: '',
+                Fec_Siembra: '',
+                Fec_PosibleCosecha: '',
+                Id_Responsable: '',
+                Id_Especie: '',
+                Id_Estanque: '',
+                Pes_Actual: '',
+                Obs_Siembra: '',
+                Hor_Siembra: '',
+                Gan_Peso: '',
+                Vlr_Siembra: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
+
     const handleEdit = (Id_Siembra) => {
         getSiembra(Id_Siembra);
     };
@@ -145,39 +169,42 @@ const CrudSiembra = () => {
         siembra.Gan_Peso,
         siembra.Vlr_Siembra,
   `
-          <button class='btn btn-info align-middle btn-edit' data-id='${siembra.Id_Siembra}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+          <button class='btn btn-primary align-middle btn-edit' data-id='${siembra.Id_Siembra}'>
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${siembra.Id_Siembra}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${siembra.Id_Siembra}'>
+            <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
     ]);
 
     const titles = [
-        "Cantidad de Peces", "Fecha de Siembra", "Fecha Posible de Cosecha", "Responsable", "Especie", "Estanque", "Peso Actual", "Observaciones", "Hora de Siembra", "Ganancia de Peso", "Valor de Siembra", "Acciones"
+        "Cantidad Peces", "Fecha Siembra", "Fecha Posible Cosecha", "Responsable", "Especie", "Estanque", "Peso Actual", "Observaciones", "Hora Siembra", "Ganancia Peso", "Valor Siembra", "Acciones"
     ];
 
     return (
         <>
+                    {/* <div className="container mt-5"> */}
+                    <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+
+                <button className="btn btn-primary" onClick={handleAddClick}
+                style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>  
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Siembra'}
+                </button>
+                </div>
             <WriteTable
                 titles={titles}
                 data={data}
                 onEditClick={handleEdit}
                 onDeleteClick={handleDelete}
             />
-            <hr />
-            <FormSiembra
-                getAllSiembras={getAllSiembras}
-                buttonForm={buttonForm}
-                siembra={siembra}
-                responsables={responsables}
-                especies={especies}
-                estanques={estanques}
-                URI={URI}
-                updateTextButton={updateTextButton}
-            />
-            <hr />
+            {showForm && (
+                <>
+                {/* <hr /> */}
+                        <FormSiembra getAllSiembras={getAllSiembras} buttonForm={buttonForm} siembra={siembra} responsables={responsables} especies={especies} estanques={estanques} URI={URI} updateTextButton={updateTextButton}
+                        />
+                    </>
+                )}
         </>
     );
 };

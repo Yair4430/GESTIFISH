@@ -9,6 +9,7 @@ const URI = process.env.ROUTER_PRINCIPAL + '/alimentacion/';
 const CrudAlimentacion = () => {
     const [AlimentacionList, setAlimentacionList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [alimentacion, setAlimentacion] = useState({
         Id_Alimentacion: '',
         Fec_Alimentacion: '',
@@ -76,6 +77,24 @@ const CrudAlimentacion = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            setAlimentacion({
+                Id_Alimentacion: '',
+                Fec_Alimentacion: '',
+                Can_RacionKg: '',
+                Tip_Alimento: '',
+                Hor_Alimentacion: '',
+                Vlr_Alimentacion: '',
+                Fec_Siembra: '',
+                Id_Responsable: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
     const handleEdit = (Id_Alimentacion) => {
         getAlimentacion(Id_Alimentacion);
     };
@@ -93,36 +112,41 @@ const CrudAlimentacion = () => {
         alimentacion.siembra.Fec_Siembra,
         alimentacion.responsable.Nom_Responsable,
         `
-          <button class='btn btn-info align-middle btn-edit' data-id='${alimentacion.Id_Alimentacion}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+          <button class='btn btn-primary align-middle btn-edit' data-id='${alimentacion.Id_Alimentacion}'>
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${alimentacion.Id_Alimentacion}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${alimentacion.Id_Alimentacion}'>
+            <i class="fa-solid fa-trash-can"></i>
           </button>
         `
     ]);
     
     const titles = [
-        "Fecha de Alimentación", "Cantidad de Ración (Kg)", "Tipo de Alimento", "Hora de Alimentación", "Valor Alimentación", "Fecha Siembra", "Nombre Responsable", "Acciones"
+        "Fecha Alimentación", "Cantidad Ración (Kg)", "Tipo Alimento", "Hora Alimentación", "Valor Alimentación", "Fecha Siembra", "Nombre Responsable", "Acciones"
     ];
 
     return (
         <>
+        {/* <div className="container mt-5"> */}
+        <div style={{ marginLeft: '320px', paddingTop: '70px' }} >
+
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}
+                style={{ width: '143px', height: '45px', padding:'0px', fontSize: '13px'}}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Alimentación'}
+                </button>
+                </div>
             <WriteTable 
                 titles={titles} 
                 data={data} 
                 onEditClick={handleEdit} 
                 onDeleteClick={handleDelete} 
             />
-            <hr />
-            <FormAlimentacion 
-                buttonForm={buttonForm} 
-                alimentacion={alimentacion} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllAlimentacion={getAllAlimentacion} 
-            />
-            <hr />
+            {showForm && (
+                <>
+                {/* <hr /> */}
+                        <FormAlimentacion getAllAlimentacion={getAllAlimentacion} buttonForm={buttonForm} alimentacion={alimentacion} URI={URI} updateTextButton={updateTextButton} />
+                    </>
+                )}
         </>
     );
 };

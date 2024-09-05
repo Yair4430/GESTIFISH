@@ -1,14 +1,15 @@
 import React from 'react';
 import imgtodo from '../IMG/Logo_FondoBlanco.jpeg';
 import img2 from '../IMG/Estanque.jpeg';
-import BarraNavegacionPublica from './barraNavegacionPublica';
+// import BarraNavegacionPublica from './barraNavegacionPublica';
 
 const HomePublica = () => {
   return (
     <>
-      <BarraNavegacionPublica />
+      {/* <BarraNavegacionPublica /> */}
       <section className="container mt-5">
         {/* Sección principal con el logo y el título */}
+        <br/>
         <Header title="GestiFish" />
 
         {/* Sección de contenido con la descripción del proyecto */}
@@ -18,11 +19,17 @@ const HomePublica = () => {
           text="En el Centro Agropecuario 'La Granja del SENA Espinal, Regional Tolima', la unidad de Piscicultura ha avanzado en el manejo de inventario y la producción acuícola. Sin embargo, el uso de procesos manuales y herramientas como Excel ha causado ineficiencias y pérdida de datos importantes. Para abordar estos problemas y mejorar la eficiencia, el equipo de aprendices ha desarrollado GestiFish, una herramienta informática avanzada que optimiza la gestión de información, reduce errores y asegura datos precisos y actualizados."
           reverse={false}
         />
-        <br/>
+        
+        <br />
+        <br />
+        <br />
+        {/* Mover el segundo título al área deseada sobre la imagen */}
+        <div className="title-over-image-container" style={{ position: 'relative' }}>
+          <h1 style={{ ...titleOverImageStyle, position: 'absolute', top: '-30px', left: '20px' }}>
+            ¿Qué es GestiFish?
+          </h1>
+        </div>
 
-        {/* Sección adicional con más detalles sobre GestiFish */}
-        <Header title="¿Qué es GestiFish?" />
-        <br/>
 
         <ContentSection
           imageSrc={img2}
@@ -37,16 +44,16 @@ const HomePublica = () => {
 
 // Componente Header reutilizable para los títulos de cada sección
 const Header = ({ title }) => (
-  <div className="text-center mb-5"> {/* Ajuste de margen */}
-    <h1 style={styles.sectionHeader}>{title}</h1>
-    {/* Eliminamos la línea horizontal debajo del título */}
+  <div className="text-center mb-5" style={{ position: 'relative' }}> {/* Ajuste de posición */}
+    <h1 style={{ ...styles.sectionHeader, position: 'absolute', top: '-30px', left: '490px' }}>{title}</h1> {/* Ajuste en top y left */}
   </div>
 );
+
 
 // Componente ContentSection reutilizable para secciones de contenido
 const ContentSection = ({ imageSrc, imageAlt, text, reverse }) => (
   <div className={`row align-items-center mb-5 ${reverse ? 'flex-row-reverse' : ''}`}> {/* Ajuste de margen */}
-    <div className="col-md-5 text-center">
+    <div className="col-md-5 text-center position-relative">
       <img 
         src={imageSrc} 
         alt={imageAlt} 
@@ -73,10 +80,11 @@ const styles = {
   sectionHeader: {
     fontFamily: 'Poppins, sans-serif',
     fontWeight: 700,
-    fontSize: '2.5rem',
+    fontSize: '3rem',
     color: '#000',
-    marginBottom: '30px', // Aumentar margen inferior
-    // Eliminamos la línea y el padding inferior
+    marginBottom: '30px',
+    marginTop: '20px', // Mueve el título hacia arriba
+    textAlign: 'center',
   },
   image: {
     maxWidth: '450px', // Ajuste del tamaño de la imagen
@@ -90,7 +98,24 @@ const styles = {
     lineHeight: '1.8', // Aumentamos el interlineado para mejor legibilidad
     margin: '0 15px',
     textAlign: 'justify' // Justifica el texto
-  },
+  }
 };
+
+// Estilo específico para posicionar el título sobre la imagen
+const titleOverImageStyle = {
+  position: '',
+  top: '30%', // Ajusta este valor para mover el título hacia abajo
+  left: '10%', // Ajusta este valor para mover el título hacia la izquierda
+  transform: 'translate(0, -50%)', // Ajuste opcional según tu diseño
+  color: '#000', // Cambié a negro, ajusta según prefieras
+  backgroundColor: 'rgba(255, 255, 255, 0.8)', // Fondo semi-transparente para legibilidad
+  padding: '0px',
+  borderRadius: '90px',
+  fontFamily: 'Poppins, sans-serif',
+  fontWeight: 700,
+  fontSize: '3rem',
+  marginBottom: '20px',
+};
+
 
 export default HomePublica;

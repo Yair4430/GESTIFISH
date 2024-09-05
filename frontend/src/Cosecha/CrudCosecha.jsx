@@ -3,13 +3,13 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx'; // Asegúrate de tener este componente para la tabla de datos
 import FormCosecha from './FormCosecha'; // Asegúrate de tener este componente para el formulario de cosecha
-import FormQueryCosecha from './FormQueryCosecha'; // Asegúrate de tener este componente para consultar cosechas por fecha
 
 const URI = process.env.ROUTER_PRINCIPAL + '/cosecha/';
 
 const CrudCosecha = () => {
     const [CosechaList, setCosechaList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [cosecha, setCosecha] = useState({
         Id_Cosecha: '',
         Fec_Cosecha: '',
@@ -87,6 +87,27 @@ const CrudCosecha = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            setCosecha({
+                Id_Cosecha: '',
+                Fec_Cosecha: '',
+                Can_Peces: '',
+                Pes_Eviscerado: '',
+                Pes_Viscerado: '',
+                Por_Visceras: '',
+                Id_Responsable: '',
+                Id_Siembra: '',
+                Hor_Cosecha: '',
+                Vlr_Cosecha: '',
+                Obs_Cosecha: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
     const handleEdit = (Id_Cosecha) => {
         getCosecha(Id_Cosecha);
     };
@@ -107,44 +128,49 @@ const CrudCosecha = () => {
         cosecha.Obs_Cosecha,
         cosecha.responsable.Nom_Responsable,
         `
-          <button class='btn btn-info align-middle btn-edit' data-id='${cosecha.Id_Cosecha}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+          <button class='btn btn-primary align-middle btn-edit' data-id='${cosecha.Id_Cosecha}'>
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${cosecha.Id_Cosecha}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${cosecha.Id_Cosecha}'>
+            <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
     ]);
 
     const titles = [
-        "Fecha de Cosecha", "Cantidad de Peces", "Peso Eviscerado", "Peso Viscerado",
-        "Porcentaje de Vísperas", "Fecha Siembra", "Hora de Cosecha", "Valor de Cosecha",
+        "Fecha Cosecha", "Cantidad Peces", "Peso Eviscerado", "Peso Viscerado",
+        "Porcentaje Viceras", "Fecha Siembra", "Hora Cosecha", "Valor Cosecha",
         "Observaciones", "Nombre Responsable", "Acciones"
     ];
 
     return (
         <>
+                    {/* <div className="container mt-5"> */}
+        <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}
+                style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Cosecha'}
+                </button>
+                </div>
             <WriteTable
                 titles={titles}
                 data={data}
                 onEditClick={handleEdit}
                 onDeleteClick={handleDelete}
             />
-            <hr />
-            <FormCosecha
-                getAllCosecha={getAllCosecha}
-                buttonForm={buttonForm}
-                cosecha={cosecha}
-                URI={URI}
-                updateTextButton={updateTextButton}
-            />
-            <hr />
-            <FormQueryCosecha
-                URI={URI}
-                getCosecha={getCosecha}
-                deleteCosecha={deleteCosecha}
-                buttonForm={buttonForm}
-            />
+            {showForm && (
+                <>
+                {/* <hr /> */}
+                        <FormCosecha
+                            getAllCosecha={getAllCosecha}
+                            buttonForm={buttonForm}
+                            cosecha={cosecha}
+                            URI={URI}
+                            updateTextButton={updateTextButton}
+                        />
+                    </>
+                )}
         </>
     );
 };

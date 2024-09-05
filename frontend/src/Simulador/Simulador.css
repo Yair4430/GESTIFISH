@@ -1,0 +1,61 @@
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #e0f7fa;
+    font-size: 1.1rem; /* Aumenta el tamaño general de la fuente */
+}
+
+.navbar {
+    background-color: #007bff !important;
+    font-size: 1.4rem; /* Aumenta el tamaño de la fuente de la navbar */
+    border-bottom: 4px solid #0056b3;
+}
+
+.navbar .navbar-brand .brand-name {
+    font-size: 2.5rem; /* Aumenta el tamaño del nombre de la marca */
+    font-weight: bold;
+    color: white;
+    margin-left: 15px;
+}
+
+.navbar .nav-link {
+    color: white !important;
+    padding: 10px 20px;
+    font-size: 1.7rem; /* Aumenta el tamaño de la fuente de los enlaces */
+}
+
+.container {
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    font-size: 1.2rem; /* Aumenta el tamaño de la fuente dentro del contenedor */
+}
+
+.display-4 {
+    font-size: 3rem; /* Aumenta el tamaño del encabezado principal */
+}
+
+.card-title {
+    font-size: 2rem; /* Aumenta el tamaño de los títulos en las tarjetas */
+    font-weight: bold;
+    color: #007bff;
+}
+
+.input-section .form-group {
+    font-size: 1.1rem; /* Aumenta el tamaño del texto en los formularios */
+}
+
+button.btn {
+    font-size: 1.3rem; /* Aumenta el tamaño del texto en los botones */
+}
+
+.simulador-descripcion {
+    font-size: 1.5rem; /* Aumenta el tamaño del texto */
+    color: gray;
+    text-align: justify;
+}

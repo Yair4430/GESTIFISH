@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormEspecie from './FormEspecie';
-import FormQueryEspecie from './FormQueryEspecie';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/especie/';
 const PATH_FOTOS = process.env.ROUTER_FOTOS;
@@ -11,6 +10,7 @@ const PATH_FOTOS = process.env.ROUTER_FOTOS;
 const CrudEspecie = () => {
     const [EspecieList, setEspecieList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [especie, setEspecie] = useState({
         Id_Especie: '',
         Nom_Especie: '',
@@ -88,6 +88,24 @@ const CrudEspecie = () => {
         });
     };
 
+    const handleAddClick = () => {
+        // Alterna la visibilidad del formulario
+        setShowForm(prevShowForm => !prevShowForm);
+    
+        // Si el formulario se va a mostrar, reinicia los valores
+        if (!showForm) {
+            setEspecie({
+                Id_Especie: '',
+                Nom_Especie: '',
+                Car_Especie: '',
+                Tam_Promedio: '',
+                Den_Especie: '',
+                Img_Especie: '' // Ajusta esto según cómo manejes la imagen
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
     const data = EspecieList.map((especie) => [
         especie.Nom_Especie,
         especie.Car_Especie,
@@ -99,11 +117,11 @@ const CrudEspecie = () => {
             'No Image'
         ),
         `
-          <button class='btn btn-info align-middle btn-edit' data-id='${especie.Id_Especie}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+          <button class='btn btn-primary align-middle btn-edit' data-id='${especie.Id_Especie}'>
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${especie.Id_Especie}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${especie.Id_Especie}'>
+            <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
     ]);
@@ -114,20 +132,33 @@ const CrudEspecie = () => {
 
     return (
         <>
+                    {/* <div className="container mt-5"> */}
+                    <div style={{ marginLeft: '320px', paddingTop: '70px' }} >
+
+                <button className="btn btn-primary" onClick={handleAddClick}
+                style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Especie'}
+                </button>
+                </div>
             <WriteTable 
                 titles={titles} 
                 data={data} 
                 onEditClick={(Id_Especie) => getEspecie(Id_Especie)} 
                 onDeleteClick={(Id_Especie) => deleteEspecie(Id_Especie)} 
             />
-            <hr />
-            <FormEspecie 
-                buttonForm={buttonForm} 
-                especie={especie} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllEspecies={getAllEspecies} 
-            />
+            {showForm && (
+                <>
+                {/* <hr /> */}
+
+                    <FormEspecie
+                        getAllEspecies={getAllEspecies}
+                        buttonForm={buttonForm}
+                        especie={especie}
+                        URI={URI}
+                        updateTextButton={updateTextButton}
+                    />
+                    </>
+                )}
         </>
     );
 }

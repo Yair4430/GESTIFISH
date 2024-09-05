@@ -9,6 +9,7 @@ const URI = process.env.ROUTER_PRINCIPAL + '/mortalidad/';
 const CrudMortalidad = () => {
     const [MortalidadList, setMortalidadList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [mortalidad, setMortalidad] = useState({
         Id_Mortalidad: '',
         Fec_Mortalidad: '',
@@ -74,6 +75,21 @@ const CrudMortalidad = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            setMortalidad({
+                Fec_Mortalidad: '',
+                Can_Peces: '',
+                Mot_Mortalidad: '',
+                Id_Siembra: '',
+                Id_Responsable: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
     const handleEdit = (Id_Mortalidad) => {
         getMortalidad(Id_Mortalidad);
     };
@@ -89,36 +105,41 @@ const CrudMortalidad = () => {
         mortalidad.siembra.Fec_Siembra,
         mortalidad.responsable.Nom_Responsable,
         `
-          <button class='btn btn-info align-middle btn-edit' data-id='${mortalidad.Id_Mortalidad}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+          <button class='btn btn-primary align-middle btn-edit' data-id='${mortalidad.Id_Mortalidad}'>
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${mortalidad.Id_Mortalidad}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${mortalidad.Id_Mortalidad}'>
+            <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
     ]);
 
     const titles = [
-        "Fecha de Mortalidad", "Cantidad de Peces", "Motivo de Mortalidad", "Fecha Siembra", "Nombre Responsable", "Acciones"
+        "Fecha Mortalidad", "Cantidad Peces", "Motivo Mortalidad", "Fecha Siembra", "Nombre Responsable", "Acciones"
     ];
 
     return (
         <>
+                    {/* <div className="container mt-5"> */}
+        <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}
+                style={{ width: '145px', height: '45px', padding:'0px', fontSize: '16px'}}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Mortalidad'}
+                </button>
+                </div>
             <WriteTable 
                 titles={titles} 
                 data={data} 
                 onEditClick={handleEdit} 
                 onDeleteClick={handleDelete} 
             />
-            <hr />
-            <FormMortalidad 
-                buttonForm={buttonForm} 
-                mortalidad={mortalidad} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllMortalidad={getAllMortalidad} 
-            />
-            <hr />
+            {showForm && (
+                <>
+                {/* <hr /> */}
+                        <FormMortalidad getAllMortalidad={getAllMortalidad} buttonForm={buttonForm} mortalidad={mortalidad} URI={URI} updateTextButton={updateTextButton} />
+                    </>
+                )}
         </>
     );
 };

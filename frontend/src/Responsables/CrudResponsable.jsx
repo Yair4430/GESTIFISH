@@ -9,6 +9,7 @@ const URI = process.env.ROUTER_PRINCIPAL + '/responsable/';
 const CrudResponsable = () => {
     const [responsableList, setResponsableList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [responsable, setResponsable] = useState({
         Id_Responsable: '',
         Nom_Responsable: '',
@@ -87,6 +88,25 @@ const CrudResponsable = () => {
         });
     };
 
+    const handleAddClick = () => {
+        // Alterna la visibilidad del formulario
+        setShowForm(prevShowForm => !prevShowForm);
+        
+        // Si el formulario se va a mostrar, reinicia los valores
+        if (!showForm) {
+            setResponsable({
+                Id_Responsable: '',
+                Nom_Responsable: '',
+                Ape_Responsable: '',
+                Doc_Responsable: '',
+                Tip_Responsable: '',
+                Cor_Responsable: '',
+                Num_Responsable: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
     const data = responsableList.map((responsable) => [
         responsable.Nom_Responsable,
         responsable.Ape_Responsable,
@@ -95,36 +115,42 @@ const CrudResponsable = () => {
         responsable.Cor_Responsable,
         responsable.Num_Responsable,
         `
-          <button class='btn btn-info align-middle btn-edit' data-id='${responsable.Id_Responsable}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+          <button class='btn btn-primary align-middle btn-edit' data-id='${responsable.Id_Responsable}'>
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${responsable.Id_Responsable}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${responsable.Id_Responsable}'>
+            <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
     ]);
 
     const titles = [
-        "Nombre", "Apellidos", "Documento de Identidad", "Tipo de Responsable", "Correo", "Número de Teléfono", "Acciones"
+        "Nombre", "Apellidos", "Numero Documento", "Tipo Responsable", "Correo", "Número Teléfono", "Acciones"
     ];
 
     return (
         <>
+         {/* <div className="container mt-5"> */}
+         <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+
+            <button className="btn btn-primary mb-4 " onClick={handleAddClick}
+            style={{ width: '144px', height: '45px', padding:'0px', fontSize: '15px'}}>
+                {showForm ? 'Ocultar Formulario' : 'Agregar Responsable'}
+            </button>
+            </div>
             <WriteTable 
                 titles={titles} 
                 data={data} 
                 onEditClick={(id) => getResponsable(id)} 
                 onDeleteClick={(id) => deleteResponsable(id)} 
             />
-            <hr />
-            <FormResponsable 
-                buttonForm={buttonForm} 
-                responsable={responsable} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllResponsable={getAllResponsable} 
-            />
-            <hr />
+            {showForm && (
+            <>
+            {/* <hr /> */}
+            <FormResponsable buttonForm={buttonForm} responsable={responsable} URI={URI} updateTextButton={updateTextButton} getAllResponsable={getAllResponsable} />
+            </>
+        )}
+
         </>
     );
 };

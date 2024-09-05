@@ -10,6 +10,7 @@ const PATH_FOTOS = process.env.ROUTER_FOTOS;
 const CrudEstanque = () => {
     const [EstanqueList, setEstanqueList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [showForm, setShowForm] = useState(false);
     const [estanque, setEstanque] = useState({
         Id_Estanque: '',
         Nom_Estanque: '',
@@ -78,6 +79,25 @@ const CrudEstanque = () => {
         });
     };
 
+    const handleAddClick = () => {
+        setShowForm(prevShowForm => !prevShowForm);
+
+        if (!showForm) {
+            setEstanque({
+                Id_Estanque: '',
+                Nom_Estanque: '',
+                Esp_Agua: '',
+                Tip_Estanque: '',
+                Lar_Estanque: '',
+                Anc_Estanque: '',
+                Des_Estanque: '',
+                Img_Estanque: '',
+                Rec_Agua: ''
+            });
+            setButtonForm('Enviar');
+        }
+    };
+
     const handleEdit = (Id_Estanque) => {
         getEstanque(Id_Estanque);
     };
@@ -97,36 +117,47 @@ const CrudEstanque = () => {
         `<img width="80px" src="${PATH_FOTOS}/${estanque.Img_Estanque}" alt="Imagen del estanque" />`,
         estanque.Rec_Agua,
         `
-          <button class='btn btn-info align-middle btn-edit' data-id='${estanque.Id_Estanque}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+          <button class='btn btn-primary align-middle btn-edit' data-id='${estanque.Id_Estanque}'>
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-info align-middle m-2 btn-delete' data-id='${estanque.Id_Estanque}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${estanque.Id_Estanque}'>
+            <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
     ]);
     
     const titles = [
-        "Número", "Nombre", "Espejo de Agua", "Tipo", "Largo", "Ancho", "Descripción", "Imagen", "Recambio de agua", "Acciones"
+        "Número", "Nombre", "Espejo Agua", "Tipo", "Largo", "Ancho", "Descripción", "Imagen", "Recambio agua", "Acciones"
     ];
 
     return (
         <>
+        {/* <div className="container mt-5"> */}
+        <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}
+                style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
+                    {showForm ? 'Ocultar Formulario' : 'Agregar Estanque'}
+                </button>
+                </div>
             <WriteTable 
                 titles={titles} 
                 data={data} 
                 onEditClick={handleEdit} 
                 onDeleteClick={handleDelete} 
             />
-            <hr />
-            <FormEstanque 
-                buttonForm={buttonForm} 
-                estanque={estanque} 
-                URI={URI} 
-                updateTextButton={updateTextButton} 
-                getAllEstanques={getAllEstanques} 
-            />
-            <hr />
+            {showForm && (
+                <>
+                {/* <hr /> */}
+                        <FormEstanque
+                            getAllEstanques={getAllEstanques}
+                            buttonForm={buttonForm}
+                            estanque={estanque}
+                            URI={URI}
+                            updateTextButton={updateTextButton}
+                        />
+                    </>
+                )}
         </>
     );
 };
