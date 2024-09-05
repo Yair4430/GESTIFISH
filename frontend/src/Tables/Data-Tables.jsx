@@ -59,13 +59,27 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
 
   return (
     <>
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css"/>
       <Sidebar />
       <center>
-        <div style={{ marginLeft: '300px', paddingTop: '30px' }} >
-          <div className="table-container">
-            <div className="dataTables_filter">
-            </div>
+        <div style={{ marginLeft: '300px', paddingTop: '30px' }}>
+          {/* Botones centrados */}
+          <div className="button-group" style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <button className="btn btn-danger mx-2">
+              <i className="bi bi-file-earmark-pdf"></i> PDF
+            </button>
+            <button className="btn btn-success mx-2">
+              <i className="bi bi-file-earmark-excel"></i> EXCEL
+            </button>
+            <button className="btn btn-secondary mx-2">
+              <i className="bi bi-file-earmark-code"></i> SQL
+            </button>
           </div>
+
+          <div className="table-container">
+            <div className="dataTables_filter"></div>
+          </div>
+
           <center>
             <table className="table table-responsive" id="TableDinamic" ref={tableRef}>
               <thead>
