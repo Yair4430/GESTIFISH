@@ -1,5 +1,4 @@
 import React from "react";
-import BarraNavegacionPublica from "../home/barraNavegacionPublica";
 
 const CaruselContact = () => {
   const teamMembers = [
@@ -44,11 +43,12 @@ const CaruselContact = () => {
       place: "Soy de Cajamarca Tolima"
     }
   ];
-  
 
   return (
     <>
-      <BarraNavegacionPublica />
+    <br/>
+    <br/>
+      {/* <BarraNavegacionPublica /> */}
       <div style={{
         paddingTop: '3rem',
         paddingBottom: '3rem',
@@ -56,8 +56,8 @@ const CaruselContact = () => {
         backgroundColor: '#f8f9fa',
         fontFamily: 'Poppins, sans-serif'
       }}>
-        {/* Título de la sección */}
-        <h2 style={styles.sectionHeader}>¿Quiénes Somos?</h2>
+        {/* Título de la sección ¿Quiénes Somos? */}
+        <h2 style={styles.sectionHeaderQuienesSomos}>¿Quiénes Somos?</h2>
 
         {/* Contenedor flex para el texto y la imagen */}
         <div style={{
@@ -160,7 +160,7 @@ const CaruselContact = () => {
                 <h4 style={styles.memberName}>{member.name}</h4>
                 <h5 style={styles.memberTitle}>{member.title}</h5>
                 <p style={styles.memberDescription}> Tengo {calculateAge(member.birthdate)} años, {member.place}</p>
-      </div>
+              </div>
             </div>
           ))}
         </div>
@@ -219,6 +219,7 @@ const CaruselContact = () => {
     </>
   );
 };
+
 const calculateAge = (birthdate) => {
   const birthDate = new Date(birthdate);
   const today = new Date();
@@ -234,12 +235,23 @@ const calculateAge = (birthdate) => {
 
 // Estilos en línea
 const styles = {
+  sectionHeaderQuienesSomos: {
+    fontFamily: 'Poppins, sans-serif',
+    fontWeight: 700,
+    fontSize: '2.5rem',
+    color: '#000',
+    position: 'absolute', // Esto permite mover el título libremente en la pantalla
+    top: '145px', // Ajusta la distancia desde la parte superior de la pantalla
+    left: '100px', // Ajusta la distancia desde el borde izquierdo
+    // Puedes usar 'right' y 'bottom' en lugar de 'left' y 'top' para mover desde esos lados
+  },
+
   sectionHeader: {
     fontFamily: 'Poppins, sans-serif',
     fontWeight: 700,
     fontSize: '2.5rem',
     color: '#000',
-    textAlign: 'center', // Asegura que el texto esté centrado
+    textAlign: 'center',
     marginBottom: '3rem', // Ajusta el margen inferior para mantener el espacio adecuado
   },
   textStyle: {
