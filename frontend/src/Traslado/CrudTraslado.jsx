@@ -10,6 +10,7 @@ const CrudTraslado = () => {
     const [trasladoList, setTrasladoList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
     const [showForm, setShowForm] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [traslado, setTraslado] = useState({
         Id_Traslado: '',
         Fec_Traslado: '',
@@ -26,19 +27,30 @@ const CrudTraslado = () => {
     const getAllTraslados = async () => {
         try {
             const respuesta = await axios.get(URI);
-            setTrasladoList(respuesta.data);
+            if (respuesta.status >= 200 && respuesta.status < 300) {
+                setTrasladoList(respuesta.data);
+            } else {
+                console.warn('HTTP Status:', respuesta.status);
+            }
         } catch (error) {
-            console.error('Error fetching traslados:', error);
+            console.error('Error fetching traslados:', error.response?.status || error.message);
         }
     };
 
-    const getTraslado = async (id_Traslado) => {
+    const getTraslado = async (Id_Traslado) => {
         setButtonForm('Actualizar');
         try {
-            const respuesta = await axios.get(`${URI}${id_Traslado}`);
-            setTraslado({ ...respuesta.data });
+            const respuesta = await axios.get(`${URI}${Id_Traslado}`);
+            if (respuesta.status >= 200 && respuesta.status < 300) {
+                setTraslado({ ...respuesta.data });
+                const modalElement = document.getElementById('modalForm');
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+            } else {
+                console.warn('HTTP Status:', respuesta.status);
+            }
         } catch (error) {
-            console.error('Error fetching traslado:', error);
+            console.error('Error fetching traslado:', error.response?.status || error.message);
         }
     };
 
@@ -73,9 +85,10 @@ const CrudTraslado = () => {
             }
         });
     };
+
     const handleAddClick = () => {
-        setShowForm(prevShowForm => !prevShowForm);
-    
+        setButtonForm('Enviar');
+        setShowForm(!showForm);
         if (!showForm) {
             setTraslado({
                 Id_Traslado: '',
@@ -85,13 +98,17 @@ const CrudTraslado = () => {
                 Obs_Traslado: '',
                 Hor_Traslado: ''
             });
-            setButtonForm('Enviar');
         }
+        setIsModalOpen(true);
     };
 
-    
-    const handleEdit = (id_Traslado) => {
-        getTraslado(id_Traslado);
+    const closeModal = () => setIsModalOpen(false);
+
+    const handleEdit = (Id_Traslado) => {
+        getTraslado(Id_Traslado);
+        const modalElement = document.getElementById('modalForm');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
     };
 
     const handleDelete = (id_Traslado) => {
@@ -106,39 +123,63 @@ const CrudTraslado = () => {
         traslado.Hor_Traslado,
         `
         <button class='btn btn-primary' align-middle btn-edit' data-id='${traslado.id_Traslado}'>
-          <i class="fa-solid fa-pen-to-square"></i> Editar
+          <i class="fa-solid fa-pen-to-square"></i> 
         </button>
-        <button class='btn btn-danger' align-middle m-2 btn-delete' data-id='${traslado.id_Traslado}'>
-          <i class="fa-solid fa-trash-can"></i> Borrar
+        <button class='btn btn-danger' align-middle m-1 btn-delete' data-id='${traslado.id_Traslado}'>
+          <i class="fa-solid fa-trash-can"></i> 
         </button>
       `
     ]);
 
     const titles = [
-        "Fecha de Traslado", "Cantidad de Peces", "Responsable", "Observaciones", "Hora de Traslado", "Acciones"
+        "Fecha Traslado", "Cantidad Peces", "Responsable", "Observaciones", "Hora Traslado", "Acciones"
     ];
 
     return (
         <>
         {/* <div className="container mt-5"> */}
-        <div style={{ marginLeft: '490px', paddingTop: '70px' }}>
-
-                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
-                    {showForm ? 'Ocultar Formulario' : 'Agregar Traslado'}
+            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+                <button 
+                    className="btn btn-primary mb-4" 
+                    onClick={handleAddClick}
+                    style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
+                    Agregar Traslado
                 </button>
-                </div>
-            <WriteTable 
-                titles={titles} 
-                data={data} 
-                onEditClick={handleEdit} 
-                onDeleteClick={handleDelete} 
-            />
-            {showForm && (
-                <>
-                <hr />
-                        <FormTraslado getAllTraslados={getAllTraslados} buttonForm={buttonForm} traslado={traslado} URI={URI} updateTextButton={updateTextButton} />
-                    </>
+
+                <WriteTable 
+                    titles={titles} 
+                    data={data} 
+                    onEditClick={handleEdit} 
+                    onDeleteClick={handleDelete} 
+                />
+                
+                {isModalOpen && (
+                    <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-lg">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Traslado' : 'Registrar Traslado'}</h5>
+                                    <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    <FormTraslado
+                                        buttonForm={buttonForm}
+                                        traslado={traslado}
+                                        URI={URI}
+                                        updateTextButton={updateTextButton}
+                                        getAllTraslados={getAllTraslados}
+                                        closeModal={() => {
+                                            const modalElement = document.getElementById('modalForm');
+                                            const modal = window.bootstrap.Modal.getInstance(modalElement);
+                                            modal.hide();
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 )}
+            </div>
         </>
     );
 };

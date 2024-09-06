@@ -4,12 +4,12 @@ import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormActividad from './formActividad.jsx';
 
-
 const URI = process.env.ROUTER_PRINCIPAL + '/Actividad/';
 
 const CrudActividad = () => {
     const [ActividadList, setActividadList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [actividad, setActividad] = useState({
         Id_Actividad: '',
@@ -36,11 +36,14 @@ const CrudActividad = () => {
     };
 
     const getActividad = async (Id_Actividad) => {
-        setButtonForm('Enviar');
+        setButtonForm('Actualizar');
         try {
             const respuesta = await axios.get(`${URI}/${Id_Actividad}`);
-            setButtonForm('Actualizar');
-            setActividad({ ...respuesta.data });
+            setActividad(respuesta.data);
+            // Mostrar el modal
+            const modalElement = document.getElementById('modalForm');
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
         } catch (error) {
             console.error('Error fetching actividad:', error);
         }
@@ -68,36 +71,42 @@ const CrudActividad = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    // getAllActividad(); // Refresh the list after deletion
+                    getAllActividad(); // Refresh the list after deletion
                 } catch (error) {
                     console.error('Error deleting actividad:', error);
                 }
-            }else{
+            } else {
                 getAllActividad(); // Refresh the list after deletion
-
             }
         });
     };
 
     const handleAddClick = () => {
-        setShowForm(prevShowForm => !prevShowForm);
-
+        setButtonForm('Enviar');
+        setShowForm(!showForm);
         if (!showForm) {
             setActividad({
+                Id_Actividad: '',
                 Nom_Actividad: '',
                 Des_Actividad: '',
+                Id_Responsable: '',
                 Fec_Actividad: '',
                 Hor_Actividad: '',
                 Fas_Produccion: '',
-                Id_Responsable: '',
                 Id_Estanque: ''
             });
-            setButtonForm('Enviar');
         }
+        setIsModalOpen(true);
     };
+
+    const closeModal = () => setIsModalOpen(false);
 
     const handleEdit = (Id_Actividad) => {
         getActividad(Id_Actividad);
+        // Usa Bootstrap para mostrar el modal
+        const modalElement = document.getElementById('modalForm');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
     };
 
     const handleDelete = (Id_Actividad) => {
@@ -114,38 +123,63 @@ const CrudActividad = () => {
         actividad.estanque.Nom_Estanque,
         `
           <button class='btn btn-primary align-middle btn-edit' data-id='${actividad.Id_Actividad}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${actividad.Id_Actividad}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${actividad.Id_Actividad}'>
+            <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
     ]);
-    
+
     const titles = [
-        "Nombre", "Descripción", "Responsable", "Fecha", "Hora", "Fase de Producción", "Estanque", "Acciones"
+        "Nombre", "Descripción", "Responsable", "Fecha", "Hora", "Fase Producción", "Estanque", "Acciones"
     ];
 
     return (
         <>
-        {/* <div className="container mt-5"> */}
-        <div style={{ marginLeft: '490px', paddingTop: '70px' }} >
-                <button className="btn btn-primary mb-4" onClick={handleAddClick} >
-                    {showForm ? 'Ocultar Formulario' : 'Agregar Actividad'}
+            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+                <button
+                    className="btn btn-primary mb-4"
+                    onClick={handleAddClick}
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}>
+                    Agregar Actividad
                 </button>
-                </div>
-            <WriteTable 
-                titles={titles} 
-                data={data} 
-                onEditClick={handleEdit} 
-                onDeleteClick={handleDelete} 
-            />
-            {showForm && (
-                    <>
-                        <hr />
-                        <FormActividad buttonForm={buttonForm} actividad={actividad} URI={URI} updateTextButton={updateTextButton} getAllActividad={getAllActividad} />
-                    </>
+
+                <WriteTable 
+                    titles={titles} 
+                    data={data} 
+                    onEditClick={handleEdit} 
+                    onDeleteClick={handleDelete} 
+                />
+
+                {isModalOpen && (
+                    <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-lg">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}</h5>
+                                    <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    <FormActividad 
+                                        buttonForm={buttonForm} 
+                                        actividad={actividad} 
+                                        URI={URI} 
+                                        updateTextButton={updateTextButton} 
+                                        getAllActividad={getAllActividad} 
+                                        closeModal ={() => {
+                                            const modalElement = document.getElementById('modalForm');
+                                            const modal = window.bootstrap.Modal.getInstance(modalElement);
+                                        modal.hide();
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 )}
+
+            </div>
         </>
     );
 };

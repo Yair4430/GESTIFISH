@@ -94,7 +94,7 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
     };
 
     useEffect(() => {
-        if (siembra) {
+        if (siembra && Object.keys(siembra).length > 0) {
             setData();
         }
     }, [siembra]);
@@ -102,7 +102,7 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
     return (
 <>
             {/* <div className="container mt-5"> */}
-            <div style={{ marginLeft: '400px', paddingTop: '70px' }}>
+            {/* <div style={{ marginLeft: '300px', paddingTop: '70px' }}> */}
 
                 <div className="card">
                     <div className="card-header bg-primary text-white">
@@ -205,7 +205,7 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                         </form>
                     </div>
                 </div>
-            </div>
+            {/* </div> */}
         </>
 
     );

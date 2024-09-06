@@ -81,6 +81,9 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                     getAllActividad();
                 }
             }
+
+            $('#modalForm').modal('hide');
+
         } catch (error) {
             Swal.fire({
                 title: 'Error',
@@ -121,8 +124,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
     return (
         <>
             {/* <div className="container mt-5"> */}
-        <div style={{ marginLeft: '400px', paddingTop: '70px' }}>
-
+        {/* <div style={{ marginLeft: '300px', paddingTop: '70px' }}> */}
                 <div className="card">
                     <div className="card-header bg-primary text-white">
                         <h1 className="text-center">
@@ -199,7 +201,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                         </form>
                     </div>
                 </div>
-            </div>
+            {/* </div> */}
         </>
 
     );

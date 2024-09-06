@@ -1,46 +1,101 @@
-.dt-search{
-    text-align: right;
-}
-/* Data-Tables.css */
 
-/* Centrar el contenido de la tabla y ajustar el tamaño */
+.dt-search{
+  text-align: 0px;
+  margin-left: 220px;
+}
+
+
+/* Estilo para el contenedor que rodea la tabla */
+.table-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px; /* Margen inferior para separar del contenido de la tabla */
+}
+
+/* Alineación de la barra de búsqueda */
+.dataTables_filter {
+  display: flex;
+  justify-content: flex-end; /* Alinea el campo de búsqueda a la derecha */
+  margin-right: 10px; /* Espaciado a la derecha */
+  margin-top: -50px; /* Ajusta la posición vertical para alinearlo con la tabla */
+}
+
+.dataTables_filter label {
+  display: flex;
+  align-items: center;
+}
+
+/* Ajusta el estilo del input de búsqueda */
+.dataTables_filter input {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  font-size: 14px;
+  width: 200px; /* Ajusta el ancho del campo de búsqueda */
+}
+
+
+/* Estilo para el contenedor de la tabla */
+.table-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
 .table {
-    margin: 0 auto; /* Centrar la tabla */
-    font-size: 18px; /* Aumentar el tamaño de la fuente */
-    width: 80%; /* Ajustar el ancho de la tabla */
-  }
-  
-  .table th, .table td {
-    padding: 15px; /* Aumentar el espaciado en las celdas */
-    text-align: center; /* Asegurarse de que el contenido esté centrado */
-    vertical-align: middle; /* Alinear el contenido verticalmente */
-  }
-  
-  /* Ajustar el tamaño del encabezado */
-  .table th {
-    font-size: 20px; /* Aumentar el tamaño de la fuente del encabezado */
-    background-color: #007bff; /* Color de fondo del encabezado */
-    color: #ffffff; /* Color del texto del encabezado */
-  }
-  
-  /* Ajustar el tamaño del cuerpo de la tabla */
-  .table td {
-    font-size: 18px; /* Tamaño de fuente del cuerpo de la tabla */
-  }
-  
-  /* Ajustar la tarjeta que contiene la tabla */
-  .card {
-    margin: 0 auto;
-    max-width: 90%; /* Limitar el ancho máximo de la tarjeta */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añadir sombra */
-  }
-  
-  .card-header h1 {
-    font-size: 24px; /* Aumentar el tamaño del título de la tabla */
-  }
-  
-  .alert {
-    font-size: 18px; /* Aumentar el tamaño de la fuente de la alerta */
-    text-align: center; /* Centrar el texto de la alerta */
-  }
-  
+  width: 100%;
+  max-width: 90%;
+  margin: 0 auto;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table th {
+  font-size: 15px !important;
+  background-color: #007bff !important;
+  color: #ffffff !important;
+  text-align: center !important;
+  padding: 10px !important;
+  border: 1px solid #ddd !important;
+  font-weight: bold !important;
+}
+
+.table td {
+  font-size: 15px !important;
+  text-align: center !important;
+  padding: 10px !important;
+  border: 1px solid #ddd !important;
+}
+
+.table-responsive {
+  max-width: 4400px;
+  overflow-x: auto;
+}
+
+#sidebar {
+  width: 220px;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+body, html {
+  overflow-x: hidden;
+}
+
+.btn-edit, .btn-delete {
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  margin: 0 5px;
+}
+
+.btn-sm {
+  padding: 3px 7px;
+  font-size: 10px;
+}

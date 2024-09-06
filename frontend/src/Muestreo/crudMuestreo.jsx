@@ -9,6 +9,7 @@ const URI = process.env.ROUTER_PRINCIPAL + '/muestreo/';
 const CrudMuestreo = () => {
     const [muestreoList, setMuestreoList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [muestreo, setMuestreo] = useState({
         Id_Muestreo: '',
@@ -29,22 +30,32 @@ const CrudMuestreo = () => {
     const getAllMuestreo = async () => {
         try {
             const respuesta = await axios.get(URI);
-            setMuestreoList(respuesta.data);
+            if (respuesta.status >= 200 && respuesta.status < 300) {
+                setMuestreoList(respuesta.data);
+            } else {
+                console.warn('HTTP Status:', respuesta.status);
+            }
         } catch (error) {
-            console.error('Error fetching muestreo:', error);
+            console.error('Error fetching muestreo:', error.response?.status || error.message);
         }
     };
 
     const getMuestreo = async (Id_Muestreo) => {
-        setButtonForm('Enviar');
+        setButtonForm('Actualizar');
         try {
             const respuesta = await axios.get(`${URI}${Id_Muestreo}`);
-            setButtonForm('Actualizar');
-            setMuestreo({ ...respuesta.data });
+            if (respuesta.status >= 200 && respuesta.status < 300) {
+                setMuestreo({ ...respuesta.data });
+                const modalElement = document.getElementById('modalForm');
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+            } else {
+                console.warn('HTTP Status:', respuesta.status);
+            }
         } catch (error) {
-            console.error('Error fetching muestreo:', error);
+            console.error('Error fetching muestreo:', error.response?.status || error.message);
         }
-    };
+    };  
 
     const updateTextButton = (texto) => {
         setButtonForm(texto);
@@ -79,10 +90,9 @@ const CrudMuestreo = () => {
     };
     
     const handleAddClick = () => {
-        setShowForm(prevShowForm => !prevShowForm);
-
+        setButtonForm('Enviar');
+        setShowForm(!showForm);
         if (!showForm) {
-            // Reinicia los valores del formulario de muestreo
             setMuestreo({
                 Id_Muestreo: '',
                 Fec_Muestreo: '',
@@ -94,12 +104,17 @@ const CrudMuestreo = () => {
                 Hor_Muestreo: '',
                 Pes_Promedio: ''
             });
-            setButtonForm('Enviar');
         }
+        setIsModalOpen(true);
     };
+
+    const closeModal = () => setIsModalOpen(false);
 
     const handleEdit = (Id_Muestreo) => {
         getMuestreo(Id_Muestreo);
+        const modalElement = document.getElementById('modalForm');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
     };
 
     const handleDelete = (Id_Muestreo) => {
@@ -116,41 +131,62 @@ const CrudMuestreo = () => {
         muestreo.responsable.Nom_Responsable,
         `
           <button class='btn btn-primary align-middle btn-edit' data-id='${muestreo.Id_Muestreo}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${muestreo.Id_Muestreo}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${muestreo.Id_Muestreo}'>
+            <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
     ]);
     
     const titles = [
-        "Fecha de Muestreo", "Número de Peces", "Observaciones", "Peso Esperado", "Hora de Muestreo", "Fecha Siembra", "Nombre Responsable", "Acciones"
+        "Fecha Muestreo", "Número Peces", "Observaciones", "Peso Esperado", "Hora Muestreo", "Fecha Siembra", "Nombre Responsable", "Acciones"
     ];
 
     return (
         <>
-                    {/* <div className="container mt-5"> */}
-                    <div style={{ marginLeft: '490px', paddingTop: '70px' }}>
-
-                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
-                    {showForm ? 'Ocultar Formulario' : 'Agregar Muestreo'}
+            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+                <button 
+                    className="btn btn-primary mb-4" 
+                    onClick={handleAddClick}
+                    style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
+                    Agregar Muestreo
                 </button>
-                </div>
+                
                 <WriteTable 
                 titles={titles} 
                 data={data} 
                 onEditClick={handleEdit} 
                 onDeleteClick={handleDelete} 
-            />
-            {showForm && (
-                
-                <>
-                <hr />
-                        <FormMuestreo getAllMuestreo={getAllMuestreo} buttonForm={buttonForm} muestreo={muestreo} URI={URI} updateTextButton={updateTextButton} />
-                    </>
+                />
+
+            {isModalOpen && (
+                    <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-lg">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Muestreo' : 'Registrar Muestreo'}</h5>
+                                    <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    <FormMuestreo
+                                        buttonForm={buttonForm}
+                                        muestreo={muestreo}
+                                        URI={URI}
+                                        updateTextButton={updateTextButton}
+                                        getAllMuestreo={getAllMuestreo}
+                                        closeModal={() => {
+                                            const modalElement = document.getElementById('modalForm');
+                                            const modal = window.bootstrap.Modal.getInstance(modalElement);
+                                            modal.hide();
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 )}
-                            
+            </div>           
         </>
     );
 };

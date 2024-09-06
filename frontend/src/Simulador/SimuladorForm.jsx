@@ -45,12 +45,16 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
 
   return (
     <>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css"/>
+
       <style>{`
         .form-container {
           background-color: #f8f9fa;
           padding: 20px;
           border-radius: 8px;
           box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          /*width: 50%;  Define un ancho para el contenedor */
+          margin: 0 auto; /* Centra el contenedor horizontalmente */
         }
         .form-container h2 {
           margin-bottom: 20px;
@@ -127,10 +131,15 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
           />
         </div>
         <div className="col-md-12 text-center">
-          <button type="submit" className="btn btn-primary">Simular</button>
-          <button type="button" className="btn btn-secondary ms-2" onClick={handleReset}>Limpiar Campos</button>
+          <button type="submit" className="btn btn-primary">
+            <i className="bi bi-play-circle me-2"></i> Simular
+          </button>
+          <button type="button" className="btn btn-secondary ms-2" onClick={handleReset}>
+            <i className="bi bi-trash me-2"></i> Limpiar
+          </button>
         </div>
       </form>
+      <br/>
     </>
   );
 };

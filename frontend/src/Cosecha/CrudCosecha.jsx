@@ -10,6 +10,7 @@ const CrudCosecha = () => {
     const [CosechaList, setCosechaList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
     const [showForm, setShowForm] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [cosecha, setCosecha] = useState({
         Id_Cosecha: '',
         Fec_Cosecha: '',
@@ -47,6 +48,9 @@ const CrudCosecha = () => {
             const respuesta = await axios.get(`${URI}${Id_Cosecha}`);
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setCosecha({ ...respuesta.data });
+                const modalElement = document.getElementById('modalForm');
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
             } else {
                 console.warn('HTTP Status:', respuesta.status);
             }
@@ -88,8 +92,8 @@ const CrudCosecha = () => {
     };
 
     const handleAddClick = () => {
-        setShowForm(prevShowForm => !prevShowForm);
-
+        setButtonForm('Enviar');
+        setShowForm(!showForm);
         if (!showForm) {
             setCosecha({
                 Id_Cosecha: '',
@@ -104,12 +108,17 @@ const CrudCosecha = () => {
                 Vlr_Cosecha: '',
                 Obs_Cosecha: ''
             });
-            setButtonForm('Enviar');
         }
+        setIsModalOpen(true);
     };
+
+    const closeModal = () => setIsModalOpen(false);
 
     const handleEdit = (Id_Cosecha) => {
         getCosecha(Id_Cosecha);
+        const modalElement = document.getElementById('modalForm');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
     };
 
     const handleDelete = (Id_Cosecha) => {
@@ -129,47 +138,63 @@ const CrudCosecha = () => {
         cosecha.responsable.Nom_Responsable,
         `
           <button class='btn btn-primary align-middle btn-edit' data-id='${cosecha.Id_Cosecha}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${cosecha.Id_Cosecha}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${cosecha.Id_Cosecha}'>
+            <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
     ]);
 
     const titles = [
-        "Fecha de Cosecha", "Cantidad de Peces", "Peso Eviscerado", "Peso Viscerado",
-        "Porcentaje de Vísperas", "Fecha Siembra", "Hora de Cosecha", "Valor de Cosecha",
+        "Fecha Cosecha", "Cantidad Peces", "Peso Eviscerado", "Peso Viscerado",
+        "Porcentaje Viceras", "Fecha Siembra", "Hora Cosecha", "Valor Cosecha",
         "Observaciones", "Nombre Responsable", "Acciones"
     ];
 
     return (
         <>
-                    {/* <div className="container mt-5"> */}
-        <div style={{ marginLeft: '490px', paddingTop: '70px' }}>
-
-                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
-                    {showForm ? 'Ocultar Formulario' : 'Agregar Cosecha'}
+            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+                <button 
+                    className="btn btn-primary mb-4" 
+                    onClick={handleAddClick}
+                    style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
+                    Agregar Cosecha
                 </button>
-                </div>
-            <WriteTable
-                titles={titles}
-                data={data}
-                onEditClick={handleEdit}
-                onDeleteClick={handleDelete}
-            />
-            {showForm && (
-                <>
-                <hr />
-                        <FormCosecha
-                            getAllCosecha={getAllCosecha}
-                            buttonForm={buttonForm}
-                            cosecha={cosecha}
-                            URI={URI}
-                            updateTextButton={updateTextButton}
-                        />
-                    </>
+                    
+                <WriteTable
+                    titles={titles}
+                    data={data}
+                    onEditClick={handleEdit}
+                    onDeleteClick={handleDelete}
+                />
+            {isModalOpen && (
+                    <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-lg">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Cosecha' : 'Registrar Cosecha'}</h5>
+                                    <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    <FormCosecha
+                                        buttonForm={buttonForm}
+                                        cosecha={cosecha}
+                                        URI={URI}
+                                        updateTextButton={updateTextButton}
+                                        getAllCosecha={getAllCosecha}
+                                        closeModal={() => {
+                                            const modalElement = document.getElementById('modalForm');
+                                            const modal = window.bootstrap.Modal.getInstance(modalElement);
+                                            modal.hide();
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 )}
+            </div>
         </>
     );
 };

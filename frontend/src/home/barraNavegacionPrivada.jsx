@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from 'react-router-dom'; // Importa NavLink
-import Logo from '../IMG/Logo_FondoBlanco.jpeg'; // Asegúrate de reemplazar esta línea con el logo que quieres usar
+import Logo from '../IMG/LogoBlanco.jpeg'; // Asegúrate de reemplazar esta línea con el logo que quieres usar
 
 // Definición del componente de barra de navegación privada
 function barraNavegacionPrivada({ logOutUser }) {
@@ -9,7 +9,7 @@ function barraNavegacionPrivada({ logOutUser }) {
   // Estilos en línea para la barra de navegación
   const styles = {
     navbar: {
-      padding: '15px 30px', // Espaciado interno de la barra
+      padding: '5px 30px', // Espaciado interno de la barra
       backgroundColor: '#007bff', // Color de fondo azul más llamativo
     },
     navbarTitle: {

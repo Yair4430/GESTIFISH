@@ -12,6 +12,7 @@ const URI_ESTANQUE = process.env.ROUTER_PRINCIPAL + '/estanque/';
 const CrudSiembra = () => {
     const [siembraList, setSiembraList] = useState([]);
     const [responsables, setResponsables] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [especies, setEspecies] = useState([]);
     const [estanques, setEstanques] = useState([]);
@@ -49,10 +50,14 @@ const CrudSiembra = () => {
 
     const getAllSiembras = async () => {
         try {
-            const { data } = await axios.get(URI);
-            setSiembraList(data);
+            const respuesta = await axios.get(URI);
+            if (respuesta.status >= 200 && respuesta.status < 300) {
+                setSiembraList(respuesta.data);
+            } else {
+                console.warn('HTTP Status:', respuesta.status);
+            }
         } catch (error) {
-            console.error('Error fetching siembras:', error);
+            console.error('Error fetching siembras:', error.response?.status || error.message);
         }
     };
 
@@ -86,10 +91,17 @@ const CrudSiembra = () => {
     const getSiembra = async (Id_Siembra) => {
         setButtonForm('Actualizar');
         try {
-            const { data } = await axios.get(`${URI}${Id_Siembra}`);
-            setSiembra(data);
+            const respuesta = await axios.get(`${URI}${Id_Siembra}`);
+            if (respuesta.status >= 200 && respuesta.status < 300) {
+                setSiembra({ ...respuesta.data });
+                const modalElement = document.getElementById('modalForm');
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+            } else {
+                console.warn('HTTP Status:', respuesta.status);
+            }
         } catch (error) {
-            console.error('Error fetching siembra:', error);
+            console.error('Error fetching siembra:', error.response?.status || error.message);
         }
     };
 
@@ -126,8 +138,8 @@ const CrudSiembra = () => {
     };
 
     const handleAddClick = () => {
-        setShowForm(prevShowForm => !prevShowForm);
-    
+        setButtonForm('Enviar');
+        setShowForm(!showForm);
         if (!showForm) {
             setSiembra({
                 Id_Siembra: '',
@@ -143,13 +155,18 @@ const CrudSiembra = () => {
                 Gan_Peso: '',
                 Vlr_Siembra: ''
             });
-            setButtonForm('Enviar');
         }
+        setIsModalOpen(true);
     };
 
 
+    const closeModal = () => setIsModalOpen(false);
+
     const handleEdit = (Id_Siembra) => {
         getSiembra(Id_Siembra);
+        const modalElement = document.getElementById('modalForm');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
     };
 
     const handleDelete = (Id_Siembra) => {
@@ -170,40 +187,62 @@ const CrudSiembra = () => {
         siembra.Vlr_Siembra,
   `
           <button class='btn btn-primary align-middle btn-edit' data-id='${siembra.Id_Siembra}'>
-            <i class="fa-solid fa-pen-to-square"></i> Editar
+            <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-danger align-middle m-2 btn-delete' data-id='${siembra.Id_Siembra}'>
-            <i class="fa-solid fa-trash-can"></i> Borrar
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${siembra.Id_Siembra}'>
+            <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
     ]);
 
     const titles = [
-        "Cantidad de Peces", "Fecha de Siembra", "Fecha Posible de Cosecha", "Responsable", "Especie", "Estanque", "Peso Actual", "Observaciones", "Hora de Siembra", "Ganancia de Peso", "Valor de Siembra", "Acciones"
+        "Cantidad Peces", "Fecha Siembra", "Fecha Posible Cosecha", "Responsable", "Especie", "Estanque", "Peso Actual", "Observaciones", "Hora Siembra", "Ganancia Peso", "Valor Siembra", "Acciones"
     ];
 
     return (
         <>
-                    {/* <div className="container mt-5"> */}
-                    <div style={{ marginLeft: '490px', paddingTop: '70px' }}>
-
-                <button className="btn btn-primary mb-4" onClick={handleAddClick}>
-                    {showForm ? 'Ocultar Formulario' : 'Agregar Siembra'}
+            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+                <button 
+                    className="btn btn-primary" 
+                    onClick={handleAddClick}
+                    style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>  
+                    Agregar Siembra
                 </button>
-                </div>
-            <WriteTable
-                titles={titles}
-                data={data}
-                onEditClick={handleEdit}
-                onDeleteClick={handleDelete}
-            />
-            {showForm && (
-                <>
-                <hr />
-                        <FormSiembra getAllSiembras={getAllSiembras} buttonForm={buttonForm} siembra={siembra} responsables={responsables} especies={especies} estanques={estanques} URI={URI} updateTextButton={updateTextButton}
-                        />
-                    </>
+                
+                <WriteTable
+                    titles={titles}
+                    data={data}
+                    onEditClick={handleEdit}
+                    onDeleteClick={handleDelete}
+                />
+
+            {isModalOpen && (
+                    <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-lg">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Siembra' : 'Registrar Siembra'}</h5>
+                                    <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    <FormSiembra
+                                        buttonForm={buttonForm}
+                                        siembra={siembra}
+                                        URI={URI}
+                                        updateTextButton={updateTextButton}
+                                        getAllSiembras={getAllSiembras}
+                                        closeModal={() => {
+                                            const modalElement = document.getElementById('modalForm');
+                                            const modal = window.bootstrap.Modal.getInstance(modalElement);
+                                            modal.hide();
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 )}
+            </div>
         </>
     );
 };
