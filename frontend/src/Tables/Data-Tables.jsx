@@ -3,9 +3,11 @@ import $ from "jquery";
 import "datatables.net-dt";
 import "datatables.net-responsive-dt";
 import "./Data-Tables.css";
+import * as XLSX from "xlsx";
+import "jspdf-autotable";
 import Sidebar from '../home/Sidebar.jsx';
 
-function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
+function WriteTable({ titles, data, onEditClick, onDeleteClick, titlesTables }) {
   const tableRef = useRef(null);
 
   useEffect(() => {
@@ -29,10 +31,10 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
       language: {
         search: "",
         searchPlaceholder: "Buscar...",
-        info: "Página _PAGE_ de _PAGES_",
+        info: "Página PAGE de PAGES",
         infoEmpty: "No hay registros disponibles",
-        infoFiltered: "(filtrado de _MAX_ registros en total)",
-        lengthMenu: "Mostrar _MENU_ registros por página"
+        infoFiltered: "(filtrado de MAX registros en total)",
+        lengthMenu: "Mostrar MENU registros por página"
       },
       drawCallback: function () {
         $table.find('.btn-edit').off('click').on('click', function () {
@@ -57,21 +59,56 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
     };
   }, [data, titles, onEditClick, onDeleteClick]);
 
+  const exportToExcel = () => {
+    const workbook = XLSX.utils.book_new();
+    const worksheetData = [
+      titles.slice(0, -1), // Excluir el título de la última columna
+      ...data.map(row =>
+        row.slice(0, -1).map(cell => {
+          // Extraer la URL de la imagen si el contenido es HTML
+          if (typeof cell === 'string' && cell.startsWith('<img')) {
+            const match = cell.match(/src="([^"]*)"/);
+            return match ? match[1] : ''; // Exportar la URL de la imagen
+          }
+          return cell;
+        })
+      )
+    ];
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+    XLSX.writeFile(workbook, "table_data.xlsx");
+  };
+
+
+  const exportToSQL = () => {
+    const sqlData = data.map(row => {
+      const values = row.slice(0, -1).map(value => {
+        // Extraer la URL de la imagen si el contenido es HTML
+        if (typeof value === 'string' && value.startsWith('<img')) {
+          const match = value.match(/src="([^"]*)"/);
+          value = match ? match[1] : '';
+        }
+        return typeof value === 'string' ? `'${value.replace(/'/g, "''")}'` : value;
+      });
+      return `INSERT INTO your_table_name (${titles.slice(0, -1).join(", ")}) VALUES (${values.join(", ")})`;;
+    });
+
+    console.log(sqlData.join("\n"));
+  };
+
   return (
     <>
-       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css"/>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" />
       <Sidebar />
       <center>
+        <h1 id="titlesTables" style={{ textAlign: 'center' }}>{titlesTables}</h1>
         <div style={{ marginLeft: '300px', paddingTop: '30px' }}>
           {/* Botones centrados */}
           <div className="button-group" style={{ textAlign: 'center', marginBottom: '20px' }}>
-            <button className="btn btn-danger mx-2">
-              <i className="bi bi-file-earmark-pdf"></i> PDF
-            </button>
-            <button className="btn btn-success mx-2">
+            <button className="btn btn-success mx-2" onClick={exportToExcel}>
               <i className="bi bi-file-earmark-excel"></i> EXCEL
             </button>
-            <button className="btn btn-secondary mx-2">
+            <button className="btn btn-secondary mx-2" onClick={exportToSQL}>
               <i className="bi bi-file-earmark-code"></i> SQL
             </button>
           </div>
@@ -81,18 +118,19 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
           </div>
 
           <center>
+            <h1 id="titlesTables" ref={titlesTables}></h1>
             <table className="table table-responsive" id="TableDinamic" ref={tableRef}>
               <thead>
                 <tr>
-                  {titles.map((title, index) => (
-                    <th key={index} scope="col">{title}</th>
+                  {titles.slice(0, -1).map((title, index) => (
+                    <th key={index} scope="col">{title}</th> // No renderiza la columna de acciones
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {data.map((row, rowIndex) => (
                   <tr key={rowIndex}>
-                    {row.map((cell, cellIndex) => (
+                    {row.slice(0, -1).map((cell, cellIndex) => (
                       <td key={cellIndex} dangerouslySetInnerHTML={{ __html: cell }}></td>
                     ))}
                   </tr>

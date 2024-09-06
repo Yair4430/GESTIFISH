@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx'; // Asegúrate de que este componente esté disponible
 import FormAlimentacion from './FormAlimentacion';
+import jsPDF from "jspdf";
 
 const URI = process.env.ROUTER_PRINCIPAL + '/alimentacion/';
 
@@ -71,10 +72,43 @@ const CrudAlimentacion = () => {
                 } catch (error) {
                     console.error('Error deleting alimentacion:', error);
                 }
-            }else{
+            } else {
                 getAllAlimentacion();
             }
         });
+    };
+
+
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+
+        // Título de la tabla
+        const title = "Alimentacion";
+        doc.setFontSize(16);
+        doc.text(title, 14, 20); // Posición del título
+
+        // Configuración de autoTable
+        const tableBody = AlimentacionList.map((Alimentacion) => [
+            Alimentacion.Fec_Alimentacion,
+            Alimentacion.Can_RacionKg,
+            Alimentacion.siembra.Fec_Siembra,
+            Alimentacion.responsable.Nom_Responsable,
+            Alimentacion.Tip_Alimento,
+            Alimentacion.Hor_Alimentacion,
+            Alimentacion.Vlr_Alimentacion
+        ]);
+
+        doc.autoTable({
+            head: [['Fecha', 'Cantidad', 'Siembra', 'Responsable', 'Tipo', 'Hora', 'Valor']],
+            body: tableBody,
+            startY: 30, // Posición donde empieza la tabla
+            theme: 'grid', // Tema de la tabla
+            headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
+        });
+
+        // Guarda el PDF
+        doc.save('alimentacion.pdf');
     };
 
     const handleAddClick = () => {
@@ -120,33 +154,41 @@ const CrudAlimentacion = () => {
           </button>
         `
     ]);
-    
+
     const titles = [
         "Fecha Alimentación", "Cantidad Ración (Kg)", "Tipo Alimento", "Hora Alimentación", "Valor Alimentación", "Fecha Siembra", "Nombre Responsable", "Acciones"
     ];
 
     return (
         <>
-        {/* <div className="container mt-5"> */}
-        <div style={{ marginLeft: '320px', paddingTop: '70px' }} >
+            {/* <div className="container mt-5"> */}
+            <div style={{ marginLeft: '320px', paddingTop: '70px' }} >
 
                 <button className="btn btn-primary mb-4" onClick={handleAddClick}
-                style={{ width: '143px', height: '45px', padding:'0px', fontSize: '13px'}}>
+                    style={{ width: '143px', height: '45px', padding: '0px', fontSize: '13px' }}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Alimentación'}
                 </button>
-                </div>
-            <WriteTable 
-                titles={titles} 
-                data={data} 
-                onEditClick={handleEdit} 
-                onDeleteClick={handleDelete} 
+
+                <button
+                    className="btn btn-danger mx-2"
+                    onClick={exportToPDF}
+                    style={{ position: 'absolute', top: '277px', right: '447px', width:'80px' }}
+                >
+                    <i className="bi bi-file-earmark-pdf"></i> PDF
+                </button>
+            </div>
+            <WriteTable
+                titles={titles}
+                data={data}
+                onEditClick={handleEdit}
+                onDeleteClick={handleDelete}
             />
             {showForm && (
                 <>
-                {/* <hr /> */}
-                        <FormAlimentacion getAllAlimentacion={getAllAlimentacion} buttonForm={buttonForm} alimentacion={alimentacion} URI={URI} updateTextButton={updateTextButton} />
-                    </>
-                )}
+                    {/* <hr /> */}
+                    <FormAlimentacion getAllAlimentacion={getAllAlimentacion} buttonForm={buttonForm} alimentacion={alimentacion} URI={URI} updateTextButton={updateTextButton} />
+                </>
+            )}
         </>
     );
 };

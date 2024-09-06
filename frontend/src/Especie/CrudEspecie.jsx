@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormEspecie from './FormEspecie';
+import jsPDF from "jspdf"; // Añade jsPDF para exportar a PDF
 
 const URI = process.env.ROUTER_PRINCIPAL + '/especie/';
 const PATH_FOTOS = process.env.ROUTER_FOTOS;
@@ -56,7 +57,7 @@ const CrudEspecie = () => {
         setButtonForm(texto);
     };
 
-    const deleteEspecie = (Id_Especie) => {
+    const deleteEspecie = async (Id_Especie) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -75,24 +76,54 @@ const CrudEspecie = () => {
                             text: "Borrado exitosamente",
                             icon: "success"
                         });
-                        // getAllEspecies(); // Refresh the list after deletion
+                        getAllEspecies(); // Refresca la lista después de la eliminación
                     } else {
                         console.warn('HTTP Status:', respuesta.status);
                     }
                 } catch (error) {
                     console.error('Error deleting especie:', error.response?.status || error.message);
                 }
-            }else{
-                getAllEspecies();
             }
         });
     };
 
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+
+        // Título de la tabla
+        const title = "Especies";
+        doc.setFontSize(16);
+        doc.text(title, 14, 20); // Posición del título
+
+        // Configuración de autoTable
+        const tableBody = EspecieList.map((especie) => [
+            especie.Nom_Especie,
+            especie.Car_Especie,
+            especie.Tam_Promedio,
+            especie.Den_Especie,
+            especie.Img_Especie ? (
+                doc.addImage(`${PATH_FOTOS}/${especie.Img_Especie}`, 'JPEG', 14, 60, 50, 50)
+            ) : (
+                'No Image'
+            )
+        ]);
+
+        doc.autoTable({
+            head: [['Nombre', 'Características', 'Tamaño Promedio', 'Densidad', 'Imagen']],
+            body: tableBody,
+            startY: 30, // Posición donde empieza la tabla
+            theme: 'grid', // Tema de la tabla
+            headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
+        });
+
+        // Guarda el PDF
+        doc.save('especies.pdf');
+    };
+
     const handleAddClick = () => {
-        // Alterna la visibilidad del formulario
         setShowForm(prevShowForm => !prevShowForm);
-    
-        // Si el formulario se va a mostrar, reinicia los valores
+
         if (!showForm) {
             setEspecie({
                 Id_Especie: '',
@@ -117,12 +148,12 @@ const CrudEspecie = () => {
             'No Image'
         ),
         `
-          <button class='btn btn-primary align-middle btn-edit' data-id='${especie.Id_Especie}'>
-            <i class="fa-solid fa-pen-to-square"></i> 
-          </button>
-          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${especie.Id_Especie}'>
-            <i class="fa-solid fa-trash-can"></i> 
-          </button>
+            <button class='btn btn-primary align-middle btn-edit' data-id='${especie.Id_Especie}'>
+                <i class="fa-solid fa-pen-to-square"></i> 
+            </button>
+            <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${especie.Id_Especie}'>
+                <i class="fa-solid fa-trash-can"></i> 
+            </button>
         `
     ]);
 
@@ -132,35 +163,37 @@ const CrudEspecie = () => {
 
     return (
         <>
-                    {/* <div className="container mt-5"> */}
-                    <div style={{ marginLeft: '320px', paddingTop: '70px' }} >
-
-                <button className="btn btn-primary" onClick={handleAddClick}
-                style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
+            <div style={{ marginLeft: '320px', paddingTop: '70px' }} >
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Especie'}
                 </button>
-                </div>
-            <WriteTable 
-                titles={titles} 
-                data={data} 
-                onEditClick={(Id_Especie) => getEspecie(Id_Especie)} 
-                onDeleteClick={(Id_Especie) => deleteEspecie(Id_Especie)} 
+                <button
+                    className="btn btn-danger mx-2"
+                    onClick={exportToPDF}
+                    style={{ position: 'absolute', top: '277px', right: '447px', width:'80px' }}
+                >
+                    <i className="bi bi-file-earmark-pdf"></i> PDF
+                </button>
+            </div>
+            <WriteTable
+                titles={titles}
+                data={data}
+                onEditClick={(Id_Especie) => getEspecie(Id_Especie)}
+                onDeleteClick={(Id_Especie) => deleteEspecie(Id_Especie)}
             />
             {showForm && (
-                <>
-                {/* <hr /> */}
-
-                    <FormEspecie
-                        getAllEspecies={getAllEspecies}
-                        buttonForm={buttonForm}
-                        especie={especie}
-                        URI={URI}
-                        updateTextButton={updateTextButton}
-                    />
-                    </>
-                )}
+                <FormEspecie
+                    getAllEspecies={getAllEspecies}
+                    buttonForm={buttonForm}
+                    especie={especie}
+                    URI={URI}
+                    updateTextButton={updateTextButton}
+                />
+            )}
         </>
     );
 }
 
 export default CrudEspecie;
+    

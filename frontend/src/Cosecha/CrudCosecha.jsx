@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import WriteTable from '../Tables/Data-Tables.jsx'; // Asegúrate de tener este componente para la tabla de datos
-import FormCosecha from './FormCosecha'; // Asegúrate de tener este componente para el formulario de cosecha
+import WriteTable from '../Tables/Data-Tables.jsx';
+import FormCosecha from './FormCosecha';
+import jsPDF from "jspdf";
 
 const URI = process.env.ROUTER_PRINCIPAL + '/cosecha/';
 
@@ -81,11 +82,62 @@ const CrudCosecha = () => {
                 } catch (error) {
                     console.error('Error deleting cosecha:', error.response?.status || error.message);
                 }
-            }else{
+            } else {
                 getAllCosecha();
             }
         });
     };
+
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+
+        // Título de la tabla
+        const title = "Cosecha";
+        doc.setFontSize(16);
+        doc.text(title, 14, 20); // Posición del título
+
+        // Configuración de autoTable
+        const tableBody = CosechaList.map((cosecha) => [
+            cosecha.Fec_Cosecha,
+            cosecha.Can_Peces,
+            cosecha.Pes_Eviscerado,
+            cosecha.Pes_Viscerado,
+            cosecha.Por_Visceras,
+            cosecha.siembra.Fec_Siembra,
+            cosecha.Hor_Cosecha,
+            cosecha.Vlr_Cosecha,
+            cosecha.Obs_Cosecha,
+            cosecha.responsable.Nom_Responsable
+        ]);
+
+        doc.autoTable({
+            head: [["Fecha Cosecha", "Cantidad Peces", "Peso Eviscerado", "Peso Viscerado",
+                "Porcentaje Viceras", "Fecha Siembra", "Hora Cosecha", "Valor Cosecha",
+                "Observaciones", "Nombre Responsable"]],
+            body: tableBody,
+            startY: 30,
+            theme: 'grid',
+            headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 },
+            columnStyles: {
+                0: { cellWidth: 25 }, // Ancho de la primera columna
+                1: { cellWidth: 15 },
+                2: { cellWidth: 15 },
+                3: { cellWidth: 15 },
+                4: { cellWidth: 15 },
+                5: { cellWidth: 23 }, // Ajusta el ancho de las columnas según sea necesario
+                6: { cellWidth: 20 },
+                7: { cellWidth: 20 },
+                8: { cellWidth: 15 },
+                9: { cellWidth: 18 } // Aumentar el ancho para "Nombre Responsable"
+            }
+        });
+        
+
+        // Guarda el PDF
+        doc.save('cosecha.pdf');
+    };
+
 
     const handleAddClick = () => {
         setShowForm(prevShowForm => !prevShowForm);
@@ -116,61 +168,67 @@ const CrudCosecha = () => {
         deleteCosecha(Id_Cosecha);
     };
 
-    const data = CosechaList.map((cosecha) => [
-        cosecha.Fec_Cosecha,
-        cosecha.Can_Peces,
-        cosecha.Pes_Eviscerado,
-        cosecha.Pes_Viscerado,
-        cosecha.Por_Visceras,
-        cosecha.siembra.Fec_Siembra,
-        cosecha.Hor_Cosecha,
-        cosecha.Vlr_Cosecha,
-        cosecha.Obs_Cosecha,
-        cosecha.responsable.Nom_Responsable,
-        `
-          <button class='btn btn-primary align-middle btn-edit' data-id='${cosecha.Id_Cosecha}'>
-            <i class="fa-solid fa-pen-to-square"></i> 
-          </button>
-          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${cosecha.Id_Cosecha}'>
-            <i class="fa-solid fa-trash-can"></i> 
-          </button>
-        `
-    ]);
-
-    const titles = [
-        "Fecha Cosecha", "Cantidad Peces", "Peso Eviscerado", "Peso Viscerado",
-        "Porcentaje Viceras", "Fecha Siembra", "Hora Cosecha", "Valor Cosecha",
-        "Observaciones", "Nombre Responsable", "Acciones"
-    ];
 
     return (
         <>
-                    {/* <div className="container mt-5"> */}
-        <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+            {/* <div className="container mt-5"> */}
+            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
 
                 <button className="btn btn-primary mb-4" onClick={handleAddClick}
-                style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Cosecha'}
                 </button>
-                </div>
+
+                {/* Botón para exportar a PDF */}
+                <button
+                    className="btn btn-danger mx-2"
+                    onClick={exportToPDF}
+                    style={{ position: 'absolute', top: '277px', right: '447px', width: '80px' }}
+                >
+                    <i className="bi bi-file-earmark-pdf"></i> PDF
+                </button>
+            </div>
             <WriteTable
-                titles={titles}
-                data={data}
                 onEditClick={handleEdit}
                 onDeleteClick={handleDelete}
+                titles={[
+                    "Fecha Cosecha", "Cantidad Peces", "Peso Eviscerado", "Peso Viscerado",
+                    "Porcentaje Viceras", "Fecha Siembra", "Hora Cosecha", "Valor Cosecha",
+                    "Observaciones", "Nombre Responsable", "Acciones"
+                ]}
+                data={CosechaList.map(cosecha => [
+                    cosecha.Fec_Cosecha,
+                    cosecha.Can_Peces,
+                    cosecha.Pes_Eviscerado,
+                    cosecha.Pes_Viscerado,
+                    cosecha.Por_Visceras,
+                    cosecha.siembra.Fec_Siembra,
+                    cosecha.Hor_Cosecha,
+                    cosecha.Vlr_Cosecha,
+                    cosecha.Obs_Cosecha,
+                    cosecha.responsable.Nom_Responsable,
+                    `
+                <button class='btn btn-primary align-middle btn-edit' data-id='${cosecha.Id_Cosecha}'>
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${cosecha.Id_Cosecha}'>
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+                `
+                ])}
             />
             {showForm && (
                 <>
-                {/* <hr /> */}
-                        <FormCosecha
-                            getAllCosecha={getAllCosecha}
-                            buttonForm={buttonForm}
-                            cosecha={cosecha}
-                            URI={URI}
-                            updateTextButton={updateTextButton}
-                        />
-                    </>
-                )}
+                    {/* <hr /> */}
+                    <FormCosecha
+                        getAllCosecha={getAllCosecha}
+                        buttonForm={buttonForm}
+                        cosecha={cosecha}
+                        URI={URI}
+                        updateTextButton={updateTextButton}
+                    />
+                </>
+            )}
         </>
     );
 };

@@ -2,7 +2,8 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
-import FormMuestreo from './formMuestreo';
+import FormMuestreo from './FormMuestreo';
+import jsPDF from 'jspdf';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/muestreo/';
 
@@ -68,16 +69,47 @@ const CrudMuestreo = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    // getAllMuestreo(); // Refresh the list after deletion
+                    getAllMuestreo(); // Refresh the list after deletion
                 } catch (error) {
                     console.error('Error deleting muestreo:', error);
                 }
-            }else{
-                getAllMuestreo();
             }
         });
     };
-    
+
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+
+        // Título de la tabla
+        const title = "Muestreo";
+        doc.setFontSize(16);
+        doc.text(title, 14, 20); // Posición del título
+
+        // Configuración de autoTable
+        const tableBody = muestreoList.map((muestreo) => [
+            muestreo.Fec_Muestreo,
+            muestreo.Num_Peces,
+            muestreo.Obs_Muestreo,
+            muestreo.Pes_Esperado,
+            muestreo.Hor_Muestreo,
+            muestreo.siembra.Fec_Siembra,
+            muestreo.responsable.Nom_Responsable,
+            muestreo.Pes_Promedio
+        ]);
+
+        doc.autoTable({
+            head: [['Fecha Muestreo', 'Número Peces', 'Observaciones', 'Peso Esperado', 'Hora Muestreo', 'Fecha Siembra', 'Nombre Responsable', 'Peso Promedio']],
+            body: tableBody,
+            startY: 30, // Posición donde empieza la tabla
+            theme: 'grid', // Tema de la tabla
+            headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
+        });
+
+        // Guarda el PDF
+        doc.save('muestreo.pdf');
+    };
+
     const handleAddClick = () => {
         setShowForm(prevShowForm => !prevShowForm);
 
@@ -114,6 +146,7 @@ const CrudMuestreo = () => {
         muestreo.Hor_Muestreo,
         muestreo.siembra.Fec_Siembra,
         muestreo.responsable.Nom_Responsable,
+        muestreo.Pes_Promedio,
         `
           <button class='btn btn-primary align-middle btn-edit' data-id='${muestreo.Id_Muestreo}'>
             <i class="fa-solid fa-pen-to-square"></i> 
@@ -123,35 +156,42 @@ const CrudMuestreo = () => {
           </button>
         `
     ]);
-    
+
     const titles = [
-        "Fecha Muestreo", "Número Peces", "Observaciones", "Peso Esperado", "Hora Muestreo", "Fecha Siembra", "Nombre Responsable", "Acciones"
+        "Fecha Muestreo", "Número Peces", "Observaciones", "Peso Esperado", "Hora Muestreo", "Fecha Siembra", "Nombre Responsable", "Peso Promedio", "Acciones"
     ];
 
     return (
         <>
-                    {/* <div className="container mt-5"> */}
-                    <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
-
+            <div style={{ marginLeft: '320px', paddingTop: '70px' }} >
                 <button className="btn btn-primary mb-4" onClick={handleAddClick}
-                style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Muestreo'}
                 </button>
-                </div>
-                <WriteTable 
-                titles={titles} 
-                data={data} 
-                onEditClick={handleEdit} 
-                onDeleteClick={handleDelete} 
+
+                <button
+                    className="btn btn-danger mx-2"
+                    onClick={exportToPDF}
+                    style={{ position: 'absolute', top: '277px', right: '447px', width: '80px' }}
+                >
+                    <i className="bi bi-file-earmark-pdf"></i> PDF
+                </button>
+            </div>
+            <WriteTable
+                titles={titles}
+                data={data}
+                onEditClick={handleEdit}
+                onDeleteClick={handleDelete}
             />
             {showForm && (
-                
-                <>
-                {/* <hr /> */}
-                        <FormMuestreo getAllMuestreo={getAllMuestreo} buttonForm={buttonForm} muestreo={muestreo} URI={URI} updateTextButton={updateTextButton} />
-                    </>
-                )}
-                            
+                <FormMuestreo
+                    getAllMuestreo={getAllMuestreo}
+                    buttonForm={buttonForm}
+                    muestreo={muestreo}
+                    URI={URI}
+                    updateTextButton={updateTextButton}
+                />
+            )}
         </>
     );
 };

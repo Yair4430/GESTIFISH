@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormSiembra from './FormSiembra.jsx';
+import jsPDF from 'jspdf'; // Si también quieres agregar la funcionalidad de exportar a PDF
 
 const URI = process.env.ROUTER_PRINCIPAL + '/siembra/';
 const URI_RESPONSABLE = process.env.ROUTER_PRINCIPAL + '/responsable/';
@@ -12,9 +13,9 @@ const URI_ESTANQUE = process.env.ROUTER_PRINCIPAL + '/estanque/';
 const CrudSiembra = () => {
     const [siembraList, setSiembraList] = useState([]);
     const [responsables, setResponsables] = useState([]);
-    const [showForm, setShowForm] = useState(false);
     const [especies, setEspecies] = useState([]);
     const [estanques, setEstanques] = useState([]);
+    const [showForm, setShowForm] = useState(false);
     const [buttonForm, setButtonForm] = useState('Enviar');
     const [siembra, setSiembra] = useState({
         Id_Siembra: '',
@@ -115,19 +116,55 @@ const CrudSiembra = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    // getAllSiembras(); // Refresh the list after deletion
+                    getAllSiembras(); // Refresh the list after deletion
                 } catch (error) {
                     console.error('Error deleting siembra:', error);
                 }
-            }else{
+            } else {
                 getAllSiembras();
             }
         });
     };
 
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+
+        // Título de la tabla
+        const title = "Siembras";
+        doc.setFontSize(16);
+        doc.text(title, 14, 20); // Posición del título
+
+        // Configuración de autoTable
+        const tableBody = siembraList.map((siembra) => [
+            siembra.Can_Peces,
+            siembra.Fec_Siembra,
+            siembra.Fec_PosibleCosecha,
+            siembra.responsable?.Nom_Responsable || 'N/A',
+            siembra.especie?.Nom_Especie || 'N/A',
+            siembra.estanque?.Nom_Estanque || 'N/A',
+            siembra.Pes_Actual,
+            siembra.Obs_Siembra,
+            siembra.Hor_Siembra,
+            siembra.Gan_Peso,
+            siembra.Vlr_Siembra
+        ]);
+
+        doc.autoTable({
+            head: [['Cantidad Peces', 'Fecha Siembra', 'Fecha Posible Cosecha', 'Responsable', 'Especie', 'Estanque', 'Peso Actual', 'Observaciones', 'Hora Siembra', 'Ganancia Peso', 'Valor Siembra']],
+            body: tableBody,
+            startY: 30, // Posición donde empieza la tabla
+            theme: 'grid', // Tema de la tabla
+            headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
+        });
+
+        // Guarda el PDF
+        doc.save('siembra.pdf');
+    };
+
     const handleAddClick = () => {
         setShowForm(prevShowForm => !prevShowForm);
-    
+
         if (!showForm) {
             setSiembra({
                 Id_Siembra: '',
@@ -146,7 +183,6 @@ const CrudSiembra = () => {
             setButtonForm('Enviar');
         }
     };
-
 
     const handleEdit = (Id_Siembra) => {
         getSiembra(Id_Siembra);
@@ -168,7 +204,7 @@ const CrudSiembra = () => {
         siembra.Hor_Siembra,
         siembra.Gan_Peso,
         siembra.Vlr_Siembra,
-  `
+        `
           <button class='btn btn-primary align-middle btn-edit' data-id='${siembra.Id_Siembra}'>
             <i class="fa-solid fa-pen-to-square"></i> 
           </button>
@@ -184,14 +220,19 @@ const CrudSiembra = () => {
 
     return (
         <>
-                    {/* <div className="container mt-5"> */}
-                    <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
-
-                <button className="btn btn-primary" onClick={handleAddClick}
-                style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>  
+            <div style={{ marginLeft: '320px', paddingTop: '70px' }} >
+                <button className="btn btn-primary mb-4" onClick={handleAddClick}
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}>
                     {showForm ? 'Ocultar Formulario' : 'Agregar Siembra'}
                 </button>
-                </div>
+                <button
+                    className="btn btn-danger mx-2"
+                    onClick={exportToPDF}
+                    style={{ position: 'absolute', top: '277px', right: '447px', width: '80px' }}
+                >
+                    <i className="bi bi-file-earmark-pdf"></i> PDF
+                </button>
+            </div>
             <WriteTable
                 titles={titles}
                 data={data}
@@ -199,12 +240,14 @@ const CrudSiembra = () => {
                 onDeleteClick={handleDelete}
             />
             {showForm && (
-                <>
-                {/* <hr /> */}
-                        <FormSiembra getAllSiembras={getAllSiembras} buttonForm={buttonForm} siembra={siembra} responsables={responsables} especies={especies} estanques={estanques} URI={URI} updateTextButton={updateTextButton}
-                        />
-                    </>
-                )}
+                <FormSiembra
+                    getAllSiembras={getAllSiembras}
+                    siembra={siembra}
+                    setSiembra={setSiembra}
+                    buttonForm={buttonForm}
+                    updateTextButton={updateTextButton}
+                />
+            )}
         </>
     );
 };
