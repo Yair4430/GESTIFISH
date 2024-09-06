@@ -122,7 +122,7 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
     return (
         <>
             {/* <div className="container mt-5"> */}
-            <div style={{ marginLeft: '300px', paddingTop: '70px' }}>
+            {/* <div style={{ marginLeft: '300px', paddingTop: '70px' }}> */}
                 <div className="card">
                     <div className="card-header bg-primary text-white">
                         <h1 className="text-center">Registrar Cosecha</h1>
@@ -211,7 +211,7 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
                         </form>
                     </div>
                 </div>
-            </div>
+            {/* </div> */}
         </>
 
     );

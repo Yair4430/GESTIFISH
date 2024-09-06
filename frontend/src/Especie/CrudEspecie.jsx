@@ -10,6 +10,7 @@ const PATH_FOTOS = process.env.ROUTER_FOTOS;
 const CrudEspecie = () => {
     const [EspecieList, setEspecieList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [especie, setEspecie] = useState({
         Id_Especie: '',
@@ -38,12 +39,15 @@ const CrudEspecie = () => {
     };
 
     const getEspecie = async (Id_Especie) => {
-        setButtonForm('Enviar');
+        setButtonForm('Actualizar');
         try {
             const respuesta = await axios.get(`${URI}${Id_Especie}`);
             if (respuesta.status === 200) {
-                setButtonForm('Actualizar');
                 setEspecie({ ...respuesta.data });
+                // Mostrar el modal
+                const modalElement = document.getElementById('modalForm');
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
             } else {
                 console.warn('HTTP Status:', respuesta.status);
             }
@@ -89,21 +93,33 @@ const CrudEspecie = () => {
     };
 
     const handleAddClick = () => {
-        // Alterna la visibilidad del formulario
-        setShowForm(prevShowForm => !prevShowForm);
-    
-        // Si el formulario se va a mostrar, reinicia los valores
+        setButtonForm('Enviar');
+        setShowForm(!showForm);
         if (!showForm) {
             setEspecie({
                 Id_Especie: '',
                 Nom_Especie: '',
-                Car_Especie: '',
-                Tam_Promedio: '',
-                Den_Especie: '',
-                Img_Especie: '' // Ajusta esto según cómo manejes la imagen
+                Des_Especie: '',
+                Temp_Agua: '',
+                Id_Tipo_Especie: '',
+                Id_Clase: ''
             });
-            setButtonForm('Enviar');
         }
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => setIsModalOpen(false);
+
+    const handleEdit = (Id_Especie) => {
+        getEspecie(Id_Especie);
+        // Usa Bootstrap para mostrar el modal
+        const modalElement = document.getElementById('modalForm');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    };
+
+    const handleDelete = (Id_Especie) => {
+        deleteEspecie(Id_Especie);
     };
 
     const data = EspecieList.map((especie) => [
@@ -132,33 +148,49 @@ const CrudEspecie = () => {
 
     return (
         <>
-                    {/* <div className="container mt-5"> */}
-                    <div style={{ marginLeft: '320px', paddingTop: '70px' }} >
-
-                <button className="btn btn-primary" onClick={handleAddClick}
-                style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
-                    {showForm ? 'Ocultar Formulario' : 'Agregar Especie'}
+            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+                <button
+                    className="btn btn-primary mb-4"
+                    onClick={handleAddClick}
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}>
+                    Agregar Especie
                 </button>
-                </div>
-            <WriteTable 
-                titles={titles} 
-                data={data} 
-                onEditClick={(Id_Especie) => getEspecie(Id_Especie)} 
-                onDeleteClick={(Id_Especie) => deleteEspecie(Id_Especie)} 
-            />
-            {showForm && (
-                <>
-                {/* <hr /> */}
 
-                    <FormEspecie
-                        getAllEspecies={getAllEspecies}
-                        buttonForm={buttonForm}
-                        especie={especie}
-                        URI={URI}
-                        updateTextButton={updateTextButton}
-                    />
-                    </>
+                <WriteTable 
+                    titles={titles} 
+                    data={data} 
+                    onEditClick={handleEdit} 
+                    onDeleteClick={handleDelete} 
+                />
+
+                {isModalOpen && (
+                    <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-lg">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Especie' : 'Registrar Especie'}</h5>
+                                    <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    <FormEspecie 
+                                        buttonForm={buttonForm} 
+                                        especie={especie} 
+                                        URI={URI} 
+                                        updateTextButton={updateTextButton} 
+                                        getAllEspecies={getAllEspecies} 
+                                        closeModal ={() => {
+                                            const modalElement = document.getElementById('modalForm');
+                                            const modal = window.bootstrap.Modal.getInstance(modalElement);
+                                            modal.hide();
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 )}
+
+            </div>
         </>
     );
 }

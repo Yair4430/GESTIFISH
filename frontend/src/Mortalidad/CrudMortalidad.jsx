@@ -9,6 +9,7 @@ const URI = process.env.ROUTER_PRINCIPAL + '/mortalidad/';
 const CrudMortalidad = () => {
     const [MortalidadList, setMortalidadList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [mortalidad, setMortalidad] = useState({
         Id_Mortalidad: '',
@@ -26,20 +27,30 @@ const CrudMortalidad = () => {
     const getAllMortalidad = async () => {
         try {
             const respuesta = await axios.get(URI);
-            setMortalidadList(respuesta.data);
+            if (respuesta.status >= 200 && respuesta.status < 300) {
+                setMortalidadList(respuesta.data);
+            } else {
+                console.warn('HTTP Status:', respuesta.status);
+            }
         } catch (error) {
-            console.error('Error fetching mortalidades:', error);
+            console.error('Error fetching mortalidad:', error.response?.status || error.message);
         }
     };
 
     const getMortalidad = async (Id_Mortalidad) => {
-        setButtonForm('Enviar');
+        setButtonForm('Actualizar');
         try {
             const respuesta = await axios.get(`${URI}${Id_Mortalidad}`);
-            setButtonForm('Actualizar');
-            setMortalidad({ ...respuesta.data });
+            if (respuesta.status >= 200 && respuesta.status < 300) {
+                setMortalidad({ ...respuesta.data });
+                const modalElement = document.getElementById('modalForm');
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+            } else {
+                console.warn('HTTP Status:', respuesta.status);
+            }
         } catch (error) {
-            console.error('Error fetching mortalidad:', error);
+            console.error('Error fetching mortalidad:', error.response?.status || error.message);
         }
     };
 
@@ -65,33 +76,40 @@ const CrudMortalidad = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    // getAllMortalidad(); // Refrescar la lista después de la eliminación
+                    //getAllMortalidad(); // Refrescar la lista después de la eliminación
                 } catch (error) {
-                    console.error('Error deleting mortalidad:', error);
+                    console.error('Error deleting mortalidad:', error.response?.status || error.message);
                 }
-            }else{
+            } else {
                 getAllMortalidad();
             }
         });
     };
 
     const handleAddClick = () => {
-        setShowForm(prevShowForm => !prevShowForm);
-
+        setButtonForm('Enviar');
+        setShowForm(!showForm);
         if (!showForm) {
             setMortalidad({
+                Id_Mortalidad: '',
                 Fec_Mortalidad: '',
                 Can_Peces: '',
-                Mot_Mortalidad: '',
+                Causa_Mortalidad: '',
+                Id_Responsable: '',
                 Id_Siembra: '',
-                Id_Responsable: ''
+                Obs_Mortalidad: ''
             });
-            setButtonForm('Enviar');
         }
+        setIsModalOpen(true);
     };
+
+    const closeModal = () => setIsModalOpen(false);
 
     const handleEdit = (Id_Mortalidad) => {
         getMortalidad(Id_Mortalidad);
+        const modalElement = document.getElementById('modalForm');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
     };
 
     const handleDelete = (Id_Mortalidad) => {
@@ -120,26 +138,47 @@ const CrudMortalidad = () => {
 
     return (
         <>
-                    {/* <div className="container mt-5"> */}
-        <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
-
-                <button className="btn btn-primary mb-4" onClick={handleAddClick}
-                style={{ width: '145px', height: '45px', padding:'0px', fontSize: '16px'}}>
-                    {showForm ? 'Ocultar Formulario' : 'Agregar Mortalidad'}
+            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+                <button 
+                    className="btn btn-primary mb-4" 
+                    onClick={handleAddClick}
+                    style={{ width: '145px', height: '45px', padding:'0px', fontSize: '16px'}}>
+                    Agregar Mortalidad
                 </button>
+
+                <WriteTable 
+                    titles={titles} 
+                    data={data} 
+                    onEditClick={handleEdit} 
+                    onDeleteClick={handleDelete} 
+                />
+            {isModalOpen && (
+                <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-lg">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Mortalidad' : 'Registrar Mortalidad'}</h5>
+                                <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                <FormMortalidad
+                                    buttonForm={buttonForm}
+                                    mortalidad={mortalidad}
+                                    URI={URI}
+                                    updateTextButton={updateTextButton}
+                                    getAllMortalidad={getAllMortalidad}
+                                    closeModal={() => {
+                                        const modalElement = document.getElementById('modalForm');
+                                        const modal = window.bootstrap.Modal.getInstance(modalElement);
+                                        modal.hide();
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            <WriteTable 
-                titles={titles} 
-                data={data} 
-                onEditClick={handleEdit} 
-                onDeleteClick={handleDelete} 
-            />
-            {showForm && (
-                <>
-                {/* <hr /> */}
-                        <FormMortalidad getAllMortalidad={getAllMortalidad} buttonForm={buttonForm} mortalidad={mortalidad} URI={URI} updateTextButton={updateTextButton} />
-                    </>
                 )}
+            </div>
         </>
     );
 };

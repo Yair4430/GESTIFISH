@@ -10,6 +10,7 @@ const CrudResponsable = () => {
     const [responsableList, setResponsableList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
     const [showForm, setShowForm] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);  
     const [responsable, setResponsable] = useState({
         Id_Responsable: '',
         Nom_Responsable: '',
@@ -38,12 +39,14 @@ const CrudResponsable = () => {
     };
 
     const getResponsable = async (Id_Responsable) => {
-        setButtonForm('Enviar');
+        setButtonForm('Actualizar');
         try {
             const respuesta = await axios.get(`${URI}${Id_Responsable}`);
             if (respuesta.status >= 200 && respuesta.status < 300) {
-                setButtonForm('Actualizar');
                 setResponsable({ ...respuesta.data });
+                const modalElement = document.getElementById('modalForm');
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
             } else {
                 console.warn('HTTP Status:', respuesta.status);
             }
@@ -89,10 +92,8 @@ const CrudResponsable = () => {
     };
 
     const handleAddClick = () => {
-        // Alterna la visibilidad del formulario
-        setShowForm(prevShowForm => !prevShowForm);
-        
-        // Si el formulario se va a mostrar, reinicia los valores
+        setButtonForm('Enviar');
+        setShowForm(!showForm);
         if (!showForm) {
             setResponsable({
                 Id_Responsable: '',
@@ -103,8 +104,21 @@ const CrudResponsable = () => {
                 Cor_Responsable: '',
                 Num_Responsable: ''
             });
-            setButtonForm('Enviar');
         }
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => setIsModalOpen(false);
+
+    const handleEdit = (Id_Responsable) => {
+        getResponsable(Id_Responsable);
+        const modalElement = document.getElementById('modalForm');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    };
+
+    const handleDelete = (Id_Responsable) => {
+        deleteResponsable(Id_Responsable);
     };
 
     const data = responsableList.map((responsable) => [
@@ -130,27 +144,48 @@ const CrudResponsable = () => {
 
     return (
         <>
-         {/* <div className="container mt-5"> */}
-         <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+                <button 
+                    className="btn btn-primary mb-4 " 
+                    onClick={handleAddClick}
+                    style={{ width: '144px', height: '45px', padding:'0px', fontSize: '15px'}}>
+                    Agregar Responsable
+                </button>
+                
+                <WriteTable 
+                    titles={titles} 
+                    data={data} 
+                    onEditClick={(id) => getResponsable(id)} 
+                    onDeleteClick={(id) => deleteResponsable(id)} 
+                />
 
-            <button className="btn btn-primary mb-4 " onClick={handleAddClick}
-            style={{ width: '144px', height: '45px', padding:'0px', fontSize: '15px'}}>
-                {showForm ? 'Ocultar Formulario' : 'Agregar Responsable'}
-            </button>
+            {isModalOpen && (
+                    <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-lg">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Responsable' : 'Registrar Responsable'}</h5>
+                                    <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    <FormResponsable
+                                        buttonForm={buttonForm}
+                                        responsable={responsable}
+                                        URI={URI}
+                                        updateTextButton={updateTextButton}
+                                        getAllResponsable={getAllResponsable}
+                                        closeModal={() => {
+                                            const modalElement = document.getElementById('modalForm');
+                                            const modal = window.bootstrap.Modal.getInstance(modalElement);
+                                            modal.hide();
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
-            <WriteTable 
-                titles={titles} 
-                data={data} 
-                onEditClick={(id) => getResponsable(id)} 
-                onDeleteClick={(id) => deleteResponsable(id)} 
-            />
-            {showForm && (
-            <>
-            {/* <hr /> */}
-            <FormResponsable buttonForm={buttonForm} responsable={responsable} URI={URI} updateTextButton={updateTextButton} getAllResponsable={getAllResponsable} />
-            </>
-        )}
-
         </>
     );
 };
