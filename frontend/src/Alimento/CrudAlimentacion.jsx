@@ -11,6 +11,7 @@ const CrudAlimentacion = () => {
     const [AlimentacionList, setAlimentacionList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
     const [showForm, setShowForm] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [alimentacion, setAlimentacion] = useState({
         Id_Alimentacion: '',
         Fec_Alimentacion: '',
@@ -37,6 +38,10 @@ const CrudAlimentacion = () => {
 
     const getAlimentacion = async (Id_Alimentacion) => {
         setButtonForm('Enviar');
+        // Mostrar el modal
+        const modalElement = document.getElementById('modalForm');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
         try {
             const respuesta = await axios.get(`${URI}${Id_Alimentacion}`);
             setButtonForm('Actualizar');
@@ -78,7 +83,6 @@ const CrudAlimentacion = () => {
         });
     };
 
-
     const exportToPDF = () => {
         const doc = new jsPDF();
 
@@ -112,8 +116,8 @@ const CrudAlimentacion = () => {
     };
 
     const handleAddClick = () => {
-        setShowForm(prevShowForm => !prevShowForm);
-
+        setButtonForm('Enviar');
+        setShowForm(!showForm);
         if (!showForm) {
             setAlimentacion({
                 Id_Alimentacion: '',
@@ -125,12 +129,18 @@ const CrudAlimentacion = () => {
                 Fec_Siembra: '',
                 Id_Responsable: ''
             });
-            setButtonForm('Enviar');
         }
+        setIsModalOpen(true);
     };
+
+    const closeModal = () => setIsModalOpen(false);
 
     const handleEdit = (Id_Alimentacion) => {
         getAlimentacion(Id_Alimentacion);
+        // Usa Bootstrap para mostrar el modal
+        const modalElement = document.getElementById('modalForm');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
     };
 
     const handleDelete = (Id_Alimentacion) => {
@@ -161,36 +171,56 @@ const CrudAlimentacion = () => {
 
     return (
         <>
-            {/* <div className="container mt-5"> */}
-            <div style={{ marginLeft: '320px', paddingTop: '70px' }} >
+            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
+            <button
+                className="btn btn-primary mb-4"
+                onClick={handleAddClick}
+                style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
+                Agregar Alimentación
+            </button>
 
-                <button className="btn btn-primary mb-4" onClick={handleAddClick}
-                    style={{ width: '143px', height: '45px', padding: '0px', fontSize: '13px' }}>
-                    {showForm ? 'Ocultar Formulario' : 'Agregar Alimentación'}
-                </button>
-
-                <button
+            <button
                     className="btn btn-danger mx-2"
                     onClick={exportToPDF}
-                    style={{ position: 'absolute', top: '277px', right: '447px', width:'80px' }}
+                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
                 >
                     <i className="bi bi-file-earmark-pdf"></i> PDF
                 </button>
+                <WriteTable 
+                    titles={titles} 
+                    data={data} 
+                    onEditClick={handleEdit} 
+                    onDeleteClick={handleDelete} 
+                />
+
+                {isModalOpen && (
+                    <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-lg">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Alimentación' : 'Registrar Alimentación'}</h5>
+                                    <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    <FormAlimentacion 
+                                        buttonForm={buttonForm} 
+                                        alimentacion={alimentacion} 
+                                        URI={URI} 
+                                        updateTextButton={updateTextButton} 
+                                        getAllAlimentacion={getAllAlimentacion} 
+                                        closeModal={() => {
+                                            const modalElement = document.getElementById('modalForm');
+                                            const modal = window.bootstrap.Modal.getInstance(modalElement);
+                                            modal.hide();
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
-            <WriteTable
-                titles={titles}
-                data={data}
-                onEditClick={handleEdit}
-                onDeleteClick={handleDelete}
-            />
-            {showForm && (
-                <>
-                    {/* <hr /> */}
-                    <FormAlimentacion getAllAlimentacion={getAllAlimentacion} buttonForm={buttonForm} alimentacion={alimentacion} URI={URI} updateTextButton={updateTextButton} />
-                </>
-            )}
         </>
     );
-};
-
+}
 export default CrudAlimentacion;

@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
-import FormEstanque from './FormEstanque.jsx';
+import FormEstanque from './formEstanque.jsx';
 import jsPDF from 'jspdf'; // Añade jsPDF para exportar a PDF
 
 const URI = process.env.ROUTER_PRINCIPAL + '/estanque/';
@@ -11,6 +11,7 @@ const PATH_FOTOS = process.env.ROUTER_FOTOS;
 const CrudEstanque = () => {
     const [EstanqueList, setEstanqueList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [estanque, setEstanque] = useState({
         Id_Estanque: '',
@@ -42,12 +43,14 @@ const CrudEstanque = () => {
     };
 
     const getEstanque = async (Id_Estanque) => {
-        setButtonForm('Enviar');
+        setButtonForm('Actualizar');
         try {
             const respuesta = await axios.get(`${URI}${Id_Estanque}`);
-            if (respuesta.status === 200) {
-                setButtonForm('Actualizar');
+            if (respuesta.status >= 200 && respuesta.status < 300) {
                 setEstanque({ ...respuesta.data });
+                const modalElement = document.getElementById('modalForm');
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
             } else {
                 console.warn('HTTP Status:', respuesta.status);
             }
@@ -128,8 +131,8 @@ const CrudEstanque = () => {
     };
 
     const handleAddClick = () => {
-        setShowForm(prevShowForm => !prevShowForm);
-
+        setButtonForm('Enviar');
+        setShowForm(!showForm);
         if (!showForm) {
             setEstanque({
                 Id_Estanque: '',
@@ -142,8 +145,21 @@ const CrudEstanque = () => {
                 Img_Estanque: null,
                 Rec_Agua: ''
             });
-            setButtonForm('Enviar');
         }
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => setIsModalOpen(false);
+
+    const handleEdit = (Id_Estanque) => {
+        getEstanque(Id_Estanque);
+        const modalElement = document.getElementById('modalForm');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    };
+
+    const handleDelete = (Id_Estanque) => {
+        deleteEstanque(Id_Estanque);
     };
 
     const data = EstanqueList.map((estanque) => [
@@ -176,34 +192,57 @@ const CrudEstanque = () => {
 
     return (
         <>
-            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
-                <button className="btn btn-primary mb-4" onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}>
-                    {showForm ? 'Ocultar Formulario' : 'Agregar Estanque'}
+        {/* <div className="container mt-5"> */}
+            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
+                <button 
+                    className="btn btn-primary mb-4" 
+                    onClick={handleAddClick}
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
+                    Agregar Estanque
                 </button>
+
                 <button
                     className="btn btn-danger mx-2"
                     onClick={exportToPDF}
-                    style={{ position: 'absolute', top: '277px', right: '447px', width: '80px' }}
+                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
                 >
                     <i className="bi bi-file-earmark-pdf"></i> PDF
                 </button>
-            </div>
-            <WriteTable
-                titles={titles}
-                data={data}
-                onEditClick={(Id_Estanque) => getEstanque(Id_Estanque)}
-                onDeleteClick={(Id_Estanque) => deleteEstanque(Id_Estanque)}
-            />
-            {showForm && (
-                <FormEstanque
-                    getAllEstanques={getAllEstanques}
-                    buttonForm={buttonForm}
-                    estanque={estanque}
-                    URI={URI}
-                    updateTextButton={updateTextButton}
+
+                <WriteTable 
+                    titles={titles} 
+                    data={data} 
+                    onEditClick={handleEdit} 
+                    onDeleteClick={handleDelete} 
                 />
-            )}
+
+                {isModalOpen && (
+                    <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-lg">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Estanque' : 'Registrar Estanque'}</h5>
+                                    <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    <FormEstanque
+                                        buttonForm={buttonForm}
+                                        estanque={estanque}
+                                        URI={URI}
+                                        updateTextButton={updateTextButton}
+                                        getAllEstanques={getAllEstanques}
+                                        closeModal={() => {
+                                            const modalElement = document.getElementById('modalForm');
+                                            const modal = window.bootstrap.Modal.getInstance(modalElement);
+                                            modal.hide();
+                                        }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                )}
+            </div>
         </>
     );
 };
