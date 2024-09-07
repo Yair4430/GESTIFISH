@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx'; // Asegúrate de que este componente esté disponible
 import FormAlimentacion from './FormAlimentacion';
+import jsPDF from "jspdf";
 
 const URI = process.env.ROUTER_PRINCIPAL + '/alimentacion/';
 
@@ -82,6 +83,38 @@ const CrudAlimentacion = () => {
         });
     };
 
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+
+        // Título de la tabla
+        const title = "Alimentacion";
+        doc.setFontSize(16);
+        doc.text(title, 14, 20); // Posición del título
+
+        // Configuración de autoTable
+        const tableBody = AlimentacionList.map((Alimentacion) => [
+            Alimentacion.Fec_Alimentacion,
+            Alimentacion.Can_RacionKg,
+            Alimentacion.siembra.Fec_Siembra,
+            Alimentacion.responsable.Nom_Responsable,
+            Alimentacion.Tip_Alimento,
+            Alimentacion.Hor_Alimentacion,
+            Alimentacion.Vlr_Alimentacion
+        ]);
+
+        doc.autoTable({
+            head: [['Fecha', 'Cantidad', 'Siembra', 'Responsable', 'Tipo', 'Hora', 'Valor']],
+            body: tableBody,
+            startY: 30, // Posición donde empieza la tabla
+            theme: 'grid', // Tema de la tabla
+            headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
+        });
+
+        // Guarda el PDF
+        doc.save('alimentacion.pdf');
+    };
+
     const handleAddClick = () => {
         setButtonForm('Enviar');
         setShowForm(!showForm);
@@ -138,14 +171,21 @@ const CrudAlimentacion = () => {
 
     return (
         <>
-            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
-                <button
-                    className="btn btn-primary mb-4"
-                    onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}>
-                    Agregar Alimentación
-                </button>
+            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
+            <button
+                className="btn btn-primary mb-4"
+                onClick={handleAddClick}
+                style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
+                Agregar Alimentación
+            </button>
 
+            <button
+                    className="btn btn-danger mx-2"
+                    onClick={exportToPDF}
+                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
+                >
+                    <i className="bi bi-file-earmark-pdf"></i> PDF
+                </button>
                 <WriteTable 
                     titles={titles} 
                     data={data} 

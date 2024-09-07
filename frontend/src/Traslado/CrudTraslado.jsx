@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormTraslado from './FormTraslado'; 
+import jsPDF from "jspdf";
+import 'jspdf-autotable';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/traslado/';
 
@@ -86,6 +88,36 @@ const CrudTraslado = () => {
         });
     };
 
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+
+        // Título de la tabla
+        const title = "Traslados";
+        doc.setFontSize(16);
+        doc.text(title, 14, 20); // Posición del título
+
+        // Configuración de autoTable
+        const tableBody = trasladoList.map((traslado) => [
+            traslado.Fec_Traslado,
+            traslado.Can_Peces,
+            traslado.responsable.Nom_Responsable,
+            traslado.Obs_Traslado,
+            traslado.Hor_Traslado
+        ]);
+
+        doc.autoTable({
+            head: [['Fecha Traslado', 'Cantidad Peces', 'Responsable', 'Observaciones', 'Hora Traslado']],
+            body: tableBody,
+            startY: 30, // Posición donde empieza la tabla
+            theme: 'grid', // Tema de la tabla
+            headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
+        });
+
+        // Guarda el PDF
+        doc.save('traslados.pdf');
+    };
+
     const handleAddClick = () => {
         setButtonForm('Enviar');
         setShowForm(!showForm);
@@ -138,12 +170,20 @@ const CrudTraslado = () => {
     return (
         <>
         {/* <div className="container mt-5"> */}
-            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
                 <button 
                     className="btn btn-primary mb-4" 
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
                     Agregar Traslado
+                </button>
+
+                <button
+                    className="btn btn-danger mx-2"
+                    onClick={exportToPDF}
+                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
+                >
+                    <i className="bi bi-file-earmark-pdf"></i> PDF
                 </button>
 
                 <WriteTable 

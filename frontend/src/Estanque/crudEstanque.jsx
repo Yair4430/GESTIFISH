@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormEstanque from './formEstanque.jsx';
+import jsPDF from 'jspdf'; // Añade jsPDF para exportar a PDF
 
 const URI = process.env.ROUTER_PRINCIPAL + '/estanque/';
 const PATH_FOTOS = process.env.ROUTER_FOTOS;
@@ -86,6 +87,43 @@ const CrudEstanque = () => {
         });
     };
 
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+
+        // Título de la tabla
+        const title = "Estanques";
+        doc.setFontSize(16);
+        doc.text(title, 14, 20); // Posición del título
+
+        // Configuración de autoTable
+        const tableBody = EstanqueList.map((estanque) => [
+            estanque.Nom_Estanque,
+            estanque.Esp_Agua,
+            estanque.Tip_Estanque,
+            estanque.Lar_Estanque,
+            estanque.Anc_Estanque,
+            estanque.Des_Estanque,
+            estanque.Img_Estanque ? (
+                doc.addImage(`${PATH_FOTOS}/${estanque.Img_Estanque}`, 'JPEG', 14, 60, 50, 50)
+            ) : (
+                'No Image'
+            ),
+            estanque.Rec_Agua
+        ]);
+
+        doc.autoTable({
+            head: [['Nombre', 'Espejo Agua', 'Tipo', 'Largo', 'Ancho', 'Descripción', 'Imagen', 'Recambio Agua']],
+            body: tableBody,
+            startY: 30, // Posición donde empieza la tabla
+            theme: 'grid', // Tema de la tabla
+            headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
+        });
+
+        // Guarda el PDF
+        doc.save('estanques.pdf');
+    };
+
     const handleAddClick = () => {
         setButtonForm('Enviar');
         setShowForm(!showForm);
@@ -145,12 +183,20 @@ const CrudEstanque = () => {
     return (
         <>
         {/* <div className="container mt-5"> */}
-            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
                 <button 
                     className="btn btn-primary mb-4" 
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
                     Agregar Estanque
+                </button>
+
+                <button
+                    className="btn btn-danger mx-2"
+                    onClick={exportToPDF}
+                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
+                >
+                    <i className="bi bi-file-earmark-pdf"></i> PDF
                 </button>
 
                 <WriteTable 
