@@ -5,6 +5,7 @@ import WriteTable from '../Tables/Data-Tables.jsx';
 import FormEspecie from './FormEspecie';
 import jsPDF from "jspdf"; // Añade jsPDF para exportar a PDF
 
+
 const URI = process.env.ROUTER_PRINCIPAL + '/especie/';
 const PATH_FOTOS = process.env.ROUTER_FOTOS;
 
