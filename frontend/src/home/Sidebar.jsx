@@ -13,7 +13,7 @@ function Sidebar() {
     color: '#000000',
     height: 'calc(115vh - 0px)', // Resta la altura de la barra de navegación
     position: 'absolute', 
-    top: '122px', // Ajusta para que comience después de la barra de navegación
+    top: '100px', // Ajusta para que comience después de la barra de navegación
     left: '0',
     width: '250px',
     boxShadow: '4px 0 5px rgba(0, 0, 0, 0.1)',

@@ -10,7 +10,7 @@ const Simulador = () => {
   const handleSimulate = (formData) => {
     const { especie, densidad, espejoAgua, precioBulto } = formData;
     let data = [];
-
+  
     const tilapiaData = [
       { mes: 1, numero: '', peso: 8, tasa: '10%', biomasa: '', alimento: '', concentrado: '', proteina: 45, bultos: '', precio: '' },
       { mes: 2, numero: '', peso: 32.5, tasa: '6%', biomasa: '', alimento: '', concentrado: '', proteina: 38, bultos: '', precio: '' },
@@ -19,7 +19,7 @@ const Simulador = () => {
       { mes: 5, numero: '', peso: 220, tasa: '2%', biomasa: '', alimento: '', concentrado: '', proteina: 24, bultos: '', precio: '' },
       { mes: 6, numero: '', peso: 330, tasa: '1.5%', biomasa: '', alimento: '', concentrado: '', proteina: 24, bultos: '', precio: '' },
     ];
-
+  
     const cachamaData = [
       { mes: 1, numero: '', peso: 10.5, tasa: '20%', biomasa: '', alimento: '', concentrado: '', proteina: 45, bultos: '', precio: '' },
       { mes: 2, numero: '', peso: 50, tasa: '10%', biomasa: '', alimento: '', concentrado: '', proteina: 38, bultos: '', precio: '' },
@@ -28,46 +28,46 @@ const Simulador = () => {
       { mes: 5, numero: '', peso: 395, tasa: '2%', biomasa: '', alimento: '', concentrado: '', proteina: 24, bultos: '', precio: '' },
       { mes: 6, numero: '', peso: 560, tasa: '2%', biomasa: '', alimento: '', concentrado: '', proteina: 24, bultos: '', precio: '' },
     ];
-
+  
     if (especie === 'Tilapia') {
       data = tilapiaData;
     } else if (especie === 'Cachama') {
       data = cachamaData;
     }
-
+  
     if (espejoAgua && densidad && precioBulto) {
       let numeroAnimales = Math.round(espejoAgua * densidad);
       const reducciones = [0.20, 0.10, 0.03, 0.03, 0.02, 0.02];
-
+  
       data = data.map((row, i) => {
         if (i < reducciones.length) {
           numeroAnimales = Math.round(numeroAnimales * (1 - reducciones[i]));
         }
-
+  
         const biomasa = Math.round(numeroAnimales * row.peso);
         const tasaDecimal = parseFloat(row.tasa) / 100;
         const alimento = Math.round(biomasa * tasaDecimal);
         const concentradoMensual = alimento * 30;
         const bultos = Math.round(concentradoMensual / 40);
         const precioTotal = Math.round(bultos * precioBulto);
-
+  
         return {
           ...row,
-          numero: numeroAnimales,
-          biomasa: biomasa,
-          alimento: `${alimento} kg`,
-          concentrado: `${concentradoMensual} kg`,
-          bultos: `${bultos} bultos`,
-          precio: `$${precioTotal}`,
+          numero: numeroAnimales.toLocaleString(), // Formatear con separadores de miles
+          biomasa: biomasa.toLocaleString(), // Formatear con separadores de miles
+          alimento: `${alimento.toLocaleString()} kg`, // Formatear con separadores de miles
+          concentrado: `${concentradoMensual.toLocaleString()} kg`, // Formatear con separadores de miles
+          bultos: `${bultos.toLocaleString()} bultos`, // Formatear con separadores de miles
+          precio: `$${precioTotal.toLocaleString()}`, // Formatear con separadores de miles
         };
       });
-
+  
       setTableData(data);
     } else {
       alert('Por favor, ingrese valores válidos para el espejo de agua, la densidad y el precio de bulto.');
     }
   };
-
+  
   const handleExportPdf = async () => {
     const input = document.getElementById('simulador-content');
     const pdf = new jsPDF('landscape', 'mm', 'a4'); // Mantiene orientación horizontal
@@ -146,8 +146,19 @@ const Simulador = () => {
 
   return (
     <>
+
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css"/>
+
+      <br/>
       <div className="container mt-4">
         <h2 className="display-4 text-center" style={{ color: 'black', fontWeight: 'bold' }}>Simulador</h2>
+        <br/>
+        <p className="simulador-descripcion">
+          Este simulador te permite calcular la proyección del número de animales por metro cuadrado, la biomasa, la cantidad de alimento necesario, y el costo total de alimentación 
+          para especies como la Tilapia y la Cachama en un estanque. Simplemente introduce los datos de densidad, tamaño del espejo 
+          de agua, y el precio del bulto de alimento para obtener una proyección mensual detallada del peso, la tasa de alimentación 
+          y los costos asociados.
+        </p>
         <br/>
         <SimuladorForm onSimulate={handleSimulate} onClear={handleClearTable} />
         <div id="simulador-content">
@@ -157,12 +168,13 @@ const Simulador = () => {
         <div className="d-flex justify-content-center mt-3">
           {tableData.length > 0 && (
             <button 
-              className="btn btn-success"
-              onClick={handleExportPdf}
-              style={{ transition: 'all 0.3s ease-in-out' }}
-            >
-              Exportar a PDF
-            </button>
+            className="btn btn-success d-flex align-items-center"
+            onClick={handleExportPdf}
+            style={{ transition: 'all 0.3s ease-in-out' }}
+          >
+            <i className="bi bi-file-earmark-pdf me-2"></i> {/* Icono de PDF */}
+            Exportar 
+          </button>
           )}
         </div>
         <br />

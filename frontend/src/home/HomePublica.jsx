@@ -9,6 +9,7 @@ const HomePublica = () => {
       {/* <BarraNavegacionPublica /> */}
       <section className="container mt-5">
         {/* Sección principal con el logo y el título */}
+        <br/>
         <Header title="GestiFish" />
 
         {/* Sección de contenido con la descripción del proyecto */}
@@ -24,10 +25,11 @@ const HomePublica = () => {
         <br />
         {/* Mover el segundo título al área deseada sobre la imagen */}
         <div className="title-over-image-container" style={{ position: 'relative' }}>
-  <h1 style={{ ...titleOverImageStyle, top: '30%', left: '10%' }}>
-    ¿Qué es GestiFish?
-  </h1>
-</div>
+          <h1 style={{ ...titleOverImageStyle, position: 'absolute', top: '-30px', left: '20px' }}>
+            ¿Qué es GestiFish?
+          </h1>
+        </div>
+
 
         <ContentSection
           imageSrc={img2}
@@ -42,10 +44,11 @@ const HomePublica = () => {
 
 // Componente Header reutilizable para los títulos de cada sección
 const Header = ({ title }) => (
-  <div className="text-center mb-5"> {/* Ajuste de margen */}
-    <h1 style={styles.sectionHeader}>{title}</h1>
+  <div className="text-center mb-5" style={{ position: 'relative' }}> {/* Ajuste de posición */}
+    <h1 style={{ ...styles.sectionHeader, position: 'absolute', top: '-30px', left: '490px' }}>{title}</h1> {/* Ajuste en top y left */}
   </div>
 );
+
 
 // Componente ContentSection reutilizable para secciones de contenido
 const ContentSection = ({ imageSrc, imageAlt, text, reverse }) => (
@@ -77,9 +80,11 @@ const styles = {
   sectionHeader: {
     fontFamily: 'Poppins, sans-serif',
     fontWeight: 700,
-    fontSize: '3rem', // Aumentar tamaño del título
+    fontSize: '3rem',
     color: '#000',
-    marginBottom: '30px', // Aumentar margen inferior
+    marginBottom: '30px',
+    marginTop: '20px', // Mueve el título hacia arriba
+    textAlign: 'center',
   },
   image: {
     maxWidth: '450px', // Ajuste del tamaño de la imagen

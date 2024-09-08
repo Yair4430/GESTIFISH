@@ -50,9 +50,9 @@ function App() {
             setIsAuth(true);
             const lastPath = localStorage.getItem('lastPath') || '/';
             if (lastPath === '/auth' || lastPath === '/') {
-              navigate('/'); 
+              navigate('/'); // Redirige al Home si la última ruta es /auth o /
             } else {
-              navigate(lastPath); 
+              navigate(lastPath); // Redirige a la última ruta guardada
             }
           }
         })

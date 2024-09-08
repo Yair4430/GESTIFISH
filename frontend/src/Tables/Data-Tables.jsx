@@ -3,12 +3,14 @@ import $ from "jquery";
 import "datatables.net-dt";
 import "datatables.net-responsive-dt";
 import "./Data-Tables.css";
+import * as XLSX from "xlsx";
 import Sidebar from '../home/Sidebar.jsx';
 
 function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
   const tableRef = useRef(null);
 
   useEffect(() => {
+
     const $table = $(tableRef.current);
 
     if ($.fn.DataTable.isDataTable($table)) {
@@ -29,17 +31,10 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
       language: {
         search: "",
         searchPlaceholder: "Buscar...",
-        info: "Página _PAGE_ de _PAGES_",
+        info: "Página PAGE de PAGES",
         infoEmpty: "No hay registros disponibles",
-        infoFiltered: "(filtrado de _MAX_ registros en total)",
-        lengthMenu: "Mostrar _MENU_ registros por página",
-        oPaginate: {
-          "sFirst": "Primero",
-          "sLast": "Último",
-          "sNext": "Siguiente",
-          "sPrevious": "Anterior"
-      }
-      
+        infoFiltered: "(filtrado de MAX registros en total)",
+        lengthMenu: "Mostrar MENU registros por página"
       },
       drawCallback: function () {
         $table.find('.btn-edit').off('click').on('click', function () {
@@ -51,10 +46,24 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
           const id = $(this).data('id');
           onDeleteClick(id);
 
+          // Corregido el filtrado de datos
           const filteredData = data.filter(row => !row[row.length - 1].includes(`data-id='${id}'`));
+          // const filteredData = data.filter(row => row[row.length - 1] !== id);
           table.clear().rows.add(filteredData).draw();
         });
-      }
+      },
+      createdRow: function (row, data, dataIndex) {
+        $(row).css({
+          'text-align': 'center',
+          'vertical-align': 'middle',
+          'font-size': '14px',
+          'line-height': '20px',
+        });
+      },
+      autoWidth: false,
+      columnDefs: [
+        { targets: "_all", className: "text-center" },
+      ],
     });
 
     return () => {
@@ -64,105 +73,82 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
     };
   }, [data, titles, onEditClick, onDeleteClick]);
 
+  const exportToExcel = () => {
+    const workbook = XLSX.utils.book_new();
+    const worksheetData = [
+      titles.slice(0, -1), // Excluir el título de la última columna
+      ...data.map(row =>
+        row.slice(0, -1).map(cell => {
+          if (typeof cell === 'string' && cell.startsWith('<img')) {
+            const match = cell.match(/src="([^"]*)"/);
+            return match ? match[1] : '';
+          }
+          return cell;
+        })
+      )
+    ];
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+    XLSX.writeFile(workbook, "table_data.xlsx");
+  };
+
+  const exportToSQL = () => {
+    const sqlData = data.map(row => {
+      const values = row.slice(0, -1).map(value => {
+        if (typeof value === 'string' && value.startsWith('<img')) {
+          const match = value.match(/src="([^"]*)"/);
+          value = match ? match[1] : '';
+        }
+        return typeof value === 'string' ? `'${value.replace(/'/g, "''")}'` : value;
+      });
+      return `INSERT INTO your_table_name (${titles.slice(0, -1).join(", ")}) VALUES (${values.join(", ")})`;
+    });
+
+    console.log(sqlData.join("\n"));
+  };
+
   return (
     <>
-    <div
-        className="modal fade"
-        id="staticBackdrop"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
-        tabIndex="-1"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="staticBackdropLabel">
-                Modal title
-              </h1>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              <form>
-                <div className="mb-3">
-                  <label htmlFor="recipient-name" className="col-form-label">
-                    Recipient:
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="recipient-name"
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="message-text" className="col-form-label">
-                    Message:
-                  </label>
-                  <textarea
-                    className="form-control"
-                    id="message-text"
-                  ></textarea>
-                </div>
-              </form>
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" className="btn btn-primary">
-                Understood
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css"
+      />
       <Sidebar />
-      <center>
-        <div style={{ marginLeft: '300px', paddingTop: '30px' }}>
-          <div className="table-container">
-            <button
-              type="button"
-              className="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#staticBackdrop"
-            >
-              Show Modal
-            </button>
-            <div className="dataTables_filter">
-            </div>
-          </div>
-          <center>
-            <table className="table table-responsive" id="TableDinamic" ref={tableRef}>
-              <thead>
-                <tr>
-                  {titles.map((title, index) => (
-                    <th key={index} scope="col">{title}</th>
+      <div style={{ marginLeft: "300px", paddingTop: "30px" }}>
+        <div className="button-group" style={{ textAlign: "center", marginBottom: "20px" }}>
+          <button className="btn btn-success mx-2" onClick={exportToExcel}>
+            <i className="bi bi-file-earmark-excel"></i> EXCEL
+          </button>
+          <button className="btn btn-secondary mx-2" onClick={exportToSQL}>
+            <i className="bi bi-file-earmark-code"></i> SQL
+          </button>
+        </div>
+
+        <div className="table-container">
+          <div className="dataTables_filter"></div>
+        </div>
+
+        <div style={{ textAlign: "center" }}>
+          <table className="table table-responsive table-bordered" id="TableDinamic" ref={tableRef}>
+            <thead>
+              <tr>
+                {titles.slice(0, -1).map((title, index) => (
+                  <th key={index} scope="col" style={{ backgroundColor: '#007bff', color: '#fff', textAlign: 'center' }}>{title}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((row, rowIndex) => (
+                <tr key={rowIndex}>
+                  {row.slice(0, -1).map((cell, cellIndex) => (
+                    <td key={cellIndex} dangerouslySetInnerHTML={{ __html: cell }} />
                   ))}
                 </tr>
-              </thead>
-              <tbody>
-                {data.map((row, rowIndex) => (
-                  <tr key={rowIndex}>
-                    {row.map((cell, cellIndex) => (
-                      <td key={cellIndex} dangerouslySetInnerHTML={{ __html: cell }}></td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </center>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </center>
+      </div>
     </>
   );
 }

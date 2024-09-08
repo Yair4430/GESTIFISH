@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormTraslado from './FormTraslado'; 
+import jsPDF from "jspdf";
+import 'jspdf-autotable';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/traslado/';
 
@@ -10,6 +12,7 @@ const CrudTraslado = () => {
     const [trasladoList, setTrasladoList] = useState([]);
     const [buttonForm, setButtonForm] = useState('Enviar');
     const [showForm, setShowForm] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [traslado, setTraslado] = useState({
         Id_Traslado: '',
         Fec_Traslado: '',
@@ -26,19 +29,30 @@ const CrudTraslado = () => {
     const getAllTraslados = async () => {
         try {
             const respuesta = await axios.get(URI);
-            setTrasladoList(respuesta.data);
+            if (respuesta.status >= 200 && respuesta.status < 300) {
+                setTrasladoList(respuesta.data);
+            } else {
+                console.warn('HTTP Status:', respuesta.status);
+            }
         } catch (error) {
-            console.error('Error fetching traslados:', error);
+            console.error('Error fetching traslados:', error.response?.status || error.message);
         }
     };
 
-    const getTraslado = async (id_Traslado) => {
+    const getTraslado = async (Id_Traslado) => {
         setButtonForm('Actualizar');
         try {
-            const respuesta = await axios.get(`${URI}${id_Traslado}`);
-            setTraslado({ ...respuesta.data });
+            const respuesta = await axios.get(`${URI}${Id_Traslado}`);
+            if (respuesta.status >= 200 && respuesta.status < 300) {
+                setTraslado({ ...respuesta.data });
+                const modalElement = document.getElementById('modalForm');
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+            } else {
+                console.warn('HTTP Status:', respuesta.status);
+            }
         } catch (error) {
-            console.error('Error fetching traslado:', error);
+            console.error('Error fetching traslado:', error.response?.status || error.message);
         }
     };
 
@@ -73,9 +87,40 @@ const CrudTraslado = () => {
             }
         });
     };
+
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+
+        // Título de la tabla
+        const title = "Traslados";
+        doc.setFontSize(16);
+        doc.text(title, 14, 20); // Posición del título
+
+        // Configuración de autoTable
+        const tableBody = trasladoList.map((traslado) => [
+            traslado.Fec_Traslado,
+            traslado.Can_Peces,
+            traslado.responsable.Nom_Responsable,
+            traslado.Obs_Traslado,
+            traslado.Hor_Traslado
+        ]);
+
+        doc.autoTable({
+            head: [['Fecha Traslado', 'Cantidad Peces', 'Responsable', 'Observaciones', 'Hora Traslado']],
+            body: tableBody,
+            startY: 30, // Posición donde empieza la tabla
+            theme: 'grid', // Tema de la tabla
+            headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
+        });
+
+        // Guarda el PDF
+        doc.save('traslados.pdf');
+    };
+
     const handleAddClick = () => {
-        setShowForm(prevShowForm => !prevShowForm);
-    
+        setButtonForm('Enviar');
+        setShowForm(!showForm);
         if (!showForm) {
             setTraslado({
                 Id_Traslado: '',
@@ -85,13 +130,17 @@ const CrudTraslado = () => {
                 Obs_Traslado: '',
                 Hor_Traslado: ''
             });
-            setButtonForm('Enviar');
         }
+        setIsModalOpen(true);
     };
 
-    
-    const handleEdit = (id_Traslado) => {
-        getTraslado(id_Traslado);
+    const closeModal = () => setIsModalOpen(false);
+
+    const handleEdit = (Id_Traslado) => {
+        getTraslado(Id_Traslado);
+        const modalElement = document.getElementById('modalForm');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
     };
 
     const handleDelete = (id_Traslado) => {
@@ -121,25 +170,56 @@ const CrudTraslado = () => {
     return (
         <>
         {/* <div className="container mt-5"> */}
-        <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
-
-                <button className="btn btn-primary mb-4" onClick={handleAddClick}
-                style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
-                    {showForm ? 'Ocultar Formulario' : 'Agregar Traslado'}
+            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
+                <button 
+                    className="btn btn-primary mb-4" 
+                    onClick={handleAddClick}
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
+                    Agregar Traslado
                 </button>
-                </div>
-            <WriteTable 
-                titles={titles} 
-                data={data} 
-                onEditClick={handleEdit} 
-                onDeleteClick={handleDelete} 
-            />
-            {showForm && (
-                <>
-                {/* <hr /> */}
-                        <FormTraslado getAllTraslados={getAllTraslados} buttonForm={buttonForm} traslado={traslado} URI={URI} updateTextButton={updateTextButton} />
-                    </>
+
+                <button
+                    className="btn btn-danger mx-2"
+                    onClick={exportToPDF}
+                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
+                >
+                    <i className="bi bi-file-earmark-pdf"></i> PDF
+                </button>
+
+                <WriteTable 
+                    titles={titles} 
+                    data={data} 
+                    onEditClick={handleEdit} 
+                    onDeleteClick={handleDelete} 
+                />
+                
+                {isModalOpen && (
+                    <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-lg">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Traslado' : 'Registrar Traslado'}</h5>
+                                    <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    <FormTraslado
+                                        buttonForm={buttonForm}
+                                        traslado={traslado}
+                                        URI={URI}
+                                        updateTextButton={updateTextButton}
+                                        getAllTraslados={getAllTraslados}
+                                        closeModal={() => {
+                                            const modalElement = document.getElementById('modalForm');
+                                            const modal = window.bootstrap.Modal.getInstance(modalElement);
+                                            modal.hide();
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 )}
+            </div>
         </>
     );
 };

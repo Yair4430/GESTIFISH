@@ -110,7 +110,7 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
     return (
         <>
         {/* <div className="container mt-5"> */}
-        <div style={{ marginLeft: '300px', paddingTop: '70px' }}>
+        {/* <div style={{ marginLeft: '300px', paddingTop: '70px' }}> */}
 
 
             <div className="card">
@@ -186,7 +186,7 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
                     </form>
                 </div>
             </div>
-        </div>
+        {/* </div> */}
     </>
 
 );

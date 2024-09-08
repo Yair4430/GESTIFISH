@@ -9,7 +9,7 @@ function barraNavegacionPrivada({ logOutUser }) {
   // Estilos en línea para la barra de navegación
   const styles = {
     navbar: {
-      padding: '15px 30px', // Espaciado interno de la barra
+      padding: '5px 30px', // Espaciado interno de la barra
       backgroundColor: '#007bff', // Color de fondo azul más llamativo
     },
     navbarTitle: {

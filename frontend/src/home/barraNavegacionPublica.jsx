@@ -5,7 +5,7 @@ import Logo from '../IMG/LogoBlanco.jpeg';
 function BarraNavegacionPublica() {
   const styles = {
     navbar: {
-      padding: '15px 30px', 
+      padding: '5px 30px', 
       backgroundColor: '#007bff', 
     },
     navbarTitle: {
