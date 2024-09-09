@@ -185,7 +185,7 @@ const CrudSiembra = () => {
     
 
     const titles = [
-        "Cantidad Peces","Fecha Siembra","Fecha Posible de Cosecha", "Responsable", "Especie", "Estanque","Peso Actual", "Observaciones", "Hora de Siembra", "Ganancia de Peso","Valor Siembra", "Acciones"
+        "Cantidad Peces","Fecha Siembra","Fecha Posible Cosecha", "Responsable", "Especie", "Estanque","Peso Actual", "Observaciones", "Hora Siembra", "Ganancia Peso","Valor Siembra", "Acciones"
     ];
 
     return (
