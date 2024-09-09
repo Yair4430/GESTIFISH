@@ -2,7 +2,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
-const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllActividad }) => {
+
+const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllActividad, }) => {
     const [Id_Actividad, setId_Actividad] = useState('');
     const [Nom_Actividad, setNom_Actividad] = useState('');
     const [Des_Actividad, setDes_Actividad] = useState('');
@@ -39,59 +40,59 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
 
     const sendFormA = async (e) => {
         e.preventDefault();
-
+      
         try {
-            if (buttonForm === 'Actualizar') {
-                await axios.put(`${URI}${actividad.Id_Actividad}`, {
-                    Id_Actividad,
-                    Nom_Actividad,
-                    Des_Actividad,
-                    Fec_Actividad,
-                    Hor_Actividad,
-                    Fas_Produccion,
-                    Id_Responsable,
-                    Id_Estanque
-                });
-                Swal.fire({
-                    title: 'Actualizado',
-                    text: '¡Registro actualizado exitosamente!',
-                    icon: 'success'
-                });
-                updateTextButton('Enviar');
+          if (buttonForm === 'Actualizar') {
+            await axios.put(`${URI}${actividad.Id_Actividad}`, {
+              Id_Actividad,
+              Nom_Actividad,
+              Des_Actividad,
+              Fec_Actividad,
+              Hor_Actividad,
+              Fas_Produccion,
+              Id_Responsable,
+              Id_Estanque
+            });
+            Swal.fire({
+              title: 'Actualizado',
+              text: '¡Registro actualizado exitosamente!',
+              icon: 'success'
+            }).then(() => {
+            //   updateTextButton('Enviar');
+              clearFormA();
+              getAllActividad();
+              $('#modalForm').modal('hide');
+            });
+          } else if (buttonForm === 'Enviar') {
+            const respuestaApi = await axios.post(URI, {
+                Nom_Actividad,
+                Des_Actividad,
+                Fec_Actividad,
+                Hor_Actividad,
+                Fas_Produccion,
+                Id_Responsable,
+                Id_Estanque
+            });
+            Swal.fire({
+                title: 'Guardado',
+                text: '¡Registro guardado exitosamente!',
+                icon: 'success'
+            });
+            if (respuestaApi.status === 201) {
+                // alert(respuestaApi.data.message);
                 clearFormA();
                 getAllActividad();
-            } else if (buttonForm === 'Enviar') {
-                const respuestaApi = await axios.post(URI, {
-                    Nom_Actividad,
-                    Des_Actividad,
-                    Fec_Actividad,
-                    Hor_Actividad,
-                    Fas_Produccion,
-                    Id_Responsable,
-                    Id_Estanque
-                });
-                Swal.fire({
-                    title: 'Guardado',
-                    text: '¡Registro guardado exitosamente!',
-                    icon: 'success'
-                });
-                if (respuestaApi.status === 201) {
-                    // alert(respuestaApi.data.message);
-                    clearFormA();
-                    getAllActividad();
-                }
             }
-
-            $('#modalForm').modal('hide');
-
+          }
+      
         } catch (error) {
-            Swal.fire({
-                title: 'Error',
-                text: 'No se pudo guardar la actividad.',
-                icon: 'error'
-            });
+          Swal.fire({
+            title: 'Error',
+            text: 'No se pudo guardar la actividad.',
+            icon: 'error'
+          });
         }
-    };
+      };
 
     const clearFormA = () => {
         setId_Actividad('');

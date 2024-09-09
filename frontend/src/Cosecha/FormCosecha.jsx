@@ -38,9 +38,12 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
                     title: 'Actualizado',
                     text: '¡Registro actualizado exitosamente!',
                     icon: 'success'
-                });
-                updateTextButton('Enviar');
+                }).then(() => {
+                // updateTextButton('Enviar');
                 clearForm(); // Limpiar el formulario después de la actualización
+                getAllCosecha()
+                $('#modalForm').modal('hide');
+                })
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, data);
                 Swal.fire({
@@ -125,7 +128,9 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
             {/* <div style={{ marginLeft: '300px', paddingTop: '70px' }}> */}
                 <div className="card">
                     <div className="card-header bg-primary text-white">
-                        <h1 className="text-center">Registrar Cosecha</h1>
+                    <h1 className="text-center">
+                            {buttonForm === 'Actualizar' ? 'Actualizar Cosecha' : 'Registrar Cosecha'}
+                        </h1>
                     </div>
                     <div className="card-body">
                         <form id="cosechaForm" onSubmit={sendForm} className="fw-bold m-2">

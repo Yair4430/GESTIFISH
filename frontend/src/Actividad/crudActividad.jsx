@@ -5,6 +5,7 @@ import WriteTable from '../Tables/Data-Tables.jsx';
 import FormActividad from './formActividad.jsx';
 import jsPDF from "jspdf";
 
+
 const URI = process.env.ROUTER_PRINCIPAL + '/Actividad/';
 
 const CrudActividad = () => {
@@ -117,8 +118,7 @@ const CrudActividad = () => {
     };
 
     const handleAddClick = () => {
-        setButtonForm('Enviar');
-        setShowForm(!showForm);
+        setShowForm(prevShowForm => !prevShowForm);
         if (!showForm) {
             setActividad({
                 Nom_Actividad: '',
@@ -129,6 +129,8 @@ const CrudActividad = () => {
                 Id_Responsable: '',
                 Id_Estanque: ''
             });
+            setButtonForm('Enviar');
+
         }
 
         setIsModalOpen(true);
@@ -138,10 +140,7 @@ const CrudActividad = () => {
 
     const handleEdit = (Id_Actividad) => {
         getActividad(Id_Actividad);
-        // Usa Bootstrap para mostrar el modal
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
     };
 
     const handleDelete = (Id_Actividad) => {

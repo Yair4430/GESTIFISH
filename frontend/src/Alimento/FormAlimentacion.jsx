@@ -32,9 +32,11 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
                     title: 'Actualizado',
                     text: '¡Registro actualizado exitosamente!',
                     icon: 'success'
-                });
-                updateTextButton('Enviar');
+                }).then(() => {
+                // updateTextButton('Enviar');
                 clearForm(); // Limpiar el formulario después de actualizar
+                $('#modalForm').modal('hide');
+                })
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, data);
                 Swal.fire({
@@ -115,7 +117,9 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
 
             <div className="card">
                 <div className="card-header bg-primary text-white">
-                    <h1 className="text-center">Registrar Alimentación</h1>
+                <h1 className="text-center">
+                            {buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}
+                        </h1>
                 </div>
                 <div className="card-body">
                     <form id="alimentacionForm" onSubmit={sendForm} className="fw-bold m-2">

@@ -153,9 +153,8 @@ const CrudSiembra = () => {
 
     const handleEdit = (Id_Siembra) => {
         getSiembra(Id_Siembra);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
+
     };
 
     const handleDelete = (Id_Siembra) => {
@@ -165,7 +164,6 @@ const CrudSiembra = () => {
     const data = SiembraList.map((siembra) => [
         siembra.Fec_Siembra,
         siembra.Can_Peces,
-        siembra.Fec_Siembra,
         siembra.Fec_PosibleCosecha,
         siembra.responsable.Nom_Responsable,
         siembra.especie.Nom_Especie,
@@ -187,7 +185,7 @@ const CrudSiembra = () => {
     
 
     const titles = [
-        "Fecha Siembra", "Cantidad Peces", "Responsable", "Especie", "Estanque", "Observaciones", "Acciones"
+        "Fecha Siembra", "Cantidad Peces","Fecha Posible de Cosecha", "Responsable", "Especie", "Estanque","Peso Actual", "Observaciones", "Hora de Siembra", "Ganancia de Peso","Valor de Siembra", "Acciones"
     ];
 
     return (

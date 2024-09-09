@@ -28,7 +28,8 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
                     text: '¡Registro actualizado exitosamente!',
                     icon: 'success'
                 });
-                updateTextButton('Enviar');
+                // updateTextButton('Enviar');
+                getAllTraslados();
                 clearForm(); // Limpiar el formulario después de la actualización
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, data);
@@ -95,7 +96,9 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
 
             <div className="card">
                 <div className="card-header bg-primary text-white">
-                    <h1 className="text-center">Registrar Traslado</h1>
+                <h1 className="text-center">
+                            {buttonForm === 'Actualizar' ? 'Actualizar Traslado' : 'Registrar Traslado'}
+                        </h1>
                 </div>
                 <div className="card-body">
                     <form id="trasladoForm" onSubmit={sendForm} className="fw-bold m-2">

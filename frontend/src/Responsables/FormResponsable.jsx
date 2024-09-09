@@ -32,7 +32,7 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                         text: '¡Registro actualizado exitosamente!',
                         icon: 'success'
                     });
-                    updateTextButton('Enviar');
+                    // updateTextButton('Enviar');
                     clearFormR();
                     getAllResponsable();
                 } else {
@@ -104,7 +104,9 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
 
           <div className="card">
             <div className="card-header bg-primary text-white">
-              <h1 className="text-center">Registro de Responsables</h1>
+            <h1 className="text-center">
+                            {buttonForm === 'Actualizar' ? 'Actualizar Responsables' : 'Registrar Responsables'}
+                        </h1>
             </div>
             <div className="card-body">
               <form id="responsableForm" onSubmit={sendFormR} className="fw-bold m-2 form-no-hover" >

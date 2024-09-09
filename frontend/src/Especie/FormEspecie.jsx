@@ -92,7 +92,9 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
 
             <div className="card">
                 <div className="card-header bg-primary text-white">
-                    <h1 className="text-center">Registrar Especies</h1>
+                <h1 className="text-center">
+                            {buttonForm === 'Actualizar' ? 'Actualizar Especies' : 'Registrar Especies'}
+                        </h1>
                 </div>
                 <div className="card-body">
                     <form id="especieForm" onSubmit={sendForm} className="fw-bold m-2 form-no-hover">
