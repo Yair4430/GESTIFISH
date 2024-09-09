@@ -138,7 +138,7 @@ function BarraNavegacionPublica() {
                   }}
                 >
                   <i className="fas fa-user" style={styles.icon}></i>
-                  <span style={styles.iconText}>Login</span>
+                  <span style={styles.iconText}>Ingresar</span>
                 </NavLink>
               </li>
             </ul>

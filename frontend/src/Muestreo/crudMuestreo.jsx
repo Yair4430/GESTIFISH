@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormMuestreo from './formMuestreo';
+import jsPDF from 'jspdf';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/muestreo/';
 
@@ -88,6 +89,39 @@ const CrudMuestreo = () => {
             }
         });
     };
+
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+
+        // Título de la tabla
+        const title = "Muestreo";
+        doc.setFontSize(16);
+        doc.text(title, 14, 20); // Posición del título
+
+        // Configuración de autoTable
+        const tableBody = muestreoList.map((muestreo) => [
+            muestreo.Fec_Muestreo,
+            muestreo.Num_Peces,
+            muestreo.Obs_Muestreo,
+            muestreo.Pes_Esperado,
+            muestreo.Hor_Muestreo,
+            muestreo.siembra.Fec_Siembra,
+            muestreo.responsable.Nom_Responsable,
+            muestreo.Pes_Promedio
+        ]);
+
+        doc.autoTable({
+            head: [['Fecha Muestreo', 'Número Peces', 'Observaciones', 'Peso Esperado', 'Hora Muestreo', 'Fecha Siembra', 'Nombre Responsable', 'Peso Promedio']],
+            body: tableBody,
+            startY: 30, // Posición donde empieza la tabla
+            theme: 'grid', // Tema de la tabla
+            headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
+        });
+
+        // Guarda el PDF
+        doc.save('muestreo.pdf');
+    };
     
     const handleAddClick = () => {
         setButtonForm('Enviar');
@@ -112,9 +146,8 @@ const CrudMuestreo = () => {
 
     const handleEdit = (Id_Muestreo) => {
         getMuestreo(Id_Muestreo);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
+
     };
 
     const handleDelete = (Id_Muestreo) => {
@@ -145,14 +178,20 @@ const CrudMuestreo = () => {
 
     return (
         <>
-            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
                 <button 
                     className="btn btn-primary mb-4" 
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
                     Agregar Muestreo
                 </button>
-                
+                <button
+                className="btn btn-danger mx-2"
+                    onClick={exportToPDF}
+                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
+                >
+                    <i className="bi bi-file-earmark-pdf"></i> PDF
+                </button>
                 <WriteTable 
                 titles={titles} 
                 data={data} 
@@ -165,7 +204,7 @@ const CrudMuestreo = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Muestreo' : 'Registrar Muestreo'}</h5>
+                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Muestreo' : 'Registrar Muestreo'}</h5> */}
                                     <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">

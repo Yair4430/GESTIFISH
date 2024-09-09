@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';  // Reemplaza con la ruta correcta
 import FormResponsable from './FormResponsable.jsx';
+import jsPDF from "jspdf";
 
 const URI = process.env.ROUTER_PRINCIPAL + '/responsable/';
 
@@ -91,6 +92,34 @@ const CrudResponsable = () => {
         });
     };
 
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+        const title = "Responsables";
+        doc.setFontSize(16);
+        doc.text(title, 14, 20); // Title position
+
+        // Table configuration
+        const tableBody = responsableList.map((responsable) => [
+            responsable.Nom_Responsable,
+            responsable.Ape_Responsable,
+            responsable.Doc_Responsable,
+            responsable.Tip_Responsable,
+            responsable.Cor_Responsable,
+            responsable.Num_Responsable
+        ]);
+
+        doc.autoTable({
+            head: [['Nombre', 'Apellidos', 'Número Documento', 'Tipo Responsable', 'Correo', 'Número Teléfono']],
+            body: tableBody,
+            startY: 30, // Table start position
+            theme: 'grid', // Table theme
+            headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
+        });
+
+        doc.save('responsables.pdf');
+    };
+
     const handleAddClick = () => {
         setButtonForm('Enviar');
         setShowForm(!showForm);
@@ -112,9 +141,8 @@ const CrudResponsable = () => {
 
     const handleEdit = (Id_Responsable) => {
         getResponsable(Id_Responsable);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
+
     };
 
     const handleDelete = (Id_Responsable) => {
@@ -144,19 +172,27 @@ const CrudResponsable = () => {
 
     return (
         <>
-            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
                 <button 
                     className="btn btn-primary mb-4 " 
                     onClick={handleAddClick}
-                    style={{ width: '144px', height: '45px', padding:'0px', fontSize: '15px'}}>
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
                     Agregar Responsable
+                </button>
+
+                <button
+                    className="btn btn-danger mx-2"
+                    onClick={exportToPDF}
+                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
+                >
+                    <i className="bi bi-file-earmark-pdf"></i> PDF
                 </button>
                 
                 <WriteTable 
                     titles={titles} 
                     data={data} 
-                    onEditClick={(id) => getResponsable(id)} 
-                    onDeleteClick={(id) => deleteResponsable(id)} 
+                    onEditClick={handleEdit} 
+                    onDeleteClick={handleDelete} 
                 />
 
             {isModalOpen && (
@@ -164,7 +200,7 @@ const CrudResponsable = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Responsable' : 'Registrar Responsable'}</h5>
+                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Responsable' : 'Registrar Responsable'}</h5> */}
                                     <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">

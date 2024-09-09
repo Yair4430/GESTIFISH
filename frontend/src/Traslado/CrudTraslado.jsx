@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormTraslado from './FormTraslado'; 
+import jsPDF from "jspdf";
 
 const URI = process.env.ROUTER_PRINCIPAL + '/traslado/';
 
@@ -40,7 +41,7 @@ const CrudTraslado = () => {
     const getTraslado = async (Id_Traslado) => {
         setButtonForm('Actualizar');
         try {
-            const respuesta = await axios.get(`${URI}${Id_Traslado}`);
+            const respuesta = await axios.get(`${URI}/${Id_Traslado}`);
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setTraslado({ ...respuesta.data });
                 const modalElement = document.getElementById('modalForm');
@@ -58,7 +59,7 @@ const CrudTraslado = () => {
         setButtonForm(texto);
     };
 
-    const deleteTraslado = async (id_Traslado) => {
+    const deleteTraslado = async (Id_Traslado) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -70,7 +71,7 @@ const CrudTraslado = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(`${URI}${id_Traslado}`);
+                    await axios.delete(`${URI}/${Id_Traslado}`);
                     Swal.fire({
                         title: "¡Borrado!",
                         text: "Borrado exitosamente",
@@ -86,9 +87,39 @@ const CrudTraslado = () => {
         });
     };
 
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+
+        // Título de la tabla
+        const title = "Traslados";
+        doc.setFontSize(16);
+        doc.text(title, 14, 20); // Posición del título
+
+        // Configuración de autoTable
+        const tableBody = trasladoList.map((traslado) => [
+            traslado.Fec_Traslado,
+            traslado.Can_Peces,
+            traslado.responsable.Nom_Responsable,
+            traslado.Obs_Traslado,
+            traslado.Hor_Traslado
+        ]);
+
+        doc.autoTable({
+            head: [['Fecha Traslado', 'Cantidad Peces', 'Responsable', 'Observaciones', 'Hora Traslado']],
+            body: tableBody,
+            startY: 30, // Posición donde empieza la tabla
+            theme: 'grid', // Tema de la tabla
+            headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
+        });
+
+        // Guarda el PDF
+        doc.save('traslados.pdf');
+    };
+
     const handleAddClick = () => {
-        setButtonForm('Enviar');
-        setShowForm(!showForm);
+        setShowForm(prevShowForm => !prevShowForm);
+        
         if (!showForm) {
             setTraslado({
                 Id_Traslado: '',
@@ -98,6 +129,7 @@ const CrudTraslado = () => {
                 Obs_Traslado: '',
                 Hor_Traslado: ''
             });
+            setButtonForm('Enviar');
         }
         setIsModalOpen(true);
     };
@@ -106,13 +138,12 @@ const CrudTraslado = () => {
 
     const handleEdit = (Id_Traslado) => {
         getTraslado(Id_Traslado);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
+
     };
 
-    const handleDelete = (id_Traslado) => {
-        deleteTraslado(id_Traslado);
+    const handleDelete = (Id_Traslado) => {
+        deleteTraslado(Id_Traslado);
     };
 
     const data = trasladoList.map((traslado) => [
@@ -122,12 +153,12 @@ const CrudTraslado = () => {
         traslado.Obs_Traslado,
         traslado.Hor_Traslado,
         `
-        <button class='btn btn-primary' align-middle btn-edit' data-id='${traslado.id_Traslado}'>
-          <i class="fa-solid fa-pen-to-square"></i> 
-        </button>
-        <button class='btn btn-danger' align-middle m-1 btn-delete' data-id='${traslado.id_Traslado}'>
-          <i class="fa-solid fa-trash-can"></i> 
-        </button>
+          <button class='btn btn-primary align-middle btn-edit' data-id='${traslado.Id_Traslado}' onClick={handleAddClick}>
+            <i class="fa-solid fa-pen-to-square"></i> 
+          </button>
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${traslado.Id_Traslado}'>
+            <i class="fa-solid fa-trash-can"></i> 
+          </button>
       `
     ]);
 
@@ -138,12 +169,20 @@ const CrudTraslado = () => {
     return (
         <>
         {/* <div className="container mt-5"> */}
-            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
                 <button 
                     className="btn btn-primary mb-4" 
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding:'0px', fontSize: '16px'}}>
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
                     Agregar Traslado
+                </button>
+
+                <button
+                    className="btn btn-danger mx-2"
+                    onClick={exportToPDF}
+                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
+                >
+                    <i className="bi bi-file-earmark-pdf"></i> PDF
                 </button>
 
                 <WriteTable 
@@ -158,7 +197,7 @@ const CrudTraslado = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Traslado' : 'Registrar Traslado'}</h5>
+                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Traslado' : 'Registrar Traslado'}</h5> */}
                                     <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">

@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormEspecie from './FormEspecie';
+import jsPDF from "jspdf"; // Añade jsPDF para exportar a PDF
+
 
 const URI = process.env.ROUTER_PRINCIPAL + '/especie/';
 const PATH_FOTOS = process.env.ROUTER_FOTOS;
@@ -39,10 +41,11 @@ const CrudEspecie = () => {
     };
 
     const getEspecie = async (Id_Especie) => {
-        setButtonForm('Actualizar');
+        setButtonForm('Enviar');
         try {
             const respuesta = await axios.get(`${URI}${Id_Especie}`);
             if (respuesta.status === 200) {
+                setButtonForm('Actualizar');
                 setEspecie({ ...respuesta.data });
                 // Mostrar el modal
                 const modalElement = document.getElementById('modalForm');
@@ -92,9 +95,42 @@ const CrudEspecie = () => {
         });
     };
 
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+
+        // Título de la tabla
+        const title = "Especies";
+        doc.setFontSize(16);
+        doc.text(title, 14, 20); // Posición del título
+
+        // Configuración de autoTable
+        const tableBody = EspecieList.map((especie) => [
+            especie.Nom_Especie,
+            especie.Car_Especie,
+            especie.Tam_Promedio,
+            especie.Den_Especie,
+            especie.Img_Especie ? (
+                doc.addImage(`${PATH_FOTOS}/${especie.Img_Especie}`, 'JPEG', 14, 60, 50, 50)
+            ) : (
+                'No Image'
+            )
+        ]);
+
+        doc.autoTable({
+            head: [['Nombre', 'Características', 'Tamaño Promedio', 'Densidad', 'Imagen']],
+            body: tableBody,
+            startY: 30, // Posición donde empieza la tabla
+            theme: 'grid', // Tema de la tabla
+            headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
+        });
+
+        // Guarda el PDF
+        doc.save('especies.pdf');
+    };
+
     const handleAddClick = () => {
-        setButtonForm('Enviar');
-        setShowForm(!showForm);
+        setShowForm(prevShowForm => !prevShowForm);
         if (!showForm) {
             setEspecie({
                 Id_Especie: '',
@@ -104,6 +140,7 @@ const CrudEspecie = () => {
                 Id_Tipo_Especie: '',
                 Id_Clase: ''
             });
+            setButtonForm('Enviar');
         }
         setIsModalOpen(true);
     };
@@ -112,10 +149,7 @@ const CrudEspecie = () => {
 
     const handleEdit = (Id_Especie) => {
         getEspecie(Id_Especie);
-        // Usa Bootstrap para mostrar el modal
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
     };
 
     const handleDelete = (Id_Especie) => {
@@ -148,14 +182,21 @@ const CrudEspecie = () => {
 
     return (
         <>
-            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
                 <button
                     className="btn btn-primary mb-4"
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}>
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
                     Agregar Especie
                 </button>
 
+                <button
+                    className="btn btn-danger mx-2"
+                    onClick={exportToPDF}
+                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
+                >
+                    <i className="bi bi-file-earmark-pdf"></i> PDF
+                </button>
                 <WriteTable 
                     titles={titles} 
                     data={data} 
@@ -168,7 +209,7 @@ const CrudEspecie = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Especie' : 'Registrar Especie'}</h5>
+                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Especie' : 'Registrar Especie'}</h5> */}
                                     <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">

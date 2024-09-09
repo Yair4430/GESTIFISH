@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx'; // Asegúrate de que esta ruta sea correcta
 import FormMortalidad from './FormMortalidad.jsx'; // Asegúrate de que esta ruta sea correcta
+import jsPDF from 'jspdf';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/mortalidad/';
 
@@ -76,7 +77,7 @@ const CrudMortalidad = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    getAllMortalidad(); // Refrescar la lista después de la eliminación
+                    //getAllMortalidad(); // Refrescar la lista después de la eliminación
                 } catch (error) {
                     console.error('Error deleting mortalidad:', error.response?.status || error.message);
                 }
@@ -84,6 +85,36 @@ const CrudMortalidad = () => {
                 getAllMortalidad();
             }
         });
+    };
+
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+
+        // Título de la tabla
+        const title = "Mortalidad";
+        doc.setFontSize(16);
+        doc.text(title, 14, 20); // Posición del título
+
+        // Configuración de autoTable
+        const tableBody = MortalidadList.map((mortalidad) => [
+            mortalidad.Fec_Mortalidad,
+            mortalidad.Can_Peces,
+            mortalidad.Mot_Mortalidad,
+            mortalidad.siembra.Fec_Siembra,
+            mortalidad.responsable.Nom_Responsable
+        ]);
+
+        doc.autoTable({
+            head: [['Fecha Mortalidad', 'Cantidad Peces', 'Motivo Mortalidad', 'Fecha Siembra', 'Nombre Responsable']],
+            body: tableBody,
+            startY: 30, // Posición donde empieza la tabla
+            theme: 'grid', // Tema de la tabla
+            headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
+        });
+
+        // Guarda el PDF
+        doc.save('mortalidad.pdf');
     };
 
     const handleAddClick = () => {
@@ -107,9 +138,8 @@ const CrudMortalidad = () => {
 
     const handleEdit = (Id_Mortalidad) => {
         getMortalidad(Id_Mortalidad);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
+
     };
 
     const handleDelete = (Id_Mortalidad) => {
@@ -138,12 +168,20 @@ const CrudMortalidad = () => {
 
     return (
         <>
-            <div style={{ marginLeft: '320px', paddingTop: '70px' }}>
+            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
                 <button 
                     className="btn btn-primary mb-4" 
                     onClick={handleAddClick}
-                    style={{ width: '145px', height: '45px', padding:'0px', fontSize: '16px'}}>
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
                     Agregar Mortalidad
+                </button>
+
+                <button
+                    className="btn btn-danger mx-2"
+                    onClick={exportToPDF}
+                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
+                    >
+                    <i className="bi bi-file-earmark-pdf"></i> PDF
                 </button>
 
                 <WriteTable 
@@ -157,7 +195,7 @@ const CrudMortalidad = () => {
                     <div className="modal-dialog modal-lg">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Mortalidad' : 'Registrar Mortalidad'}</h5>
+                                {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Mortalidad' : 'Registrar Mortalidad'}</h5> */}
                                 <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                             </div>
                             <div className="modal-body">

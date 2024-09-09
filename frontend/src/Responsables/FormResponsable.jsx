@@ -32,7 +32,7 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                         text: '¡Registro actualizado exitosamente!',
                         icon: 'success'
                     });
-                    updateTextButton('Enviar');
+                    // updateTextButton('Enviar');
                     clearFormR();
                     getAllResponsable();
                 } else {
@@ -99,67 +99,72 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
 
     return (
         <>
-        {/* <div className="container mt-5">
-        <div style={{ marginLeft: '300px', paddingTop: '70px' }}> */}
-
-          <div className="card">
-            <div className="card-header bg-primary text-white">
-              <h1 className="text-center">Registro de Responsables</h1>
+            <div className="card">
+                <div className="card-header bg-primary text-white">
+                    <h1 className="text-center">
+                        {buttonForm === 'Actualizar' ? 'Actualizar Responsables' : 'Registrar Responsables'}
+                    </h1>
+                </div>
+                <div className="card-body">
+                    <form id="responsableForm" onSubmit={sendFormR} className="fw-bold m-2 form-no-hover">
+                        <div className="row mb-3">
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="Nom_Responsable" className="form-label">Nombre del Responsable:</label>
+                                    <input className="form-control" type="text" id="Nom_Responsable" value={Nom_Responsable} onChange={(e) => setNom_Responsable(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="Ape_Responsable" className="form-label">Apellidos del Responsable:</label>
+                                    <input className="form-control" type="text" id="Ape_Responsable" value={Ape_Responsable} onChange={(e) => setApe_Responsable(e.target.value)} required />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row mb-3">
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="Doc_Responsable" className="form-label">Documento de Identificación:</label>
+                                    <input className="form-control" type="text" id="Doc_Responsable" value={Doc_Responsable} onChange={(e) => setDoc_Responsable(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="Tip_Responsable" className="form-label">Tipo de Responsable:</label>
+                                    <select className="form-control" id="Tip_Responsable" value={Tip_Responsable} onChange={(e) => setTip_Responsable(e.target.value)} required>
+                                        <option value="">Seleccione uno...</option>
+                                        <option value="Instructor">Instructor</option>
+                                        <option value="Pasante">Pasante</option>
+                                        <option value="Encargado de la Unidad">Encargado de la Unidad</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row mb-3">
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="Cor_Responsable" className="form-label">Correo del Responsable:</label>
+                                    <input className="form-control" type="email" id="Cor_Responsable" value={Cor_Responsable} onChange={(e) => setCor_Responsable(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="Num_Responsable" className="form-label">Número de Teléfono:</label>
+                                    <input className="form-control" type="tel" id="Num_Responsable" value={Num_Responsable} onChange={(e) => setNum_Responsable(e.target.value)} required />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="text-center">
+                            <button type="submit" id="boton" className="btn btn-primary btn-block m-2">
+                                {buttonForm}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div className="card-body">
-              <form id="responsableForm" onSubmit={sendFormR} className="fw-bold m-2 form-no-hover" >
-                <div className="form-group row mb-3 gap-1 align-items-center">
-                  <label htmlFor="Nom_Responsable" className="col-sm-5 col-form-label text-end">Nombre del Responsable:</label>
-                  <div className="col-sm-4">
-                    <input className="form-control" type="text" id="Nom_Responsable" value={Nom_Responsable} onChange={(e) => setNom_Responsable(e.target.value)} required />
-                  </div>
-                </div>
-                <div className="form-group row mb-3 gap-1 align-items-center">
-                  <label htmlFor="Ape_Responsable"className="col-sm-5 col-form-label text-end">Apellidos del Responsable:</label>
-                  <div className="col-sm-4">
-                    <input className="form-control" type="text" id="Ape_Responsable" value={Ape_Responsable} onChange={(e) => setApe_Responsable(e.target.value)} required />
-                  </div>
-                </div>
-                <div className="form-group row mb-3 gap-1 align-items-center">
-                  <label htmlFor="Doc_Responsable" className="col-sm-5 col-form-label text-end">Documento de Identificación:</label>
-                  <div className="col-sm-4">
-                    <input className="form-control" type="text" id="Doc_Responsable" value={Doc_Responsable} onChange={(e) => setDoc_Responsable(e.target.value)} required />
-                  </div>
-                </div>
-                <div className="form-group row mb-3 gap-1 align-items-center">
-                  <label htmlFor="Tip_Responsable" className="col-sm-5 col-form-label text-end">Tipo de Responsable:
-                  </label>
-                  <div className="col-sm-4">
-                    <select className="form-control" id="Tip_Responsable" value={Tip_Responsable} onChange={(e) => setTip_Responsable(e.target.value)} required >
-                      <option value="">Seleccione uno...</option>
-                      <option value="Instructor">Instructor</option>
-                      <option value="Pasante">Pasante</option>
-                      <option value="Encargado de la Unidad">Encargado de la Unidad</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="form-group row mb-3 gap-1 align-items-center">
-                  <label htmlFor="Cor_Responsable" className="col-sm-5 col-form-label text-end">Correo del Responsable:</label>
-                  <div className="col-sm-4">
-                    <input className="form-control" type="email" id="Cor_Responsable" value={Cor_Responsable} onChange={(e) => setCor_Responsable(e.target.value)} required />
-                  </div>
-                </div>
-                <div className="form-group row mb-3 gap-1 align-items-center">
-                  <label htmlFor="Num_Responsable" className="col-sm-5 col-form-label text-end">Número de Teléfono:</label>
-                  <div className="col-sm-4">
-                    <input className="form-control" type="number" id="Num_Responsable" value={Num_Responsable} onChange={(e) => setNum_Responsable(e.target.value)} required />
-                  </div>
-                </div>
-                <div className="text-center">
-                  <button type="submit" id="boton" className="btn btn-primary btn-block m-2"
-                  >{buttonForm} </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        {/* </div> */}
-      </>
+        </>
     );
+  
   };
   
   export default FormResponsable;
