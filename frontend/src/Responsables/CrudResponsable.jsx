@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';  // Reemplaza con la ruta correcta
 import FormResponsable from './FormResponsable.jsx';
 import jsPDF from "jspdf";
+import * as XLSX from 'xlsx'; // Para exportar a Excel
 
 const URI = process.env.ROUTER_PRINCIPAL + '/responsable/';
 
@@ -86,7 +87,7 @@ const CrudResponsable = () => {
                 } catch (error) {
                     console.error('Error deleting responsable:', error.response?.status || error.message);
                 }
-            }else{
+            } else {
                 getAllResponsable();
             }
         });
@@ -120,6 +121,49 @@ const CrudResponsable = () => {
         doc.save('responsables.pdf');
     };
 
+    // Función para exportar a Excel
+    const exportToExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(responsableList.map((responsable) => ({
+            Nombre: responsable.Nom_Responsable,
+            Apellidos: responsable.Ape_Responsable,
+            Documento: responsable.Doc_Responsable,
+            Tipo: responsable.Tip_Responsable,
+            Correo: responsable.Cor_Responsable,
+            Teléfono: responsable.Num_Responsable
+        })));
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Responsables');
+        XLSX.writeFile(wb, 'responsables.xlsx');
+    };
+
+    // Función para exportar a SQL
+    const exportToSQL = () => {
+        let sqlStatements = `CREATE TABLE IF NOT EXISTS Responsables (
+            Id_Responsable INT AUTO_INCREMENT PRIMARY KEY,
+            Nom_Responsable VARCHAR(255),
+            Ape_Responsable VARCHAR(255),
+            Doc_Responsable VARCHAR(255),
+            Tip_Responsable VARCHAR(255),
+            Cor_Responsable VARCHAR(255),
+            Num_Responsable VARCHAR(255)
+        );\n\n`;
+
+        sqlStatements += "INSERT INTO Responsables (Nom_Responsable, Ape_Responsable, Doc_Responsable, Tip_Responsable, Cor_Responsable, Num_Responsable) VALUES \n";
+
+        sqlStatements += responsableList.map((responsable) => {
+            return `('${responsable.Nom_Responsable.replace(/'/g, "''")}', '${responsable.Ape_Responsable.replace(/'/g, "''")}', '${responsable.Doc_Responsable}', '${responsable.Tip_Responsable}', '${responsable.Cor_Responsable}', '${responsable.Num_Responsable}')`;
+        }).join(",\n") + ";";
+
+        console.log(sqlStatements);
+
+        const blob = new Blob([sqlStatements], { type: 'text/sql' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'responsables.sql';
+        link.click();
+    };
+
     const handleAddClick = () => {
         setButtonForm('Enviar');
         setShowForm(!showForm);
@@ -142,7 +186,6 @@ const CrudResponsable = () => {
     const handleEdit = (Id_Responsable) => {
         getResponsable(Id_Responsable);
         setIsModalOpen(true);
-
     };
 
     const handleDelete = (Id_Responsable) => {
@@ -169,24 +212,54 @@ const CrudResponsable = () => {
     const titles = [
         "Nombre", "Apellidos", "Numero Documento", "Tipo Responsable", "Correo", "Número Teléfono", "Acciones"
     ];
-
     return (
         <>
-            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
-                <button 
-                    className="btn btn-primary mb-4 " 
+            <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
+                {/* Botón para agregar actividad */}
+                <button
+                    className="btn btn-primary mb-4"
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
-                    Agregar Responsable
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}
+                >
+                    Agregar Actividad
                 </button>
 
+                {/* Botón para exportar a PDF */}
                 <button
                     className="btn btn-danger mx-2"
                     onClick={exportToPDF}
-                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
+                    style={{
+                        width: '80px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '880px'
+                    }}
                 >
                     <i className="bi bi-file-earmark-pdf"></i> PDF
                 </button>
+
+                {/* Botón para exportar a Excel (verde) */}
+                <button
+                    className="btn btn-success mx-2"
+                    onClick={exportToExcel}
+                    style={{
+                        width: '90px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '672px'
+                    }}
+                >
+                    <i className="bi bi-file-earmark-excel"></i> Excel
+                </button>
+
+                {/* Botón para exportar a SQL (gris) */}
+                <button
+                    className="btn btn-secondary mx-2"
+                    onClick={exportToSQL}
+                    style={{
+                        width: '80px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '780px'
+                    }}
+                >
+                    <i className="bi bi-file-earmark-code"></i> SQL
+                </button>
+            </div>
                 
                 <WriteTable 
                     titles={titles} 
@@ -221,7 +294,6 @@ const CrudResponsable = () => {
                         </div>
                     </div>
                 )}
-            </div>
         </>
     );
 };
