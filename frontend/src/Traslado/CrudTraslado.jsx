@@ -4,6 +4,8 @@ import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormTraslado from './FormTraslado'; 
 import jsPDF from "jspdf";
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/traslado/';
 
@@ -77,11 +79,10 @@ const CrudTraslado = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    // getAllTraslados(); // Refrescar la lista después de la eliminación
                 } catch (error) {
                     console.error('Error deleting traslado:', error);
                 }
-            }else{
+            } else {
                 getAllTraslados();
             }
         });
@@ -117,6 +118,46 @@ const CrudTraslado = () => {
         doc.save('traslados.pdf');
     };
 
+    // Función para exportar a Excel
+    const exportToExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(trasladoList.map((traslado) => ({
+            'Fecha Traslado': traslado.Fec_Traslado,
+            'Cantidad Peces': traslado.Can_Peces,
+            'Responsable': traslado.responsable.Nom_Responsable,
+            'Observaciones': traslado.Obs_Traslado,
+            'Hora Traslado': traslado.Hor_Traslado
+        })));
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Traslados');
+        XLSX.writeFile(wb, 'traslados.xlsx');
+    };
+
+    // Función para exportar a SQL
+    const exportToSQL = () => {
+        let sqlStatements = `CREATE TABLE IF NOT EXISTS Traslados (
+            Id_Traslado INT AUTO_INCREMENT PRIMARY KEY,
+            Fec_Traslado DATE,
+            Can_Peces INT,
+            Responsable VARCHAR(255),
+            Obs_Traslado TEXT,
+            Hor_Traslado TIME
+        );\n\n`;
+
+        sqlStatements += "INSERT INTO Traslados (Fec_Traslado, Can_Peces, Responsable, Obs_Traslado, Hor_Traslado) VALUES \n";
+        sqlStatements += trasladoList.map((traslado) => {
+            return `('${traslado.Fec_Traslado}', ${traslado.Can_Peces}, '${traslado.responsable.Nom_Responsable.replace(/'/g, "''")}', '${traslado.Obs_Traslado.replace(/'/g, "''")}', '${traslado.Hor_Traslado}')`;
+        }).join(",\n") + ";";
+
+        console.log(sqlStatements);
+
+        const blob = new Blob([sqlStatements], { type: 'text/sql' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'traslados.sql';
+        link.click();
+    };
+
     const handleAddClick = () => {
         setShowForm(prevShowForm => !prevShowForm);
         
@@ -139,7 +180,6 @@ const CrudTraslado = () => {
     const handleEdit = (Id_Traslado) => {
         getTraslado(Id_Traslado);
         setIsModalOpen(true);
-
     };
 
     const handleDelete = (Id_Traslado) => {
@@ -156,7 +196,7 @@ const CrudTraslado = () => {
           <button class='btn btn-primary align-middle btn-edit' data-id='${traslado.Id_Traslado}' onClick={handleAddClick}>
             <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${traslado.Id_Traslado}'>
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${traslado.Id_Traslado}' onClick={handleDelete}>
             <i class="fa-solid fa-trash-can"></i> 
           </button>
       `
@@ -168,22 +208,52 @@ const CrudTraslado = () => {
 
     return (
         <>
-        {/* <div className="container mt-5"> */}
-            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
-                <button 
-                    className="btn btn-primary mb-4" 
+            <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
+                {/* Botón para agregar actividad */}
+                <button
+                    className="btn btn-primary mb-4"
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
-                    Agregar Traslado
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}
+                >
+                    Agregar Actividad
                 </button>
 
+                {/* Botón para exportar a PDF */}
                 <button
                     className="btn btn-danger mx-2"
                     onClick={exportToPDF}
-                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
+                    style={{
+                        width: '80px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '880px'
+                    }}
                 >
                     <i className="bi bi-file-earmark-pdf"></i> PDF
                 </button>
+
+                {/* Botón para exportar a Excel (verde) */}
+                <button
+                    className="btn btn-success mx-2"
+                    onClick={exportToExcel}
+                    style={{
+                        width: '90px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '672px'
+                    }}
+                >
+                    <i className="bi bi-file-earmark-excel"></i> Excel
+                </button>
+
+                {/* Botón para exportar a SQL (gris) */}
+                <button
+                    className="btn btn-secondary mx-2"
+                    onClick={exportToSQL}
+                    style={{
+                        width: '80px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '780px'
+                    }}
+                >
+                    <i className="bi bi-file-earmark-code"></i> SQL
+                </button>
+            </div>
 
                 <WriteTable 
                     titles={titles} 
@@ -218,7 +288,6 @@ const CrudTraslado = () => {
                         </div>
                     </div>
                 )}
-            </div>
         </>
     );
 };

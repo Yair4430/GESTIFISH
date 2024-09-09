@@ -4,6 +4,8 @@ import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx'; // Asegúrate de que esta ruta sea correcta
 import FormMortalidad from './FormMortalidad.jsx'; // Asegúrate de que esta ruta sea correcta
 import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/mortalidad/';
 
@@ -77,7 +79,7 @@ const CrudMortalidad = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    //getAllMortalidad(); // Refrescar la lista después de la eliminación
+                    getAllMortalidad(); // Refrescar la lista después de la eliminación
                 } catch (error) {
                     console.error('Error deleting mortalidad:', error.response?.status || error.message);
                 }
@@ -86,6 +88,52 @@ const CrudMortalidad = () => {
             }
         });
     };
+
+    // Función para exportar a Excel
+    const exportToExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(MortalidadList.map((mortalidad) => ({
+            Fecha: mortalidad.Fec_Mortalidad,
+            Cantidad: mortalidad.Can_Peces,
+            Motivo: mortalidad.Mot_Mortalidad,
+            FechaSiembra: mortalidad.siembra.Fec_Siembra,
+            Responsable: mortalidad.responsable.Nom_Responsable
+        })));
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Mortalidades');
+        XLSX.writeFile(wb, 'mortalidades.xlsx');
+    };
+
+// Función para exportar a SQL
+const exportToSQL = () => {
+    // Creación de la tabla Mortalidades
+    let sqlStatements = `CREATE TABLE IF NOT EXISTS Mortalidades (
+        Id_Mortalidad INT AUTO_INCREMENT PRIMARY KEY,
+        Fec_Mortalidad DATE,
+        Can_Peces INT,
+        Mot_Mortalidad TEXT,
+        Siembra_Fec DATE,
+        Responsable_Nombre VARCHAR(255)
+    );\n\n`;
+
+    // Sentencia para insertar datos en la tabla Mortalidades
+    sqlStatements += "INSERT INTO Mortalidades (Fec_Mortalidad, Can_Peces, Mot_Mortalidad, Siembra_Fec, Responsable_Nombre) VALUES \n";
+
+    // Mapear la lista de mortalidades a sentencias SQL
+    sqlStatements += MortalidadList.map((mortalidad) => {
+        return `('${mortalidad.Fec_Mortalidad}', ${mortalidad.Can_Peces}, '${mortalidad.Mot_Mortalidad.replace(/'/g, "''")}', '${mortalidad.siembra.Fec_Siembra}', '${mortalidad.responsable.Nom_Responsable.replace(/'/g, "''")}')`;
+    }).join(",\n") + ";";
+
+    // Imprimir el script SQL en la consola
+    console.log(sqlStatements);
+
+    // Opción para descargarlo como un archivo SQL
+    const blob = new Blob([sqlStatements], { type: 'text/sql' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'mortalidades.sql';
+    link.click();
+};
 
     const exportToPDF = () => {
         const doc = new jsPDF();
@@ -125,10 +173,9 @@ const CrudMortalidad = () => {
                 Id_Mortalidad: '',
                 Fec_Mortalidad: '',
                 Can_Peces: '',
-                Causa_Mortalidad: '',
-                Id_Responsable: '',
+                Mot_Mortalidad: '',
                 Id_Siembra: '',
-                Obs_Mortalidad: ''
+                Id_Responsable: '',
             });
         }
         setIsModalOpen(true);
@@ -139,7 +186,6 @@ const CrudMortalidad = () => {
     const handleEdit = (Id_Mortalidad) => {
         getMortalidad(Id_Mortalidad);
         setIsModalOpen(true);
-
     };
 
     const handleDelete = (Id_Mortalidad) => {
@@ -153,10 +199,10 @@ const CrudMortalidad = () => {
         mortalidad.siembra.Fec_Siembra,
         mortalidad.responsable.Nom_Responsable,
         `
-          <button class='btn btn-primary align-middle btn-edit' data-id='${mortalidad.Id_Mortalidad}'>
+          <button class='btn btn-primary align-middle btn-edit' data-id='${mortalidad.Id_Mortalidad}' onClick={() => handleEdit(mortalidad.Id_Mortalidad)}>
             <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${mortalidad.Id_Mortalidad}'>
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${mortalidad.Id_Mortalidad}' onClick={() => handleDelete(mortalidad.Id_Mortalidad)}>
             <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
@@ -168,21 +214,52 @@ const CrudMortalidad = () => {
 
     return (
         <>
-            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
-                <button 
-                    className="btn btn-primary mb-4" 
+                        <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
+                {/* Botón para agregar actividad */}
+                <button
+                    className="btn btn-primary mb-4"
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
-                    Agregar Mortalidad
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}
+                >
+                    Agregar Actividad
                 </button>
 
+                {/* Botón para exportar a PDF */}
                 <button
                     className="btn btn-danger mx-2"
                     onClick={exportToPDF}
-                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
-                    >
+                    style={{
+                        width: '80px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '880px'
+                    }}
+                >
                     <i className="bi bi-file-earmark-pdf"></i> PDF
                 </button>
+
+                {/* Botón para exportar a Excel (verde) */}
+                <button
+                    className="btn btn-success mx-2"
+                    onClick={exportToExcel}
+                    style={{
+                        width: '90px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '672px'
+                    }}
+                >
+                    <i className="bi bi-file-earmark-excel"></i> Excel
+                </button>
+
+                {/* Botón para exportar a SQL (gris) */}
+                <button
+                    className="btn btn-secondary mx-2"
+                    onClick={exportToSQL}
+                    style={{
+                        width: '80px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '780px'
+                    }}
+                >
+                    <i className="bi bi-file-earmark-code"></i> SQL
+                </button>
+            </div>
 
                 <WriteTable 
                     titles={titles} 
@@ -216,7 +293,6 @@ const CrudMortalidad = () => {
                     </div>
                 </div>
                 )}
-            </div>
         </>
     );
 };

@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx'; // Asegúrate de tener este componente para la tabla de datos
 import FormSiembra from './FormSiembra'; // Asegúrate de tener este componente para el formulario de siembra
 import jsPDF from 'jspdf';
+import * as XLSX from 'xlsx';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/siembra/';
 
@@ -100,13 +101,13 @@ const CrudSiembra = () => {
         doc.text(title, 14, 20); // Posición del título
     
         // Configuración de autoTable
-        const tableBody = SiembraList.map((siembra) => [  // Cambié siembraList a SiembraList
+        const tableBody = SiembraList.map((siembra) => [
             siembra.Can_Peces,
             siembra.Fec_Siembra,
             siembra.Fec_PosibleCosecha,
-            siembra.responsable?.Nom_Responsable || 'N/A',
-            siembra.especie?.Nom_Especie || 'N/A',
-            siembra.estanque?.Nom_Estanque || 'N/A',
+            siembra.responsable.Nom_Responsable,
+            siembra.especie.Nom_Especie,
+            siembra.estanque.Nom_Estanque,
             siembra.Pes_Actual,
             siembra.Obs_Siembra,
             siembra.Hor_Siembra,
@@ -127,8 +128,61 @@ const CrudSiembra = () => {
         doc.save('siembra.pdf');
     };
 
+    // Función para exportar a Excel
+    const exportToExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(SiembraList.map((siembra) => ({
+            'Cantidad Peces': siembra.Can_Peces,
+            'Fecha Siembra': siembra.Fec_Siembra,
+            'Fecha Posible Cosecha': siembra.Fec_PosibleCosecha,
+            'Responsable': siembra.responsable.Nom_Responsable,
+            'Especie': siembra.especie.Nom_Especie,
+            'Estanque': siembra.estanque.Nom_Estanque,
+            'Peso Actual': siembra.Pes_Actual,
+            'Observaciones': siembra.Obs_Siembra,
+            'Hora Siembra': siembra.Hor_Siembra,
+            'Ganancia Peso': siembra.Gan_Peso,
+            'Valor Siembra': siembra.Vlr_Siembra
+        })));
+        
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Siembras');
+        XLSX.writeFile(wb, 'siembras.xlsx');
+    };
+
+    // Función para exportar a SQL
+    const exportToSQL = () => {
+        let sqlStatements = `CREATE TABLE IF NOT EXISTS Siembras (
+            Id_Siembra INT AUTO_INCREMENT PRIMARY KEY,
+            Can_Peces INT,
+            Fec_Siembra DATE,
+            Fec_PosibleCosecha DATE,
+            Responsable VARCHAR(255),
+            Especie VARCHAR(255),
+            Estanque VARCHAR(255),
+            Peso_Actual FLOAT,
+            Observaciones TEXT,
+            Hora_Siembra TIME,
+            Ganancia_Peso FLOAT,
+            Valor_Siembra FLOAT
+        );\n\n`;
+    
+        sqlStatements += "INSERT INTO Siembras (Can_Peces, Fec_Siembra, Fec_PosibleCosecha, Responsable, Especie, Estanque, Peso_Actual, Observaciones, Hora_Siembra, Ganancia_Peso, Valor_Siembra) VALUES \n";
+        
+        sqlStatements += SiembraList.map((siembra) => {
+            return `(${siembra.Can_Peces}, '${siembra.Fec_Siembra}', '${siembra.Fec_PosibleCosecha}', '${siembra.responsable?.Nom_Responsable.replace(/'/g, "''") || 'N/A'}', '${siembra.especie?.Nom_Especie.replace(/'/g, "''") || 'N/A'}', '${siembra.estanque?.Nom_Estanque.replace(/'/g, "''") || 'N/A'}', ${siembra.Pes_Actual}, '${siembra.Obs_Siembra.replace(/'/g, "''")}', '${siembra.Hor_Siembra}', ${siembra.Gan_Peso}, ${siembra.Vlr_Siembra})`;
+        }).join(",\n") + ";";
+    
+        // Imprimir el script SQL en la consola o exportar a archivo .sql
+        console.log(sqlStatements);
+
+        const blob = new Blob([sqlStatements], { type: 'text/sql' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'actividades.sql';
+        link.click();
+    };
+
     const handleAddClick = () => {
-        setButtonForm('Enviar');
         setShowForm(!showForm);
         if (!showForm) {
             setSiembra({
@@ -145,6 +199,7 @@ const CrudSiembra = () => {
                 Gan_Peso: '', 
                 Vlr_Siembra: ''
             });
+            setButtonForm('Enviar');
         }
         setIsModalOpen(true);
     };
@@ -162,17 +217,18 @@ const CrudSiembra = () => {
     };
 
     const data = SiembraList.map((siembra) => [
-        siembra.Can_Peces,
-        siembra.Fec_Siembra,
-        siembra.Fec_PosibleCosecha,
-        siembra.responsable.Nom_Responsable,
-        siembra.especie.Nom_Especie,
-        siembra.estanque.Nom_Estanque,
-        siembra.Pes_Actual, 
-        siembra.Obs_Siembra,
-        siembra.Hor_Siembra,
-        siembra.Gan_Peso,
-        siembra.Vlr_Siembra,
+       siembra.Can_Peces,
+       siembra.Fec_Siembra,
+       siembra.Fec_PosibleCosecha,
+       siembra.responsable.Nom_Responsable,
+       siembra.especie.Nom_Especie,
+       siembra.estanque.Nom_Estanque,
+       siembra.Pes_Actual,
+       siembra.Obs_Siembra,
+       siembra.Hor_Siembra,
+       siembra.Gan_Peso,
+       siembra.Vlr_Siembra,
+
         `
           <button class='btn btn-primary align-middle btn-edit' data-id='${siembra.Id_Siembra}' onClick={handleAddClick}>
             <i class="fa-solid fa-pen-to-square"></i> 
@@ -181,30 +237,61 @@ const CrudSiembra = () => {
             <i class="fa-solid fa-trash-can"></i> 
           </button>
         `
+        
     ]);
-    
 
-    const titles = [
-        "Cantidad Peces","Fecha Siembra","Fecha Posible de Cosecha", "Responsable", "Especie", "Estanque","Peso Actual", "Observaciones", "Hora de Siembra", "Ganancia de Peso","Valor Siembra", "Acciones"
-    ];
+    const titles =[
+        'Cantidad Peces', 'Fecha Siembra', 'Fecha Posible Cosecha', 'Responsable', 'Especie', 'Estanque', 'Peso Actual', 'Observaciones', 'Hora Siembra', 'Ganancia Peso', 'Valor Siembra', 'Acciones'
+    ]
 
     return (
         <>
-            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
-                <button 
-                    className="btn btn-primary mb-4" 
+            <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
+                {/* Botón para agregar actividad */}
+                <button
+                    className="btn btn-primary mb-4"
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
-                    Agregar Siembra
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}
+                >
+                    Agregar Actividad
                 </button>
 
+                {/* Botón para exportar a PDF */}
                 <button
                     className="btn btn-danger mx-2"
                     onClick={exportToPDF}
-                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
+                    style={{
+                        width: '80px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '880px'
+                    }}
                 >
                     <i className="bi bi-file-earmark-pdf"></i> PDF
                 </button>
+
+                {/* Botón para exportar a Excel (verde) */}
+                <button
+                    className="btn btn-success mx-2"
+                    onClick={exportToExcel}
+                    style={{
+                        width: '90px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '672px'
+                    }}
+                >
+                    <i className="bi bi-file-earmark-excel"></i> Excel
+                </button>
+
+                {/* Botón para exportar a SQL (gris) */}
+                <button
+                    className="btn btn-secondary mx-2"
+                    onClick={exportToSQL}
+                    style={{
+                        width: '80px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '780px'
+                    }}
+                >
+                    <i className="bi bi-file-earmark-code"></i> SQL
+                </button>
+            </div>
                     
                 <WriteTable
                     titles={titles}
@@ -238,7 +325,6 @@ const CrudSiembra = () => {
                         </div>
                     </div>
                 )}
-            </div>
         </>
     );
 };

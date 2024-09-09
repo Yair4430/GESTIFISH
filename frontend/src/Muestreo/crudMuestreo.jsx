@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormMuestreo from './formMuestreo';
 import jsPDF from 'jspdf';
+import * as XLSX from 'xlsx';  // Importar XLSX para exportar a Excel
 
 const URI = process.env.ROUTER_PRINCIPAL + '/muestreo/';
 
@@ -21,7 +22,7 @@ const CrudMuestreo = () => {
         Id_Siembra: '',
         Id_Responsable: '',
         Hor_Muestreo: '',
-        Pes_Promedio: '',
+        Pes_Promedio: ''
     });
 
     useEffect(() => {
@@ -46,6 +47,7 @@ const CrudMuestreo = () => {
         try {
             const respuesta = await axios.get(`${URI}${Id_Muestreo}`);
             if (respuesta.status >= 200 && respuesta.status < 300) {
+                setButtonForm('Actualizar');
                 setMuestreo({ ...respuesta.data });
                 const modalElement = document.getElementById('modalForm');
                 const modal = new bootstrap.Modal(modalElement);
@@ -56,7 +58,7 @@ const CrudMuestreo = () => {
         } catch (error) {
             console.error('Error fetching muestreo:', error.response?.status || error.message);
         }
-    };  
+    };
 
     const updateTextButton = (texto) => {
         setButtonForm(texto);
@@ -80,16 +82,65 @@ const CrudMuestreo = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    // getAllMuestreo(); // Refresh the list after deletion
+                    //getAllMuestreo(); // Refresh the list after deletion
                 } catch (error) {
                     console.error('Error deleting muestreo:', error);
                 }
-            }else{
+            } else {
                 getAllMuestreo();
             }
         });
     };
 
+    // Función para exportar a Excel
+    const exportToExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(muestreoList.map((muestreo) => ({
+            Fecha: muestreo.Fec_Muestreo,
+            Número_Peces: muestreo.Num_Peces,
+            Observaciones: muestreo.Obs_Muestreo,
+            Peso_Esperado: muestreo.Pes_Esperado,
+            Hora_Muestreo: muestreo.Hor_Muestreo,
+            Siembra: muestreo.siembra.Fec_Siembra,
+            Responsable: muestreo.responsable.Nom_Responsable,
+            Peso_Promedio: muestreo.Pes_Promedio
+        })));
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Muestreo');
+        XLSX.writeFile(wb, 'muestreo.xlsx');
+    };
+
+    // Función para exportar a SQL
+    const exportToSQL = () => {
+        let sqlStatements = `CREATE TABLE IF NOT EXISTS Muestreos (
+            Id_Muestreo INT AUTO_INCREMENT PRIMARY KEY,
+            Fec_Muestreo DATE,
+            Num_Peces INT,
+            Obs_Muestreo TEXT,
+            Pes_Esperado DECIMAL(10,2),
+            Fec_Siembra DATE, -- Cambiado de Id_Siembra a Fec_Siembra
+            Nom_Responsable VARCHAR(255), -- Cambiado de Id_Responsable a Nom_Responsable
+            Hor_Muestreo TIME,
+            Pes_Promedio DECIMAL(10,2)
+        );\n\n`;
+    
+        sqlStatements += "INSERT INTO Muestreos (Fec_Muestreo, Num_Peces, Obs_Muestreo, Pes_Esperado, Fec_Siembra, Nom_Responsable, Hor_Muestreo, Pes_Promedio) VALUES \n";
+    
+        sqlStatements += muestreoList.map((muestreo) => {
+            return `('${muestreo.Fec_Muestreo}', ${muestreo.Num_Peces}, '${muestreo.Obs_Muestreo.replace(/'/g, "''")}', ${muestreo.Pes_Esperado}, '${muestreo.siembra.Fec_Siembra}', '${muestreo.responsable.Nom_Responsable}', '${muestreo.Hor_Muestreo}', ${muestreo.Pes_Promedio})`;
+        }).join(",\n") + ";";
+    
+        // Imprimir el script SQL en la consola
+        console.log(sqlStatements);
+    
+        // Opción para descargarlo como un archivo SQL
+        const blob = new Blob([sqlStatements], { type: 'text/sql' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'muestreos.sql';
+        link.click();
+    };
+    
     const exportToPDF = () => {
         const doc = new jsPDF();
 
@@ -122,10 +173,9 @@ const CrudMuestreo = () => {
         // Guarda el PDF
         doc.save('muestreo.pdf');
     };
-    
+
     const handleAddClick = () => {
-        setButtonForm('Enviar');
-        setShowForm(!showForm);
+        setShowForm(prevShowForm => !prevShowForm);
         if (!showForm) {
             setMuestreo({
                 Id_Muestreo: '',
@@ -138,6 +188,8 @@ const CrudMuestreo = () => {
                 Hor_Muestreo: '',
                 Pes_Promedio: ''
             });
+
+            setButtonForm('Enviar');
         }
         setIsModalOpen(true);
     };
@@ -147,7 +199,6 @@ const CrudMuestreo = () => {
     const handleEdit = (Id_Muestreo) => {
         getMuestreo(Id_Muestreo);
         setIsModalOpen(true);
-
     };
 
     const handleDelete = (Id_Muestreo) => {
@@ -162,36 +213,71 @@ const CrudMuestreo = () => {
         muestreo.Hor_Muestreo,
         muestreo.siembra.Fec_Siembra,
         muestreo.responsable.Nom_Responsable,
-        `
-          <button class='btn btn-primary align-middle btn-edit' data-id='${muestreo.Id_Muestreo}'>
-            <i class="fa-solid fa-pen-to-square"></i> 
-          </button>
-          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${muestreo.Id_Muestreo}'>
-            <i class="fa-solid fa-trash-can"></i> 
-          </button>
-        `
-    ]);
-    
-    const titles = [
-        "Fecha Muestreo", "Número Peces", "Observaciones", "Peso Esperado", "Hora Muestreo", "Fecha Siembra", "Nombre Responsable", "Acciones"
-    ];
+        muestreo.Pes_Promedio,
 
+        `
+        <button class='btn btn-primary align-middle btn-edit' data-id='${muestreo.Id_Muestreo}' onClick={handleAddClick}>
+          <i class="fa-solid fa-pen-to-square"></i> 
+        </button>
+        <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${muestreo.Id_Muestreo}'>
+          <i class="fa-solid fa-trash-can"></i> 
+        </button>
+      `
+    ]);
+
+    const titles =[
+        'Fecha Muestreo', 'Número Peces', 'Observaciones', 'Peso Esperado', 'Hora Muestreo', 'Fecha Siembra', 'Nombre Responsable', 'Peso Promedio', 'Acciones'
+    ]
     return (
         <>
-            <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
-                <button 
-                    className="btn btn-primary mb-4" 
-                    onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
-                    Agregar Muestreo
-                </button>
+            <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
+                {/* Botón para agregar actividad */}
                 <button
-                className="btn btn-danger mx-2"
+                    className="btn btn-primary mb-4"
+                    onClick={handleAddClick}
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}
+                >
+                    Agregar Actividad
+                </button>
+
+                {/* Botón para exportar a PDF */}
+                <button
+                    className="btn btn-danger mx-2"
                     onClick={exportToPDF}
-                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
+                    style={{
+                        width: '80px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '880px'
+                    }}
                 >
                     <i className="bi bi-file-earmark-pdf"></i> PDF
                 </button>
+
+                {/* Botón para exportar a Excel (verde) */}
+                <button
+                    className="btn btn-success mx-2"
+                    onClick={exportToExcel}
+                    style={{
+                        width: '90px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '672px'
+                    }}
+                >
+                    <i className="bi bi-file-earmark-excel"></i> Excel
+                </button>
+
+                {/* Botón para exportar a SQL (gris) */}
+                <button
+                    className="btn btn-secondary mx-2"
+                    onClick={exportToSQL}
+                    style={{
+                        width: '80px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '780px'
+                    }}
+                >
+                    <i className="bi bi-file-earmark-code"></i> SQL
+                </button>
+            </div>
+
+
                 <WriteTable 
                 titles={titles} 
                 data={data} 
@@ -224,8 +310,7 @@ const CrudMuestreo = () => {
                             </div>
                         </div>
                     </div>
-                )}
-            </div>           
+                )}           
         </>
     );
 };
