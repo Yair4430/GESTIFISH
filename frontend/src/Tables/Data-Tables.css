@@ -35,12 +35,6 @@
   width: 200px; /* Ajusta el ancho del campo de búsqueda */
 }
 
-/* Data-Tables.css */
-.table img {
-  max-width: 100%;
-  height: auto;
-}
-
 
 /* Estilo para el contenedor de la tabla */
 .table-container {

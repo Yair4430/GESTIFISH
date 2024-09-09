@@ -4,7 +4,6 @@ import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormTraslado from './FormTraslado'; 
 import jsPDF from "jspdf";
-import 'jspdf-autotable';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/traslado/';
 
@@ -42,7 +41,7 @@ const CrudTraslado = () => {
     const getTraslado = async (Id_Traslado) => {
         setButtonForm('Actualizar');
         try {
-            const respuesta = await axios.get(`${URI}${Id_Traslado}`);
+            const respuesta = await axios.get(`${URI}/${Id_Traslado}`);
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setTraslado({ ...respuesta.data });
                 const modalElement = document.getElementById('modalForm');
@@ -60,7 +59,7 @@ const CrudTraslado = () => {
         setButtonForm(texto);
     };
 
-    const deleteTraslado = async (id_Traslado) => {
+    const deleteTraslado = async (Id_Traslado) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -72,17 +71,17 @@ const CrudTraslado = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(`${URI}${id_Traslado}`);
+                    await axios.delete(`${URI}/${Id_Traslado}`);
                     Swal.fire({
                         title: "¡Borrado!",
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    getAllTraslados(); // Refrescar la lista después de la eliminación
+                    // getAllTraslados(); // Refrescar la lista después de la eliminación
                 } catch (error) {
                     console.error('Error deleting traslado:', error);
                 }
-            } else {
+            }else{
                 getAllTraslados();
             }
         });
@@ -119,8 +118,8 @@ const CrudTraslado = () => {
     };
 
     const handleAddClick = () => {
-        setButtonForm('Enviar');
-        setShowForm(!showForm);
+        setShowForm(prevShowForm => !prevShowForm);
+        
         if (!showForm) {
             setTraslado({
                 Id_Traslado: '',
@@ -130,6 +129,7 @@ const CrudTraslado = () => {
                 Obs_Traslado: '',
                 Hor_Traslado: ''
             });
+            setButtonForm('Enviar');
         }
         setIsModalOpen(true);
     };
@@ -138,13 +138,12 @@ const CrudTraslado = () => {
 
     const handleEdit = (Id_Traslado) => {
         getTraslado(Id_Traslado);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
+
     };
 
-    const handleDelete = (id_Traslado) => {
-        deleteTraslado(id_Traslado);
+    const handleDelete = (Id_Traslado) => {
+        deleteTraslado(Id_Traslado);
     };
 
     const data = trasladoList.map((traslado) => [
@@ -154,12 +153,12 @@ const CrudTraslado = () => {
         traslado.Obs_Traslado,
         traslado.Hor_Traslado,
         `
-        <button class='btn btn-primary align-middle btn-edit' data-id='${traslado.Id_Traslado}'>
-          <i class="fa-solid fa-pen-to-square"></i> 
-        </button>
-        <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${traslado.Id_Traslado}'>
-          <i class="fa-solid fa-trash-can"></i> 
-        </button>
+          <button class='btn btn-primary align-middle btn-edit' data-id='${traslado.Id_Traslado}' onClick={handleAddClick}>
+            <i class="fa-solid fa-pen-to-square"></i> 
+          </button>
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${traslado.Id_Traslado}'>
+            <i class="fa-solid fa-trash-can"></i> 
+          </button>
       `
     ]);
 
@@ -198,7 +197,7 @@ const CrudTraslado = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Traslado' : 'Registrar Traslado'}</h5>
+                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Traslado' : 'Registrar Traslado'}</h5> */}
                                     <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">

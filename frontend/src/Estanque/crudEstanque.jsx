@@ -32,22 +32,19 @@ const CrudEstanque = () => {
     const getAllEstanques = async () => {
         try {
             const respuesta = await axios.get(URI);
-            if (respuesta.status === 200) {
-                setEstanqueList(respuesta.data);
-            } else {
-                console.warn('HTTP Status:', respuesta.status);
-            }
+            setEstanqueList(respuesta.data);
         } catch (error) {
-            console.error('Error fetching estanques:', error.response?.status || error.message);
+            console.error('Error fetching estanques:', error);
         }
     };
 
     const getEstanque = async (Id_Estanque) => {
-        setButtonForm('Actualizar');
+        setButtonForm('Enviar');
         try {
             const respuesta = await axios.get(`${URI}${Id_Estanque}`);
             if (respuesta.status >= 200 && respuesta.status < 300) {
-                setEstanque({ ...respuesta.data });
+                setButtonForm('Actualizar');
+                setEstanque(respuesta.data);
                 const modalElement = document.getElementById('modalForm');
                 const modal = new bootstrap.Modal(modalElement);
                 modal.show();
@@ -71,24 +68,22 @@ const CrudEstanque = () => {
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Sí, borrar!"
+            confirmButtonText: "¡Sí, borrar!"
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const respuesta = await axios.delete(`${URI}${Id_Estanque}`);
-                    if (respuesta.status === 200) {
-                        Swal.fire({
-                            title: "¡Borrado!",
-                            text: "Borrado exitosamente",
-                            icon: "success"
-                        });
-                        getAllEstanques(); // Refresca la lista después de la eliminación
-                    } else {
-                        console.warn('HTTP Status:', respuesta.status);
-                    }
+                    await axios.delete(`${URI}${Id_Estanque}`);
+                    Swal.fire({
+                        title: "¡Borrado!",
+                        text: "Borrado exitosamente",
+                        icon: "success"
+                    });
+                    // getAllEstanques(); // Refresh the list after deletion
                 } catch (error) {
-                    console.error('Error deleting estanque:', error.response?.status || error.message);
+                    console.error('Error deleting estanque:', error);
                 }
+            }else{
+                getAllEstanques();
             }
         });
     };
@@ -131,8 +126,7 @@ const CrudEstanque = () => {
     };
 
     const handleAddClick = () => {
-        setButtonForm('Enviar');
-        setShowForm(!showForm);
+        setShowForm(prevShowForm => !prevShowForm);
         if (!showForm) {
             setEstanque({
                 Id_Estanque: '',
@@ -145,6 +139,7 @@ const CrudEstanque = () => {
                 Img_Estanque: null,
                 Rec_Agua: ''
             });
+            setButtonForm('Enviar');
         }
         setIsModalOpen(true);
     };
@@ -153,9 +148,8 @@ const CrudEstanque = () => {
 
     const handleEdit = (Id_Estanque) => {
         getEstanque(Id_Estanque);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
+
     };
 
     const handleDelete = (Id_Estanque) => {
@@ -170,11 +164,7 @@ const CrudEstanque = () => {
         estanque.Lar_Estanque,
         estanque.Anc_Estanque,
         estanque.Des_Estanque,
-        estanque.Img_Estanque ? (
-            `<img width="80px" src="${PATH_FOTOS}/${estanque.Img_Estanque}" alt="Imagen del estanque" />`
-        ) : (
-            'No Image'
-        ),
+        `<img width="80px" src="${PATH_FOTOS}/${estanque.Img_Estanque}" alt="Imagen del estanque" />`,
         estanque.Rec_Agua,
         `
           <button class='btn btn-primary align-middle btn-edit' data-id='${estanque.Id_Estanque}'>
@@ -187,7 +177,7 @@ const CrudEstanque = () => {
     ]);
     
     const titles = [
-        "Número", "Nombre", "Espejo Agua", "Tipo", "Largo", "Ancho", "Descripción", "Imagen", "Recambio Agua", "Acciones"
+        "Número", "Nombre", "Espejo Agua", "Tipo", "Largo", "Ancho", "Descripción", "Imagen", "Recambio agua", "Acciones"
     ];
 
     return (
@@ -221,7 +211,7 @@ const CrudEstanque = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Estanque' : 'Registrar Estanque'}</h5>
+                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Estanque' : 'Registrar Estanque'}</h5> */}
                                     <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">

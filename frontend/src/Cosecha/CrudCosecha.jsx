@@ -44,10 +44,11 @@ const CrudCosecha = () => {
     };
 
     const getCosecha = async (Id_Cosecha) => {
-        setButtonForm('Actualizar');
+        setButtonForm('Enviar');
         try {
             const respuesta = await axios.get(`${URI}${Id_Cosecha}`);
             if (respuesta.status >= 200 && respuesta.status < 300) {
+                setButtonForm('Actualizar');
                 setCosecha({ ...respuesta.data });
                 const modalElement = document.getElementById('modalForm');
                 const modal = new bootstrap.Modal(modalElement);
@@ -86,7 +87,7 @@ const CrudCosecha = () => {
                 } catch (error) {
                     console.error('Error deleting cosecha:', error.response?.status || error.message);
                 }
-            } else {
+            }else{
                 getAllCosecha();
             }
         });
@@ -142,8 +143,7 @@ const CrudCosecha = () => {
     };
 
     const handleAddClick = () => {
-        setButtonForm('Enviar');
-        setShowForm(!showForm);
+        setShowForm(prevShowForm => !prevShowForm);
         if (!showForm) {
             setCosecha({
                 Id_Cosecha: '',
@@ -158,6 +158,8 @@ const CrudCosecha = () => {
                 Vlr_Cosecha: '',
                 Obs_Cosecha: ''
             });
+            setButtonForm('Enviar');
+            
         }
         setIsModalOpen(true);
     };
@@ -166,15 +168,39 @@ const CrudCosecha = () => {
 
     const handleEdit = (Id_Cosecha) => {
         getCosecha(Id_Cosecha);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
     };
 
     const handleDelete = (Id_Cosecha) => {
         deleteCosecha(Id_Cosecha);
     };
 
+    const data = CosechaList.map((cosecha) => [
+        cosecha.Fec_Cosecha,
+        cosecha.Can_Peces,
+        cosecha.Pes_Eviscerado,
+        cosecha.Pes_Viscerado,
+        cosecha.Por_Visceras,
+        cosecha.siembra.Fec_Siembra,
+        cosecha.Hor_Cosecha,
+        cosecha.Vlr_Cosecha,
+        cosecha.Obs_Cosecha,
+        cosecha.responsable.Nom_Responsable,
+        `
+          <button class='btn btn-primary align-middle btn-edit' data-id='${cosecha.Id_Cosecha}'>
+            <i class="fa-solid fa-pen-to-square"></i> 
+          </button>
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${cosecha.Id_Cosecha}'>
+            <i class="fa-solid fa-trash-can"></i> 
+          </button>
+        `
+    ]);
+
+    const titles = [
+        "Fecha Cosecha", "Cantidad Peces", "Peso Eviscerado", "Peso Viscerado",
+        "Porcentaje Viceras", "Fecha Siembra", "Hora Cosecha", "Valor Cosecha",
+        "Observaciones", "Nombre Responsable", "Acciones"
+    ];
 
     return (
         <>
@@ -205,7 +231,7 @@ const CrudCosecha = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Cosecha' : 'Registrar Cosecha'}</h5>
+                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Cosecha' : 'Registrar Cosecha'}</h5> */}
                                     <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">

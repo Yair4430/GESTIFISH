@@ -5,6 +5,7 @@ import WriteTable from '../Tables/Data-Tables.jsx';
 import FormEspecie from './FormEspecie';
 import jsPDF from "jspdf"; // Añade jsPDF para exportar a PDF
 
+
 const URI = process.env.ROUTER_PRINCIPAL + '/especie/';
 const PATH_FOTOS = process.env.ROUTER_FOTOS;
 
@@ -40,10 +41,11 @@ const CrudEspecie = () => {
     };
 
     const getEspecie = async (Id_Especie) => {
-        setButtonForm('Actualizar');
+        setButtonForm('Enviar');
         try {
             const respuesta = await axios.get(`${URI}${Id_Especie}`);
             if (respuesta.status === 200) {
+                setButtonForm('Actualizar');
                 setEspecie({ ...respuesta.data });
                 // Mostrar el modal
                 const modalElement = document.getElementById('modalForm');
@@ -61,7 +63,7 @@ const CrudEspecie = () => {
         setButtonForm(texto);
     };
 
-    const deleteEspecie = async (Id_Especie) => {
+    const deleteEspecie = (Id_Especie) => {
         Swal.fire({
             title: "¿Estás seguro?",
             text: "¡No podrás revertir esto!",
@@ -80,13 +82,15 @@ const CrudEspecie = () => {
                             text: "Borrado exitosamente",
                             icon: "success"
                         });
-                        getAllEspecies(); // Refresca la lista después de la eliminación
+                        // getAllEspecies(); // Refresh the list after deletion
                     } else {
                         console.warn('HTTP Status:', respuesta.status);
                     }
                 } catch (error) {
                     console.error('Error deleting especie:', error.response?.status || error.message);
                 }
+            }else{
+                getAllEspecies();
             }
         });
     };
@@ -126,8 +130,7 @@ const CrudEspecie = () => {
     };
 
     const handleAddClick = () => {
-        setButtonForm('Enviar');
-        setShowForm(!showForm);
+        setShowForm(prevShowForm => !prevShowForm);
         if (!showForm) {
             setEspecie({
                 Id_Especie: '',
@@ -137,6 +140,7 @@ const CrudEspecie = () => {
                 Id_Tipo_Especie: '',
                 Id_Clase: ''
             });
+            setButtonForm('Enviar');
         }
         setIsModalOpen(true);
     };
@@ -145,10 +149,7 @@ const CrudEspecie = () => {
 
     const handleEdit = (Id_Especie) => {
         getEspecie(Id_Especie);
-        // Usa Bootstrap para mostrar el modal
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
     };
 
     const handleDelete = (Id_Especie) => {
@@ -166,12 +167,12 @@ const CrudEspecie = () => {
             'No Image'
         ),
         `
-            <button class='btn btn-primary align-middle btn-edit' data-id='${especie.Id_Especie}'>
-                <i class="fa-solid fa-pen-to-square"></i> 
-            </button>
-            <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${especie.Id_Especie}'>
-                <i class="fa-solid fa-trash-can"></i> 
-            </button>
+          <button class='btn btn-primary align-middle btn-edit' data-id='${especie.Id_Especie}'>
+            <i class="fa-solid fa-pen-to-square"></i> 
+          </button>
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${especie.Id_Especie}'>
+            <i class="fa-solid fa-trash-can"></i> 
+          </button>
         `
     ]);
 
@@ -208,7 +209,7 @@ const CrudEspecie = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Especie' : 'Registrar Especie'}</h5>
+                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Especie' : 'Registrar Especie'}</h5> */}
                                     <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">

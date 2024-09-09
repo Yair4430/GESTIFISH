@@ -138,9 +138,8 @@ const CrudMortalidad = () => {
 
     const handleEdit = (Id_Mortalidad) => {
         getMortalidad(Id_Mortalidad);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
+
     };
 
     const handleDelete = (Id_Mortalidad) => {
@@ -196,7 +195,7 @@ const CrudMortalidad = () => {
                     <div className="modal-dialog modal-lg">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Mortalidad' : 'Registrar Mortalidad'}</h5>
+                                {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Mortalidad' : 'Registrar Mortalidad'}</h5> */}
                                 <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                             </div>
                             <div className="modal-body">

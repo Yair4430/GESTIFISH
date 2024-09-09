@@ -80,10 +80,12 @@ const CrudMuestreo = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    getAllMuestreo(); // Refresh the list after deletion
+                    // getAllMuestreo(); // Refresh the list after deletion
                 } catch (error) {
                     console.error('Error deleting muestreo:', error);
                 }
+            }else{
+                getAllMuestreo();
             }
         });
     };
@@ -144,9 +146,8 @@ const CrudMuestreo = () => {
 
     const handleEdit = (Id_Muestreo) => {
         getMuestreo(Id_Muestreo);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
+
     };
 
     const handleDelete = (Id_Muestreo) => {
@@ -161,7 +162,6 @@ const CrudMuestreo = () => {
         muestreo.Hor_Muestreo,
         muestreo.siembra.Fec_Siembra,
         muestreo.responsable.Nom_Responsable,
-        muestreo.Pes_Promedio,
         `
           <button class='btn btn-primary align-middle btn-edit' data-id='${muestreo.Id_Muestreo}'>
             <i class="fa-solid fa-pen-to-square"></i> 
@@ -171,9 +171,9 @@ const CrudMuestreo = () => {
           </button>
         `
     ]);
-
+    
     const titles = [
-        "Fecha Muestreo", "Número Peces", "Observaciones", "Peso Esperado", "Hora Muestreo", "Fecha Siembra", "Nombre Responsable", "Peso Promedio", "Acciones"
+        "Fecha Muestreo", "Número Peces", "Observaciones", "Peso Esperado", "Hora Muestreo", "Fecha Siembra", "Nombre Responsable", "Acciones"
     ];
 
     return (
@@ -204,7 +204,7 @@ const CrudMuestreo = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Muestreo' : 'Registrar Muestreo'}</h5>
+                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Muestreo' : 'Registrar Muestreo'}</h5> */}
                                     <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">

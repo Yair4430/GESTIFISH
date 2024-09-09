@@ -153,9 +153,8 @@ const CrudSiembra = () => {
 
     const handleEdit = (Id_Siembra) => {
         getSiembra(Id_Siembra);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
+
     };
 
     const handleDelete = (Id_Siembra) => {
@@ -163,20 +162,19 @@ const CrudSiembra = () => {
     };
 
     const data = SiembraList.map((siembra) => [
-        siembra.Fec_Siembra,
         siembra.Can_Peces,
         siembra.Fec_Siembra,
         siembra.Fec_PosibleCosecha,
         siembra.responsable.Nom_Responsable,
         siembra.especie.Nom_Especie,
         siembra.estanque.Nom_Estanque,
-        siembra.Obs_Siembra,
         siembra.Pes_Actual, 
+        siembra.Obs_Siembra,
         siembra.Hor_Siembra,
         siembra.Gan_Peso,
         siembra.Vlr_Siembra,
         `
-          <button class='btn btn-primary align-middle btn-edit' data-id='${siembra.Id_Siembra}'>
+          <button class='btn btn-primary align-middle btn-edit' data-id='${siembra.Id_Siembra}' onClick={handleAddClick}>
             <i class="fa-solid fa-pen-to-square"></i> 
           </button>
           <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${siembra.Id_Siembra}'>
@@ -187,7 +185,7 @@ const CrudSiembra = () => {
     
 
     const titles = [
-        "Fecha Siembra", "Cantidad Peces", "Responsable", "Especie", "Estanque", "Observaciones", "Acciones"
+        "Cantidad Peces","Fecha Siembra","Fecha Posible de Cosecha", "Responsable", "Especie", "Estanque","Peso Actual", "Observaciones", "Hora de Siembra", "Ganancia de Peso","Valor Siembra", "Acciones"
     ];
 
     return (
@@ -219,7 +217,7 @@ const CrudSiembra = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Siembra' : 'Registrar Siembra'}</h5>
+                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Siembra' : 'Registrar Siembra'}</h5> */}
                                     <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">

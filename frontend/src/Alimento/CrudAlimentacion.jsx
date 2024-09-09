@@ -39,15 +39,15 @@ const CrudAlimentacion = () => {
     const getAlimentacion = async (Id_Alimentacion) => {
         setButtonForm('Enviar');
         // Mostrar el modal
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
         try {
             const respuesta = await axios.get(`${URI}${Id_Alimentacion}`);
             setButtonForm('Actualizar');
-            setAlimentacion({ ...respuesta.data });
+            setAlimentacion(respuesta.data);
+            const modalElement = document.getElementById('modalForm');
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
         } catch (error) {
-            console.error('Error fetching alimentacion:', error);
+        console.error('Error fetching Alimento:', error.response?.status || error.message);
         }
     };
 
@@ -77,7 +77,7 @@ const CrudAlimentacion = () => {
                 } catch (error) {
                     console.error('Error deleting alimentacion:', error);
                 }
-            } else {
+            }else{
                 getAllAlimentacion();
             }
         });
@@ -116,8 +116,7 @@ const CrudAlimentacion = () => {
     };
 
     const handleAddClick = () => {
-        setButtonForm('Enviar');
-        setShowForm(!showForm);
+        setShowForm(prevShowForm => !prevShowForm);
         if (!showForm) {
             setAlimentacion({
                 Id_Alimentacion: '',
@@ -129,7 +128,9 @@ const CrudAlimentacion = () => {
                 Fec_Siembra: '',
                 Id_Responsable: ''
             });
+            setButtonForm('Enviar');
         }
+        
         setIsModalOpen(true);
     };
 
@@ -137,10 +138,7 @@ const CrudAlimentacion = () => {
 
     const handleEdit = (Id_Alimentacion) => {
         getAlimentacion(Id_Alimentacion);
-        // Usa Bootstrap para mostrar el modal
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
     };
 
     const handleDelete = (Id_Alimentacion) => {
@@ -164,7 +162,7 @@ const CrudAlimentacion = () => {
           </button>
         `
     ]);
-
+    
     const titles = [
         "Fecha Alimentación", "Cantidad Ración (Kg)", "Tipo Alimento", "Hora Alimentación", "Valor Alimentación", "Fecha Siembra", "Nombre Responsable", "Acciones"
     ];
@@ -198,7 +196,7 @@ const CrudAlimentacion = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Alimentación' : 'Registrar Alimentación'}</h5>
+                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Alimentación' : 'Registrar Alimentación'}</h5> */}
                                     <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">

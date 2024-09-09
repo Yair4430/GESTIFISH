@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import axios from 'axios';
 
 // Importaciones Formularios
@@ -78,7 +78,12 @@ function App() {
     localStorage.removeItem('usuario');
     localStorage.removeItem('lastPath');
     setIsAuth(false);
-    navigate('/auth');
+    navigate('/'); // Redirige al Home público
+  };
+
+  // Componente para proteger rutas privadas
+  const PrivateRoute = ({ children }) => {
+    return isAuth ? children : <Navigate to="/" replace />;
   };
 
   return (
@@ -88,18 +93,18 @@ function App() {
           <BarraNavegacionPrivada logOutUser={logOutUser} />
           <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/RegistrosMenu' element={<RegistrosMenu />} />
-            <Route path='/Alimentacion' element={<CrudAlimentacion />} />
-            <Route path='/Responsable' element={<CrudResponsable />} />
-            <Route path='/Estanque' element={<CrudEstanque />} />
-            <Route path='/Especie' element={<CrudEspecie />} />
-            <Route path='/Traslado' element={<CrudTraslado />} />
-            <Route path='/Actividad' element={<CrudActividad />} />
-            <Route path='/Muestreo' element={<CrudMuestreo />} />
-            <Route path='/Cosecha' element={<CrudCosecha />} />
-            <Route path='/Mortalidad' element={<CrudMortalidad />} />
-            <Route path='/Siembra' element={<CrudSiembra />} />
-            <Route path='/Simulador' element={<Simulador />} />
+            <Route path='/RegistrosMenu' element={<PrivateRoute><RegistrosMenu /></PrivateRoute>} />
+            <Route path='/Alimentacion' element={<PrivateRoute><CrudAlimentacion /></PrivateRoute>} />
+            <Route path='/Responsable' element={<PrivateRoute><CrudResponsable /></PrivateRoute>} />
+            <Route path='/Estanque' element={<PrivateRoute><CrudEstanque /></PrivateRoute>} />
+            <Route path='/Especie' element={<PrivateRoute><CrudEspecie /></PrivateRoute>} />
+            <Route path='/Traslado' element={<PrivateRoute><CrudTraslado /></PrivateRoute>} />
+            <Route path='/Actividad' element={<PrivateRoute><CrudActividad /></PrivateRoute>} />
+            <Route path='/Muestreo' element={<PrivateRoute><CrudMuestreo /></PrivateRoute>} />
+            <Route path='/Cosecha' element={<PrivateRoute><CrudCosecha /></PrivateRoute>} />
+            <Route path='/Mortalidad' element={<PrivateRoute><CrudMortalidad /></PrivateRoute>} />
+            <Route path='/Siembra' element={<PrivateRoute><CrudSiembra /></PrivateRoute>} />
+            <Route path='/Simulador' element={<PrivateRoute><Simulador /></PrivateRoute>} />
           </Routes>
         </>
       ) : (
@@ -111,6 +116,7 @@ function App() {
             <Route path='/SimuladorPublico' element={<Simulador />} />
             <Route path='/auth' element={<Auth />} />
             <Route path='/reset-password' element={<ResetPassword />} />
+            <Route path='*' element={<Navigate to="/" />} />
           </Routes>
         </>
       )}

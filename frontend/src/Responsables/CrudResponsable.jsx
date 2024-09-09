@@ -29,9 +29,13 @@ const CrudResponsable = () => {
     const getAllResponsable = async () => {
         try {
             const respuesta = await axios.get(URI);
-            setResponsableList(respuesta.data);
+            if (respuesta.status >= 200 && respuesta.status < 300) {
+                setResponsableList(respuesta.data);
+            } else {
+                console.warn('HTTP Status:', respuesta.status);
+            }
         } catch (error) {
-            console.error('Error fetching responsables:', error);
+            console.error('Error fetching responsables:', error.response?.status || error.message);
         }
     };
 
@@ -48,7 +52,7 @@ const CrudResponsable = () => {
                 console.warn('HTTP Status:', respuesta.status);
             }
         } catch (error) {
-            console.error('Error fetching responsable:', error);
+            console.error('Error fetching responsable:', error.response?.status || error.message);
         }
     };
 
@@ -68,18 +72,22 @@ const CrudResponsable = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(`${URI}${Id_Responsable}`);
-                    Swal.fire({
-                        title: "¡Borrado!",
-                        text: "Borrado exitosamente",
-                        icon: "success"
-                    });
-                    getAllResponsable(); // Refresh the list after deletion
+                    const respuesta = await axios.delete(`${URI}${Id_Responsable}`);
+                    if (respuesta.status >= 200 && respuesta.status < 300) {
+                        Swal.fire({
+                            title: "¡Borrado!",
+                            text: "Borrado exitosamente",
+                            icon: "success"
+                        });
+                        // getAllResponsable(); // Refresh the list after deletion
+                    } else {
+                        console.warn('HTTP Status:', respuesta.status);
+                    }
                 } catch (error) {
-                    console.error('Error deleting responsable:', error);
+                    console.error('Error deleting responsable:', error.response?.status || error.message);
                 }
-            } else {
-                getAllResponsable(); // Refresh if not confirmed
+            }else{
+                getAllResponsable();
             }
         });
     };
@@ -133,17 +141,8 @@ const CrudResponsable = () => {
 
     const handleEdit = (Id_Responsable) => {
         getResponsable(Id_Responsable);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
-    };
+        setIsModalOpen(true);
 
-    const handleDelete = (Id_Responsable) => {
-        deleteResponsable(Id_Responsable);
-    };
-
-    const handleEdit = (Id_Responsable) => {
-        getResponsable(Id_Responsable);
     };
 
     const handleDelete = (Id_Responsable) => {
@@ -168,7 +167,7 @@ const CrudResponsable = () => {
     ]);
 
     const titles = [
-        "Nombre", "Apellidos", "Número Documento", "Tipo Responsable", "Correo", "Número Teléfono", "Acciones"
+        "Nombre", "Apellidos", "Numero Documento", "Tipo Responsable", "Correo", "Número Teléfono", "Acciones"
     ];
 
     return (
@@ -192,8 +191,8 @@ const CrudResponsable = () => {
                 <WriteTable 
                     titles={titles} 
                     data={data} 
-                    onEditClick={(id) => getResponsable(id)} 
-                    onDeleteClick={(id) => deleteResponsable(id)} 
+                    onEditClick={handleEdit} 
+                    onDeleteClick={handleDelete} 
                 />
 
             {isModalOpen && (
@@ -201,7 +200,7 @@ const CrudResponsable = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Responsable' : 'Registrar Responsable'}</h5>
+                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Responsable' : 'Registrar Responsable'}</h5> */}
                                     <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">

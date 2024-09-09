@@ -4,6 +4,8 @@ import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx';
 import FormActividad from './formActividad.jsx';
 import jsPDF from "jspdf";
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx'
 
 const URI = process.env.ROUTER_PRINCIPAL + '/Actividad/';
 
@@ -77,12 +79,60 @@ const CrudActividad = () => {
                 } catch (error) {
                     console.error('Error deleting actividad:', error);
                 }
-            } else {
+            }else{
                 getAllActividad(); // Refresh the list after deletion
 
             }
         });
     };
+
+    // Función para exportar a Excel
+    const exportToExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(ActividadList.map((actividad) => ({
+            Nombre: actividad.Nom_Actividad,
+            Descripción: actividad.Des_Actividad,
+            Responsable: actividad.responsable.Nom_Responsable,
+            Fecha: actividad.Fec_Actividad,
+            Hora: actividad.Hor_Actividad,
+            'Fase Producción': actividad.Fas_Produccion,
+            Estanque: actividad.estanque.Nom_Estanque
+        })));
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Actividades');
+        XLSX.writeFile(wb, 'actividades.xlsx');
+    };
+
+ 
+    const exportToSQL = () => {
+        let sqlStatements = `CREATE TABLE IF NOT EXISTS Actividades (
+            Id_Actividad INT AUTO_INCREMENT PRIMARY KEY,
+            Nom_Actividad VARCHAR(255),
+            Des_Actividad TEXT,
+            Responsable VARCHAR(255),
+            Fec_Actividad DATE,
+            Hor_Actividad TIME,
+            Fas_Produccion VARCHAR(255),
+            Estanque VARCHAR(255)
+        );\n\n`;
+    
+        sqlStatements += "INSERT INTO Actividades (Nom_Actividad, Des_Actividad, Responsable, Fec_Actividad, Hor_Actividad, Fas_Produccion, Estanque) VALUES \n";
+        
+        sqlStatements += ActividadList.map((actividad) => {
+            return `('${actividad.Nom_Actividad.replace(/'/g, "''")}', '${actividad.Des_Actividad.replace(/'/g, "''")}', '${actividad.responsable.Nom_Responsable.replace(/'/g, "''")}', '${actividad.Fec_Actividad}', '${actividad.Hor_Actividad}', '${actividad.Fas_Produccion.replace(/'/g, "''")}', '${actividad.estanque.Nom_Estanque.replace(/'/g, "''")}')`;
+        }).join(",\n") + ";";
+    
+        // Imprimir el script SQL en la consola
+        console.log(sqlStatements);
+    
+        // Opción para descargarlo como un archivo SQL
+        const blob = new Blob([sqlStatements], { type: 'text/sql' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'actividades.sql';
+        link.click();
+    };
+    
 
     const exportToPDF = () => {
         const doc = new jsPDF();
@@ -117,8 +167,7 @@ const CrudActividad = () => {
     };
 
     const handleAddClick = () => {
-        setButtonForm('Enviar');
-        setShowForm(!showForm);
+        setShowForm(prevShowForm => !prevShowForm);
         if (!showForm) {
             setActividad({
                 Nom_Actividad: '',
@@ -129,6 +178,8 @@ const CrudActividad = () => {
                 Id_Responsable: '',
                 Id_Estanque: ''
             });
+            setButtonForm('Enviar');
+
         }
 
         setIsModalOpen(true);
@@ -138,10 +189,7 @@ const CrudActividad = () => {
 
     const handleEdit = (Id_Actividad) => {
         getActividad(Id_Actividad);
-        // Usa Bootstrap para mostrar el modal
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
     };
 
     const handleDelete = (Id_Actividad) => {
@@ -172,25 +220,53 @@ const CrudActividad = () => {
 
     return (
         <>
-        {/* <div className="container mt-5"> */}
-        <div style={{ marginLeft: '320px', paddingTop: '70px' }} >
-        <button
-             className="btn btn-primary mb-4"
-             onClick={handleAddClick}
-             style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}>
-            Agregar Actividad
-        </button>
+            <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
+                {/* Botón para agregar actividad */}
+                <button
+                    className="btn btn-primary mb-4"
+                    onClick={handleAddClick}
+                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}
+                >
+                    Agregar Actividad
+                </button>
 
                 {/* Botón para exportar a PDF */}
                 <button
                     className="btn btn-danger mx-2"
                     onClick={exportToPDF}
-                    style={{ position: 'absolute', top: '269px', right: '622px', width:'80px' }}
+                    style={{
+                        width: '80px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '880px'
+                    }}
                 >
                     <i className="bi bi-file-earmark-pdf"></i> PDF
                 </button>
 
-                </div>
+                {/* Botón para exportar a Excel (verde) */}
+                <button
+                    className="btn btn-success mx-2"
+                    onClick={exportToExcel}
+                    style={{
+                        width: '90px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '672px'
+                    }}
+                >
+                    <i className="bi bi-file-earmark-excel"></i> Excel
+                </button>
+
+                {/* Botón para exportar a SQL (gris) */}
+                <button
+                    className="btn btn-secondary mx-2"
+                    onClick={exportToSQL}
+                    style={{
+                        width: '80px', height: '45px', padding: '0px', fontSize: '16px',
+                        position: 'absolute', top: '269px', right: '780px'
+                    }}
+                >
+                    <i className="bi bi-file-earmark-code"></i> SQL
+                </button>
+            </div>
+
             <WriteTable 
                 titles={titles} 
                 data={data} 
@@ -202,7 +278,7 @@ const CrudActividad = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}</h5>
+                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}</h5> */}
                                     <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">
