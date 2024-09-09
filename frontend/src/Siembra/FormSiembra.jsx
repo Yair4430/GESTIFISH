@@ -41,9 +41,12 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                     title: 'Actualizado',
                     text: '¡Registro actualizado exitosamente!',
                     icon: 'success'
-                });
-                updateTextButton('Enviar');
+                }).then(() => {
+                // updateTextButton('Enviar');
                 clearForm(); 
+                getAllSiembra()
+                $('#modalForm').modal('hide');
+                });
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, data);
                 Swal.fire({
@@ -53,11 +56,12 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                 });
                 if (respuestaApi.status === 201) {
                     clearForm();
+                    getAllSiembra()
                 }
             }
 
-            getAllSiembra(); 
-            closeModal();
+            // getAllSiembra(); 
+            // closeModal();
         } catch (error) {
             console.error('Error al enviar el formulario:', error);
             Swal.fire({
@@ -138,7 +142,9 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
     return (
         <div className="card">
             <div className="card-header bg-primary text-white">
-                <h1 className="text-center">Registrar Siembra</h1>
+            <h1 className="text-center">
+                            {buttonForm === 'Actualizar' ? 'Actualizar Siembra' : 'Registrar Siembra'}
+                        </h1>
             </div>
             <div className="card-body">
                 <form id="siembraForm" onSubmit={sendForm} className="fw-bold m-2">

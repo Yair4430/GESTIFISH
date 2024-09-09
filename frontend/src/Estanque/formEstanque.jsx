@@ -39,10 +39,13 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
                         title: 'Actualizado',
                         text: '¡Registro actualizado exitosamente!',
                         icon: 'success'
-                    });
-                    updateTextButton('Enviar');
-                    clearForm();
+                    }).then(() => {
+                    // updateTextButton('Enviar');
                     getAllEstanques();
+                    clearForm();
+              $('#modalForm').modal('hide');
+
+                    })
                 } else {
                     console.warn('HTTP Status:', respuesta.status);
                 }
@@ -113,7 +116,9 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
 
             <div className="card">
                 <div className="card-header bg-primary text-white">
-                    <h1 className="text-center">Registrar Estanques</h1>
+                <h1 className="text-center">
+                            {buttonForm === 'Actualizar' ? 'Actualizar Estanques' : 'Registrar Estanques'}
+                        </h1>
                 </div>
                 <div className="card-body">
                     <form id="estanqueForm" onSubmit={sendForm} className="fw-bold m-2 form-no-hover">

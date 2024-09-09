@@ -44,10 +44,11 @@ const CrudCosecha = () => {
     };
 
     const getCosecha = async (Id_Cosecha) => {
-        setButtonForm('Actualizar');
+        setButtonForm('Enviar');
         try {
             const respuesta = await axios.get(`${URI}${Id_Cosecha}`);
             if (respuesta.status >= 200 && respuesta.status < 300) {
+                setButtonForm('Actualizar');
                 setCosecha({ ...respuesta.data });
                 const modalElement = document.getElementById('modalForm');
                 const modal = new bootstrap.Modal(modalElement);
@@ -142,8 +143,7 @@ const CrudCosecha = () => {
     };
 
     const handleAddClick = () => {
-        setButtonForm('Enviar');
-        setShowForm(!showForm);
+        setShowForm(prevShowForm => !prevShowForm);
         if (!showForm) {
             setCosecha({
                 Id_Cosecha: '',
@@ -158,6 +158,8 @@ const CrudCosecha = () => {
                 Vlr_Cosecha: '',
                 Obs_Cosecha: ''
             });
+            setButtonForm('Enviar');
+            
         }
         setIsModalOpen(true);
     };
@@ -166,9 +168,7 @@ const CrudCosecha = () => {
 
     const handleEdit = (Id_Cosecha) => {
         getCosecha(Id_Cosecha);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
     };
 
     const handleDelete = (Id_Cosecha) => {

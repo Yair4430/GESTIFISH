@@ -3,13 +3,13 @@ import $ from "jquery";
 import "datatables.net-dt";
 import "datatables.net-responsive-dt";
 import "./Data-Tables.css";
-import * as XLSX from "xlsx";
 import Sidebar from '../home/Sidebar.jsx';
 
-function WriteTable({ titles, data, onEditClick, onDeleteClick, formName }) {
+function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
   const tableRef = useRef(null);
 
   useEffect(() => {
+
     const $table = $(tableRef.current);
 
     if ($.fn.DataTable.isDataTable($table)) {
@@ -46,7 +46,8 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick, formName }) {
           onDeleteClick(id);
 
           // Corregido el filtrado de datos
-          const filteredData = data.filter(row => row[row.length - 1] !== id);
+          const filteredData = data.filter(row => !row[row.length - 1].includes(`data-id='${id}'`));
+          // const filteredData = data.filter(row => row[row.length - 1] !== id);
           table.clear().rows.add(filteredData).draw();
         });
       },
@@ -71,40 +72,6 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick, formName }) {
     };
   }, [data, titles, onEditClick, onDeleteClick]);
 
-  const exportToExcel = () => {
-    const workbook = XLSX.utils.book_new();
-    const worksheetData = [
-      titles.slice(0, -1), // Excluir el título de la última columna
-      ...data.map(row =>
-        row.slice(0, -1).map(cell => {
-          if (typeof cell === 'string' && cell.startsWith('<img')) {
-            const match = cell.match(/src="([^"]*)"/);
-            return match ? match[1] : '';
-          }
-          return cell;
-        })
-      )
-    ];
-    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
-    XLSX.writeFile(workbook, "table_data.xlsx");
-  };
-
-  const exportToSQL = () => {
-    const sqlData = data.map(row => {
-      const values = row.slice(0, -1).map(value => {
-        if (typeof value === 'string' && value.startsWith('<img')) {
-          const match = value.match(/src="([^"]*)"/);
-          value = match ? match[1] : '';
-        }
-        return typeof value === 'string' ? `'${value.replace(/'/g, "''")}'` : value;
-      });
-      return `INSERT INTO your_table_name (${titles.slice(0, -1).join(", ")}) VALUES (${values.join(", ")})`;
-    });
-
-    console.log(sqlData.join("\n"));
-  };
-
   return (
     <>
       <link
@@ -113,15 +80,6 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick, formName }) {
       />
       <Sidebar />
       <div style={{ marginLeft: "300px", paddingTop: "30px" }}>
-        <div className="button-group" style={{ textAlign: "center", marginBottom: "20px" }}>
-          <button className="btn btn-success mx-2" onClick={exportToExcel}>
-            <i className="bi bi-file-earmark-excel"></i> EXCEL
-          </button>
-          <button className="btn btn-secondary mx-2" onClick={exportToSQL}>
-            <i className="bi bi-file-earmark-code"></i> SQL
-          </button>
-        </div>
-
         <div className="table-container">
           <div className="dataTables_filter"></div>
         </div>

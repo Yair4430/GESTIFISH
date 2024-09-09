@@ -146,9 +146,8 @@ const CrudMuestreo = () => {
 
     const handleEdit = (Id_Muestreo) => {
         getMuestreo(Id_Muestreo);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
+
     };
 
     const handleDelete = (Id_Muestreo) => {

@@ -35,7 +35,8 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                     text: '¡Registro actualizado exitosamente!',
                     icon: 'success'
                 });
-                updateTextButton('Enviar');
+                // updateTextButton('Enviar');
+                getAllMuestreo()
                 clearForm(); // Limpiar el formulario después de actualizar
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, data);
@@ -118,7 +119,9 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
 
             <div className="card">
                 <div className="card-header bg-primary text-white">
-                    <h1 className="text-center">Registrar Muestreo</h1>
+                <h1 className="text-center">
+                            {buttonForm === 'Actualizar' ? 'Actualizar Muestreo' : 'Registrar Muestreo'}
+                        </h1>
                 </div>
                 <div className="card-body">
                     <form id="muestreoForm" onSubmit={sendForm} className="fw-bold m-2">

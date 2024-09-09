@@ -141,9 +141,8 @@ const CrudResponsable = () => {
 
     const handleEdit = (Id_Responsable) => {
         getResponsable(Id_Responsable);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
+
     };
 
     const handleDelete = (Id_Responsable) => {
@@ -192,8 +191,8 @@ const CrudResponsable = () => {
                 <WriteTable 
                     titles={titles} 
                     data={data} 
-                    onEditClick={(id) => getResponsable(id)} 
-                    onDeleteClick={(id) => deleteResponsable(id)} 
+                    onEditClick={handleEdit} 
+                    onDeleteClick={handleDelete} 
                 />
 
             {isModalOpen && (

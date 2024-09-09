@@ -106,7 +106,9 @@ const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllM
 
             <div className="card">
                 <div className="card-header bg-primary text-white">
-                    <h1 className="text-center">Registrar Mortalidad</h1>
+                <h1 className="text-center">
+                            {buttonForm === 'Actualizar' ? 'Actualizar Mortalidad' : 'Registrar Mortalidad'}
+                        </h1>
                 </div>
                 <div className="card-body">
                     <form id="mortalidadForm" onSubmit={sendForm} className="fw-bold m-2">

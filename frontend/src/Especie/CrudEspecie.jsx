@@ -41,10 +41,11 @@ const CrudEspecie = () => {
     };
 
     const getEspecie = async (Id_Especie) => {
-        setButtonForm('Actualizar');
+        setButtonForm('Enviar');
         try {
             const respuesta = await axios.get(`${URI}${Id_Especie}`);
             if (respuesta.status === 200) {
+                setButtonForm('Actualizar');
                 setEspecie({ ...respuesta.data });
                 // Mostrar el modal
                 const modalElement = document.getElementById('modalForm');
@@ -129,8 +130,7 @@ const CrudEspecie = () => {
     };
 
     const handleAddClick = () => {
-        setButtonForm('Enviar');
-        setShowForm(!showForm);
+        setShowForm(prevShowForm => !prevShowForm);
         if (!showForm) {
             setEspecie({
                 Id_Especie: '',
@@ -140,6 +140,7 @@ const CrudEspecie = () => {
                 Id_Tipo_Especie: '',
                 Id_Clase: ''
             });
+            setButtonForm('Enviar');
         }
         setIsModalOpen(true);
     };
@@ -148,10 +149,7 @@ const CrudEspecie = () => {
 
     const handleEdit = (Id_Especie) => {
         getEspecie(Id_Especie);
-        // Usa Bootstrap para mostrar el modal
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
     };
 
     const handleDelete = (Id_Especie) => {

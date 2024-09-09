@@ -138,9 +138,8 @@ const CrudMortalidad = () => {
 
     const handleEdit = (Id_Mortalidad) => {
         getMortalidad(Id_Mortalidad);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
+
     };
 
     const handleDelete = (Id_Mortalidad) => {

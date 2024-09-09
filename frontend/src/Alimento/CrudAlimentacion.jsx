@@ -39,15 +39,15 @@ const CrudAlimentacion = () => {
     const getAlimentacion = async (Id_Alimentacion) => {
         setButtonForm('Enviar');
         // Mostrar el modal
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
         try {
             const respuesta = await axios.get(`${URI}${Id_Alimentacion}`);
             setButtonForm('Actualizar');
-            setAlimentacion({ ...respuesta.data });
+            setAlimentacion(respuesta.data);
+            const modalElement = document.getElementById('modalForm');
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
         } catch (error) {
-            console.error('Error fetching alimentacion:', error);
+        console.error('Error fetching Alimento:', error.response?.status || error.message);
         }
     };
 
@@ -116,8 +116,7 @@ const CrudAlimentacion = () => {
     };
 
     const handleAddClick = () => {
-        setButtonForm('Enviar');
-        setShowForm(!showForm);
+        setShowForm(prevShowForm => !prevShowForm);
         if (!showForm) {
             setAlimentacion({
                 Id_Alimentacion: '',
@@ -129,7 +128,9 @@ const CrudAlimentacion = () => {
                 Fec_Siembra: '',
                 Id_Responsable: ''
             });
+            setButtonForm('Enviar');
         }
+        
         setIsModalOpen(true);
     };
 
@@ -137,10 +138,7 @@ const CrudAlimentacion = () => {
 
     const handleEdit = (Id_Alimentacion) => {
         getAlimentacion(Id_Alimentacion);
-        // Usa Bootstrap para mostrar el modal
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
     };
 
     const handleDelete = (Id_Alimentacion) => {

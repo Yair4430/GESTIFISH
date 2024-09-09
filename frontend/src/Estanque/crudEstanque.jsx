@@ -39,11 +39,12 @@ const CrudEstanque = () => {
     };
 
     const getEstanque = async (Id_Estanque) => {
-        setButtonForm('Actualizar');
+        setButtonForm('Enviar');
         try {
             const respuesta = await axios.get(`${URI}${Id_Estanque}`);
             if (respuesta.status >= 200 && respuesta.status < 300) {
-                setEstanque({ ...respuesta.data });
+                setButtonForm('Actualizar');
+                setEstanque(respuesta.data);
                 const modalElement = document.getElementById('modalForm');
                 const modal = new bootstrap.Modal(modalElement);
                 modal.show();
@@ -125,8 +126,7 @@ const CrudEstanque = () => {
     };
 
     const handleAddClick = () => {
-        setButtonForm('Enviar');
-        setShowForm(!showForm);
+        setShowForm(prevShowForm => !prevShowForm);
         if (!showForm) {
             setEstanque({
                 Id_Estanque: '',
@@ -139,6 +139,7 @@ const CrudEstanque = () => {
                 Img_Estanque: null,
                 Rec_Agua: ''
             });
+            setButtonForm('Enviar');
         }
         setIsModalOpen(true);
     };
@@ -147,9 +148,8 @@ const CrudEstanque = () => {
 
     const handleEdit = (Id_Estanque) => {
         getEstanque(Id_Estanque);
-        const modalElement = document.getElementById('modalForm');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        setIsModalOpen(true);
+
     };
 
     const handleDelete = (Id_Estanque) => {
