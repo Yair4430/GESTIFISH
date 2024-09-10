@@ -125,7 +125,7 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
     return (
         <>
             <div className="card">
-                <div className="card-header bg-primary text-white">
+                <div className="card-header bg-secondary text-white">
                     <h1 className="text-center">
                         {buttonForm === 'Actualizar' ? 'Actualizar Cosecha' : 'Registrar Cosecha'}
                     </h1>

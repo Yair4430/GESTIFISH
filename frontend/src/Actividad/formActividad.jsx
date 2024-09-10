@@ -125,7 +125,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
     return (
         <>
           <div className="card">
-            <div className="card-header bg-primary text-white">
+            <div className="card-header bg-dark text-white">
               <h1 className="text-center">
                 {buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}
               </h1>

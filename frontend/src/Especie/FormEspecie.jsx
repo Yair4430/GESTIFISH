@@ -88,7 +88,7 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
 
     return (
         <div className="card">
-            <div className="card-header bg-primary text-white">
+            <div className="card-header bg-danger text-white">
                 <h1 className="text-center">
                     {buttonForm === 'Actualizar' ? 'Actualizar Especies' : 'Registrar Especies'}
                 </h1>

@@ -223,7 +223,7 @@ const CrudActividad = () => {
             <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
                 {/* Botón para agregar actividad */}
                 <button
-                    className="btn btn-primary mb-4"
+                    className="btn btn-success mb-4"
                     onClick={handleAddClick}
                     style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}
                 >

@@ -44,7 +44,7 @@ function Sidebar() {
   const iconStyle = {
     marginRight: '15px',
     fontSize: '30px',
-    color: '#007bff'
+    color: '#007FFF'
   };
 
   return (
