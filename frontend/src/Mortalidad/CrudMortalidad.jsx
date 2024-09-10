@@ -104,10 +104,10 @@ const CrudMortalidad = () => {
         XLSX.writeFile(wb, 'mortalidades.xlsx');
     };
 
-// Función para exportar a SQL
-const exportToSQL = () => {
-    // Creación de la tabla Mortalidades
-    let sqlStatements = `CREATE TABLE IF NOT EXISTS Mortalidades (
+    // Función para exportar a SQL
+    const exportToSQL = () => {
+        // Creación de la tabla Mortalidades
+        let sqlStatements = `CREATE TABLE IF NOT EXISTS Mortalidades (
         Id_Mortalidad INT AUTO_INCREMENT PRIMARY KEY,
         Fec_Mortalidad DATE,
         Can_Peces INT,
@@ -116,24 +116,24 @@ const exportToSQL = () => {
         Responsable_Nombre VARCHAR(255)
     );\n\n`;
 
-    // Sentencia para insertar datos en la tabla Mortalidades
-    sqlStatements += "INSERT INTO Mortalidades (Fec_Mortalidad, Can_Peces, Mot_Mortalidad, Siembra_Fec, Responsable_Nombre) VALUES \n";
+        // Sentencia para insertar datos en la tabla Mortalidades
+        sqlStatements += "INSERT INTO Mortalidades (Fec_Mortalidad, Can_Peces, Mot_Mortalidad, Siembra_Fec, Responsable_Nombre) VALUES \n";
 
-    // Mapear la lista de mortalidades a sentencias SQL
-    sqlStatements += MortalidadList.map((mortalidad) => {
-        return `('${mortalidad.Fec_Mortalidad}', ${mortalidad.Can_Peces}, '${mortalidad.Mot_Mortalidad.replace(/'/g, "''")}', '${mortalidad.siembra.Fec_Siembra}', '${mortalidad.responsable.Nom_Responsable.replace(/'/g, "''")}')`;
-    }).join(",\n") + ";";
+        // Mapear la lista de mortalidades a sentencias SQL
+        sqlStatements += MortalidadList.map((mortalidad) => {
+            return `('${mortalidad.Fec_Mortalidad}', ${mortalidad.Can_Peces}, '${mortalidad.Mot_Mortalidad.replace(/'/g, "''")}', '${mortalidad.siembra.Fec_Siembra}', '${mortalidad.responsable.Nom_Responsable.replace(/'/g, "''")}')`;
+        }).join(",\n") + ";";
 
-    // Imprimir el script SQL en la consola
-    console.log(sqlStatements);
+        // Imprimir el script SQL en la consola
+        console.log(sqlStatements);
 
-    // Opción para descargarlo como un archivo SQL
-    const blob = new Blob([sqlStatements], { type: 'text/sql' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'mortalidades.sql';
-    link.click();
-};
+        // Opción para descargarlo como un archivo SQL
+        const blob = new Blob([sqlStatements], { type: 'text/sql' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'mortalidades.sql';
+        link.click();
+    };
 
     const exportToPDF = () => {
         const doc = new jsPDF();
@@ -199,12 +199,13 @@ const exportToSQL = () => {
         mortalidad.siembra.Fec_Siembra,
         mortalidad.responsable.Nom_Responsable,
         `
-          <button class='btn btn-primary align-middle btn-edit' data-id='${mortalidad.Id_Mortalidad}' onClick={() => handleEdit(mortalidad.Id_Mortalidad)}>
+            <button class='btn btn-primary align-middle btn-edit' data-id='${mortalidad.Id_Mortalidad}' onClick={handleAddClick}>
             <i class="fa-solid fa-pen-to-square"></i> 
-          </button>
-          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${mortalidad.Id_Mortalidad}' onClick={() => handleDelete(mortalidad.Id_Mortalidad)}>
+            </button>
+            <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${mortalidad.Id_Mortalidad}'>
             <i class="fa-solid fa-trash-can"></i> 
-          </button>
+            </button>
+
         `
     ]);
 
@@ -214,14 +215,13 @@ const exportToSQL = () => {
 
     return (
         <>
-                        <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
-                {/* Botón para agregar actividad */}
+            <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
                 <button
                     className="btn btn-primary mb-4"
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}
+                    style={{ width: '110px', height: '45px', padding: '0px', fontSize: '16px' }}
                 >
-                    Agregar Actividad
+                    <span style={{ fontSize: '24px', marginRight: '8px' }}>+</span> Agregar
                 </button>
 
                 {/* Botón para exportar a PDF */}
@@ -261,12 +261,12 @@ const exportToSQL = () => {
                 </button>
             </div>
 
-                <WriteTable 
-                    titles={titles} 
-                    data={data} 
-                    onEditClick={handleEdit} 
-                    onDeleteClick={handleDelete} 
-                />
+            <WriteTable
+                titles={titles}
+                data={data}
+                onEditClick={handleEdit}
+                onDeleteClick={handleDelete}
+            />
             {isModalOpen && (
                 <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
                     <div className="modal-dialog modal-lg">
@@ -292,7 +292,7 @@ const exportToSQL = () => {
                         </div>
                     </div>
                 </div>
-                )}
+            )}
         </>
     );
 };

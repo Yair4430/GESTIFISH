@@ -200,7 +200,7 @@ const CrudResponsable = () => {
         responsable.Cor_Responsable,
         responsable.Num_Responsable,
         `
-          <button class='btn btn-primary align-middle btn-edit' data-id='${responsable.Id_Responsable}'>
+          <button class='btn btn-primary align-middle btn-edit' data-id='${responsable.Id_Responsable}' onClick={handleAddClick}>
             <i class="fa-solid fa-pen-to-square"></i> 
           </button>
           <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${responsable.Id_Responsable}'>
@@ -219,9 +219,9 @@ const CrudResponsable = () => {
                 <button
                     className="btn btn-primary mb-4"
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}
+                    style={{ width: '110px', height: '45px', padding: '0px', fontSize: '16px' }}
                 >
-                    Agregar Actividad
+                    <span style={{ fontSize: '24px', marginRight: '8px' }}>+</span> Agregar
                 </button>
 
                 {/* Botón para exportar a PDF */}

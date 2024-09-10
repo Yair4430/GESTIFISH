@@ -79,7 +79,7 @@ const CrudActividad = () => {
                 } catch (error) {
                     console.error('Error deleting actividad:', error);
                 }
-            }else{
+            } else {
                 getAllActividad(); // Refresh the list after deletion
 
             }
@@ -103,7 +103,7 @@ const CrudActividad = () => {
         XLSX.writeFile(wb, 'actividades.xlsx');
     };
 
- 
+
     const exportToSQL = () => {
         let sqlStatements = `CREATE TABLE IF NOT EXISTS Actividades (
             Id_Actividad INT AUTO_INCREMENT PRIMARY KEY,
@@ -115,16 +115,16 @@ const CrudActividad = () => {
             Fas_Produccion VARCHAR(255),
             Estanque VARCHAR(255)
         );\n\n`;
-    
+
         sqlStatements += "INSERT INTO Actividades (Nom_Actividad, Des_Actividad, Responsable, Fec_Actividad, Hor_Actividad, Fas_Produccion, Estanque) VALUES \n";
-        
+
         sqlStatements += ActividadList.map((actividad) => {
             return `('${actividad.Nom_Actividad.replace(/'/g, "''")}', '${actividad.Des_Actividad.replace(/'/g, "''")}', '${actividad.responsable.Nom_Responsable.replace(/'/g, "''")}', '${actividad.Fec_Actividad}', '${actividad.Hor_Actividad}', '${actividad.Fas_Produccion.replace(/'/g, "''")}', '${actividad.estanque.Nom_Estanque.replace(/'/g, "''")}')`;
         }).join(",\n") + ";";
-    
+
         // Imprimir el script SQL en la consola
         console.log(sqlStatements);
-    
+
         // Opción para descargarlo como un archivo SQL
         const blob = new Blob([sqlStatements], { type: 'text/sql' });
         const link = document.createElement('a');
@@ -132,7 +132,7 @@ const CrudActividad = () => {
         link.download = 'actividades.sql';
         link.click();
     };
-    
+
 
     const exportToPDF = () => {
         const doc = new jsPDF();
@@ -213,7 +213,7 @@ const CrudActividad = () => {
           </button>
         `
     ]);
-    
+
     const titles = [
         "Nombre", "Descripción", "Responsable", "Fecha", "Hora", "Fase Producción", "Estanque", "Acciones"
     ];
@@ -225,9 +225,9 @@ const CrudActividad = () => {
                 <button
                     className="btn btn-primary mb-4"
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}
+                    style={{ width: '110px', height: '45px', padding: '0px', fontSize: '16px' }}
                 >
-                    Agregar Actividad
+                    <span style={{ fontSize: '24px', marginRight: '8px' }}>+</span> Agregar
                 </button>
 
                 {/* Botón para exportar a PDF */}
@@ -267,38 +267,38 @@ const CrudActividad = () => {
                 </button>
             </div>
 
-            <WriteTable 
-                titles={titles} 
-                data={data} 
-                onEditClick={handleEdit} 
-                onDeleteClick={handleDelete} 
+            <WriteTable
+                titles={titles}
+                data={data}
+                onEditClick={handleEdit}
+                onDeleteClick={handleDelete}
             />
-                {isModalOpen && (
-                    <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
-                        <div className="modal-dialog modal-lg">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}</h5> */}
-                                    <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
-                                </div>
-                                <div className="modal-body">
-                                    <FormActividad 
-                                        buttonForm={buttonForm} 
-                                        actividad={actividad} 
-                                        URI={URI} 
-                                        updateTextButton={updateTextButton} 
-                                        getAllActividad={getAllActividad} 
-                                        closeModal ={() => {
-                                            const modalElement = document.getElementById('modalForm');
-                                            const modal = window.bootstrap.Modal.getInstance(modalElement);
+            {isModalOpen && (
+                <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-lg">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}</h5> */}
+                                <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                <FormActividad
+                                    buttonForm={buttonForm}
+                                    actividad={actividad}
+                                    URI={URI}
+                                    updateTextButton={updateTextButton}
+                                    getAllActividad={getAllActividad}
+                                    closeModal={() => {
+                                        const modalElement = document.getElementById('modalForm');
+                                        const modal = window.bootstrap.Modal.getInstance(modalElement);
                                         modal.hide();
-                                        }}
-                                    />
-                                </div>
+                                    }}
+                                />
                             </div>
                         </div>
                     </div>
-                )}
+                </div>
+            )}
         </>
     );
 };
