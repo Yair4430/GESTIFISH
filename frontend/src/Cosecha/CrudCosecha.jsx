@@ -112,7 +112,7 @@ const CrudCosecha = () => {
 
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Cosechas');
-        XLSX.writeFile(wb, 'cosechas.xlsx');
+        XLSX.writeFile(wb, 'Cosechas.xlsx');
     };
 
     // Función para exportar a SQL
@@ -144,7 +144,7 @@ const CrudCosecha = () => {
         const blob = new Blob([sqlStatements], { type: 'text/sql' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'cosechas.sql';
+        link.download = 'Cosechas.sql';
         link.click();
     };
 
@@ -187,7 +187,7 @@ const CrudCosecha = () => {
             }
         });
     
-        doc.save("cosechas.pdf");
+        doc.save("Cosechas.pdf");
     };
     
 
@@ -207,7 +207,6 @@ const CrudCosecha = () => {
                 Obs_Cosecha: ''
             });
             setButtonForm('Enviar');
-
         }
 
         setIsModalOpen(true);
@@ -253,17 +252,25 @@ const CrudCosecha = () => {
         "Observaciones", "Nombre Responsable", "Acciones"
     ];
 
-
     return (
         <>
             <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
-                {/* Botón para agregar actividad */}
+                {/* Botón para agregar */}
                 <button
-                    className="btn btn-primary mb-4"
+                    className="btn btn-primary mb-4 d-flex align-items-center justify-content-center"
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}
+                    style={{ width: '115px', height: '45px', fontSize: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                 >
-                    Agregar Actividad
+                       <span
+                            style={{
+                                fontSize: '30px',
+                                marginRight: '8px',
+                                lineHeight: '1',
+                                position: 'relative',
+                                top: '-3px' // Ajusta el valor para subir o bajar el símbolo
+                            }}
+                        > + </span>
+                    Agregar
                 </button>
 
                 {/* Botón para exportar a PDF */}

@@ -115,7 +115,7 @@ const CrudTraslado = () => {
         });
 
         // Guarda el PDF
-        doc.save('traslados.pdf');
+        doc.save('Traslados.pdf');
     };
 
     // Función para exportar a Excel
@@ -130,7 +130,7 @@ const CrudTraslado = () => {
 
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Traslados');
-        XLSX.writeFile(wb, 'traslados.xlsx');
+        XLSX.writeFile(wb, 'Traslados.xlsx');
     };
 
     // Función para exportar a SQL
@@ -154,7 +154,7 @@ const CrudTraslado = () => {
         const blob = new Blob([sqlStatements], { type: 'text/sql' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'traslados.sql';
+        link.download = 'Traslados.sql';
         link.click();
     };
 
@@ -196,7 +196,7 @@ const CrudTraslado = () => {
           <button class='btn btn-primary align-middle btn-edit' data-id='${traslado.Id_Traslado}' onClick={handleAddClick}>
             <i class="fa-solid fa-pen-to-square"></i> 
           </button>
-          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${traslado.Id_Traslado}' onClick={handleDelete}>
+          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${traslado.Id_Traslado}'>
             <i class="fa-solid fa-trash-can"></i> 
           </button>
       `
@@ -209,13 +209,22 @@ const CrudTraslado = () => {
     return (
         <>
             <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
-                {/* Botón para agregar actividad */}
+                {/* Botón para agregar */}
                 <button
-                    className="btn btn-primary mb-4"
+                    className="btn btn-primary mb-4 d-flex align-items-center justify-content-center"
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}
+                    style={{ width: '115px', height: '45px', fontSize: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                 >
-                    Agregar Actividad
+                       <span
+                            style={{
+                                fontSize: '30px',
+                                marginRight: '8px',
+                                lineHeight: '1',
+                                position: 'relative',
+                                top: '-3px' // Ajusta el valor para subir o bajar el símbolo
+                            }}
+                        > + </span>
+                    Agregar
                 </button>
 
                 {/* Botón para exportar a PDF */}
@@ -267,7 +276,7 @@ const CrudTraslado = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Traslado' : 'Registrar Traslado'}</h5>
+                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Traslado' : 'Registrar Traslado'}</h5> */}
                                     <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">

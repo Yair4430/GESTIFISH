@@ -83,7 +83,7 @@ const CrudAlimentacion = () => {
         });
     };
 
-        // Función para exportar a Excel
+    // Función para exportar a Excel
     const exportToExcel = () => {
         const ws = XLSX.utils.json_to_sheet(AlimentacionList.map((alimentacion) => ({
             Fecha: alimentacion.Fec_Alimentacion,
@@ -97,7 +97,7 @@ const CrudAlimentacion = () => {
 
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Alimentacion');
-        XLSX.writeFile(wb, 'alimentacion.xlsx');
+        XLSX.writeFile(wb, 'Alimentaciones.xlsx');
     };
 
     // Función para exportar a SQL
@@ -124,7 +124,7 @@ const CrudAlimentacion = () => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'alimentacion.sql';
+        a.download = 'Alimentaciones.sql';
         a.click();
         URL.revokeObjectURL(url);
     };
@@ -135,7 +135,7 @@ const CrudAlimentacion = () => {
         const title = "Alimentacion";
         doc.setFontSize(16);
         doc.text(title, 14, 20);
-        
+
         const tableBody = AlimentacionList.map((Alimentacion) => [
             Alimentacion.Fec_Alimentacion,
             Alimentacion.Can_RacionKg,
@@ -155,7 +155,7 @@ const CrudAlimentacion = () => {
             styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
         });
 
-        doc.save('alimentacion.pdf');
+        doc.save('Alimentaciones.pdf');
     };
 
 
@@ -174,7 +174,7 @@ const CrudAlimentacion = () => {
             });
             setButtonForm('Enviar');
         }
-        
+
         setIsModalOpen(true);
     };
 
@@ -198,12 +198,13 @@ const CrudAlimentacion = () => {
         alimentacion.siembra.Fec_Siembra,
         alimentacion.responsable.Nom_Responsable,
         `
-          <button class='btn btn-primary align-middle btn-edit' data-id='${alimentacion.Id_Alimentacion}' onClick={() => handleEdit(${alimentacion.Id_Alimentacion})}>
+            <button class='btn btn-primary align-middle btn-edit' data-id='${alimentacion.Id_Alimentacion}' onClick={handleAddClick}>
             <i class="fa-solid fa-pen-to-square"></i> 
-          </button>
-          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${alimentacion.Id_Alimentacion}' onClick={() => handleDelete(${alimentacion.Id_Alimentacion})}>
+            </button>
+            <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${alimentacion.Id_Alimentacion}'>
             <i class="fa-solid fa-trash-can"></i>
-          </button>
+            </button>
+
         `
     ]);
 
@@ -214,14 +215,24 @@ const CrudAlimentacion = () => {
     return (
         <>
             <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
-                {/* Botón para agregar actividad */}
+                {/* Botón para agregar */}
                 <button
-                    className="btn btn-primary mb-4"
+                    className="btn btn-primary mb-4 d-flex align-items-center justify-content-center"
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}
+                    style={{ width: '115px', height: '45px', fontSize: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                 >
-                    Agregar Actividad
+                       <span
+                            style={{
+                                fontSize: '30px',
+                                marginRight: '8px',
+                                lineHeight: '1',
+                                position: 'relative',
+                                top: '-3px' // Ajusta el valor para subir o bajar el símbolo
+                            }}
+                        > + </span>
+                    Agregar
                 </button>
+
 
                 {/* Botón para exportar a PDF */}
                 <button
@@ -260,41 +271,41 @@ const CrudAlimentacion = () => {
                 </button>
             </div>
 
-                <WriteTable 
-                titles={titles} 
-                data={data} 
-                onEditClick={handleEdit} 
-                onDeleteClick={handleDelete} 
+            <WriteTable
+                titles={titles}
+                data={data}
+                onEditClick={handleEdit}
+                onDeleteClick={handleDelete}
             />
 
-            
+
 
             {isModalOpen && (
                 <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
                     <div className="modal-dialog modal-lg">
                         <div className="modal-content">
-                             <div className="modal-header">
+                            <div className="modal-header">
                                 <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}</h5>
                                 <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
-                                </div>
-                                <div className="modal-body">
-                                    <FormAlimentacion
-                                        buttonText={buttonForm}
-                                        alimentacion={alimentacion}
-                                        URI={URI}
-                                        updateTextButton={updateTextButton}
-                                        getAllAlimentacion={getAllAlimentacion}
-                                        closeModal ={() => {
-                                            const modalElement = document.getElementById('modalForm');
-                                            const modal = window.bootstrap.Modal.getInstance(modalElement);
+                            </div>
+                            <div className="modal-body">
+                                <FormAlimentacion
+                                    buttonText={buttonForm}
+                                    alimentacion={alimentacion}
+                                    URI={URI}
+                                    updateTextButton={updateTextButton}
+                                    getAllAlimentacion={getAllAlimentacion}
+                                    closeModal={() => {
+                                        const modalElement = document.getElementById('modalForm');
+                                        const modal = window.bootstrap.Modal.getInstance(modalElement);
                                         modal.hide();
-                                        }}
-                                    />
-                                </div>
+                                    }}
+                                />
                             </div>
                         </div>
                     </div>
-             )}
+                </div>
+            )}
         </>
     );
 };

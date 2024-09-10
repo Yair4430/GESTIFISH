@@ -52,7 +52,7 @@ function Sidebar() {
       <div style={sidebarStyle} className="sidebar">
         <ul style={sidebarMenuStyle} className="nav flex-column">
           {[
-            { to: "/Actividad", icon: <FaClipboardList />, text: "Actividades" },
+            { to: "/Actividad", icon: <FaClipboardList />, text: "Actividad" },
             { to: "/Alimentacion", icon: <FaUtensils />, text: "Alimentación" },
             { to: "/Cosecha", icon: <FaFish />, text: "Cosecha" },
             { to: "/Especie", icon: <FaFish />, text: "Especie" },

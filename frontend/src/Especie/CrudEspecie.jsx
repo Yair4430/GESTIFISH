@@ -6,6 +6,7 @@ import FormEspecie from './FormEspecie';
 import jsPDF from "jspdf"; // Añade jsPDF para exportar a PDF
 import * as XLSX from 'xlsx'; // Añade XLSX para exportar a Excel
 
+
 const URI = process.env.ROUTER_PRINCIPAL + '/especie/';
 const PATH_FOTOS = process.env.ROUTER_FOTOS;
 
@@ -107,7 +108,7 @@ const CrudEspecie = () => {
 
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Especies');
-        XLSX.writeFile(wb, 'especies.xlsx');
+        XLSX.writeFile(wb, 'Especies.xlsx');
     };
 
     const exportToSQL = () => {
@@ -143,7 +144,7 @@ const CrudEspecie = () => {
         const blob = new Blob([sqlStatements], { type: 'text/sql' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'especies.sql';
+        link.download = 'Especies.sql';
         link.click();
     };
     
@@ -180,7 +181,7 @@ const CrudEspecie = () => {
         });
 
         // Guarda el PDF
-        doc.save('especies.pdf');
+        doc.save('Especies.pdf');
     };
 
     const handleAddClick = () => {
@@ -236,13 +237,22 @@ const CrudEspecie = () => {
     return (
         <>
             <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
-                {/* Botón para agregar actividad */}
-                <button
-                    className="btn btn-primary mb-4"
+                 {/* Botón para agregar */}
+                 <button
+                    className="btn btn-primary mb-4 d-flex align-items-center justify-content-center"
                     onClick={handleAddClick}
-                    style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px' }}
+                    style={{ width: '115px', height: '45px', fontSize: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                 >
-                    Agregar Actividad
+                       <span
+                            style={{
+                                fontSize: '30px',
+                                marginRight: '8px',
+                                lineHeight: '1',
+                                position: 'relative',
+                                top: '-3px' // Ajusta el valor para subir o bajar el símbolo
+                            }}
+                        > + </span>
+                    Agregar
                 </button>
 
                 {/* Botón para exportar a PDF */}
@@ -294,7 +304,7 @@ const CrudEspecie = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Especie' : 'Registrar Especie'}</h5>
+                                    {/* <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Especie' : 'Registrar Especie'}</h5> */}
                                     <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">

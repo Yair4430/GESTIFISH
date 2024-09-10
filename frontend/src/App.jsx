@@ -116,6 +116,7 @@ function App() {
             <Route path='/SimuladorPublico' element={<Simulador />} />
             <Route path='/auth' element={<Auth />} />
             <Route path='/reset-password' element={<ResetPassword />} />
+            <Route path='*' element={<Navigate to="/" />} />
           </Routes>
         </>
       )}
