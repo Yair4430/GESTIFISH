@@ -99,12 +99,11 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
 
     return (
         <>
-            <div className="card">
-                <div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
+                {/*<div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
                     <h1 className="text-center">
                         {buttonForm === 'Actualizar' ? 'Actualizar Responsables' : 'Registrar Responsables'}
                     </h1>
-                </div>
+                </div>*/}
                 <div className="card-body">
                     <form id="responsableForm" onSubmit={sendFormR} className="fw-bold m-2 form-no-hover">
                         <div className="row mb-3">
@@ -161,7 +160,6 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                         </div>
                     </form>
                 </div>
-            </div>
         </>
     );
   

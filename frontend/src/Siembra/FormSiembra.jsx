@@ -141,12 +141,12 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
 
 
     return (
-        <div className="card">
-            <div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
+        <>
+            {/*<div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
                 <h1 className="text-center">
                     {buttonForm === 'Actualizar' ? 'Actualizar Siembra' : 'Registrar Siembra'}
                 </h1>
-            </div>
+            </div>*/}
             <div className="card-body">
                 <form id="siembraForm" onSubmit={sendForm} className="fw-bold m-2">
                     <div className="row mb-3">
@@ -253,7 +253,7 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                     </div>
                 </form>
             </div>
-        </div>
+        </>
     );
     
 };

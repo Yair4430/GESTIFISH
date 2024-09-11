@@ -123,12 +123,12 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
 
     return (
       <>
-        <div className="card">
-          <div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
+        
+          {/*<div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
             <h1 className="text-center">
               {buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}
             </h1>
-          </div>
+          </div>*/}
   
           <div className="card-body">
             <form id="actividadForm" onSubmit={sendFormA} className="fw-bold m-2">
@@ -190,7 +190,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                       onChange={(e) => setFas_Produccion(e.target.value)}
                       required
                     >
-                      <option value="">-- Seleccione --</option>
+                      <option value="">Selecciona uno...</option>
                       <option value="Antes de la cosecha">Antes de la cosecha</option>
                       <option value="Despues de la cosecha">Después de la cosecha</option>
                     </select>
@@ -238,7 +238,6 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
               </div>
             </form>
           </div>
-        </div>
       </>
     );
   

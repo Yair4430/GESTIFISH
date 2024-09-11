@@ -114,12 +114,12 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
 
     return (
         <>
-            <div className="card">
-                <div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
+
+                {/*<div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
                     <h1 className="text-center">
                         {buttonForm === 'Actualizar' ? 'Actualizar Muestreo' : 'Registrar Muestreo'}
                     </h1>
-                </div>
+                </div>*/}
                 <div className="card-body">
                     <form id="muestreoForm" onSubmit={sendForm} className="fw-bold m-2">
                         <div className="row mb-3">
@@ -199,7 +199,6 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                         </div>
                     </form>
                 </div>
-            </div>
         </>
     );
     

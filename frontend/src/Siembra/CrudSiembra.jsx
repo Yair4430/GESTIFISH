@@ -317,10 +317,28 @@ const CrudSiembra = () => {
                     <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
-                            <div className="modal-header">
-                               {/*<h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Siembra' : 'Registrar Siembra'}</h5>*/}
-                                <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
-                            </div>
+                                <div className="modal-header" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', width: '100%' }}>
+                                    <h5 
+                                        className="modal-title" 
+                                        id="modalFormLabel"
+                                        style={{ 
+                                            fontWeight: 'bold',  /* Negrita */
+                                            fontSize: '28px',    /* Tamaño de texto más grande */
+                                            margin: '0',         /* Elimina márgenes para evitar desalineación */
+                                            textAlign: 'center', /* Centra el texto dentro del h5 */
+                                            flex: 1              /* Hace que el h5 ocupe el espacio disponible */
+                                        }} 
+                                    >
+                                        {buttonForm === 'Actualizar' ? 'Actualizar Siembra' : 'Registrar Siembra'}
+                                    </h5>
+                                    <button 
+                                        type="button" 
+                                        className="btn-close" 
+                                        onClick={closeModal} 
+                                        aria-label="Close" 
+                                        style={{ position: 'absolute', right: '35px' }} /* Ajusta la posición del botón */
+                                    ></button>
+                                </div>
                                 <div className="modal-body">
                                     <FormSiembra
                                         buttonForm={buttonForm}

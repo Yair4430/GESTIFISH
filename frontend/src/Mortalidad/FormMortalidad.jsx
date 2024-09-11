@@ -101,12 +101,12 @@ const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllM
 
     return (
         <>
-            <div className="card">
-                <div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
+
+                {/*<div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
                     <h1 className="text-center">
                         {buttonForm === 'Actualizar' ? 'Actualizar Mortalidad' : 'Registrar Mortalidad'}
                     </h1>
-                </div>
+                </div>*/}
                 <div className="card-body">
                     <form id="mortalidadForm" onSubmit={sendForm} className="fw-bold m-2">
                         <div className="row mb-3">
@@ -166,7 +166,6 @@ const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllM
                         </div>
                     </form>
                 </div>
-            </div>
         </>
     );
     

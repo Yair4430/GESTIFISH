@@ -124,12 +124,11 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
 
     return (
         <>
-            <div className="card">
-                <div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
+                {/*<div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
                     <h1 className="text-center">
                         {buttonForm === 'Actualizar' ? 'Actualizar Cosecha' : 'Registrar Cosecha'}
                     </h1>
-                </div>
+                </div>*/}
                 <div className="card-body">
                     <form id="cosechaForm" onSubmit={sendForm} className="fw-bold m-2">
                         <div className="row mb-3">
@@ -223,7 +222,6 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
                         </div>
                     </form>
                 </div>
-            </div>
         </>
     );
     

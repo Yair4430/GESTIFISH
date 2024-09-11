@@ -91,12 +91,11 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
 
     return (
         <>
-            <div className="card">
-                <div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
+                {/*<div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
                     <h1 className="text-center">
                         {buttonForm === 'Actualizar' ? 'Actualizar Traslado' : 'Registrar Traslado'}
                     </h1>
-                </div>
+                </div>*/}
                 <div className="card-body">
                     <form id="trasladoForm" onSubmit={sendForm} className="fw-bold m-2">
                         <div className="row mb-3">
@@ -149,7 +148,6 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
                         </div>
                     </form>
                 </div>
-            </div>
         </>
     );
 };

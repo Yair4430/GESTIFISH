@@ -110,13 +110,12 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
     }, [alimentacion]);
 
     return (
-      <>
-          <div className="card">
-              <div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
+        <>
+              {/*<div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
                   <h1 className="text-center">
                       {buttonForm === 'Actualizar' ? 'Actualizar Alimentación' : 'Registrar Alimentación'}
                   </h1>
-              </div>
+              </div>*/}
               <div className="card-body">
                   <form id="alimentacionForm" onSubmit={sendForm} className="fw-bold m-2">
                       <div className="row mb-3">
@@ -186,13 +185,12 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
                           </div>
                       </div>
                       <div className="text-center">
-                          <button type="submit" id="boton" className="btn btn-success btn-block m-2">
-                              {buttonForm}
-                          </button>
+                        <button type="submit" id="boton" className="btn btn-success btn-block m-2">
+                            {buttonForm}
+                        </button>
                       </div>
                   </form>
               </div>
-          </div>
       </>
   );
   
