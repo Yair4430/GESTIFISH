@@ -170,7 +170,7 @@ const CrudMortalidad = () => {
         <>
             <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
                 <button 
-                    className="btn btn-primary mb-4" 
+                    className="btn btn-success mb-4" 
                     onClick={handleAddClick}
                     style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
                     Agregar Mortalidad

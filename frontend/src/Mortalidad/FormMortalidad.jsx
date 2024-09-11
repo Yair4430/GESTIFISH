@@ -102,7 +102,7 @@ const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllM
     return (
         <>
             <div className="card">
-                <div className="card-header bg-primary text-white">
+                <div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
                     <h1 className="text-center">
                         {buttonForm === 'Actualizar' ? 'Actualizar Mortalidad' : 'Registrar Mortalidad'}
                     </h1>

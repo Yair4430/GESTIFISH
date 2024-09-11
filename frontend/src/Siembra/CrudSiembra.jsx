@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import WriteTable from '../Tables/Data-Tables.jsx'; // Asegúrate de tener este componente para la tabla de datos
-import FormSiembra from './FormSiembra'; // Asegúrate de tener este componente para el formulario de siembra
+import FormSiembra from './FormSiembra.jsx'; // Asegúrate de tener este componente para el formulario de siembra
 import jsPDF from 'jspdf';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/siembra/';
@@ -192,7 +192,7 @@ const CrudSiembra = () => {
         <>
             <div style={{ marginLeft: '-20px', paddingTop: '70px' }}>
                 <button 
-                    className="btn btn-primary mb-4" 
+                    className="btn btn-success mb-4" 
                     onClick={handleAddClick}
                     style={{ width: '140px', height: '45px', padding: '0px', fontSize: '16px', marginLeft: '300px' }}>
                     Agregar Siembra

@@ -88,7 +88,7 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
 
     return (
         <div className="card">
-            <div className="card-header bg-danger text-white">
+            <div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
                 <h1 className="text-center">
                     {buttonForm === 'Actualizar' ? 'Actualizar Especies' : 'Registrar Especies'}
                 </h1>
@@ -132,7 +132,7 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
                         </div>
                     </div>
                     <div className="text-center">
-                        <button type="submit" id="boton" className="btn btn-primary btn-block m-2">
+                        <button type="submit" id="boton" className="btn btn-success btn-block m-2">
                             {buttonForm}
                         </button>
                     </div>

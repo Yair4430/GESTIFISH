@@ -112,9 +112,9 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
     return (
         <>
             <div className="card">
-                <div className="card-header bg-success text-white">
+                <div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
                     <h1 className="text-center">
-                        {buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}
+                        {buttonForm === 'Actualizar' ? 'Actualizar Alimentación' : 'Registrar Alimentación'}
                     </h1>
                 </div>
                 <div className="card-body">
