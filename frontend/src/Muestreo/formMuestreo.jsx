@@ -114,77 +114,82 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
 
     return (
         <>
-        {/* <div className="container mt-5"> */}
-        {/* <div style={{ marginLeft: '300px', paddingTop: '70px' }}> */}
-
             <div className="card">
-                {/*<div className="card-header bg-primary text-white">
-                <h1 className="text-center">
-                            {buttonForm === 'Actualizar' ? 'Actualizar Muestreo' : 'Registrar Muestreo'}
-                        </h1>
-                </div>*/}
+                <div className="card-header bg-primary text-white">
+                    <h1 className="text-center">
+                        {buttonForm === 'Actualizar' ? 'Actualizar Muestreo' : 'Registrar Muestreo'}
+                    </h1>
+                </div>
                 <div className="card-body">
                     <form id="muestreoForm" onSubmit={sendForm} className="fw-bold m-2">
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Fec_Muestreo" className="col-sm-5 col-form-label text-end">Fecha de Muestreo:</label>
-                            <div className="col-sm-4">
-                                <input className="form-control" type="date" id="Fec_Muestreo" value={Fec_Muestreo} onChange={(e) => setFec_Muestreo(e.target.value)} required />
+                        <div className="row mb-3">
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="Fec_Muestreo" className="form-label">Fecha de Muestreo:</label>
+                                    <input className="form-control" type="date" id="Fec_Muestreo" value={Fec_Muestreo} onChange={(e) => setFec_Muestreo(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="Num_Peces" className="form-label">Número de Peces:</label>
+                                    <input className="form-control" type="number" id="Num_Peces" value={Num_Peces} onChange={(e) => setNum_Peces(e.target.value)} required />
+                                </div>
                             </div>
                         </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Num_Peces" className="col-sm-5 col-form-label text-end">Número de Peces:</label>
-                            <div className="col-sm-4">
-                                <input className="form-control" type="number" id="Num_Peces" value={Num_Peces} onChange={(e) => setNum_Peces(e.target.value)} required />
+                        <div className="row mb-3">
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="Obs_Muestreo" className="form-label">Observaciones:</label>
+                                    <input className="form-control" type="text" id="Obs_Muestreo" value={Obs_Muestreo} onChange={(e) => setObs_Muestreo(e.target.value)} />
+                                </div>
+                            </div>
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="Pes_Esperado" className="form-label">Peso Esperado:</label>
+                                    <input className="form-control" type="number" id="Pes_Esperado" value={Pes_Esperado} onChange={(e) => setPes_Esperado(e.target.value)} required />
+                                </div>
                             </div>
                         </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Obs_Muestreo" className="col-sm-5 col-form-label text-end">Observaciones:</label>
-                            <div className="col-sm-4">
-                                <input className="form-control" type="text" id="Obs_Muestreo" value={Obs_Muestreo} onChange={(e) => setObs_Muestreo(e.target.value)} />
+                        <div className="row mb-3">
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="Id_SiembraSelect" className="form-label">Fecha Siembra:</label>
+                                    <select className="form-control" id="Id_SiembraSelect" value={Id_Siembra} onChange={(e) => setId_Siembra(e.target.value)} required>
+                                        <option value="">Selecciona uno...</option>
+                                        {DatosSiembra.map((siembra) => (
+                                            <option key={siembra.Id_Siembra} value={siembra.Id_Siembra}>
+                                                {siembra.Fec_Siembra}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="Id_ResponsableSelect" className="form-label">Nombre Responsable:</label>
+                                    <select className="form-control" id="Id_ResponsableSelect" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)} required>
+                                        <option value="">Selecciona uno...</option>
+                                        {DatosResponsable.map((responsable) => (
+                                            <option key={responsable.Id_Responsable} value={responsable.Id_Responsable}>
+                                                {responsable.Nom_Responsable}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Pes_Esperado" className="col-sm-5 col-form-label text-end">Peso Esperado:</label>
-                            <div className="col-sm-4">
-                                <input className="form-control" type="number" id="Pes_Esperado" value={Pes_Esperado} onChange={(e) => setPes_Esperado(e.target.value)} required />
+                        <div className="row mb-3">
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="Hor_Muestreo" className="form-label">Hora de Muestreo:</label>
+                                    <input className="form-control" type="time" id="Hor_Muestreo" value={Hor_Muestreo} onChange={(e) => setHor_Muestreo(e.target.value)} />
+                                </div>
                             </div>
-                        </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Id_SiembraSelect" className="col-sm-5 col-form-label text-end">Fecha Siembra:</label>
-                            <div className="col-sm-4">
-                                <select className="form-control" id="Id_SiembraSelect" value={Id_Siembra} onChange={(e) => setId_Siembra(e.target.value)} required>
-                                    <option value="">Selecciona uno...</option>
-                                    {DatosSiembra.map((siembra) => (
-                                        <option key={siembra.Id_Siembra} value={siembra.Id_Siembra}>
-                                            {siembra.Fec_Siembra}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Id_ResponsableSelect" className="col-sm-5 col-form-label text-end">Nombre Responsable:</label>
-                            <div className="col-sm-4">
-                                <select className="form-control" id="Id_ResponsableSelect" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)} required>
-                                    <option value="">Selecciona uno...</option>
-                                    {DatosResponsable.map((responsable) => (
-                                        <option key={responsable.Id_Responsable} value={responsable.Id_Responsable}>
-                                            {responsable.Nom_Responsable}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Hor_Muestreo" className="col-sm-5 col-form-label text-end">Hora de Muestreo:</label>
-                            <div className="col-sm-4">
-                                <input className="form-control" type="time" id="Hor_Muestreo" value={Hor_Muestreo} onChange={(e) => setHor_Muestreo(e.target.value)} />
-                            </div>
-                        </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Pes_Promedio" className="col-sm-5 col-form-label text-end">Peso Promedio:</label>
-                            <div className="col-sm-4">
-                                <input className="form-control" type="number" id="Pes_Promedio" value={Pes_Promedio} onChange={(e) => setPes_Promedio(e.target.value)} />
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="Pes_Promedio" className="form-label">Peso Promedio:</label>
+                                    <input className="form-control" type="number" id="Pes_Promedio" value={Pes_Promedio} onChange={(e) => setPes_Promedio(e.target.value)} />
+                                </div>
                             </div>
                         </div>
                         <div className="text-center">
@@ -195,10 +200,9 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                     </form>
                 </div>
             </div>
-        {/* </div> */}
-    </>
-
-);
+        </>
+    );
+    
 };
 
 export default FormMuestreo;
