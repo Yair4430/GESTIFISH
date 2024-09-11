@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
-
 const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllActividad, }) => {
     const [Id_Actividad, setId_Actividad] = useState('');
     const [Nom_Actividad, setNom_Actividad] = useState('');
@@ -128,11 +127,11 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
          {/* <div style={{ marginLeft: '300px', paddingTop: '70px' }}> */}
 
                 <div className="card">
-                    <div className="card-header bg-primary text-white">
+                   {/* <div className="card-header bg-primary text-white">
                         <h1 className="text-center">
                             {buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}
                         </h1>
-                    </div>
+                    </div>*/}
                     <div className="card-body">
                         <form id="actividadForm" onSubmit={sendFormA} className="fw-bold m-2">
                             <div className="form-group row mb-3 gap-1 align-items-center">

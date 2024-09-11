@@ -95,11 +95,11 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
         {/* <div style={{ marginLeft: '300px', paddingTop: '70px' }}> */}
 
             <div className="card">
-                <div className="card-header bg-primary text-white">
+                {/*<div className="card-header bg-primary text-white">
                 <h1 className="text-center">
                             {buttonForm === 'Actualizar' ? 'Actualizar Traslado' : 'Registrar Traslado'}
                         </h1>
-                </div>
+                </div>*/}
                 <div className="card-body">
                     <form id="trasladoForm" onSubmit={sendForm} className="fw-bold m-2">
                         <div className="form-group row mb-3 gap-1 align-items-center">

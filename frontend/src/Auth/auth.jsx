@@ -93,6 +93,9 @@ const Auth = () => {
     return (
         <>
             {/* <BarraNavegacionPublica /> */}
+            <br />
+            <br />
+            <br />
             <div className="auth-container">
                 <div className={`auth-content ${isSignUpActive ? 'sign-up-mode' : ''}`}>
                     <div className="auth-left">

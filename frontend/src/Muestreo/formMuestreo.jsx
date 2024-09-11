@@ -118,11 +118,11 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
         {/* <div style={{ marginLeft: '300px', paddingTop: '70px' }}> */}
 
             <div className="card">
-                <div className="card-header bg-primary text-white">
+                {/*<div className="card-header bg-primary text-white">
                 <h1 className="text-center">
                             {buttonForm === 'Actualizar' ? 'Actualizar Muestreo' : 'Registrar Muestreo'}
                         </h1>
-                </div>
+                </div>*/}
                 <div className="card-body">
                     <form id="muestreoForm" onSubmit={sendForm} className="fw-bold m-2">
                         <div className="form-group row mb-3 gap-1 align-items-center">

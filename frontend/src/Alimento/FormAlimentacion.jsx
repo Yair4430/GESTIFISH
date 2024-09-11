@@ -116,10 +116,10 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
 
 
             <div className="card">
-                <div className="card-header bg-primary text-white">
-                <h1 className="text-center">
-                            {buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}
-                        </h1>
+                <div className="">
+                {/* <h1 className="text-center">
+                            {buttonForm === 'Actualizar' ? 'Actualizar Alimentacion' : 'Registrar Alimentacion'}
+                        </h1> */}
                 </div>
                 <div className="card-body">
                     <form id="alimentacionForm" onSubmit={sendForm} className="fw-bold m-2">
@@ -183,9 +183,9 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
                             </div>
                         </div>
                         <div className="text-center">
-                            <button type="submit" id="boton" className="btn btn-success btn-block m-2">
-                                {buttonForm}
-                            </button>
+                                <button type="submit" id="boton" className="btn btn-primary btn-block m-2">
+                                    {buttonForm}
+                                </button>
                         </div>
                     </form>
                 </div>

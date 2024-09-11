@@ -1,8 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import $ from "jquery";
 import "datatables.net-dt";
+import "datatables.net-bs5";  // DataTables integrado con Bootstrap 5
 import "datatables.net-responsive-dt";
+import "datatables.net-responsive-bs5";  // DataTables responsive para Bootstrap 5
 import "./Data-Tables.css";
+import "datatables.net-bs5/css/dataTables.bootstrap5.min.css"; // Estilos CSS para DataTables con Bootstrap 5
 import Sidebar from '../home/Sidebar.jsx';
 
 function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
@@ -19,7 +22,7 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
     const table = $table.DataTable({
       responsive: true,
       lengthChange: false,
-      pageLength: 10,
+      pageLength: 5,
       data: data,
       columns: titles.map((title, index) => ({
         title,
@@ -35,7 +38,20 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
         infoFiltered: "(filtrado de MAX registros en total)",
         lengthMenu: "Mostrar MENU registros por página"
       },
+      dom: "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+          "<'row'<'col-sm-12'tr>>" +
+          "<'row'<'col-sm-5'i><'col-sm-7'p>>",  // Estructura de Bootstrap
+      
       drawCallback: function () {
+        $(".dataTables_filter input")
+          .addClass("form-control me-2") // Añade clases de Bootstrap
+          .attr("placeholder", "Buscar")
+          .css({ display: "inline-block", width: "auto" }); // Ajusta el estilo del input
+
+          
+        $(".dataTables_paginate .paginate_button").addClass("btn btn-sm btn-outline-primary mx-1");
+        $(".dataTables_paginate .paginate_button.current").addClass("active");
+
         $table.find('.btn-edit').off('click').on('click', function () {
           const id = $(this).data('id');
           onEditClick(id);
