@@ -115,7 +115,7 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
     return (
         <>
             <div className="card">
-                <div className="card-header bg-primary text-white">
+                <div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
                     <h1 className="text-center">
                         {buttonForm === 'Actualizar' ? 'Actualizar Muestreo' : 'Registrar Muestreo'}
                     </h1>
@@ -204,5 +204,6 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
     );
     
 };
+
 
 export default FormMuestreo;

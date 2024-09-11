@@ -139,9 +139,10 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
         }
     }, [siembra]);
 
+
     return (
         <div className="card">
-            <div className="card-header bg-primary text-white">
+            <div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
                 <h1 className="text-center">
                     {buttonForm === 'Actualizar' ? 'Actualizar Siembra' : 'Registrar Siembra'}
                 </h1>
@@ -248,7 +249,7 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                         </div>
                     </div>
                     <div className="d-grid gap-2">
-                        <button type="submit" className="btn btn-primary">{buttonForm}</button>
+                        <button type="submit" className="btn btn-success">{buttonForm}</button>
                     </div>
                 </form>
             </div>

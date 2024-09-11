@@ -110,91 +110,92 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
     }, [alimentacion]);
 
     return (
-        <>
-            <div className="card">
-                <div className="card-header bg-success text-white">
-                    <h1 className="text-center">
-                        {buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}
-                    </h1>
-                </div>
-                <div className="card-body">
-                    <form id="alimentacionForm" onSubmit={sendForm} className="fw-bold m-2">
-                        <div className="row mb-3">
-                            <div className="col-md-6">
-                                <div className="form-group mb-3">
-                                    <label htmlFor="Fec_Alimentacion" className="form-label">Fecha de Alimentación:</label>
-                                    <input className="form-control" type="date" id="Fec_Alimentacion" value={Fec_Alimentacion} onChange={(e) => setFec_Alimentacion(e.target.value)} required />
-                                </div>
-                            </div>
-                            <div className="col-md-6">
-                                <div className="form-group mb-3">
-                                    <label htmlFor="Can_RacionKg" className="form-label">Cantidad de Ración (Kg):</label>
-                                    <input className="form-control" type="number" id="Can_RacionKg" value={Can_RacionKg} onChange={(e) => setCan_RacionKg(e.target.value)} required />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row mb-3">
-                            <div className="col-md-6">
-                                <div className="form-group mb-3">
-                                    <label htmlFor="Tip_Alimento" className="form-label">Tipo de Alimento:</label>
-                                    <select className="form-control" id="Tip_Alimento" value={Tip_Alimento} onChange={(e) => setTip_Alimento(e.target.value)} required>
-                                        <option value="">Selecciona uno...</option>
-                                        <option value="Concentrado">Concentrado</option>
-                                        <option value="Sal">Sal</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="col-md-6">
-                                <div className="form-group mb-3">
-                                    <label htmlFor="Hor_Alimentacion" className="form-label">Hora de Alimentación:</label>
-                                    <input className="form-control" type="time" id="Hor_Alimentacion" value={Hor_Alimentacion} onChange={(e) => setHor_Alimentacion(e.target.value)} required />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row mb-3">
-                            <div className="col-md-6">
-                                <div className="form-group mb-3">
-                                    <label htmlFor="Vlr_Alimentacion" className="form-label">Valor de Alimentación:</label>
-                                    <input className="form-control" type="number" id="Vlr_Alimentacion" value={Vlr_Alimentacion} onChange={(e) => setVlr_Alimentacion(e.target.value)} required />
-                                </div>
-                            </div>
-                            <div className="col-md-6">
-                                <div className="form-group mb-3">
-                                    <label htmlFor="Id_SiembraSelect" className="form-label">Fecha Siembra:</label>
-                                    <select className="form-control" id="Id_SiembraSelect" value={Id_Siembra} onChange={(e) => setId_Siembra(e.target.value)} required>
-                                        <option value="">Selecciona uno...</option>
-                                        {DatosSiembra.map((siembra) => (
-                                            <option key={siembra.Id_Siembra} value={siembra.Id_Siembra}> {siembra.Fec_Siembra}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row mb-3">
-                            <div className="col-md-6">
-                                <div className="form-group mb-3">
-                                    <label htmlFor="Id_ResponsableSelect" className="form-label">Nombre Responsable:</label>
-                                    <select className="form-control" id="Id_ResponsableSelect" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)} required>
-                                        <option value="">Selecciona uno...</option>
-                                        {DatosResponsable.map((responsable) => (
-                                            <option key={responsable.Id_Responsable} value={responsable.Id_Responsable}>
-                                                {responsable.Nom_Responsable}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="text-center">
-                            <button type="submit" id="boton" className="btn btn-success btn-block m-2">
-                                {buttonForm}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </>
-    );
+      <>
+          <div className="card">
+              <div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
+                  <h1 className="text-center">
+                      {buttonForm === 'Actualizar' ? 'Actualizar Alimentación' : 'Registrar Alimentación'}
+                  </h1>
+              </div>
+              <div className="card-body">
+                  <form id="alimentacionForm" onSubmit={sendForm} className="fw-bold m-2">
+                      <div className="row mb-3">
+                          <div className="col-md-6">
+                              <div className="form-group mb-3">
+                                  <label htmlFor="Fec_Alimentacion" className="form-label">Fecha de Alimentación:</label>
+                                  <input className="form-control" type="date" id="Fec_Alimentacion" value={Fec_Alimentacion} onChange={(e) => setFec_Alimentacion(e.target.value)} required />
+                              </div>
+                          </div>
+                          <div className="col-md-6">
+                              <div className="form-group mb-3">
+                                  <label htmlFor="Can_RacionKg" className="form-label">Cantidad de Ración (Kg):</label>
+                                  <input className="form-control" type="number" id="Can_RacionKg" value={Can_RacionKg} onChange={(e) => setCan_RacionKg(e.target.value)} required />
+                              </div>
+                          </div>
+                      </div>
+                      <div className="row mb-3">
+                          <div className="col-md-6">
+                              <div className="form-group mb-3">
+                                  <label htmlFor="Tip_Alimento" className="form-label">Tipo de Alimento:</label>
+                                  <select className="form-control" id="Tip_Alimento" value={Tip_Alimento} onChange={(e) => setTip_Alimento(e.target.value)} required>
+                                      <option value="">Selecciona uno...</option>
+                                      <option value="Concentrado">Concentrado</option>
+                                      <option value="Sal">Sal</option>
+                                  </select>
+                              </div>
+                          </div>
+                          <div className="col-md-6">
+                              <div className="form-group mb-3">
+                                  <label htmlFor="Hor_Alimentacion" className="form-label">Hora de Alimentación:</label>
+                                  <input className="form-control" type="time" id="Hor_Alimentacion" value={Hor_Alimentacion} onChange={(e) => setHor_Alimentacion(e.target.value)} required />
+                              </div>
+                          </div>
+                      </div>
+                      <div className="row mb-3">
+                          <div className="col-md-6">
+                              <div className="form-group mb-3">
+                                  <label htmlFor="Vlr_Alimentacion" className="form-label">Valor de Alimentación:</label>
+                                  <input className="form-control" type="number" id="Vlr_Alimentacion" value={Vlr_Alimentacion} onChange={(e) => setVlr_Alimentacion(e.target.value)} required />
+                              </div>
+                          </div>
+                          <div className="col-md-6">
+                              <div className="form-group mb-3">
+                                  <label htmlFor="Id_SiembraSelect" className="form-label">Fecha Siembra:</label>
+                                  <select className="form-control" id="Id_SiembraSelect" value={Id_Siembra} onChange={(e) => setId_Siembra(e.target.value)} required>
+                                      <option value="">Selecciona uno...</option>
+                                      {DatosSiembra.map((siembra) => (
+                                          <option key={siembra.Id_Siembra} value={siembra.Id_Siembra}> {siembra.Fec_Siembra}</option>
+                                      ))}
+                                  </select>
+                              </div>
+                          </div>
+                      </div>
+                      <div className="row mb-3">
+                          <div className="col-md-6">
+                              <div className="form-group mb-3">
+                                  <label htmlFor="Id_ResponsableSelect" className="form-label">Nombre Responsable:</label>
+                                  <select className="form-control" id="Id_ResponsableSelect" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)} required>
+                                      <option value="">Selecciona uno...</option>
+                                      {DatosResponsable.map((responsable) => (
+                                          <option key={responsable.Id_Responsable} value={responsable.Id_Responsable}>
+                                              {responsable.Nom_Responsable}
+                                          </option>
+                                      ))}
+                                  </select>
+                              </div>
+                          </div>
+                      </div>
+                      <div className="text-center">
+                          <button type="submit" id="boton" className="btn btn-success btn-block m-2">
+                              {buttonForm}
+                          </button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </>
+  );
+  
 };
 
 export default FormAlimentacion;

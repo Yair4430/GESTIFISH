@@ -92,7 +92,7 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
     return (
         <>
             <div className="card">
-                <div className="card-header bg-primary text-white">
+                <div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
                     <h1 className="text-center">
                         {buttonForm === 'Actualizar' ? 'Actualizar Traslado' : 'Registrar Traslado'}
                     </h1>
@@ -152,8 +152,6 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
             </div>
         </>
     );
-    
-    
 };
 
 export default FormTraslado;
