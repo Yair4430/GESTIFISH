@@ -207,22 +207,22 @@ const CrudTraslado = () => {
 
     return (
         <>
-            <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
+            <div style={{ marginLeft: '304px', paddingTop: '100px' }}>
                 {/* Botón para agregar */}
                 <button
-                    className="btn btn-primary mb-4 d-flex align-items-center justify-content-center"
+                    className="btn btn-success mb-4 d-flex align-items-center justify-content-center"
                     onClick={handleAddClick}
                     style={{ width: '115px', height: '45px', fontSize: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                 >
-                       <span
-                            style={{
-                                fontSize: '30px',
-                                marginRight: '8px',
-                                lineHeight: '1',
-                                position: 'relative',
-                                top: '-3px' // Ajusta el valor para subir o bajar el símbolo
-                            }}
-                        > + </span>
+                    <span
+                        style={{
+                            fontSize: '30px',
+                            marginRight: '8px',
+                            lineHeight: '1',
+                            position: 'relative',
+                            top: '-3px' // Ajusta el valor para subir o bajar el símbolo
+                        }}
+                    > + </span>
                     Agregar
                 </button>
             </div>

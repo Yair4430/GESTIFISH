@@ -257,25 +257,26 @@ const CrudCosecha = () => {
 
     return (
         <>
-            <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
+            <div style={{ marginLeft: '304px', paddingTop: '100px' }}>
                 {/* Botón para agregar */}
                 <button
-                    className="btn btn-primary mb-4 d-flex align-items-center justify-content-center"
+                    className="btn btn-success mb-4 d-flex align-items-center justify-content-center"
                     onClick={handleAddClick}
                     style={{ width: '115px', height: '45px', fontSize: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                 >
-                       <span
-                            style={{
-                                fontSize: '30px',
-                                marginRight: '8px',
-                                lineHeight: '1',
-                                position: 'relative',
-                                top: '-3px' // Ajusta el valor para subir o bajar el símbolo
-                            }}
-                        > + </span>
+                    <span
+                        style={{
+                            fontSize: '30px',
+                            marginRight: '8px',
+                            lineHeight: '1',
+                            position: 'relative',
+                            top: '-3px' // Ajusta el valor para subir o bajar el símbolo
+                        }}
+                    > + </span>
                     Agregar
                 </button>
-                </div>
+            </div>
+            
                 <div style={{ position: 'relative', width: '100%', height: 'auto' }}>
                     <div style={{ 
                             display: 'flex', 
@@ -329,29 +330,10 @@ const CrudCosecha = () => {
                 <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
                     <div className="modal-dialog modal-lg">
                         <div className="modal-content border-0"> {/* Elimina el borde */}
-                            <div 
-                                className="modal-header" 
-                                style={{ 
-                                    backgroundColor: buttonForm === 'Actualizar' ? '#6c757d' : '#28a745', // Gris para 'Actualizar', Verde para 'Registrar'
-                                    padding: '15px',
-                                    borderRadius: '10px 10px 0 0' // Esquinas redondeadas para el modal-header
-                                }}
-                            >
-                                <h5 
-                                    className="modal-title" 
-                                    id="modalFormLabel" 
-                                    style={{
-                                        color: '#ffffff', // Color blanco para el texto
-                                        fontWeight: 'bold', // Negrita
-                                        fontSize: '1.5rem', // Tamaño de fuente más grande
-                                        letterSpacing: '1px', // Espaciado entre letras
-                                        margin: '0' // Elimina márgenes
-                                    }}
-                                >
-                                    {buttonForm === 'Actualizar' ? 'Actualizar Cosecha' : 'Registrar Cosecha'}
-                                </h5>
+                        <div className="modal-header">
+                                {/*<h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Alimentacion' : 'Registrar Alimentacion'}</h5>*/}
                                 <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
-                            </div>
+                         </div>
                             <div className="modal-body">
                                 <FormCosecha
                                     buttonForm={buttonForm}

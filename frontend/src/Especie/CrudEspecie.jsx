@@ -235,25 +235,26 @@ const CrudEspecie = () => {
     ];
     return (
         <>
-            <div style={{ marginLeft: '320px', paddingTop: '100px' }} >
-                 {/* Botón para agregar */}
-                 <button
-                    className="btn btn-primary mb-4 d-flex align-items-center justify-content-center"
+            <div style={{ marginLeft: '304px', paddingTop: '100px' }}>
+                {/* Botón para agregar */}
+                <button
+                    className="btn btn-success mb-4 d-flex align-items-center justify-content-center"
                     onClick={handleAddClick}
                     style={{ width: '115px', height: '45px', fontSize: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                 >
-                       <span
-                            style={{
-                                fontSize: '30px',
-                                marginRight: '8px',
-                                lineHeight: '1',
-                                position: 'relative',
-                                top: '-3px' // Ajusta el valor para subir o bajar el símbolo
-                            }}
-                        > + </span>
+                    <span
+                        style={{
+                            fontSize: '30px',
+                            marginRight: '8px',
+                            lineHeight: '1',
+                            position: 'relative',
+                            top: '-3px' // Ajusta el valor para subir o bajar el símbolo
+                        }}
+                    > + </span>
                     Agregar
                 </button>
-                </div>
+            </div>
+            
                 <div style={{ position: 'relative', width: '100%', height: 'auto' }}>
                     <div style={{ 
                             display: 'flex', 
@@ -308,7 +309,7 @@ const CrudEspecie = () => {
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Especie' : 'Registrar Especie'}</h5>
+                                {/*<h5 className="modal-title" id="modalFormLabel">{buttonForm === 'Actualizar' ? 'Actualizar Especie' : 'Registrar Especie'}</h5>*/}
                                 <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
                             </div>
                                 <div className="modal-body">

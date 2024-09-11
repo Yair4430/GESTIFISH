@@ -87,57 +87,58 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
     }, [especie]);
 
     return (
-        // <div className="container mt-5">
-        // <div style={{ marginLeft: '300px', paddingTop: '70px' }}>
-
-            <div className="card">
-                {/*<div className="card-header bg-primary text-white">
+        <div className="card">
+            <div className="card-header bg-danger text-white">
                 <h1 className="text-center">
-                            {buttonForm === 'Actualizar' ? 'Actualizar Especies' : 'Registrar Especies'}
-                        </h1>
-                </div>*/}
-                <div className="card-body">
-                    <form id="especieForm" onSubmit={sendForm} className="fw-bold m-2 form-no-hover">
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Nom_Especie" className="col-sm-5 col-form-label text-end">Nombre de la Especie:</label>
-                            <div className="col-sm-4">
+                    {buttonForm === 'Actualizar' ? 'Actualizar Especies' : 'Registrar Especies'}
+                </h1>
+            </div>
+            <div className="card-body">
+                <form id="especieForm" onSubmit={sendForm} className="fw-bold m-2 form-no-hover">
+                    <div className="row mb-3">
+                        <div className="col-md-6">
+                            <div className="form-group">
+                                <label htmlFor="Nom_Especie" className="form-label">Nombre de la Especie:</label>
                                 <input className="form-control" type="text" id="Nom_Especie" value={Nom_Especie} onChange={(e) => setNom_Especie(e.target.value)} required />
                             </div>
                         </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Car_Especie" className="col-sm-5 col-form-label text-end">Características de la Especie:</label>
-                            <div className="col-sm-4">
+                        <div className="col-md-6">
+                            <div className="form-group">
+                                <label htmlFor="Car_Especie" className="form-label">Características de la Especie:</label>
                                 <input className="form-control" type="text" id="Car_Especie" value={Car_Especie} onChange={(e) => setCar_Especie(e.target.value)} required />
                             </div>
                         </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Img_Especie" className="col-sm-5 col-form-label text-end">Imagen:</label>
-                            <div className="col-sm-4">
+                    </div>
+                    <div className="row mb-3">
+                        <div className="col-md-6">
+                            <div className="form-group">
+                                <label htmlFor="Img_Especie" className="form-label">Imagen:</label>
                                 <input className="form-control" type="file" id="Img_Especie" onChange={(e) => setImg_Especie(e.target.files[0])} ref={inputFoto} />
                             </div>
                         </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Tam_Promedio" className="col-sm-5 col-form-label text-end">Tamaño Promedio:</label>
-                            <div className="col-sm-4">
+                        <div className="col-md-6">
+                            <div className="form-group">
+                                <label htmlFor="Tam_Promedio" className="form-label">Tamaño Promedio:</label>
                                 <input className="form-control" type="number" id="Tam_Promedio" value={Tam_Promedio} onChange={(e) => setTam_Promedio(e.target.value)} required />
                             </div>
                         </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Den_Especie" className="col-sm-5 col-form-label text-end">Densidad de la Especie:</label>
-                            <div className="col-sm-4">
+                    </div>
+                    <div className="row mb-3">
+                        <div className="col-md-6">
+                            <div className="form-group">
+                                <label htmlFor="Den_Especie" className="form-label">Densidad de la Especie:</label>
                                 <input className="form-control" type="text" id="Den_Especie" value={Den_Especie} onChange={(e) => setDen_Especie(e.target.value)} required />
                             </div>
                         </div>
-                        <div className="text-center">
-                            <button type="submit" id="boton" className="btn btn-primary btn-block m-2">
-                                {buttonForm}
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div className="text-center">
+                        <button type="submit" id="boton" className="btn btn-primary btn-block m-2">
+                            {buttonForm}
+                        </button>
+                    </div>
+                </form>
             </div>
-        // </div>
-
+        </div>
     );
 };
 

@@ -23,6 +23,7 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
       responsive: true,
       lengthChange: false,
       pageLength: 5,
+      ordering: false,  // Deshabilitar la ordenación para quitar las flechas
       data: data,
       columns: titles.map((title, index) => ({
         title,
