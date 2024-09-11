@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import db from './database/db.js';
 
 import routerResponsable from './routes/routerResponsable.js';
+// import RegisterForm from './components/RegisterForm'; // Ajusta la ruta según la ubicación
 import routerEstanque from './routes/routerEstanque.js';
 import routerEspecie from './routes/routerEspecie.js';
 import routerTraslado from './routes/routerTraslado.js';
@@ -41,6 +42,8 @@ app.use('/public/uploads', express.static('public/uploads'));
 app.use('/api', routerAuth);
 app.use('/api/auth', routerAuth);
 app.use('/auth', routerAuth);
+
+app.use(routerAuth);
 
 app.use('/alimentacion', routerAlimentacion);
 app.use('/responsable', routerResponsable);

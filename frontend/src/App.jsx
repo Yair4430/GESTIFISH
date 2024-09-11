@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import axios from 'axios';
 
-// Importaciones Formularios
+// // Importaciones Formularios
+// import RegisterForm from './Componentes/RegisterForm.jsx';
+
 import CrudAlimentacion from './Alimento/CrudAlimentacion.jsx';
 import CrudResponsable from './Responsables/CrudResponsable.jsx';
 import CrudEstanque from './Estanque/crudEstanque.jsx';
@@ -116,6 +118,7 @@ function App() {
             <Route path='/SimuladorPublico' element={<Simulador />} />
             <Route path='/auth' element={<Auth />} />
             <Route path='/reset-password' element={<ResetPassword />} />
+            {/* <Route path='/register' element={<RegisterForm />} /> Añade esta línea */}
           </Routes>
         </>
       )}

@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
-// import BarraNavegacionPublica from "../home/barraNavegacionPublica";
 import './auth.css';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/auth/';
@@ -18,10 +17,8 @@ const Auth = () => {
     const [resetPass, setResetPass] = useState(false);
     const [isSignUpActive, setIsSignUpActive] = useState(false);
 
-    // Validar que el nombre y apellido solo contengan letras y espacios
     const validateName = (name) => /^[a-zA-Z\s]+$/.test(name);
 
-    // Validar que el correo tenga un formato válido y que pertenezca a un dominio permitido
     const validateEmail = (email) => {
         const regex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|outlook\.com|hotmail\.com|soy\.sena\.edu\.co)$/;
         return regex.test(email);
@@ -31,14 +28,12 @@ const Auth = () => {
         e.preventDefault();
 
         if (buttonForm === 'Registrar') {
-            // Validación del nombre y apellido
             if (!validateName(Nom_Usuario) || !validateName(Ape_Usuario)) {
                 setMessageType('error');
                 setMessage('El nombre y los apellidos solo pueden contener letras y espacios');
                 return;
             }
 
-            // Validación del correo electrónico
             if (!validateEmail(Cor_Usuario)) {
                 setMessageType('error');
                 setMessage('Por favor ingrese un correo válido de los siguientes dominios: @gmail.com, @outlook.com, @hotmail.com, @soy.sena.edu.co');
@@ -60,9 +55,8 @@ const Auth = () => {
                 }
             } catch (error) {
                 if (error.response && error.response.status === 409) {
-                    // Suponiendo que el backend devuelve un 409 cuando el correo ya está registrado
                     setMessageType('error');
-                    setMessage('Ese correo que está registrando ya existe registrado en la base de datos');
+                    setMessage('Ese correo ya está registrado en la base de datos');
                 } else {
                     setMessageType('error');
                     setMessage('Hubo un error, por favor intenta nuevamente');
@@ -84,6 +78,20 @@ const Auth = () => {
         }
     };
 
+    const sendResetPasswordRequest = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`${URI}forgot-password`, { Cor_Usuario });
+            setMessageType('success');
+            setMessage('Se ha enviado un correo para restablecer la contraseña si el correo está registrado.');
+        } catch (error) {
+            console.error('Error al enviar el correo de restablecimiento:', error.response ? error.response.data : error.message);
+            setMessageType('error');
+            setMessage('Hubo un error al intentar enviar el correo de restablecimiento.');
+        }
+    };
+    
+
     const switchForm = (opcion) => {
         setSingnInOrLogIn(opcion);
         setButtonForm(opcion === 'signIn' ? 'Registrar' : 'Iniciar Sesion');
@@ -92,7 +100,6 @@ const Auth = () => {
 
     return (
         <>
-            {/* <BarraNavegacionPublica /> */}
             <div className="auth-container">
                 <div className={`auth-content ${isSignUpActive ? 'sign-up-mode' : ''}`}>
                     <div className="auth-left">
@@ -133,7 +140,7 @@ const Auth = () => {
                             </>
                         ) : (
                             <>
-                                <form>
+                                <form onSubmit={sendResetPasswordRequest}>
                                     <div className="form-group">
                                         <input type="email" placeholder="Correo electrónico" value={Cor_Usuario} onChange={(e) => setCor_Usuario(e.target.value)} required />
                                     </div>
@@ -157,8 +164,8 @@ const Auth = () => {
                         ) : (
                             <>
                                 <h2>¡Hola, Bienvenido a GestiFish!</h2>
-                                <p>Regístrate con tus datos personales para usar todas las funcionalidades de esta maravillosa herramienta digital</p>
-                                <button className="btn-signup" onClick={() => switchForm('signIn')}>REGÍSTRATE</button>
+                                <p>Regístrate para comenzar</p>
+                                <button className="btn-signup" onClick={() => switchForm('signIn')}>REGISTRAR</button>
                             </>
                         )}
                     </div>
@@ -166,6 +173,6 @@ const Auth = () => {
             </div>
         </>
     );
-}
+};
 
 export default Auth;

@@ -1,28 +1,39 @@
 import express from 'express';
-import { createUser, verifyToken, logInUser, getResetPassword, setNewPassword } from '../controllers/authController.js';
+import { createUser, verifyToken, logInUser, getResetPassword, setNewPassword, forgotPassword, updatePassword, resetPasswordHandler } from '../controllers/authController.js';
 import { check } from 'express-validator';
+import User from '../models/UsuarioModel.js'; // Asegúrate de que esta importación sea correcta
 
 const routerAuth = express.Router();
 
-routerAuth.post('/', 
+routerAuth.post('/forgot-password', forgotPassword);
+
+routerAuth.post('/register', 
     [
         check('email', 'por favor digite un email valido').isEmail(),
-        check('contraseña', 'por favor ingrese una contraseña con mas de 8 caracteres').isLength({ min: 8 })
+        check('contraseña', 'por favor ingrese una contraseña con mas de 8 caracteres').isLength({ min: 8 }),
+        check('Nom_Usuario', 'El nombre es obligatorio y solo puede contener letras y espacios').matches(/^[a-zA-Z\s]+$/),
+        check('Ape_Usuario', 'El apellido es obligatorio y solo puede contener letras y espacios').matches(/^[a-zA-Z\s]+$/),
+        check('Cor_Usuario', 'Por favor ingrese un correo válido').isEmail(),
+        check('Con_Usuario', 'La contraseña es obligatoria').exists()
     ], 
     createUser
 );
-//saca canas jajaja
+
 routerAuth.get('/verify', (req, res) => {
-    // Aquí debería ir la lógica para verificar el token
     res.status(200).send('Token Verified');
-  });
+});
+
 routerAuth.post('/login', logInUser);
-routerAuth.post('/request-password-reset', getResetPassword);
-routerAuth.post('/reset-password', setNewPassword);
+routerAuth.post('/reset-password', getResetPassword);
+routerAuth.post('/set-new-password', setNewPassword);
+
+routerAuth.post('/resetPassword', resetPasswordHandler);
+
+routerAuth.post('/update-password', updatePassword);
+
 routerAuth.get('/protected-route', verifyToken, (req, res) => {
     res.status(200).json({ message: 'Ruta protegida accesible' });
 });
-
 
 // Rutas protegidas
 routerAuth.get('/alimentacion', verifyToken, (req, res) => {
@@ -64,6 +75,5 @@ routerAuth.get('/muestreo', verifyToken, (req, res) => {
 routerAuth.get('/cosecha', verifyToken, (req, res) => {
     res.status(200).json({ message: 'Datos de cosecha' });
 });
-
 
 export default routerAuth;

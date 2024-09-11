@@ -1,15 +1,64 @@
-
 import bcryptjs from 'bcryptjs';
-import UsuarioModel from '../models/usuarioModel.js';
+import UsuarioModel from '../models/UsuarioModel.js';
 import jwt from 'jsonwebtoken';
 import { sendPassworResetEmail } from '../servicios/emailService.js';
 
-// Crear nuevo usuario
+export const forgotPassword = async (req, res) => {
+    const { Cor_Usuario } = req.body;
+
+    try {
+        // Generar token de restablecimiento
+        const tokenForPassword = jwt.sign(
+            { Cor_Usuario },
+            process.env.JWT_LLAVE,
+            { expiresIn: '1h' }
+        );
+
+        // URL del frontend
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+        const resetPasswordUrl = `${frontendUrl}/reset-password?token=${tokenForPassword}`;
+
+        // Enviar el correo
+        await sendPassworResetEmail(Cor_Usuario, resetPasswordUrl);
+
+        res.status(200).json({ message: 'Correo enviado para restablecer la contraseña si el correo está registrado.' });
+    } catch (error) {
+        console.error('Error al enviar el correo de restablecimiento:', error.message);
+        res.status(500).json({ message: 'Hubo un error al intentar enviar el correo de restablecimiento.' });
+    }
+};
+
+export const updatePassword = async (req, res) => {
+    const { tokenForPassword, newPassword } = req.body;
+
+    try {
+        // Verifica el token (este es un ejemplo; ajusta según tu implementación)
+        const decoded = jwt.verify(tokenForPassword, process.env.JWT_SECRET);
+
+        // Encuentra al usuario
+        const user = await User.findOne({ where: { id: decoded.userId } });
+
+        if (!user) {
+            return res.status(400).json({ message: 'Usuario no encontrado' });
+        }
+
+        // Encripta la nueva contraseña
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Actualiza la contraseña en la base de datos
+        user.password = hashedPassword;
+        await user.save();
+
+        res.status(200).json({ message: 'Contraseña actualizada exitosamente' });
+    } catch (error) {
+        res.status(400).json({ message: 'Token inválido o error en la actualización' });
+    }
+};
+
 export const createUser = async (req, res) => {
     try {
         const { Nom_Usuario, Ape_Usuario, Cor_Usuario, Con_Usuario } = req.body;
 
-        // Validar nombres y apellidos
         const nameRegex = /^[a-zA-Z\s]+$/;
 
         if (!nameRegex.test(Nom_Usuario)) {
@@ -20,14 +69,12 @@ export const createUser = async (req, res) => {
             return res.status(400).json({ message: 'El apellido solo puede contener letras y espacios' });
         }
 
-        // Verificar si el usuario ya existe
         let user = await UsuarioModel.findOne({ where: { Cor_Usuario } });
 
         if (user) {
             return res.status(400).json({ message: "El usuario ya existe" });
         }
 
-        // Crear nuevo usuario
         let passHash = await bcryptjs.hash(Con_Usuario, 8);
         const newUser = await UsuarioModel.create({
             Nom_Usuario,
@@ -36,15 +83,8 @@ export const createUser = async (req, res) => {
             Con_Usuario: passHash,
         });
 
-        // Encriptar el Cor_Usuario y Id_Usuario para el token
-        const encryptedEmail = await bcryptjs.hash(newUser.Cor_Usuario, 8);
-        const encryptedId = await bcryptjs.hash(newUser.Id_Usuario.toString(), 8);
-
-        console.log('Encrypted Email:', encryptedEmail);
-        console.log('Encrypted ID:', encryptedId);
-
         const tokenUser = jwt.sign(
-            { user: { Cor_Usuario: encryptedEmail, Id_Usuario: encryptedId } },
+            { user: { Cor_Usuario: newUser.Cor_Usuario, Id_Usuario: newUser.Id_Usuario } },
             process.env.JWT_LLAVE,
             { expiresIn: '1h' }
         );
@@ -56,7 +96,8 @@ export const createUser = async (req, res) => {
     }
 };
 
-// Iniciar sesión
+
+
 export const logInUser = async (req, res) => {
     try {
         const { Cor_Usuario, Con_Usuario } = req.body;
@@ -70,17 +111,10 @@ export const logInUser = async (req, res) => {
         const usuarioValido = await bcryptjs.compare(Con_Usuario, usuario.Con_Usuario);
 
         if (usuarioValido) {
-            // Encriptar el Cor_Usuario y Id_Usuario para el token
-            const encryptedEmail = await bcryptjs.hash(usuario.Cor_Usuario, 8);
-            const encryptedId = await bcryptjs.hash(usuario.Id_Usuario.toString(), 8);
-
-            console.log('Encrypted Email:', encryptedEmail);
-            console.log('Encrypted ID:', encryptedId);
-
             const token = jwt.sign(
-                { user: { Cor_Usuario: encryptedEmail, Id_Usuario: encryptedId } },
+                { user: { Cor_Usuario: usuario.Cor_Usuario, Id_Usuario: usuario.Id_Usuario } },
                 process.env.JWT_LLAVE,
-                { expiresIn: '1h' } // El token expira en 1 hora
+                { expiresIn: '1h' }
             );
 
             res.json({ tokenUser: token });
@@ -93,14 +127,11 @@ export const logInUser = async (req, res) => {
     }
 };
 
-
-// Verificar token
 export const verifyToken = async (req, res, next) => {
     const authorizationHeader = req.headers['authorization'];
-    
+
     if (authorizationHeader) {
         const token = authorizationHeader.split(' ')[1];
-        console.log('Token recibido:', token);
 
         if (!token) {
             return res.status(401).json({ message: 'Token no proporcionado' });
@@ -108,9 +139,8 @@ export const verifyToken = async (req, res, next) => {
 
         try {
             const decoded = jwt.verify(token, process.env.JWT_LLAVE);
-            console.log('Token decodificado:', decoded);
-            req.user = decoded; // Almacena los datos del usuario decodificado en `req.user`
-            next(); // Continúa con la ruta protegida
+            req.user = decoded;
+            next();
         } catch (error) {
             console.error('Error de verificación de token:', error);
             res.status(403).json({ message: 'Token inválido o expirado' });
@@ -120,7 +150,6 @@ export const verifyToken = async (req, res, next) => {
     }
 };
 
-// Restablecer contraseña
 export const getResetPassword = async (req, res) => {
     const { Cor_Usuario } = req.body;
     try {
@@ -131,7 +160,7 @@ export const getResetPassword = async (req, res) => {
         }
 
         const tokenForPassword = jwt.sign(
-            { user: { Id_Usuario: user.Id_Usuario, Nom_Usuario: user.Nom_Usuario, Ape_Usuario: user.Ape_Usuario, Cor_Usuario: user.Cor_Usuario } },
+            { user: { Id_Usuario: user.Id_Usuario } },
             process.env.JWT_LLAVE,
             { expiresIn: '1d' }
         );
@@ -143,13 +172,12 @@ export const getResetPassword = async (req, res) => {
     }
 };
 
-// Establecer nueva contraseña
 export const setNewPassword = async (req, res) => {
     const { tokenForPassword, newPassword } = req.body;
     try {
-        const decodificado = jwt.verify(tokenForPassword, process.env.JWT_LLAVE);
+        const decoded = jwt.verify(tokenForPassword, process.env.JWT_LLAVE);
 
-        const user = await UsuarioModel.findByPk(decodificado.user.Id_Usuario);
+        const user = await UsuarioModel.findByPk(decoded.user.Id_Usuario);
 
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
@@ -158,12 +186,35 @@ export const setNewPassword = async (req, res) => {
 
             await UsuarioModel.update(
                 { Con_Usuario: passHash },
-                { where: { Id_Usuario: decodificado.user.Id_Usuario } }
+                { where: { Id_Usuario: decoded.user.Id_Usuario } }
             );
 
             res.status(200).json({ message: 'Contraseña actualizada correctamente' });
         }
     } catch (error) {
         res.status(400).json({ message: 'Información inválida o el tiempo ha expirado' });
+    }
+};
+
+export const resetPasswordHandler = async (req, res) => {
+    const { id, newPassword } = req.body;
+
+    try {
+        // Encuentra al usuario por ID
+        const user = await UsuarioModel.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        // Actualiza la contraseña
+        user.password = newPassword; // Asegúrate de que la contraseña se encripte antes de guardar
+
+        await user.save();
+
+        res.status(200).json({ message: 'Contraseña actualizada exitosamente' });
+    } catch (error) {
+        console.error('Error en el servidor:', error);
+        res.status(500).json({ message: 'Error al actualizar la contraseña' });
     }
 };
