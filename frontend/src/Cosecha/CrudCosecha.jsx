@@ -257,26 +257,16 @@ const CrudCosecha = () => {
 
     return (
         <>
-            <div style={{ marginLeft: '304px', paddingTop: '100px' }}>
-                {/* Botón para agregar */}
-                <button
-                    className="btn btn-success mb-4 d-flex align-items-center justify-content-center"
-                    onClick={handleAddClick}
-                    style={{ width: '115px', height: '45px', fontSize: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                >
-                    <span
-                        style={{
-                            fontSize: '30px',
-                            marginRight: '8px',
-                            lineHeight: '1',
-                            position: 'relative',
-                            top: '-3px' // Ajusta el valor para subir o bajar el símbolo
-                        }}
-                    > + </span>
-                    Agregar
-                </button>
-            </div>
-            
+                <div style={{ marginLeft: '-680px', paddingTop: '50px' }}>
+                    {/* Ícono para agregar */}
+                    <a
+                        onClick={handleAddClick}
+                        style={{ fontSize: '44px', color: 'green', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                    >
+                        <i className="bi bi-plus-circle"></i>
+                    </a>
+                </div>
+                
                 <div style={{ position: 'relative', width: '100%', height: 'auto' }}>
                     <div style={{ 
                             display: 'flex', 

@@ -41,8 +41,9 @@ const Auth = () => {
             // Validación del correo electrónico
             if (!validateEmail(Cor_Usuario)) {
                 setMessageType('error');
-                setMessage('Por favor ingrese un correo válido de los siguientes dominios: @gmail.com, @outlook.com, @hotmail.com, @soy.sena.edu.co');
-                return;
+            setMessage('Ingrese un correo válido de los siguientes dominios: @gmail.com, @outlook.com, @hotmail.com, @soy.sena.edu.co');
+            setTimeout(() => { setMessage(''); }, 3000); // Ocultar después de 5 segundos
+            return;
             }
 
             try {
@@ -63,9 +64,12 @@ const Auth = () => {
                     // Suponiendo que el backend devuelve un 409 cuando el correo ya está registrado
                     setMessageType('error');
                     setMessage('Ese correo que está registrando ya existe registrado en la base de datos');
+                    setTimeout(() => { setMessage(''); }, 3000);
+
                 } else {
                     setMessageType('error');
-                    setMessage('Hubo un error, por favor intenta nuevamente');
+                    setMessage('Ese correo ya existe, intenta con otro.');
+                    setTimeout(() => { setMessage(''); }, 3000);
                 }
             }
         } else if (buttonForm === 'Iniciar Sesion') {
@@ -80,6 +84,7 @@ const Auth = () => {
             } catch (error) {
                 setMessageType('error');
                 setMessage('Las credenciales son incorrectas. Por favor, intenta nuevamente.');
+                setTimeout(() => { setMessage(''); }, 3000);
             }
         }
     };
@@ -88,22 +93,28 @@ const Auth = () => {
         setSingnInOrLogIn(opcion);
         setButtonForm(opcion === 'signIn' ? 'Registrar' : 'Iniciar Sesion');
         setIsSignUpActive(opcion === 'signIn');
+        setMessage('');  // Ocultar las alertas al cambiar de formulario
+        setMessageType('');  // Opcional, restablece el tipo de mensaje si es necesario
     };
-
+    
     return (
         <>
             {/* <BarraNavegacionPublica /> */}
             <br />
-            <br />
-            <br />
             <div className="auth-container">
+                <br />
                 <div className={`auth-content ${isSignUpActive ? 'sign-up-mode' : ''}`}>
+
+                    <br />
+                    <br />
                     <div className="auth-left">
                         <h3 className="bold-highlight">{singnInOrLogIn === 'signIn' ? 'Registrar' : 'Iniciar Sesión'}</h3>
                         {message && (
-                            <div className={`alert ${messageType === 'success' ? 'alert-success' : 'alert-danger'}`}>
-                                {message}
-                            </div>
+                            <div 
+                            className={`alert ${messageType === 'success' ? 'alert-success' : 'alert-danger'}`}
+                            style={{ width: '330px', margin: '15px auto', padding: '0px', textAlign: 'center' }}>
+                            {message}
+                        </div>
                         )}
                         {resetPass === false ? (
                             <>
