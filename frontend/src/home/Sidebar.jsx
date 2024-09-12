@@ -11,39 +11,39 @@ function Sidebar() {
   const sidebarStyle = {
     backgroundColor: '#ffffff',
     color: '#000000',
-    height: 'calc(115vh - 0px)', // Resta la altura de la barra de navegación
+    // height: 'calc(90vh - 0px)', // Resta la altura de la barra de navegación
     position: 'absolute', 
     top: '80px', // Ajusta para que comience después de la barra de navegación
-    left: '0',
-    width: '220px',
+    left: '-4px',
+    width: '190px',
     boxShadow: '4px 0 5px rgba(0, 0, 0, 0.1)',
     // zIndex: 1000, // Asegura que el sidebar se superponga sobre otros elementos
     overflowY: '0px', // Permite scroll en el sidebar si el contenido es largo
-    paddingTop: '6px'
+    paddingTop: '1px'
   };
 
   const sidebarMenuStyle = {
-    padding: '2px 0'
+    padding: '0px 0'
   };
 
   const navItemStyle = {
-    margin: '1px 0'
+    margin: '0px 0'
   };
 
   const getNavLinkStyle = ({ isActive }) => ({
     display: 'flex',
     alignItems: 'center',
-    padding: '17px 15px',
+    padding: '13px 13px',
     borderRadius: '6px',
     textDecoration: 'none',
     fontWeight: '600',
-    fontSize: '20px',
+    fontSize: '18px',
     color: '#000000',
   });
 
   const iconStyle = {
-    marginRight: '10px',
-    fontSize: '25px',
+    marginRight: '8px',
+    fontSize: '20px',
     color: '#007bff'
   };
 

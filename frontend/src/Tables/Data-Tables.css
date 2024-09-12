@@ -1,8 +1,8 @@
-.dt-search{
-  text-align: 0px;
-  margin-left: 220px;
-}
 
+input[type=search]{
+  margin-right: 34px;
+  margin-bottom: 15px;
+}
 /* Estilo para el contenedor que rodea la tabla */
 .table-container {
   display: flex;
@@ -10,29 +10,6 @@
   align-items: center;
   margin-bottom: 10px; /* Margen inferior para separar del contenido de la tabla */
 }
-
-/* Alineación de la barra de búsqueda */
-.dataTables_filter {
-  display: flex;
-  justify-content: flex-end; /* Alinea el campo de búsqueda a la derecha */
-  margin-right: 10px; /* Espaciado a la derecha */
-  margin-top: -50px; /* Ajusta la posición vertical para alinearlo con la tabla */
-}
-
-.dataTables_filter label {
-  display: flex;
-  align-items: center;
-}
-
-/* Ajusta el estilo del input de búsqueda */
-.dataTables_filter input {
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  padding: 5px 10px;
-  font-size: 14px;
-  width: 200px; /* Ajusta el ancho del campo de búsqueda */
-}
-
 
 /* Estilo para el contenedor de la tabla */
 .table-container {
