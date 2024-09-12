@@ -238,12 +238,12 @@ const CrudCosecha = () => {
         cosecha.Obs_Cosecha,
         cosecha.responsable.Nom_Responsable, // Aquí
         `
-          <button class='btn btn-primary align-middle btn-edit' data-id='${cosecha.Id_Cosecha}' onClick={handleAddClick}>
+          <a class='text-primary align-middle btn-edit' data-id='${cosecha.Id_Cosecha}' onClick={handleAddClick}>
             <i class="fa-solid fa-pen-to-square"></i> 
-          </button>
-          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${cosecha.Id_Cosecha}'>
+          </a>
+          <a class='text-danger align-middle m-1 btn-delete' data-id='${cosecha.Id_Cosecha}'>
             <i class="fa-solid fa-trash-can"></i> 
-          </button>
+          </a>
         
         `
     ]);

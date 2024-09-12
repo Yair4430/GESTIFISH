@@ -192,12 +192,12 @@ const CrudTraslado = () => {
         traslado.Obs_Traslado,
         traslado.Hor_Traslado,
         `
-          <button class='btn btn-primary align-middle btn-edit' data-id='${traslado.Id_Traslado}' onClick={handleAddClick}>
+          <a class='text-primary align-middle btn-edit' data-id='${traslado.Id_Traslado}' onClick={handleAddClick}>
             <i class="fa-solid fa-pen-to-square"></i> 
-          </button>
-          <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${traslado.Id_Traslado}'>
+          </a>
+          <a class='text-danger align-middle m-1 btn-delete' data-id='${traslado.Id_Traslado}'>
             <i class="fa-solid fa-trash-can"></i> 
-          </button>
+          </a>
       `
     ]);
 

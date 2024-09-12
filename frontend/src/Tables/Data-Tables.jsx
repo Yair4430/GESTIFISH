@@ -22,7 +22,7 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
     const table = $table.DataTable({
       responsive: true,
       lengthChange: false,
-      pageLength: 5,
+      pageLength: 10,
       ordering: false,  // Deshabilitar la ordenación para quitar las flechas
       data: data,
       columns: titles.map((title, index) => ({
@@ -34,7 +34,7 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
       language: {
         search: "",
         searchPlaceholder: "Buscar...",
-        info: "Página PAGE de PAGES",
+        info: " ",
         infoEmpty: "No hay registros disponibles",
         infoFiltered: "(filtrado de MAX registros en total)",
         lengthMenu: "Mostrar MENU registros por página"
@@ -96,11 +96,10 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css"
       />
       <Sidebar />
-      <div style={{ marginLeft: "300px", paddingTop: "30px" }}>
+      <div style={{ marginLeft: "300px", paddingTop: "30px", }}>
         <div className="table-container">
           <div className="dataTables_filter"></div>
         </div>
-
         <div style={{ textAlign: "center" }}>
           <table className="table table-responsive table-bordered" id="TableDinamic" ref={tableRef}>
             <thead>

@@ -215,12 +215,12 @@ const CrudMuestreo = () => {
         muestreo.Pes_Promedio,
 
         `
-        <button class='btn btn-primary align-middle btn-edit' data-id='${muestreo.Id_Muestreo}' onClick={handleAddClick}>
+        <a class='text-primary align-middle btn-edit' data-id='${muestreo.Id_Muestreo}' onClick={handleAddClick}>
           <i class="fa-solid fa-pen-to-square"></i> 
-        </button>
-        <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${muestreo.Id_Muestreo}'>
+        </a>
+        <a class='text-danger align-middle m-1 btn-delete' data-id='${muestreo.Id_Muestreo}'>
           <i class="fa-solid fa-trash-can"></i> 
-        </button>
+        </a>
       `
     ]);
 

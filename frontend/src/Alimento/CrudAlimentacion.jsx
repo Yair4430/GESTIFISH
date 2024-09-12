@@ -198,12 +198,12 @@ const CrudAlimentacion = () => {
         alimentacion.siembra.Fec_Siembra,
         alimentacion.responsable.Nom_Responsable,
         `
-            <button class='btn btn-primary align-middle btn-edit' data-id='${alimentacion.Id_Alimentacion}' onClick={handleAddClick}>
+            <a class='text-primary align-middle btn-edit' data-id='${alimentacion.Id_Alimentacion}' onClick={handleAddClick}>
             <i class="fa-solid fa-pen-to-square"></i> 
-            </button>
-            <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${alimentacion.Id_Alimentacion}'>
+            </a>
+            <a class='text-danger align-middle m-1 btn-delete' data-id='${alimentacion.Id_Alimentacion}'>
             <i class="fa-solid fa-trash-can"></i>
-            </button>
+            </a>
 
         `
     ]);

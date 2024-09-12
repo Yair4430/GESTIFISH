@@ -221,12 +221,12 @@ const CrudEspecie = () => {
             'No Image'
         ),
         `
-        <button class='btn btn-primary align-middle btn-edit' data-id='${especie.Id_Especie}' onClick={handleAddClick}>
+        <a class='text-primary align-middle btn-edit' data-id='${especie.Id_Especie}' onClick={handleAddClick}>
           <i class="fa-solid fa-pen-to-square"></i> 
-        </button>
-        <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${especie.Id_Especie}'>
+        </a>
+        <a class='text-danger align-middle m-1 btn-delete' data-id='${especie.Id_Especie}'>
           <i class="fa-solid fa-trash-can"></i> 
-        </button>
+        </a>
       `
     ]);
 

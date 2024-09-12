@@ -198,12 +198,12 @@ const CrudMortalidad = () => {
         mortalidad.siembra.Fec_Siembra,
         mortalidad.responsable.Nom_Responsable,
         `
-            <button class='btn btn-primary align-middle btn-edit' data-id='${mortalidad.Id_Mortalidad}' onClick={handleAddClick}>
+            <a class='text-primary align-middle btn-edit' data-id='${mortalidad.Id_Mortalidad}' onClick={handleAddClick}>
             <i class="fa-solid fa-pen-to-square"></i> 
-            </button>
-            <button class='btn btn-danger align-middle m-1 btn-delete' data-id='${mortalidad.Id_Mortalidad}'>
+            </a>
+            <a class='text-danger align-middle m-1 btn-delete' data-id='${mortalidad.Id_Mortalidad}'>
             <i class="fa-solid fa-trash-can"></i> 
-            </button>
+            </a>
 
         `
     ]);

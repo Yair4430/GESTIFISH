@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
-// import BarraNavegacionPublica from "../home/barraNavegacionPublica";
 import './auth.css';
 
 const URI = process.env.ROUTER_PRINCIPAL + '/auth/';
@@ -61,7 +60,6 @@ const Auth = () => {
                 }
             } catch (error) {
                 if (error.response && error.response.status === 409) {
-                    // Suponiendo que el backend devuelve un 409 cuando el correo ya está registrado
                     setMessageType('error');
                     setMessage('Ese correo que está registrando ya existe registrado en la base de datos');
                     setTimeout(() => { setMessage(''); }, 3000);
@@ -89,6 +87,19 @@ const Auth = () => {
         }
     };
 
+    const sendResetPasswordRequest = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`${URI}forgot-password`, { Cor_Usuario });
+            setMessageType('success');
+            setMessage('Se ha enviado un correo para restablecer la contraseña si el correo está registrado.');
+        } catch (error) {
+            console.error('Error al enviar el correo de restablecimiento:', error.response ? error.response.data : error.message);
+            setMessageType('error');
+            setMessage('Hubo un error al intentar enviar el correo de restablecimiento.');
+        }
+    };
+
     const switchForm = (opcion) => {
         setSingnInOrLogIn(opcion);
         setButtonForm(opcion === 'signIn' ? 'Registrar' : 'Iniciar Sesion');
@@ -104,7 +115,6 @@ const Auth = () => {
             <div className="auth-container">
                 <br />
                 <div className={`auth-content ${isSignUpActive ? 'sign-up-mode' : ''}`}>
-
                     <br />
                     <br />
                     <div className="auth-left">
@@ -147,7 +157,7 @@ const Auth = () => {
                             </>
                         ) : (
                             <>
-                                <form>
+                                <form onSubmit={sendResetPasswordRequest}>
                                     <div className="form-group">
                                         <input type="email" placeholder="Correo electrónico" value={Cor_Usuario} onChange={(e) => setCor_Usuario(e.target.value)} required />
                                     </div>

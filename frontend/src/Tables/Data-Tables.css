@@ -53,21 +53,22 @@
 
 /* Estilo para las cabeceras de la tabla */
 .table th {
-  font-size: 15px !important;
+  font-size: 13px !important;
   background-color: #d0d0d0 !important; /* Fondo gris medio para las cabeceras */
   color: #000000 !important; /* Texto negro */
   text-align: center !important;
-  padding: 10px !important;
+  padding: 8px !important;
   border: 1px solid #b0b0b0 !important; /* Borde gris oscuro */
   font-weight: bold !important;
 }
 
 /* Estilo para las celdas de la tabla */
 .table td {
-  font-size: 15px !important;
+  font-size: 14px !important;
   text-align: center !important;
-  padding: 10px !important;
+  padding: 1px !important;
   border: 1px solid #b0b0b0 !important; /* Borde gris oscuro */
+  white-space: nowrap;
 }
 
 /* Estilo para las filas alternas */
