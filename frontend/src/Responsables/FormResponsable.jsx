@@ -14,6 +14,22 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
     const sendFormR = async (e) => {
         e.preventDefault();
 
+        if (
+            Nom_Responsable === responsable.Nom_Responsable &&
+            Ape_Responsable === responsable.Ape_Responsable &&
+            Doc_Responsable === responsable.Doc_Responsable &&
+            Tip_Responsable === responsable.Tip_Responsable &&
+            Cor_Responsable === responsable.Cor_Responsable &&
+            Num_Responsable === responsable.Num_Responsable
+        ) {
+            Swal.fire({
+                title: 'Sin cambios',
+                text: 'No ha realizado ningún cambio.',
+                icon: 'info'
+            });
+            return; // Salir de la función sin hacer la solicitud
+        }
+
         try {
             if (buttonForm === 'Actualizar') {
                 const respuesta = await axios.put(`${URI}${responsable.Id_Responsable}`, {

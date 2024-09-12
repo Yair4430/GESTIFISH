@@ -274,7 +274,7 @@ const CrudResponsable = () => {
                 />
 
             {isModalOpen && (
-                    <div className="modal fade show d-block" id="modalForm" tabIndex="-1" aria-labelledby="modalFormLabel" aria-hidden="true">
+                <div className="modal fade show" tabIndex="-1" style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
                         <div className="modal-dialog modal-lg">
                             <div className="modal-content">
                                 <div className="modal-header" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', width: '100%' }}>

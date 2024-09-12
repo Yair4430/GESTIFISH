@@ -13,6 +13,22 @@ const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllM
 
     const sendForm = async (e) => {
         e.preventDefault();
+
+        if (
+            Fec_Mortalidad === mortalidad.Fec_Mortalidad &&
+            Can_Peces === mortalidad.Can_Peces &&
+            Mot_Mortalidad === mortalidad.Mot_Mortalidad &&
+            Id_Siembra === mortalidad.Id_Siembra &&
+            Id_Responsable === mortalidad.Id_Responsable
+        ) {
+            Swal.fire({
+                title: 'Sin cambios',
+                text: 'No ha realizado ningún cambio.',
+                icon: 'info'
+            });
+            return; // Salir de la función sin hacer la solicitud
+        }
+        
         try {
             const data = {
                 Fec_Mortalidad,

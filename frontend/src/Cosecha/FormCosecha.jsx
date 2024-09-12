@@ -18,6 +18,27 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
 
     const sendForm = async (e) => {
         e.preventDefault();
+
+        if (
+            Fec_Cosecha === cosecha.Fec_Cosecha &&
+            Can_Peces === cosecha.Can_Peces &&
+            Pes_Eviscerado === cosecha.Pes_Eviscerado &&
+            Pes_Viscerado === cosecha.Pes_Viscerado &&
+            Por_Visceras === cosecha.Por_Visceras &&
+            Id_Responsable === cosecha.Id_Responsable &&
+            Id_Siembra === cosecha.Id_Siembra &&
+            Hor_Cosecha === cosecha.Hor_Cosecha &&
+            Vlr_Cosecha === cosecha.Vlr_Cosecha &&
+            Obs_Cosecha === cosecha.Obs_Cosecha
+        ) {
+            Swal.fire({
+                title: 'Sin cambios',
+                text: 'No ha realizado ningún cambio.',
+                icon: 'info'
+            });
+            return; // Salir de la función sin hacer la solicitud
+        }
+        
         try {
             const data = {
                 Fec_Cosecha,

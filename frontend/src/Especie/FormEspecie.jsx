@@ -13,6 +13,22 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
 
     const sendForm = async (e) => {
         e.preventDefault();
+
+        if (
+            Nom_Especie === especie.Nom_Especie &&
+            Car_Especie === especie.Car_Especie &&
+            Tam_Promedio === especie.Tam_Promedio &&
+            Den_Especie === especie.Den_Especie &&
+            Img_Especie === null
+        ) {
+            Swal.fire({
+                title: 'Sin cambios',
+                text: 'No ha realizado ningún cambio.',
+                icon: 'info'
+            });
+            return; // Salir de la función sin hacer la solicitud
+        }
+
         const formData = new FormData();
         formData.append('Nom_Especie', Nom_Especie);
         formData.append('Car_Especie', Car_Especie);

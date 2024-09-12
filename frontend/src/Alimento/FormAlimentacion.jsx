@@ -15,6 +15,24 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
 
     const sendForm = async (e) => {
         e.preventDefault();
+
+        if (
+            Fec_Alimentacion === alimentacion.Fec_Alimentacion &&
+            Can_RacionKg === alimentacion.Can_RacionKg &&
+            Id_Siembra === alimentacion.Id_Siembra &&
+            Id_Responsable === alimentacion.Id_Responsable &&
+            Tip_Alimento === alimentacion.Tip_Alimento &&
+            Hor_Alimentacion === alimentacion.Hor_Alimentacion &&
+            Vlr_Alimentacion === alimentacion.Vlr_Alimentacion
+        ) {
+            Swal.fire({
+                title: 'Sin cambios',
+                text: 'No ha realizado ningún cambio.',
+                icon: 'info'
+            });
+            return; // Salir de la función sin hacer la solicitud
+        }
+        
         try {
             const data = {
                 Fec_Alimentacion,

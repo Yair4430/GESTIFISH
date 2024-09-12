@@ -20,6 +20,28 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
 
     const sendForm = async (e) => {
         e.preventDefault();
+
+        if (
+            Can_Peces === siembra.Can_Peces &&
+            Fec_Siembra === siembra.Fec_Siembra &&
+            Fec_PosibleCosecha === siembra.Fec_PosibleCosecha &&
+            Id_Responsable === siembra.Id_Responsable &&
+            Id_Especie === siembra.Id_Especie &&
+            Id_Estanque === siembra.Id_Estanque &&
+            Obs_Siembra === siembra.Obs_Siembra &&
+            Pes_Actual === siembra.Pes_Actual &&
+            Hor_Siembra === siembra.Hor_Siembra &&
+            Gan_Peso === siembra.Gan_Peso &&
+            Vlr_Siembra === siembra.Vlr_Siembra
+        ) {
+            Swal.fire({
+                title: 'Sin cambios',
+                text: 'No ha realizado ningún cambio.',
+                icon: 'info'
+            });
+            return; // Salir de la función sin hacer la solicitud
+        }
+        
         try {
             const data = {
                 Fec_Siembra,

@@ -16,6 +16,25 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
 
     const sendForm = async (e) => {
         e.preventDefault();
+
+        if (
+            Fec_Muestreo === muestreo.Fec_Muestreo &&
+            Num_Peces === muestreo.Num_Peces &&
+            Obs_Muestreo === muestreo.Obs_Muestreo &&
+            Pes_Esperado === muestreo.Pes_Esperado &&
+            Id_Siembra === muestreo.Id_Siembra &&
+            Id_Responsable === muestreo.Id_Responsable &&
+            Hor_Muestreo === muestreo.Hor_Muestreo &&
+            Pes_Promedio === muestreo.Pes_Promedio
+        ) {
+            Swal.fire({
+                title: 'Sin cambios',
+                text: 'No ha realizado ningún cambio.',
+                icon: 'info'
+            });
+            return; // Salir de la función sin hacer la solicitud
+        }
+        
         try {
             const data = {
                 Fec_Muestreo,

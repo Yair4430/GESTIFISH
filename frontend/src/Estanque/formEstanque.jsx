@@ -17,6 +17,25 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
 
     const sendForm = async (e) => {
         e.preventDefault();
+
+        if (
+            Nom_Estanque ===estanque.Nom_Estanque &&
+            Esp_Agua === estanque.Esp_Agua &&
+            Tip_Estanque === estanque.Tip_Estanque &&
+            Lar_Estanque === estanque.Lar_Estanque &&
+            Anc_Estanque === estanque.Anc_Estanque &&
+            Des_Estanque === estanque.Des_Estanque &&
+            Img_Estanque === estanque.Img_Estanque &&
+            Rec_Agua ===estanque.Rec_Agua
+        ) {
+            Swal.fire({
+                title: 'Sin Cambios',
+                text: 'No ha realizado ningún cambio.',
+                icon: 'info'
+            });
+            return; // Detener el envío del formulario si no hay cambios
+        }
+
         const formData = new FormData();
         formData.append('Id_Estanque', Id_Estanque);
         formData.append('Nom_Estanque', Nom_Estanque);

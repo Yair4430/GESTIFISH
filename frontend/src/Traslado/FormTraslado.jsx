@@ -12,6 +12,22 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
 
     const sendForm = async (e) => {
         e.preventDefault();
+
+        if (
+            Fec_Traslado === traslado.Fec_Traslado &&
+            Can_Peces === traslado.Can_Peces &&
+            Id_Responsable === traslado.Id_Responsable &&
+            Obs_Traslado === traslado.Obs_Traslado &&
+            Hor_Traslado === traslado.Hor_Traslado
+        ) {
+            Swal.fire({
+                title: 'Sin cambios',
+                text: 'No ha realizado ningún cambio.',
+                icon: 'info'
+            });
+            return; // Salir de la función sin hacer la solicitud
+        }
+        
         try {
             const data = {
                 Fec_Traslado,
