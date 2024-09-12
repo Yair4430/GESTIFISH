@@ -99,9 +99,10 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
       <div style={{ marginLeft: "300px", paddingTop: "30px", }}>
         <div className="table-container">
           <div className="dataTables_filter"></div>
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <table className="table table-responsive table-bordered" id="TableDinamic" ref={tableRef}>
+
+          </div>
+        <div className="table-position" >
+          <table className="table table-responsive table-bordered" id="TableDinamic" ref={tableRef} style={{ marginLeft: "-35px"}}>
             <thead>
               <tr>
                 {titles.slice(0, -1).map((title, index) => (

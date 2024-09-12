@@ -111,3 +111,9 @@ body, html {
   padding: 3px 7px;
   font-size: 10px;
 }
+
+.table-position {
+  margin-left: 0px;  /* Ajusta el valor para mover a la izquierda o derecha */
+  padding-top: 20px;   /* Ajusta el valor para mover hacia arriba o abajo */
+
+}

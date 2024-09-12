@@ -220,7 +220,7 @@ const CrudActividad = () => {
 
     return (
         <>
-            <div style={{ marginLeft: '-680px', paddingTop: '50px' }}>
+            <div style={{ marginLeft: '-800px', paddingTop: '50px' }}>
                 {/* Ícono para agregar */}
                 <a
                     onClick={handleAddClick}
