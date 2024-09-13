@@ -1,8 +1,9 @@
+
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
-const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllActividad, }) => {
+const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllActividad }) => {
     const [Id_Actividad, setId_Actividad] = useState('');
     const [Nom_Actividad, setNom_Actividad] = useState('');
     const [Des_Actividad, setDes_Actividad] = useState('');
@@ -37,78 +38,111 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
         getEstanque();
     }, []);
 
+    const validateForm = () => {
+        if (!Nom_Actividad.trim()) {
+            Swal.fire('Error', 'El nombre de la actividad es obligatorio.', 'error');
+            return false;
+        }
+        if (!Des_Actividad.trim()) {
+            Swal.fire('Error', 'La descripción de la actividad es obligatoria.', 'error');
+            return false;
+        }
+        if (!Fec_Actividad) {
+            Swal.fire('Error', 'La fecha de la actividad es obligatoria.', 'error');
+            return false;
+        }
+        if (!Hor_Actividad) {
+            Swal.fire('Error', 'La duración de la actividad es obligatoria.', 'error');
+            return false;
+        }
+        if (!Fas_Produccion) {
+            Swal.fire('Error', 'La fase de producción es obligatoria.', 'error');
+            return false;
+        }
+        if (!Id_Responsable) {
+            Swal.fire('Error', 'El responsable de la actividad es obligatorio.', 'error');
+            return false;
+        }
+        if (!Id_Estanque) {
+            Swal.fire('Error', 'El estanque es obligatorio.', 'error');
+            return false;
+        }
+        return true;
+    };
+
     const sendFormA = async (e) => {
         e.preventDefault();
-      
+
+        if (!validateForm()) {
+            return; // Detener el envío del formulario si hay errores
+        }
+
         if (
-          Nom_Actividad === actividad.Nom_Actividad &&
-          Des_Actividad === actividad.Des_Actividad &&
-          Fec_Actividad === actividad.Fec_Actividad &&
-          Hor_Actividad === actividad.Hor_Actividad &&
-          Fas_Produccion === actividad.Fas_Produccion &&
-          Id_Responsable === actividad.Id_Responsable &&
-          Id_Estanque === actividad.Id_Estanque
-      ) {
-          Swal.fire({
-              title: 'Sin cambios',
-              text: 'No ha realizado ningún cambio.',
-              icon: 'info'
-          });
-          return; // Salir de la función sin hacer la solicitud
-      }
+            Nom_Actividad === actividad.Nom_Actividad &&
+            Des_Actividad === actividad.Des_Actividad &&
+            Fec_Actividad === actividad.Fec_Actividad &&
+            Hor_Actividad === actividad.Hor_Actividad &&
+            Fas_Produccion === actividad.Fas_Produccion &&
+            Id_Responsable === actividad.Id_Responsable &&
+            Id_Estanque === actividad.Id_Estanque
+        ) {
+            Swal.fire({
+                title: 'Sin cambios',
+                text: 'No ha realizado ningún cambio.',
+                icon: 'info'
+            });
+            return; // Salir de la función sin hacer la solicitud
+        }
 
         try {
-          if (buttonForm === 'Actualizar') {
-            await axios.put(`${URI}${actividad.Id_Actividad}`, {
-              Id_Actividad,
-              Nom_Actividad,
-              Des_Actividad,
-              Fec_Actividad,
-              Hor_Actividad,
-              Fas_Produccion,
-              Id_Responsable,
-              Id_Estanque
-            });
-            Swal.fire({
-              title: 'Actualizado',
-              text: '¡Registro actualizado exitosamente!',
-              icon: 'success'
-            }).then(() => {
-            //   updateTextButton('Enviar');
-              clearFormA();
-              getAllActividad();
-              $('#modalForm').modal('hide');
-            });
-          } else if (buttonForm === 'Enviar') {
-            const respuestaApi = await axios.post(URI, {
-                Nom_Actividad,
-                Des_Actividad,
-                Fec_Actividad,
-                Hor_Actividad,
-                Fas_Produccion,
-                Id_Responsable,
-                Id_Estanque
-            });
-            Swal.fire({
-                title: 'Guardado',
-                text: '¡Registro guardado exitosamente!',
-                icon: 'success'
-            });
-            if (respuestaApi.status === 201) {
-                // alert(respuestaApi.data.message);
-                clearFormA();
-                getAllActividad();
+            if (buttonForm === 'Actualizar') {
+                await axios.put(`${URI}${actividad.Id_Actividad}`, {
+                    Id_Actividad,
+                    Nom_Actividad,
+                    Des_Actividad,
+                    Fec_Actividad,
+                    Hor_Actividad,
+                    Fas_Produccion,
+                    Id_Responsable,
+                    Id_Estanque
+                });
+                Swal.fire({
+                    title: 'Actualizado',
+                    text: '¡Registro actualizado exitosamente!',
+                    icon: 'success'
+                }).then(() => {
+                    clearFormA();
+                    getAllActividad();
+                    $('#modalForm').modal('hide');
+                });
+            } else if (buttonForm === 'Enviar') {
+                const respuestaApi = await axios.post(URI, {
+                    Nom_Actividad,
+                    Des_Actividad,
+                    Fec_Actividad,
+                    Hor_Actividad,
+                    Fas_Produccion,
+                    Id_Responsable,
+                    Id_Estanque
+                });
+                Swal.fire({
+                    title: 'Guardado',
+                    text: '¡Registro guardado exitosamente!',
+                    icon: 'success'
+                });
+                if (respuestaApi.status === 201) {
+                    clearFormA();
+                    getAllActividad();
+                }
             }
-          }
-      
         } catch (error) {
-          Swal.fire({
-            title: 'Error',
-            text: 'No se pudo guardar la actividad.',
-            icon: 'error'
-          });
+            Swal.fire({
+                title: 'Error',
+                text: 'No se pudo guardar la actividad.',
+                icon: 'error'
+            });
         }
-      };
+    };
 
     const clearFormA = () => {
         setId_Actividad('');

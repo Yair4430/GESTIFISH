@@ -11,8 +11,42 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
     const [Cor_Responsable, setCor_Responsable] = useState('');
     const [Num_Responsable, setNum_Responsable] = useState('');
 
+    // Validar campos antes de enviar el formulario
+    const validateForm = () => {
+        if (!Nom_Responsable.trim()) {
+            Swal.fire('Error', 'El nombre del responsable es obligatorio', 'error');
+            return false;
+        }
+        if (!Ape_Responsable.trim()) {
+            Swal.fire('Error', 'Los apellidos del responsable son obligatorios', 'error');
+            return false;
+        }
+        if (!Doc_Responsable.trim()) {
+            Swal.fire('Error', 'El documento de identificación es obligatorio', 'error');
+            return false;
+        }
+        if (!Tip_Responsable) {
+            Swal.fire('Error', 'Debe seleccionar el tipo de responsable', 'error');
+            return false;
+        }
+        const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+        if (!emailPattern.test(Cor_Responsable)) {
+            Swal.fire('Error', 'Debe ingresar un correo electrónico válido', 'error');
+            return false;
+        }
+        // Validar que el número de teléfono tenga exactamente 10 dígitos
+        const phonePattern = /^[0-9]{10}$/; // Acepta exactamente 10 dígitos
+        if (!phonePattern.test(Num_Responsable)) {
+            Swal.fire('Error', 'El número de teléfono debe tener exactamente 10 dígitos', 'error');
+            return false;
+        }
+        return true;
+    };
+
     const sendFormR = async (e) => {
         e.preventDefault();
+
+        if (!validateForm()) return;
 
         if (
             Nom_Responsable === responsable.Nom_Responsable &&
@@ -27,7 +61,7 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                 text: 'No ha realizado ningún cambio.',
                 icon: 'info'
             });
-            return; // Salir de la función sin hacer la solicitud
+            return;
         }
 
         try {
@@ -48,13 +82,9 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                         text: '¡Registro actualizado exitosamente!',
                         icon: 'success'
                     });
-                    // updateTextButton('Enviar');
                     clearFormR();
                     getAllResponsable();
-                } else {
-                    console.warn('HTTP Status:', respuesta.status);
                 }
-
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, {
                     Nom_Responsable,
@@ -73,12 +103,9 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                     });
                     clearFormR();
                     getAllResponsable();
-                } else {
-                    console.warn('HTTP Status:', respuestaApi.status);
                 }
             }
         } catch (error) {
-            console.error('Error al enviar el formulario:', error.response?.status || error.message);
             Swal.fire({
                 title: 'Error',
                 text: 'No se pudo guardar el responsable.',
@@ -140,7 +167,7 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="Doc_Responsable" className="form-label">Documento de Identificación:</label>
-                                    <input className="form-control" type="text" id="Doc_Responsable" value={Doc_Responsable} onChange={(e) => setDoc_Responsable(e.target.value)} required />
+                                    <input className="form-control" type="number" id="Doc_Responsable" value={Doc_Responsable} onChange={(e) => setDoc_Responsable(e.target.value)} required />
                                 </div>
                             </div>
                             <div className="col-md-6">
@@ -158,14 +185,23 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="Cor_Responsable" className="form-label">Correo del Responsable:</label>
-                                    <input className="form-control" type="email" id="Cor_Responsable" value={Cor_Responsable} onChange={(e) => setCor_Responsable(e.target.value)} required />
+                                <label htmlFor="Cor_Responsable" className="form-label">Correo del Responsable:</label>
+                                <input 
+                className="form-control" 
+                type="email" 
+                id="Cor_Responsable" 
+                value={Cor_Responsable} 
+                onChange={(e) => setCor_Responsable(e.target.value)} 
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
+                title="El correo debe tener un formato válido, incluyendo una extensión como '.com', '.net', etc." 
+                required 
+            />
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="Num_Responsable" className="form-label">Número de Teléfono:</label>
-                                    <input className="form-control" type="tel" id="Num_Responsable" value={Num_Responsable} onChange={(e) => setNum_Responsable(e.target.value)} required />
+                                    <input className="form-control" type="number" id="Num_Responsable" value={Num_Responsable} onChange={(e) => setNum_Responsable(e.target.value)} required />
                                 </div>
                             </div>
                         </div>

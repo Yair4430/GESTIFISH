@@ -4,6 +4,21 @@ input[type=search]{
   margin-bottom: 20px;
 }
 
+.col-sm-7{
+  margin-left: 330px;
+  margin-top: 10px;
+}
+
+/*.pagination{
+  margin-left: 330px;
+  margin-top: 10px;
+}*/
+
+/*.dt-paging{
+  margin-left: 330px;
+  margin-top: 10px;
+}*/
+
 /* Estilo para el contenedor que rodea la tabla */
 .table-container {
   display: flex;
