@@ -3,6 +3,7 @@ import SimuladorForm from './SimuladorForm';
 import SimuladorTabla from './SimuladorTabla';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import * as XLSX from 'xlsx'; // Importa la librería xlsx
 
 const Simulador = () => {
   const [tableData, setTableData] = useState([]);
@@ -66,6 +67,26 @@ const Simulador = () => {
     } else {
       alert('Por favor, ingrese valores válidos para el espejo de agua, la densidad y el precio de bulto.');
     }
+  };
+
+  const handleExportExcel = () => {
+    // Define los encabezados de la hoja de cálculo
+    const worksheetData = [
+      ["Mes", "Número de Animales", "Peso (g)", "Tasa de Alimentación", "Biomasa (kg)", "Alimento Diario (kg)", "Concentrado Mensual (kg)", "Bultos", "Precio Total"]
+    ];
+
+    // Agrega los datos de la tabla
+    tableData.forEach((row) => {
+      worksheetData.push([row.mes, row.numero, row.peso, row.tasa, row.biomasa, row.alimento, row.concentrado, row.bultos, row.precio]);
+    });
+
+    // Crea un libro de Excel y una hoja
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Simulador");
+
+    // Genera el archivo Excel y lo descarga
+    XLSX.writeFile(workbook, "simulador.xlsx");
   };
   
   const handleExportPdf = async () => {
@@ -146,41 +167,73 @@ const Simulador = () => {
 
   return (
     <>
-
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css"/>
-
-      <br/>
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css"
+      />
+  
+      <br />
       <div className="container mt-4">
-        <h2 className="display-4 text-center" style={{ color: 'black', fontWeight: 'bold' }}>Simulador</h2>
-        <br/>
+        <h2 className="display-4 text-center" style={{ color: 'black', fontWeight: 'bold' }}>
+          Simulador
+        </h2>
+        <br />
         <p className="simulador-descripcion">
-          Este simulador te permite calcular la proyección del número de animales por metro cuadrado, la biomasa, la cantidad de alimento necesario, y el costo total de alimentación 
-          para especies como la Tilapia y la Cachama en un estanque. Simplemente introduce los datos de densidad, tamaño del espejo 
-          de agua, y el precio del bulto de alimento para obtener una proyección mensual detallada del peso, la tasa de alimentación 
+          Este simulador te permite calcular la proyección del número de animales por metro cuadrado, la biomasa, la cantidad de alimento necesario, y el costo total de alimentación
+          para especies como la Tilapia y la Cachama en un estanque. Simplemente introduce los datos de densidad, tamaño del espejo
+          de agua, y el precio del bulto de alimento para obtener una proyección mensual detallada del peso, la tasa de alimentación
           y los costos asociados.
         </p>
-        <br/>
+        <br />
         <SimuladorForm onSimulate={handleSimulate} onClear={handleClearTable} />
         <div id="simulador-content">
           <SimuladorTabla data={tableData} />
         </div>
         <br />
-        <div className="d-flex justify-content-center mt-3">
-          {tableData.length > 0 && (
-            <button 
-            className="btn btn-success d-flex align-items-center"
-            onClick={handleExportPdf}
-            style={{ transition: 'all 0.3s ease-in-out' }}
-          >
-            <i className="bi bi-file-earmark-pdf me-2"></i> {/* Icono de PDF */}
-            Exportar 
-          </button>
-          )}
-        </div>
+  
+        {tableData.length > 0 && (
+            <div className="d-flex justify-content-center mt-3">
+            {/* Botón para exportar a PDF (rojo) */}
+            <a
+              className="text-danger"
+              onClick={handleExportPdf}
+              style={{
+                width: '80px',
+                height: '45px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: '10px',
+                cursor: 'pointer'
+              }}
+              title="Exportar a PDF"
+            >
+              <i className="bi bi-filetype-pdf" style={{ fontSize: '35px' }}></i>
+            </a>
+
+            {/* Botón para exportar a Excel (verde) */}
+            <a
+              className="text-success"
+              onClick={handleExportExcel}
+              style={{
+                width: '80px',
+                height: '45px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                cursor: 'pointer'
+              }}
+              title="Exportar a Excel"
+            >
+              <i className="bi bi-file-earmark-excel" style={{ fontSize: '35px' }}></i>
+            </a>
+          </div>
+        )}
+
         <br />
       </div>
     </>
   );
-};
+}  
 
 export default Simulador;

@@ -8,17 +8,47 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
     precioBulto: '',
   });
 
+  // Función para formatear los números con comas o puntos
+  const formatNumber = (value) => {
+    if (!value) return '';
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
+  // Remover formato para obtener el valor numérico real
+  const unformatNumber = (value) => {
+    return value.replace(/,/g, '');
+  };
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    if (name === 'densidad' || name === 'espejoAgua' || name === 'precioBulto') {
+      // Formatear el número mientras se escribe
+      const unformattedValue = unformatNumber(value);
+      if (!isNaN(unformattedValue)) {
+        setFormData({
+          ...formData,
+          [name]: formatNumber(unformattedValue),
+        });
+      }
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Al enviar el formulario, desformatear los números para obtener el valor real
     if (formData.especie && formData.densidad && formData.espejoAgua && formData.precioBulto) {
-      onSimulate(formData);
+      const formattedData = {
+        ...formData,
+        densidad: unformatNumber(formData.densidad),
+        espejoAgua: unformatNumber(formData.espejoAgua),
+        precioBulto: unformatNumber(formData.precioBulto),
+      };
+      onSimulate(formattedData);
     } else {
       alert('Por favor complete todos los campos en el orden correcto.');
     }
@@ -45,7 +75,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
 
   return (
     <>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css"/>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" />
 
       <style>{`
         .form-container {
@@ -53,8 +83,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
           padding: 20px;
           border-radius: 8px;
           box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          /*width: 50%;  Define un ancho para el contenedor */
-          margin: 0 auto; /* Centra el contenedor horizontalmente */
+          margin: 0 auto;
         }
         .form-container h2 {
           margin-bottom: 20px;
@@ -97,7 +126,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
         <div className="col-md-6">
           <label htmlFor="densidad" className="form-label">Densidad</label>
           <input
-            type="number"
+            type="text"
             id="densidad"
             name="densidad"
             value={formData.densidad}
@@ -109,7 +138,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
         <div className="col-md-6">
           <label htmlFor="espejoAgua" className="form-label">Espejo de agua</label>
           <input
-            type="number"
+            type="text"
             id="espejoAgua"
             name="espejoAgua"
             value={formData.espejoAgua}
@@ -121,7 +150,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
         <div className="col-md-6">
           <label htmlFor="precioBulto" className="form-label">Precio del Bulto</label>
           <input
-            type="number"
+            type="text"
             id="precioBulto"
             name="precioBulto"
             value={formData.precioBulto}
@@ -139,7 +168,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
           </button>
         </div>
       </form>
-      <br/>
+      <br />
     </>
   );
 };

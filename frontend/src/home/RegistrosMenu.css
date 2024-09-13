@@ -30,7 +30,7 @@
   /* Estilo para la imagen representativa */
   .form-image {
     width: 50%;
-    max-width: 400px;
+    max-width: 370px;
     border-radius: 10px;
     margin-bottom: 1rem;
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición suave para la animación */
