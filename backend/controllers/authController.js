@@ -28,7 +28,7 @@ export const createUser = async (req, res) => {
         }
 
         // Crear nuevo usuario
-        let passHash = await bcryptjs.hash(Con_Usuario, 8);
+        let passHash = await bcryptjs.hash(Con_Usuario, 12);
         const newUser = await UsuarioModel.create({
             Nom_Usuario,
             Ape_Usuario,
