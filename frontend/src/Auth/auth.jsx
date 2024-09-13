@@ -36,7 +36,6 @@ const validateName = (name) => {
 };
 
 // Validar que el correo tenga un formato válido y que pertenezca a un dominio permitido
-// Validar que el correo tenga un formato válido y que pertenezca a un dominio permitido
 const validateEmail = (email) => {
     // Verificar que la parte local (antes del @) comience con letra o número y que solo tenga caracteres válidos
     const localPartRegex = /^[a-zA-Z0-9][a-zA-Z0-9._%+-]*$/;
@@ -84,18 +83,18 @@ const sendForm = async (e) => {
         if (!validateName(Ape_Usuario)) {
             setMessageType('error');
             setMessage('El apellido solo puede contener letras y no más de un espacio entre palabras.');
-            setTimeout(() => { setMessage(''); }, 4000);
+            setTimeout(() => { setMessage(''); }, 5000);
             return;
         }
 
         // Validación del correo electrónico
         if (!validateEmail(Cor_Usuario)) {
-            setTimeout(() => { setMessage(''); }, 4000);
+            setTimeout(() => { setMessage(''); }, 5000);
             return;
         }
         // Validar la contraseña
         if (!validatePassword(Con_Usuario)) {
-            setTimeout(() => { setMessage(''); }, 4000);
+            setTimeout(() => { setMessage(''); }, 5000);
             return;
         }
 
@@ -110,18 +109,18 @@ const sendForm = async (e) => {
                     setApe_Usuario('');
                     setCor_Usuario('');
                     setCon_Usuario('');
-                    setTimeout(() => { setMessage(''); }, 4000);
+                    setTimeout(() => { setMessage(''); }, 5000);
                 }
             } catch (error) {
                 if (error.response && error.response.status === 409) {
                     setMessageType('error');
                     setMessage('Ese correo que está registrando ya existe registrado en la base de datos');
-                    setTimeout(() => { setMessage(''); }, 4000);
+                    setTimeout(() => { setMessage(''); }, 5000);
 
                 } else {
                     setMessageType('error');
                     setMessage('Ese correo ya existe, intenta con otro.');
-                    setTimeout(() => { setMessage(''); }, 3000);
+                    setTimeout(() => { setMessage(''); }, 5000);
                 }
             }
         } else if (buttonForm === 'Iniciar Sesion') {
@@ -136,7 +135,7 @@ const sendForm = async (e) => {
             } catch (error) {
                 setMessageType('error');
                 setMessage('Las credenciales son incorrectas. Por favor, intenta nuevamente.');
-                setTimeout(() => { setMessage(''); }, 3000);
+                setTimeout(() => { setMessage(''); }, 5000);
             }
         }
     };
