@@ -83,7 +83,7 @@ function barraNavegacionPrivada({ logOutUser }) {
           <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul className="navbar-nav">
               {/* Elemento de la lista de navegación para el ícono de inicio */}
-              <li className="nav-item">
+              {/*<li className="nav-item">
                 <NavLink
                   to="/"
                   className="nav-link text-white"
@@ -97,10 +97,10 @@ function barraNavegacionPrivada({ logOutUser }) {
                     e.currentTarget.style.opacity = '1';
                   }}
                 >
-                  <i className="fas fa-home" style={styles.icon}></i> {/* Ícono de inicio */}
+                  <i className="fas fa-home" style={styles.icon}></i> 
                   <span style={styles.iconText}>Inicio</span>
                 </NavLink>
-              </li>
+              </li> */}
               {/* Elemento de la lista de navegación para el ícono de formularios */}
               <li className="nav-item">
                 <NavLink

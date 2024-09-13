@@ -102,7 +102,7 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
 
           </div>
         <div className="table-position" >
-          <table className="table table-responsive table-bordered" id="TableDinamic" ref={tableRef} style={{ marginLeft: "-35px"}}>
+          <table className="table table-responsive table-bordered" id="TableDinamic" ref={tableRef} style={{ marginLeft: "-50px"}}>
             <thead>
               <tr>
                 {titles.slice(0, -1).map((title, index) => (

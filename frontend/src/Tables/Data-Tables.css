@@ -1,8 +1,9 @@
 
 input[type=search]{
-  margin-right: 34px;
-  margin-bottom: 15px;
+  margin-right: 50px;
+  margin-bottom: 20px;
 }
+
 /* Estilo para el contenedor que rodea la tabla */
 .table-container {
   display: flex;
