@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Swal from 'sweetalert2';
 
 const SimuladorForm = ({ onSimulate, onClear }) => {
   const [formData, setFormData] = useState({
@@ -8,49 +9,43 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
     precioBulto: '',
   });
 
-  // Función para formatear los números con comas o puntos
-  const formatNumber = (value) => {
-    if (!value) return '';
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
-
-  // Remover formato para obtener el valor numérico real
-  const unformatNumber = (value) => {
-    return value.replace(/,/g, '');
+  const formatNumber = (num) => {
+    return num.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'densidad' || name === 'espejoAgua' || name === 'precioBulto') {
-      // Formatear el número mientras se escribe
-      const unformattedValue = unformatNumber(value);
-      if (!isNaN(unformattedValue)) {
-        setFormData({
-          ...formData,
-          [name]: formatNumber(unformattedValue),
-        });
-      }
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
+
+    // Limitar el número de cifras
+    if (name === 'espejoAgua' && value.replace(/\D/g, '').length > 4) return;
+    if (name === 'densidad' && value.replace(/\D/g, '').length > 2) return;
+    if (name === 'precioBulto' && value.replace(/\D/g, '').length > 7) return;
+
+    const formattedValue = formatNumber(value.replace(/\D/g, ''));
+
+    setFormData({
+      ...formData,
+      [name]: formattedValue,
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Al enviar el formulario, desformatear los números para obtener el valor real
     if (formData.especie && formData.densidad && formData.espejoAgua && formData.precioBulto) {
-      const formattedData = {
+      // Remover puntos antes de enviar los datos
+      const cleanedData = {
         ...formData,
-        densidad: unformatNumber(formData.densidad),
-        espejoAgua: unformatNumber(formData.espejoAgua),
-        precioBulto: unformatNumber(formData.precioBulto),
+        densidad: formData.densidad.replace(/\./g, ''),
+        espejoAgua: formData.espejoAgua.replace(/\./g, ''),
+        precioBulto: formData.precioBulto.replace(/\./g, ''),
       };
-      onSimulate(formattedData);
+      onSimulate(cleanedData);
     } else {
-      alert('Por favor complete todos los campos en el orden correcto.');
+      Swal.fire({
+        title: 'Por favor complete todos los campos',
+        text: 'Debe completar todos los campos en el orden correcto.',
+        icon: 'info'
+      });
     }
   };
 
@@ -59,7 +54,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
     setFormData({
       ...formData,
       especie: value,
-      densidad: value === 'Cachama' ? 2 : '',
+      densidad: value === 'Cachama' ? '2' : '',
     });
   };
 
@@ -75,7 +70,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
 
   return (
     <>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css"/>
 
       <style>{`
         .form-container {
@@ -168,7 +163,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
           </button>
         </div>
       </form>
-      <br />
+      <br/>
     </>
   );
 };

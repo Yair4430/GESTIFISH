@@ -54,12 +54,12 @@ const Simulador = () => {
   
         return {
           ...row,
-          numero: numeroAnimales.toLocaleString(), // Formatear con separadores de miles
-          biomasa: biomasa.toLocaleString(), // Formatear con separadores de miles
-          alimento: `${alimento.toLocaleString()} kg`, // Formatear con separadores de miles
-          concentrado: `${concentradoMensual.toLocaleString()} kg`, // Formatear con separadores de miles
-          bultos: `${bultos.toLocaleString()} bultos`, // Formatear con separadores de miles
-          precio: `$${precioTotal.toLocaleString()}`, // Formatear con separadores de miles
+          numero: numeroAnimales.toLocaleString('es-ES'), // Formatear con separadores de miles
+          biomasa: biomasa.toLocaleString('es-ES'), // Formatear con separadores de miles
+          alimento: `${alimento.toLocaleString('es-ES')} kg`, // Formatear con separadores de miles
+          concentrado: `${concentradoMensual.toLocaleString('es-ES')} kg`, // Formatear con separadores de miles
+          bultos: `${bultos.toLocaleString('es-ES')} bultos`, // Formatear con separadores de miles
+          precio: `$${precioTotal.toLocaleString('es-ES')}`, // Formatear con separadores de miles
         };
       });
   
@@ -68,7 +68,7 @@ const Simulador = () => {
       alert('Por favor, ingrese valores válidos para el espejo de agua, la densidad y el precio de bulto.');
     }
   };
-
+  
   const handleExportExcel = () => {
     // Define los encabezados de la hoja de cálculo
     const worksheetData = [
@@ -123,7 +123,7 @@ const Simulador = () => {
     Especie: ${formData.especie}
     Densidad: ${formData.densidad} por metro cuadrado
     Espejo de agua: ${formData.espejoAgua} m²
-    Precio del Bulto: $${formData.precioBulto}
+    Precio del Bulto: $${formData.precioBulto.toLocaleString()}
     
     Basado en estos datos, los resultados del simulador son los siguientes:`;
   
@@ -192,7 +192,7 @@ const Simulador = () => {
         <br />
   
         {tableData.length > 0 && (
-            <div className="d-flex justify-content-center mt-3">
+          <div className="d-flex justify-content-center mt-3">
             {/* Botón para exportar a PDF (rojo) */}
             <a
               className="text-danger"
@@ -234,6 +234,6 @@ const Simulador = () => {
       </div>
     </>
   );
-}  
+}
 
 export default Simulador;
