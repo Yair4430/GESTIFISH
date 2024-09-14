@@ -207,11 +207,12 @@ const CrudTraslado = () => {
 
     return (
         <>
+        <div style={{ marginTop: '50px' }}> {/* Aquí ajustas la distancia con marginTop */}
             <div
                 style={{
                     position: 'absolute', // Permite posicionar el botón de manera independiente
                     left: '260px', // Ajusta la posición horizontal
-                    top: '20px', // Ajusta la posición vertical
+                    top: '60px', // Ajusta la posición vertical
                     display: 'flex',
                     alignItems: 'center'
                 }}
@@ -248,7 +249,7 @@ const CrudTraslado = () => {
                     gap: '25px',  // Espacio entre los botones
                     position: 'absolute', 
                     top: '118px', 
-                    right: '1015px',  
+                    right: '1041px',  
                     transform: 'translateY(-50%)'  
                     }}>
 
@@ -369,6 +370,7 @@ const CrudTraslado = () => {
                         </div>
                     </div>
                 )}
+            </div>    
         </>
     );
 };
