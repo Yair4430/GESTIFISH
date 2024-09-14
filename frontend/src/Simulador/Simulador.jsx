@@ -74,20 +74,60 @@ const Simulador = () => {
     const worksheetData = [
       ["Mes", "Número de Animales", "Peso (g)", "Tasa de Alimentación", "Biomasa (kg)", "Alimento Diario (kg)", "Concentrado Mensual (kg)", "Bultos", "Precio Total"]
     ];
-
+  
     // Agrega los datos de la tabla
     tableData.forEach((row) => {
       worksheetData.push([row.mes, row.numero, row.peso, row.tasa, row.biomasa, row.alimento, row.concentrado, row.bultos, row.precio]);
     });
-
+  
     // Crea un libro de Excel y una hoja
     const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+  
+    // Aplica bordes y formato básico a la tabla
+    const range = XLSX.utils.decode_range(worksheet['!ref']); // Rango de la hoja
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+        if (!worksheet[cellAddress]) continue;
+  
+        // Agregar borde a cada celda
+        worksheet[cellAddress].s = {
+          border: {
+            top: { style: 'thin', color: { rgb: '000000' } },
+            bottom: { style: 'thin', color: { rgb: '000000' } },
+            left: { style: 'thin', color: { rgb: '000000' } },
+            right: { style: 'thin', color: { rgb: '000000' } }
+          }
+        };
+  
+        // Negrita para la primera fila (encabezados)
+        if (R === 0) {
+          worksheet[cellAddress].s.font = { bold: true };
+        }
+      }
+    }
+  
+    // Configura el ancho de las columnas
+    worksheet['!cols'] = [
+      { wpx: 50 }, // Mes
+      { wpx: 120 }, // Número de Animales
+      { wpx: 80 }, // Peso
+      { wpx: 130 }, // Tasa de Alimentación
+      { wpx: 110 }, // Biomasa
+      { wpx: 150 }, // Alimento Diario
+      { wpx: 180 }, // Concentrado Mensual
+      { wpx: 90 }, // Bultos
+      { wpx: 120 }, // Precio Total
+    ];
+  
+    // Crea un libro de Excel
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Simulador");
-
+  
     // Genera el archivo Excel y lo descarga
     XLSX.writeFile(workbook, "simulador.xlsx");
   };
+  
   
   const handleExportPdf = async () => {
     const input = document.getElementById('simulador-content');
@@ -117,16 +157,12 @@ const Simulador = () => {
     pdf.setFont(undefined, 'bold'); // Texto en negrilla
   
     const narrativa = `
-    
     Los datos ingresados en el simulador son los siguientes:
-    
     Especie: ${formData.especie}
     Densidad: ${formData.densidad} por metro cuadrado
     Espejo de agua: ${formData.espejoAgua} m²
     Precio del Bulto: $${formData.precioBulto.toLocaleString()}
-    
     Basado en estos datos, los resultados del simulador son los siguientes:`;
-  
     const narrativaLineas = pdf.splitTextToSize(narrativa, pdfWidth - 20); // Ajusta el texto para que se ajuste al ancho del PDF
     pdf.text(narrativaLineas, 10, yPosition);
     yPosition += narrativaLineas.length * 5; // Ajusta el espacio vertical basado en el número de líneas usadas
