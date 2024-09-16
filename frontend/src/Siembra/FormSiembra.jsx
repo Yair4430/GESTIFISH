@@ -122,6 +122,23 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
         setVlr_Siembra(siembra.Vlr_Siembra);
     };
 
+    // Función para evitar la entrada de caracteres inválidos
+    const handleKeyDown = (e) => {
+        if (["e", "E", "+", "-", ","].includes(e.key)) {
+        e.preventDefault();  // Evita que el carácter sea ingresado
+        }
+    };
+    
+    // Función para validar que solo números sean permitidos
+    const handleNumericInput = (e, setValue) => {
+        const value = e.target.value;
+    
+        // Solo permite dígitos y puntos decimales
+        if (!isNaN(value) && !value.includes("e")) {
+        setValue(value);  // Actualiza el estado si es un número válido
+        }
+    };
+
     useEffect(() => {
         const getResponsable = async () => {
             try {
@@ -174,14 +191,14 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                     <div className="row mb-3">
                         <div className="col-md-6">
                             <div className="form-group">
-                                <label htmlFor="Fec_Siembra" className="form-label">Fecha de Siembra:</label>
+                                <label htmlFor="Fec_Siembra" className="form-label">Fecha Siembra:</label>
                                 <input className="form-control" type="date" id="Fec_Siembra" value={Fec_Siembra} onChange={(e) => setFec_Siembra(e.target.value)} required />
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
-                                <label htmlFor="Can_Peces" className="form-label">Cantidad de Peces:</label>
-                                <input className="form-control" type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => setCan_Peces(e.target.value)} required />
+                                <label htmlFor="Can_Peces" className="form-label">Cantidad Peces:</label>
+                                <input className="form-control" type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => handleNumericInput (e, setCan_Peces)} onKeyDown={handleKeyDown} required />
                             </div>
                         </div>
                     </div>
@@ -238,12 +255,12 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="Pes_Actual" className="form-label">Peso Actual:</label>
-                                <input className="form-control" type="number" id="Pes_Actual" value={Pes_Actual} onChange={(e) => setPes_Actual(e.target.value)} required />
+                                <input className="form-control" type="number" id="Pes_Actual" value={Pes_Actual} onChange={(e) => handleNumericInput (e, setPes_Actual)} onKeyDown={handleKeyDown} required />
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
-                                <label htmlFor="Hor_Siembra" className="form-label">Hora de Siembra:</label>
+                                <label htmlFor="Hor_Siembra" className="form-label">Hora Siembra:</label>
                                 <input className="form-control" type="time" id="Hor_Siembra" value={Hor_Siembra} onChange={(e) => setHor_Siembra(e.target.value)} required />
                             </div>
                         </div>
@@ -251,14 +268,14 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                     <div className="row mb-3">
                         <div className="col-md-6">
                             <div className="form-group">
-                                <label htmlFor="Gan_Peso" className="form-label">Ganancia de Peso:</label>
-                                <input className="form-control" type="number" id="Gan_Peso" value={Gan_Peso} onChange={(e) => setGan_Peso(e.target.value)} required />
+                                <label htmlFor="Gan_Peso" className="form-label">Ganancia Peso:</label>
+                                <input className="form-control" type="number" id="Gan_Peso" value={Gan_Peso} onChange={(e) => handleNumericInput (e, setGan_Peso)} onKeyDown={handleKeyDown} required />
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
-                                <label htmlFor="Vlr_Siembra" className="form-label">Valor de Siembra:</label>
-                                <input className="form-control" type="number" id="Vlr_Siembra" value={Vlr_Siembra} onChange={(e) => setVlr_Siembra(e.target.value)} required />
+                                <label htmlFor="Vlr_Siembra" className="form-label">Valor Siembra:</label>
+                                <input className="form-control" type="number" id="Vlr_Siembra" value={Vlr_Siembra} onChange={(e) => handleNumericInput (e, setVlr_Siembra)} onKeyDown={handleKeyDown} required />
                             </div>
                         </div>
                     </div>

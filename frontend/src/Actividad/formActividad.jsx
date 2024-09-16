@@ -186,7 +186,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
               <div className="row">
                 <div className="col-md-6">
                   <div className="form-group mb-3">
-                    <label htmlFor="Nom_Actividad" className="form-label">Nombre de la Actividad:</label>
+                    <label htmlFor="Nom_Actividad" className="form-label">Nombre Actividad:</label>
                     <input
                       type="text"
                       id="Nom_Actividad"
@@ -197,7 +197,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                     />
                   </div>
                   <div className="form-group mb-3">
-                    <label htmlFor="Des_Actividad" className="form-label">Descripción de la Actividad:</label>
+                    <label htmlFor="Des_Actividad" className="form-label">Descripción:</label>
                     <input
                       type="text"
                       id="Des_Actividad"
@@ -208,7 +208,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                     />
                   </div>
                   <div className="form-group mb-3">
-                    <label htmlFor="Fec_Actividad" className="form-label">Fecha de la Actividad:</label>
+                    <label htmlFor="Fec_Actividad" className="form-label">Fecha Actividad:</label>
                     <input
                       type="date"
                       id="Fec_Actividad"
@@ -219,7 +219,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                     />
                   </div>
                   <div className="form-group mb-3">
-                    <label htmlFor="Hor_Actividad" className="form-label">Duración de la Actividad:</label>
+                    <label htmlFor="Hor_Actividad" className="form-label">Hora:</label>
                     <input
                       type="time"
                       id="Hor_Actividad"

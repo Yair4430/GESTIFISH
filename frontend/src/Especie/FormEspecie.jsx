@@ -96,6 +96,23 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
         setDen_Especie(especie.Den_Especie || '');
     };
 
+        // Función para evitar la entrada de caracteres inválidos
+    const handleKeyDown = (e) => {
+        if (["e", "E", "+", "-", ","].includes(e.key)) {
+        e.preventDefault();  // Evita que el carácter sea ingresado
+        }
+    };
+    
+    // Función para validar que solo números sean permitidos
+    const handleNumericInput = (e, setValue) => {
+        const value = e.target.value;
+    
+        // Solo permite dígitos y puntos decimales
+        if (!isNaN(value) && !value.includes("e")) {
+        setValue(value);  // Actualiza el estado si es un número válido
+        }
+    };
+
     useEffect(() => {
         if (especie) {
             setData();
@@ -117,13 +134,13 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
                     <div className="row mb-3">
                         <div className="col-md-6">
                             <div className="form-group">
-                                <label htmlFor="Nom_Especie" className="form-label">Nombre de la Especie:</label>
+                                <label htmlFor="Nom_Especie" className="form-label">Nombre Especie:</label>
                                 <input className="form-control" type="text" id="Nom_Especie" value={Nom_Especie} onChange={(e) => setNom_Especie(e.target.value)} required />
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
-                                <label htmlFor="Car_Especie" className="form-label">Características de la Especie:</label>
+                                <label htmlFor="Car_Especie" className="form-label">Características Especie:</label>
                                 <input className="form-control" type="text" id="Car_Especie" value={Car_Especie} onChange={(e) => setCar_Especie(e.target.value)} required />
                             </div>
                         </div>
@@ -138,15 +155,15 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="Tam_Promedio" className="form-label">Tamaño Promedio:</label>
-                                <input className="form-control" type="number" id="Tam_Promedio" value={Tam_Promedio} onChange={(e) => setTam_Promedio(e.target.value)} required />
+                                <input className="form-control" type="number" id="Tam_Promedio" value={Tam_Promedio} onChange={(e) =>  handleNumericInput (e, setTam_Promedio)} onKeyDown={handleKeyDown} required />
                             </div>
                         </div>
                     </div>
                     <div className="row mb-3">
                         <div className="col-md-6">
                             <div className="form-group">
-                                <label htmlFor="Den_Especie" className="form-label">Densidad de la Especie:</label>
-                                <input className="form-control" type="text" id="Den_Especie" value={Den_Especie} onChange={(e) => setDen_Especie(e.target.value)} required />
+                                <label htmlFor="Den_Especie" className="form-label">Densidad Especie:</label>
+                                <input className="form-control" type="text" id="Den_Especie" value={Den_Especie} onChange={(e) => handleNumericInput (e, setDen_Especie)} onKeyDown={handleKeyDown}  required />
                             </div>
                         </div>
                     </div>

@@ -12,7 +12,7 @@ const CosechaModel = db.define('cosecha', {
   Id_Siembra: { type: DataTypes.INTEGER, allowNull: false },
   Hor_Cosecha: { type: DataTypes.TIME, allowNull: false },
   Vlr_Cosecha: { type: DataTypes.INTEGER, allowNull: false },
-  Obs_Cosecha: { type: DataTypes.STRING(80), allowNull: true }
+  Obs_Cosecha: { type: DataTypes.STRING(90), allowNull: true }
 
 }, {
     

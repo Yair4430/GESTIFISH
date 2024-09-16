@@ -322,7 +322,7 @@ const CrudActividad = () => {
                     fontWeight: 'bold',  // Texto en negrilla
                     position: 'relative', // Posicionamiento relativo para ajustar la posición
                     top: '10px'  // Ajusta este valor para bajar el texto
-                }}>Actividad</h2>
+                }}>Actividad De Estaque</h2>
             </div>
 
             <WriteTable

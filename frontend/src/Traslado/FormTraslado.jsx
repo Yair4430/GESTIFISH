@@ -85,7 +85,23 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
         setObs_Traslado(traslado.Obs_Traslado);
         setHor_Traslado(traslado.Hor_Traslado);
     };
-
+   // Función para evitar la entrada de caracteres inválidos
+    const handleKeyDown = (e) => {
+        if (["e", "E", "+", "-", ","].includes(e.key)) {
+        e.preventDefault();  // Evita que el carácter sea ingresado
+        }
+    };
+    
+    // Función para validar que solo números sean permitidos
+    const handleNumericInput = (e, setValue) => {
+        const value = e.target.value;
+    
+        // Solo permite dígitos y puntos decimales
+        if (!isNaN(value) && !value.includes("e")) {
+        setValue(value);  // Actualiza el estado si es un número válido
+        }
+    };
+  
     useEffect(() => {
         const getResponsable = async () => {
             try {
@@ -117,14 +133,14 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
-                                    <label htmlFor="Fec_Traslado" className="form-label">Fecha de Traslado:</label>
+                                    <label htmlFor="Fec_Traslado" className="form-label">Fecha Traslado:</label>
                                     <input className="form-control" type="date" id="Fec_Traslado" value={Fec_Traslado} onChange={(e) => setFec_Traslado(e.target.value)} required />
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
-                                    <label htmlFor="Can_Peces" className="form-label">Cantidad de Peces:</label>
-                                    <input className="form-control" type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => setCan_Peces(e.target.value)} required />
+                                    <label htmlFor="Can_Peces" className="form-label">Cantidad Peces:</label>
+                                    <input className="form-control" type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => handleNumericInput (e, setCan_Peces)} onKeyDown={handleKeyDown}  required />
                                 </div>
                             </div>
                         </div>
@@ -144,7 +160,7 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
-                                    <label htmlFor="Hor_Traslado" className="form-label">Hora de Traslado:</label>
+                                    <label htmlFor="Hor_Traslado" className="form-label">Hora Traslado:</label>
                                     <input className="form-control" type="time" id="Hor_Traslado" value={Hor_Traslado} onChange={(e) => setHor_Traslado(e.target.value)} />
                                 </div>
                             </div>

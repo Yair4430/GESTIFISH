@@ -134,6 +134,23 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
         setNum_Responsable(responsable.Num_Responsable);
     };
 
+        // Función para evitar la entrada de caracteres inválidos
+    const handleKeyDown = (e) => {
+        if (["e", "E", "+", "-", ","].includes(e.key)) {
+        e.preventDefault();  // Evita que el carácter sea ingresado
+        }
+    };
+    
+    // Función para validar que solo números sean permitidos
+    const handleNumericInput = (e, setValue) => {
+        const value = e.target.value;
+    
+        // Solo permite dígitos y puntos decimales
+        if (!isNaN(value) && !value.includes("e")) {
+        setValue(value);  // Actualiza el estado si es un número válido
+        }
+    };
+
     useEffect(() => {
         if (responsable) {
             setDataR();
@@ -152,13 +169,13 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="Nom_Responsable" className="form-label">Nombre del Responsable:</label>
+                                    <label htmlFor="Nom_Responsable" className="form-label">Nombres:</label>
                                     <input className="form-control" type="text" id="Nom_Responsable" value={Nom_Responsable} onChange={(e) => setNom_Responsable(e.target.value)} required />
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="Ape_Responsable" className="form-label">Apellidos del Responsable:</label>
+                                    <label htmlFor="Ape_Responsable" className="form-label">Apellidos:</label>
                                     <input className="form-control" type="text" id="Ape_Responsable" value={Ape_Responsable} onChange={(e) => setApe_Responsable(e.target.value)} required />
                                 </div>
                             </div>
@@ -166,13 +183,13 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="Doc_Responsable" className="form-label">Documento de Identificación:</label>
-                                    <input className="form-control" type="number" id="Doc_Responsable" value={Doc_Responsable} onChange={(e) => setDoc_Responsable(e.target.value)} required />
+                                    <label htmlFor="Doc_Responsable" className="form-label">Documento Identificación:</label>
+                                    <input className="form-control" type="number" id="Doc_Responsable" value={Doc_Responsable} onChange={(e) => handleNumericInput (e, setDoc_Responsable)} onKeyDown={handleKeyDown}  required />
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="Tip_Responsable" className="form-label">Tipo de Responsable:</label>
+                                    <label htmlFor="Tip_Responsable" className="form-label">Cargo:</label>
                                     <select className="form-control" id="Tip_Responsable" value={Tip_Responsable} onChange={(e) => setTip_Responsable(e.target.value)} required>
                                         <option value="">Seleccione uno...</option>
                                         <option value="Instructor">Instructor</option>
@@ -185,23 +202,23 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group">
-                                <label htmlFor="Cor_Responsable" className="form-label">Correo del Responsable:</label>
+                                <label htmlFor="Cor_Responsable" className="form-label">Correo:</label>
                                 <input 
-                className="form-control" 
-                type="email" 
-                id="Cor_Responsable" 
-                value={Cor_Responsable} 
-                onChange={(e) => setCor_Responsable(e.target.value)} 
-                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
-                title="El correo debe tener un formato válido, incluyendo una extensión como '.com', '.net', etc." 
-                required 
-            />
+                                    className="form-control" 
+                                    type="email" 
+                                    id="Cor_Responsable" 
+                                    value={Cor_Responsable} 
+                                    onChange={(e) => setCor_Responsable(e.target.value)} 
+                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
+                                    title="El correo debe tener un formato válido, incluyendo una extensión como '.com', '.net', etc." 
+                                    required 
+                                />
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="Num_Responsable" className="form-label">Número de Teléfono:</label>
-                                    <input className="form-control" type="number" id="Num_Responsable" value={Num_Responsable} onChange={(e) => setNum_Responsable(e.target.value)} required />
+                                    <label htmlFor="Num_Responsable" className="form-label">Número Teléfono:</label>
+                                    <input className="form-control" type="number" id="Num_Responsable" value={Num_Responsable} onChange={(e) => handleNumericInput (e, setNum_Responsable)} onKeyDown={handleKeyDown}  required />
                                 </div>
                             </div>
                         </div>

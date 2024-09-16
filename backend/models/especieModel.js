@@ -3,11 +3,11 @@ import { DataTypes } from "sequelize";
 
 const EspecieModel = db.define('especie', {
     Id_Especie: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    Nom_Especie: { type: DataTypes.STRING },
-    Car_Especie: { type: DataTypes.STRING },
-    Img_Especie: { type: DataTypes.STRING, allowNull: false },
+    Nom_Especie: { type: DataTypes.STRING(25) },
+    Car_Especie: { type: DataTypes.STRING(90) },
+    Img_Especie: { type: DataTypes.STRING(250), allowNull: false },
     Tam_Promedio: { type: DataTypes.INTEGER },
-    Den_Especie: { type: DataTypes.STRING }
+    Den_Especie: { type: DataTypes.STRING(4) }
 }, {
     freezeTableName: true
 });

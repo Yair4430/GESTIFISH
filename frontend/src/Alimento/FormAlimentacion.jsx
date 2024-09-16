@@ -98,6 +98,24 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
         setId_Responsable(alimentacion.Id_Responsable);
     };
 
+    // Función para evitar la entrada de caracteres inválidos
+    const handleKeyDown = (e) => {
+        if (["e", "E", "+", "-", ","].includes(e.key)) {
+        e.preventDefault();  // Evita que el carácter sea ingresado
+        }
+    };
+    
+    // Función para validar que solo números sean permitidos
+    const handleNumericInput = (e, setValue) => {
+        const value = e.target.value;
+    
+        // Solo permite dígitos y puntos decimales
+        if (!isNaN(value) && !value.includes("e")) {
+        setValue(value);  // Actualiza el estado si es un número válido
+        }
+    };
+  
+
     useEffect(() => {
         const getResponsable = async () => {
             try {
@@ -139,21 +157,29 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
                       <div className="row mb-3">
                           <div className="col-md-6">
                               <div className="form-group mb-3">
-                                  <label htmlFor="Fec_Alimentacion" className="form-label">Fecha de Alimentación:</label>
+                                  <label htmlFor="Fec_Alimentacion" className="form-label">Fecha Alimentación:</label>
                                   <input className="form-control" type="date" id="Fec_Alimentacion" value={Fec_Alimentacion} onChange={(e) => setFec_Alimentacion(e.target.value)} required />
                               </div>
                           </div>
                           <div className="col-md-6">
-                              <div className="form-group mb-3">
-                                  <label htmlFor="Can_RacionKg" className="form-label">Cantidad de Ración (Kg):</label>
-                                  <input className="form-control" type="number" id="Can_RacionKg" value={Can_RacionKg} onChange={(e) => setCan_RacionKg(e.target.value)} required />
-                              </div>
-                          </div>
+                            <div className="form-group mb-3">
+                                <label htmlFor="Can_RacionKg" className="form-label">Cantidad Ración (Kg):</label>
+                                <input 
+                                className="form-control" 
+                                type="number" 
+                                id="Can_RacionKg" 
+                                value={Can_RacionKg} 
+                                onChange={(e) => handleNumericInput(e, setCan_RacionKg)} 
+                                onKeyDown={handleKeyDown} 
+                                required 
+                                />
+                            </div>
+                        </div>
                       </div>
                       <div className="row mb-3">
                           <div className="col-md-6">
                               <div className="form-group mb-3">
-                                  <label htmlFor="Tip_Alimento" className="form-label">Tipo de Alimento:</label>
+                                  <label htmlFor="Tip_Alimento" className="form-label">Tipo Alimento:</label>
                                   <select className="form-control" id="Tip_Alimento" value={Tip_Alimento} onChange={(e) => setTip_Alimento(e.target.value)} required>
                                       <option value="">Selecciona uno...</option>
                                       <option value="Concentrado">Concentrado</option>
@@ -163,7 +189,7 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
                           </div>
                           <div className="col-md-6">
                               <div className="form-group mb-3">
-                                  <label htmlFor="Hor_Alimentacion" className="form-label">Hora de Alimentación:</label>
+                                  <label htmlFor="Hor_Alimentacion" className="form-label">Hora Alimentación:</label>
                                   <input className="form-control" type="time" id="Hor_Alimentacion" value={Hor_Alimentacion} onChange={(e) => setHor_Alimentacion(e.target.value)} required />
                               </div>
                           </div>
@@ -171,8 +197,8 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
                       <div className="row mb-3">
                           <div className="col-md-6">
                               <div className="form-group mb-3">
-                                  <label htmlFor="Vlr_Alimentacion" className="form-label">Valor de Alimentación:</label>
-                                  <input className="form-control" type="number" id="Vlr_Alimentacion" value={Vlr_Alimentacion} onChange={(e) => setVlr_Alimentacion(e.target.value)} required />
+                                  <label htmlFor="Vlr_Alimentacion" className="form-label">Valor Alimentación:</label>
+                                  <input className="form-control" type="number" id="Vlr_Alimentacion" value={Vlr_Alimentacion} onChange={(e) => handleNumericInput (e, setVlr_Alimentacion)} onKeyDown={handleKeyDown}  required />
                               </div>
                           </div>
                           <div className="col-md-6">

@@ -102,6 +102,23 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
         setPes_Promedio(muestreo.Pes_Promedio);
     };
 
+    // Función para evitar la entrada de caracteres inválidos
+    const handleKeyDown = (e) => {
+        if (["e", "E", "+", "-", ","].includes(e.key)) {
+        e.preventDefault();  // Evita que el carácter sea ingresado
+        }
+    };
+    
+    // Función para validar que solo números sean permitidos
+    const handleNumericInput = (e, setValue) => {
+        const value = e.target.value;
+    
+        // Solo permite dígitos y puntos decimales
+        if (!isNaN(value) && !value.includes("e")) {
+        setValue(value);  // Actualiza el estado si es un número válido
+        }
+    };
+
     useEffect(() => {
         const getResponsable = async () => {
             try {
@@ -144,14 +161,14 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="Fec_Muestreo" className="form-label">Fecha de Muestreo:</label>
+                                    <label htmlFor="Fec_Muestreo" className="form-label">Fecha Muestreo:</label>
                                     <input className="form-control" type="date" id="Fec_Muestreo" value={Fec_Muestreo} onChange={(e) => setFec_Muestreo(e.target.value)} required />
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="Num_Peces" className="form-label">Número de Peces:</label>
-                                    <input className="form-control" type="number" id="Num_Peces" value={Num_Peces} onChange={(e) => setNum_Peces(e.target.value)} required />
+                                    <label htmlFor="Num_Peces" className="form-label">Número Peces:</label>
+                                    <input className="form-control" type="number" id="Num_Peces" value={Num_Peces} onChange={(e) => handleNumericInput (e, setNum_Peces)} onKeyDown={handleKeyDown}  required />
                                 </div>
                             </div>
                         </div>
@@ -165,7 +182,7 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="Pes_Esperado" className="form-label">Peso Esperado:</label>
-                                    <input className="form-control" type="number" id="Pes_Esperado" value={Pes_Esperado} onChange={(e) => setPes_Esperado(e.target.value)} required />
+                                    <input className="form-control" type="number" id="Pes_Esperado" value={Pes_Esperado} onChange={(e) => handleNumericInput (e, setPes_Esperado)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>
                         </div>
@@ -200,14 +217,14 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="Hor_Muestreo" className="form-label">Hora de Muestreo:</label>
-                                    <input className="form-control" type="time" id="Hor_Muestreo" value={Hor_Muestreo} onChange={(e) => setHor_Muestreo(e.target.value)} />
+                                    <label htmlFor="Hor_Muestreo" className="form-label">Hora Muestreo:</label>
+                                    <input className="form-control" type="time" id="Hor_Muestreo" value={Hor_Muestreo} onChange={(e) => setHor_Muestreo(e.target.value)} required />
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="Pes_Promedio" className="form-label">Peso Promedio:</label>
-                                    <input className="form-control" type="number" id="Pes_Promedio" value={Pes_Promedio} onChange={(e) => setPes_Promedio(e.target.value)} />
+                                    <input className="form-control" type="number" id="Pes_Promedio" value={Pes_Promedio} onChange={(e) => handleNumericInput (e, setPes_Promedio)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>
                         </div>

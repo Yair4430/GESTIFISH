@@ -114,6 +114,23 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
         setObs_Cosecha(cosecha.Obs_Cosecha);
     };
 
+        // Función para evitar la entrada de caracteres inválidos
+    const handleKeyDown = (e) => {
+        if (["e", "E", "+", "-", ","].includes(e.key)) {
+        e.preventDefault();  // Evita que el carácter sea ingresado
+        }
+    };
+    
+    // Función para validar que solo números sean permitidos
+    const handleNumericInput = (e, setValue) => {
+        const value = e.target.value;
+    
+        // Solo permite dígitos y puntos decimales
+        if (!isNaN(value) && !value.includes("e")) {
+        setValue(value);  // Actualiza el estado si es un número válido
+        }
+    };
+
     useEffect(() => {
         const getResponsable = async () => {
             try {
@@ -155,14 +172,14 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
-                                    <label htmlFor="Fec_Cosecha" className="form-label">Fecha de Cosecha:</label>
+                                    <label htmlFor="Fec_Cosecha" className="form-label">Fecha Cosecha:</label>
                                     <input className="form-control" type="date" id="Fec_Cosecha" value={Fec_Cosecha} onChange={(e) => setFec_Cosecha(e.target.value)} required />
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
-                                    <label htmlFor="Can_Peces" className="form-label">Cantidad de Peces:</label>
-                                    <input className="form-control" type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => setCan_Peces(e.target.value)} required />
+                                    <label htmlFor="Can_Peces" className="form-label">Cantidad Peces:</label>
+                                    <input className="form-control" type="number" id="Can_Peces" value={Can_Peces} onChange={(e) => handleNumericInput (e, setCan_Peces)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>
                         </div>
@@ -170,21 +187,21 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
                                     <label htmlFor="Pes_Eviscerado" className="form-label">Peso Eviscerado:</label>
-                                    <input className="form-control" type="number" id="Pes_Eviscerado" value={Pes_Eviscerado} onChange={(e) => setPes_Eviscerado(e.target.value)} required />
+                                    <input className="form-control" type="number" id="Pes_Eviscerado" value={Pes_Eviscerado} onChange={(e) => handleNumericInput (e, setPes_Eviscerado)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
                                     <label htmlFor="Pes_Viscerado" className="form-label">Peso Viscerado:</label>
-                                    <input className="form-control" type="number" id="Pes_Viscerado" value={Pes_Viscerado} onChange={(e) => setPes_Viscerado(e.target.value)} required />
+                                    <input className="form-control" type="number" id="Pes_Viscerado" value={Pes_Viscerado} onChange={(e) => handleNumericInput (e, setPes_Viscerado)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>
                         </div>
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
-                                    <label htmlFor="Por_Visceras" className="form-label">Porcentaje de Vísceras:</label>
-                                    <input className="form-control" type="number" id="Por_Visceras" value={Por_Visceras} onChange={(e) => setPor_Visceras(e.target.value)} required />
+                                    <label htmlFor="Por_Visceras" className="form-label">Porcentaje Vísceras:</label>
+                                    <input className="form-control" type="number" id="Por_Visceras" value={Por_Visceras} onChange={(e) => handleNumericInput (e, setPor_Visceras)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>
                             <div className="col-md-6">
@@ -217,7 +234,7 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
-                                    <label htmlFor="Hor_Cosecha" className="form-label">Hora de Cosecha:</label>
+                                    <label htmlFor="Hor_Cosecha" className="form-label">Hora Cosecha:</label>
                                     <input className="form-control" type="time" id="Hor_Cosecha" value={Hor_Cosecha} onChange={(e) => setHor_Cosecha(e.target.value)} required />
                                 </div>
                             </div>
@@ -225,8 +242,8 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
-                                    <label htmlFor="Vlr_Cosecha" className="form-label">Valor de Cosecha:</label>
-                                    <input className="form-control" type="number" id="Vlr_Cosecha" value={Vlr_Cosecha} onChange={(e) => setVlr_Cosecha(e.target.value)} required />
+                                    <label htmlFor="Vlr_Cosecha" className="form-label">Valor Cosecha:</label>
+                                    <input className="form-control" type="number" id="Vlr_Cosecha" value={Vlr_Cosecha} onChange={(e) => handleNumericInput (e, setVlr_Cosecha)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>
                             <div className="col-md-6">

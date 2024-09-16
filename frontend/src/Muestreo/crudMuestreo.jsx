@@ -96,13 +96,13 @@ const CrudMuestreo = () => {
     const exportToExcel = () => {
         const ws = XLSX.utils.json_to_sheet(muestreoList.map((muestreo) => ({
             Fecha: muestreo.Fec_Muestreo,
-            Número_Peces: muestreo.Num_Peces,
+            'Número Peces': muestreo.Num_Peces,
             Observaciones: muestreo.Obs_Muestreo,
-            Peso_Esperado: muestreo.Pes_Esperado,
-            Hora_Muestreo: muestreo.Hor_Muestreo,
+            'Peso Esperado': muestreo.Pes_Esperado,
+            'Hora Muestreo': muestreo.Hor_Muestreo,
             Siembra: muestreo.siembra.Fec_Siembra,
             Responsable: muestreo.responsable.Nom_Responsable,
-            Peso_Promedio: muestreo.Pes_Promedio
+            'Peso Promedio': muestreo.Pes_Promedio
         })));
 
         const wb = XLSX.utils.book_new();

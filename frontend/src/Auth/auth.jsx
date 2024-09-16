@@ -58,7 +58,7 @@ const validateEmail = (email) => {
 };
 // Validar que la contraseña tenga al menos 8 caracteres y contenga al menos un carácter especial
 const validatePassword = (password) => {
-    const regex = /^(?=.[.!@#$%^&])[a-zA-Z0-9.!@#$%^&*]{8,}$/;
+    const regex = /^(?=.*[.!@#$%^&])[a-zA-Z0-9.!@#$%^&*]{8,}$/;
     if (!regex.test(password)) {
         setMessageType('error');
         setMessage('La contraseña debe tener al menos 8 caracteres y contener al menos un carácter especial.');
