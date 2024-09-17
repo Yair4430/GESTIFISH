@@ -131,6 +131,18 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
         }
     };
 
+      // Función para manejar cambios en los campos de texto
+      const handleInputChange = (e) => {
+        const { name, value, maxLength } = e.target;
+
+        if (value.length <= maxLength) {
+          if (name === 'Obs_Cosecha') {
+            setObs_Cosecha(value);
+          } 
+        }
+      };
+      
+
     useEffect(() => {
         const getResponsable = async () => {
             try {
@@ -249,7 +261,10 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
                                     <label htmlFor="Obs_Cosecha" className="form-label">Observaciones:</label>
-                                    <textarea className="form-control" id="Obs_Cosecha" value={Obs_Cosecha} onChange={(e) => setObs_Cosecha(e.target.value)} />
+                                    <textarea className="form-control" id="Obs_Cosecha" name='Obs_Cosecha' value={Obs_Cosecha} onChange={handleInputChange} maxLength={80} />
+                                    {Obs_Cosecha.length === 80 && (
+                                        <span className="text-danger">¡Has alcanzado el límite de 80 caracteres!</span>
+                                    )}
                                 </div>
                             </div>
                         </div>

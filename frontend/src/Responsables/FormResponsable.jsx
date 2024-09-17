@@ -151,6 +151,21 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
         }
     };
 
+      // Función para manejar cambios en los campos de texto
+      const handleInputChange = (e) => {
+        const { name, value, maxLength } = e.target;
+
+        if (value.length <= maxLength) {
+          if (name === 'Nom_Responsable') {
+            setNom_Responsable(value);
+          } else if (name === 'Ape_Responsable') {
+            setApe_Responsable(value);
+          } else if (name === 'Cor_Responsable') {
+            setCor_Responsable(value);
+          }
+        }
+      };
+
     useEffect(() => {
         if (responsable) {
             setDataR();
@@ -170,13 +185,19 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="Nom_Responsable" className="form-label">Nombres:</label>
-                                    <input className="form-control" type="text" id="Nom_Responsable" value={Nom_Responsable} onChange={(e) => setNom_Responsable(e.target.value)} required />
+                                    <input className="form-control" type="text" id="Nom_Responsable" name="Nom_Responsable" onChange={handleInputChange} maxLength={25} required />
+                                    {Nom_Responsable.length === 25 && (
+                                        <span className="text-danger">¡Has alcanzado el límite de 25 caracteres!</span>
+                                    )}
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="Ape_Responsable" className="form-label">Apellidos:</label>
-                                    <input className="form-control" type="text" id="Ape_Responsable" value={Ape_Responsable} onChange={(e) => setApe_Responsable(e.target.value)} required />
+                                    <input className="form-control" type="text" id="Ape_Responsable" name="Ape_Responsable" value={Ape_Responsable} onChange={handleInputChange} maxLength={25} required />
+                                    {Ape_Responsable.length === 25 && (
+                                        <span className="text-danger">¡Has alcanzado el límite de 25 caracteres!</span>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -207,12 +228,17 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                                     className="form-control" 
                                     type="email" 
                                     id="Cor_Responsable" 
+                                    name="Cor_Responsable"
                                     value={Cor_Responsable} 
-                                    onChange={(e) => setCor_Responsable(e.target.value)} 
+                                    onChange={handleInputChange}
+                                    maxLength={25}
                                     pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
                                     title="El correo debe tener un formato válido, incluyendo una extensión como '.com', '.net', etc." 
                                     required 
                                 />
+                                    {Cor_Responsable.length === 25 && (
+                                        <span className="text-danger">¡Has alcanzado el límite de 25 caracteres!</span>
+                                    )}
                                 </div>
                             </div>
                             <div className="col-md-6">

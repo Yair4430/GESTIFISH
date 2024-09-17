@@ -103,6 +103,17 @@ const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllM
         }
     };
 
+      // Función para manejar cambios en los campos de texto
+      const handleInputChange = (e) => {
+        const { name, value, maxLength } = e.target;
+
+        if (value.length <= maxLength) {
+          if (name === 'Mot_Mortalidad') {
+            setMot_Mortalidad(value);
+          } 
+        }
+      };
+
     useEffect(() => {
         const getResponsable = async () => {
             try {
@@ -160,7 +171,10 @@ const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllM
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="Mot_Mortalidad" className="form-label">Motivo Mortalidad:</label>
-                                    <input className="form-control" type="text" id="Mot_Mortalidad" value={Mot_Mortalidad} onChange={(e) => setMot_Mortalidad(e.target.value)} required />
+                                    <input className="form-control" type="text" id="Mot_Mortalidad" name='Mot_Mortalidad' value={Mot_Mortalidad} onChange={handleInputChange} maxLength={90}  required />
+                                    {Mot_Mortalidad.length === 90 && (
+                                        <span className="text-danger">¡Has alcanzado el límite de 90 caracteres!</span>
+                                        )}
                                 </div>
                             </div>
                             <div className="col-md-6">

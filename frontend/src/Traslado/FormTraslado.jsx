@@ -101,6 +101,18 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
         setValue(value);  // Actualiza el estado si es un número válido
         }
     };
+
+          // Función para manejar cambios en los campos de texto
+      const handleInputChange = (e) => {
+        const { name, value, maxLength } = e.target;
+
+        if (value.length <= maxLength) {
+          if (name === 'Obs_Traslado') {
+            setObs_Traslado(value);
+          }
+        }
+      };
+
   
     useEffect(() => {
         const getResponsable = async () => {
@@ -169,7 +181,10 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
                             <div className="col-12">
                                 <div className="form-group mb-3">
                                     <label htmlFor="Obs_Traslado" className="form-label">Observaciones:</label>
-                                    <textarea className="form-control" id="Obs_Traslado" value={Obs_Traslado} onChange={(e) => setObs_Traslado(e.target.value)} rows="4" />
+                                    <textarea className="form-control" id="Obs_Traslado" name='Obs_Traslado' value={Obs_Traslado} onChange={handleInputChange} maxLength={90} rows="4" />
+                                    {Obs_Traslado.length === 90 && (
+                                        <span className="text-danger">¡Has alcanzado el límite de 90 caracteres!</span>
+                                    )}
                                 </div>
                             </div>
                         </div>

@@ -139,6 +139,19 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
         }
     };
 
+      // Función para manejar cambios en los campos de texto
+      const handleInputChange = (e) => {
+        const { name, value, maxLength } = e.target;
+
+        if (value.length <= maxLength) {
+          if (name === 'Nom_Estanque') {
+            setNom_Estanque(value);
+          } else if (name === 'Des_Estanque') {
+            setDes_Estanque(value);
+          }
+        }
+      };
+
     useEffect(() => {
         if (estanque) {
             setData();
@@ -164,7 +177,10 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="Nom_Estanque" className="form-label">Nombre Estanque:</label>
-                                    <input className="form-control" type="text" id="Nom_Estanque" value={Nom_Estanque} onChange={(e) => setNom_Estanque(e.target.value)} required />
+                                    <input className="form-control" type="text" id="Nom_Estanque" name="Nom_Estanque" value={Nom_Estanque} onChange={handleInputChange} maxLength={25} required />
+                                    {Nom_Estanque.length === 25 && (
+                                        <span className="text-danger">¡Has alcanzado el límite de 25 caracteres!</span>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -204,7 +220,10 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="Des_Estanque" className="form-label">Descripción:</label>
-                                    <input className="form-control" type="text" id="Des_Estanque" value={Des_Estanque} onChange={(e) => setDes_Estanque(e.target.value)} required />
+                                    <input className="form-control" type="text" id="Des_Estanque" name="Des_Estanque" value={Des_Estanque} onChange={handleInputChange} maxLength={80} required />
+                                    {Des_Estanque.length === 80 && (
+                                        <span className="text-danger">¡Has alcanzado el límite de 80 caracteres!</span>
+                                    )}
                                 </div>
                             </div>
                             <div className="col-md-6">

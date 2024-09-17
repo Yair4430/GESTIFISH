@@ -113,6 +113,19 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
         }
     };
 
+      // Función para manejar cambios en los campos de texto
+      const handleInputChange = (e) => {
+        const { name, value, maxLength } = e.target;
+
+        if (value.length <= maxLength) {
+          if (name === 'Nom_Especie') {
+            setNom_Especie(value);
+          } else if (name === 'Car_Especie') {
+            setCar_Especie(value);
+          }
+        }
+      };
+
     useEffect(() => {
         if (especie) {
             setData();
@@ -135,13 +148,19 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="Nom_Especie" className="form-label">Nombre Especie:</label>
-                                <input className="form-control" type="text" id="Nom_Especie" value={Nom_Especie} onChange={(e) => setNom_Especie(e.target.value)} required />
+                                <input className="form-control" type="text" id="Nom_Especie" name="Nom_Especie" value={Nom_Especie} onChange={handleInputChange} maxLength={25} required />
+                                {Nom_Especie.length === 25 && (
+                                    <span className="text-danger">¡Has alcanzado el límite de 25 caracteres!</span>
+                                )}
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="Car_Especie" className="form-label">Características Especie:</label>
-                                <input className="form-control" type="text" id="Car_Especie" value={Car_Especie} onChange={(e) => setCar_Especie(e.target.value)} required />
+                                <input className="form-control" type="text" id="Car_Especie" name="Car_Especie" value={Car_Especie} onChange={handleInputChange} maxLength={90} required />
+                                {Car_Especie.length === 90 && (
+                                    <span className="text-danger">¡Has alcanzado el límite de 90 caracteres!</span>
+                                )}
                             </div>
                         </div>
                     </div>

@@ -7,7 +7,7 @@ const EspecieModel = db.define('especie', {
     Car_Especie: { type: DataTypes.STRING(90) },
     Img_Especie: { type: DataTypes.STRING(250), allowNull: false },
     Tam_Promedio: { type: DataTypes.INTEGER },
-    Den_Especie: { type: DataTypes.STRING(4) }
+    Den_Especie: { type: DataTypes.INTEGER }
 }, {
     freezeTableName: true
 });

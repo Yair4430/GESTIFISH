@@ -119,6 +119,17 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
         }
     };
 
+          // Función para manejar cambios en los campos de texto
+      const handleInputChange = (e) => {
+        const { name, value, maxLength } = e.target;
+
+        if (value.length <= maxLength) {
+          if (name === 'Obs_Muestreo') {
+            setObs_Muestreo(value);
+          } 
+        }
+      };
+
     useEffect(() => {
         const getResponsable = async () => {
             try {
@@ -176,7 +187,10 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="Obs_Muestreo" className="form-label">Observaciones:</label>
-                                    <input className="form-control" type="text" id="Obs_Muestreo" value={Obs_Muestreo} onChange={(e) => setObs_Muestreo(e.target.value)} />
+                                    <input className="form-control" type="text" id="Obs_Muestreo" name='Obs_Muestreo' value={Obs_Muestreo} onChange={handleInputChange} maxLength={90} />
+                                    {Obs_Muestreo.length === 90 && (
+                                        <span className="text-danger">¡Has alcanzado el límite de 90 caracteres!</span>
+                                    )}
                                 </div>
                             </div>
                             <div className="col-md-6">

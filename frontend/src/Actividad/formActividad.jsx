@@ -38,38 +38,6 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
         getEstanque();
     }, []);
 
-    const validateForm = () => {
-        if (!Nom_Actividad.trim()) {
-            Swal.fire('Error', 'El nombre de la actividad es obligatorio.', 'error');
-            return false;
-        }
-        if (!Des_Actividad.trim()) {
-            Swal.fire('Error', 'La descripción de la actividad es obligatoria.', 'error');
-            return false;
-        }
-        if (!Fec_Actividad) {
-            Swal.fire('Error', 'La fecha de la actividad es obligatoria.', 'error');
-            return false;
-        }
-        if (!Hor_Actividad) {
-            Swal.fire('Error', 'La duración de la actividad es obligatoria.', 'error');
-            return false;
-        }
-        if (!Fas_Produccion) {
-            Swal.fire('Error', 'La fase de producción es obligatoria.', 'error');
-            return false;
-        }
-        if (!Id_Responsable) {
-            Swal.fire('Error', 'El responsable de la actividad es obligatorio.', 'error');
-            return false;
-        }
-        if (!Id_Estanque) {
-            Swal.fire('Error', 'El estanque es obligatorio.', 'error');
-            return false;
-        }
-        return true;
-    };
-
     const sendFormA = async (e) => {
         e.preventDefault();
 
@@ -166,6 +134,19 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
         setId_Estanque(actividad.Id_Estanque);
     };
 
+      // Función para manejar cambios en los campos de texto
+      const handleInputChange = (e) => {
+        const { name, value, maxLength } = e.target;
+
+        if (value.length <= maxLength) {
+          if (name === 'Nom_Actividad') {
+            setNom_Actividad(value);
+          } else if (name === 'Des_Actividad') {
+            setDes_Actividad(value);
+          }
+        }
+      };
+
     useEffect(() => {
         if (actividad) {
             setDataA();
@@ -185,27 +166,38 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
             <form id="actividadForm" onSubmit={sendFormA} className="fw-bold m-2">
               <div className="row">
                 <div className="col-md-6">
-                  <div className="form-group mb-3">
-                    <label htmlFor="Nom_Actividad" className="form-label">Nombre Actividad:</label>
-                    <input
-                      type="text"
-                      id="Nom_Actividad"
-                      className="form-control"
-                      value={Nom_Actividad}
-                      onChange={(e) => setNom_Actividad(e.target.value)}
-                      required
-                    />
-                  </div>
+                <div className="form-group mb-3">
+                  <label htmlFor="Nom_Actividad" className="form-label">Nombre Actividad:</label>
+                  <input
+                    type="text"
+                    id="Nom_Actividad"
+                    name="Nom_Actividad" // Usamos name para distinguir el campo
+                    className="form-control"
+                    value={Nom_Actividad}
+                    onChange={handleInputChange} // Usamos una sola función
+                    maxLength={25} // Límite de caracteres
+                    required
+                  />
+                  {Nom_Actividad.length === 25 && (
+                    <span className="text-danger">¡Has alcanzado el límite de 25 caracteres!</span>
+                  )}
+                </div>
+
                   <div className="form-group mb-3">
                     <label htmlFor="Des_Actividad" className="form-label">Descripción:</label>
                     <input
                       type="text"
                       id="Des_Actividad"
+                      name="Des_Actividad" // Usamos name para distinguir el campo
                       className="form-control"
                       value={Des_Actividad}
-                      onChange={(e) => setDes_Actividad(e.target.value)}
+                      onChange={handleInputChange} // Usamos una sola función
+                      maxLength={90} // Límite de caracteres
                       required
                     />
+                    {Des_Actividad.length === 90 && (
+                      <span className="text-danger">¡Has alcanzado el límite de 90 caracteres!</span>
+                    )}
                   </div>
                   <div className="form-group mb-3">
                     <label htmlFor="Fec_Actividad" className="form-label">Fecha Actividad:</label>

@@ -139,6 +139,18 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
         }
     };
 
+          // Función para manejar cambios en los campos de texto
+      const handleInputChange = (e) => {
+        const { name, value, maxLength } = e.target;
+
+        if (value.length <= maxLength) {
+          if (name === 'Obs_Siembra') {
+            setObs_Siembra(value);
+          }
+        }
+      };
+
+
     useEffect(() => {
         const getResponsable = async () => {
             try {
@@ -283,7 +295,10 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                         <div className="col-md-12">
                             <div className="form-group">
                                 <label htmlFor="Obs_Siembra" className="form-label">Observaciones:</label>
-                                <textarea className="form-control" id="Obs_Siembra" value={Obs_Siembra} onChange={(e) => setObs_Siembra(e.target.value)} rows="3" required />
+                                <textarea className="form-control" id="Obs_Siembra" name='Obs_Siembra' value={Obs_Siembra} onChange={handleInputChange} maxLength={50}  rows="3" required />
+                                {Obs_Siembra.length === 50 && (
+                                    <span className="text-danger">¡Has alcanzado el límite de 50 caracteres!</span>
+                                )}
                             </div>
                         </div>
                     </div>

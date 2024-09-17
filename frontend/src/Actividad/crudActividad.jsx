@@ -322,7 +322,7 @@ const CrudActividad = () => {
                     fontWeight: 'bold',  // Texto en negrilla
                     position: 'relative', // Posicionamiento relativo para ajustar la posición
                     top: '10px'  // Ajusta este valor para bajar el texto
-                }}>Actividad De Estaque</h2>
+                }}>Actividad Del Estaque</h2>
             </div>
 
             <WriteTable
@@ -347,7 +347,7 @@ const CrudActividad = () => {
                                         flex: 1              /* Hace que el h5 ocupe el espacio disponible */
                                     }} 
                                 >
-                                    {buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}
+                                    {buttonForm === 'Actualizar' ? 'Actualizar Actividad Del Estanque' : 'Registrar Actividad Del Estanque'}
                                 </h5>
                                 <button 
                                     type="button" 
