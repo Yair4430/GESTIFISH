@@ -186,13 +186,13 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
-                                    <label htmlFor="Pes_Eviscerado" className="form-label">Peso Eviscerado:</label>
+                                    <label htmlFor="Pes_Eviscerado" className="form-label">Peso Eviscerado (Kg):</label>
                                     <input className="form-control" type="number" id="Pes_Eviscerado" value={Pes_Eviscerado} onChange={(e) => handleNumericInput (e, setPes_Eviscerado)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
-                                    <label htmlFor="Pes_Viscerado" className="form-label">Peso Viscerado:</label>
+                                    <label htmlFor="Pes_Viscerado" className="form-label">Peso Viscerado (Kg):</label>
                                     <input className="form-control" type="number" id="Pes_Viscerado" value={Pes_Viscerado} onChange={(e) => handleNumericInput (e, setPes_Viscerado)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>
@@ -200,7 +200,7 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
-                                    <label htmlFor="Por_Visceras" className="form-label">Porcentaje Vísceras:</label>
+                                    <label htmlFor="Por_Visceras" className="form-label">Porcentaje Vísceras (%):</label>
                                     <input className="form-control" type="number" id="Por_Visceras" value={Por_Visceras} onChange={(e) => handleNumericInput (e, setPor_Visceras)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>
@@ -242,7 +242,7 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
-                                    <label htmlFor="Vlr_Cosecha" className="form-label">Valor Cosecha:</label>
+                                    <label htmlFor="Vlr_Cosecha" className="form-label">Valor Cosecha ($):</label>
                                     <input className="form-control" type="number" id="Vlr_Cosecha" value={Vlr_Cosecha} onChange={(e) => handleNumericInput (e, setVlr_Cosecha)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>

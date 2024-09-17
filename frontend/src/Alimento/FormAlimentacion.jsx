@@ -197,7 +197,7 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
                       <div className="row mb-3">
                           <div className="col-md-6">
                               <div className="form-group mb-3">
-                                  <label htmlFor="Vlr_Alimentacion" className="form-label">Valor Alimentación:</label>
+                                  <label htmlFor="Vlr_Alimentacion" className="form-label">Valor Alimentación ($):</label>
                                   <input className="form-control" type="number" id="Vlr_Alimentacion" value={Vlr_Alimentacion} onChange={(e) => handleNumericInput (e, setVlr_Alimentacion)} onKeyDown={handleKeyDown}  required />
                               </div>
                           </div>

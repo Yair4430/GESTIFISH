@@ -181,7 +181,7 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="Pes_Esperado" className="form-label">Peso Esperado:</label>
+                                    <label htmlFor="Pes_Esperado" className="form-label">Peso Esperado (kg):</label>
                                     <input className="form-control" type="number" id="Pes_Esperado" value={Pes_Esperado} onChange={(e) => handleNumericInput (e, setPes_Esperado)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>
@@ -223,7 +223,7 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="Pes_Promedio" className="form-label">Peso Promedio:</label>
+                                    <label htmlFor="Pes_Promedio" className="form-label">Peso Promedio (kg):</label>
                                     <input className="form-control" type="number" id="Pes_Promedio" value={Pes_Promedio} onChange={(e) => handleNumericInput (e, setPes_Promedio)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>

@@ -254,7 +254,7 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                     <div className="row mb-3">
                         <div className="col-md-6">
                             <div className="form-group">
-                                <label htmlFor="Pes_Actual" className="form-label">Peso Actual:</label>
+                                <label htmlFor="Pes_Actual" className="form-label">Peso Actual (Kg):</label>
                                 <input className="form-control" type="number" id="Pes_Actual" value={Pes_Actual} onChange={(e) => handleNumericInput (e, setPes_Actual)} onKeyDown={handleKeyDown} required />
                             </div>
                         </div>
@@ -268,13 +268,13 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                     <div className="row mb-3">
                         <div className="col-md-6">
                             <div className="form-group">
-                                <label htmlFor="Gan_Peso" className="form-label">Ganancia Peso:</label>
+                                <label htmlFor="Gan_Peso" className="form-label">Ganancia Peso (Kg):</label>
                                 <input className="form-control" type="number" id="Gan_Peso" value={Gan_Peso} onChange={(e) => handleNumericInput (e, setGan_Peso)} onKeyDown={handleKeyDown} required />
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
-                                <label htmlFor="Vlr_Siembra" className="form-label">Valor Siembra:</label>
+                                <label htmlFor="Vlr_Siembra" className="form-label">Valor Siembra ($):</label>
                                 <input className="form-control" type="number" id="Vlr_Siembra" value={Vlr_Siembra} onChange={(e) => handleNumericInput (e, setVlr_Siembra)} onKeyDown={handleKeyDown} required />
                             </div>
                         </div>

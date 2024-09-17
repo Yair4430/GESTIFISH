@@ -342,7 +342,7 @@ const CrudTraslado = () => {
                                             flex: 1              /* Hace que el h5 ocupe el espacio disponible */
                                         }} 
                                     >
-                                        {buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}
+                                        {buttonForm === 'Actualizar' ? 'Actualizar Traslado' : 'Registrar Traslado'}
                                     </h5>
                                     <button 
                                         type="button" 

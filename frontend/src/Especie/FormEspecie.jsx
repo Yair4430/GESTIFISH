@@ -154,7 +154,7 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
-                                <label htmlFor="Tam_Promedio" className="form-label">Tamaño Promedio:</label>
+                                <label htmlFor="Tam_Promedio" className="form-label">Tamaño Promedio (m):</label>
                                 <input className="form-control" type="number" id="Tam_Promedio" value={Tam_Promedio} onChange={(e) =>  handleNumericInput (e, setTam_Promedio)} onKeyDown={handleKeyDown} required />
                             </div>
                         </div>
@@ -163,7 +163,7 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="Den_Especie" className="form-label">Densidad Especie:</label>
-                                <input className="form-control" type="text" id="Den_Especie" value={Den_Especie} onChange={(e) => handleNumericInput (e, setDen_Especie)} onKeyDown={handleKeyDown}  required />
+                                <input className="form-control" type="number" id="Den_Especie" value={Den_Especie} onChange={(e) => handleNumericInput (e, setDen_Especie)} onKeyDown={handleKeyDown}  required />
                             </div>
                         </div>
                     </div>

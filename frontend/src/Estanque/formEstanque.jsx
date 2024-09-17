@@ -171,7 +171,7 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="Esp_Agua" className="form-label">Espejo de Agua:</label>
+                                    <label htmlFor="Esp_Agua" className="form-label">Espejo de Agua (m2):</label>
                                     <input className="form-control" type="number" id="Esp_Agua" value={Esp_Agua} onChange={(e) => handleNumericInput (e, setEsp_Agua)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>
@@ -189,13 +189,13 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="Lar_Estanque" className="form-label">Largo:</label>
+                                    <label htmlFor="Lar_Estanque" className="form-label">Largo (m):</label>
                                     <input className="form-control" type="number" id="Lar_Estanque" value={Lar_Estanque} onChange={(e) => handleNumericInput (e, setLar_Estanque)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="Anc_Estanque" className="form-label">Ancho:</label>
+                                    <label htmlFor="Anc_Estanque" className="form-label">Ancho (m):</label>
                                     <input className="form-control" type="number" id="Anc_Estanque" value={Anc_Estanque} onChange={(e) => handleNumericInput (e, setAnc_Estanque)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>
@@ -217,7 +217,7 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="Rec_Agua" className="form-label">Recambio de Agua:</label>
+                                    <label htmlFor="Rec_Agua" className="form-label">Recambio de Agua (m3 X Hora):</label>
                                     <input className="form-control" type="number" id="Rec_Agua" value={Rec_Agua} onChange={(e) => handleNumericInput (e, setRec_Agua)} onKeyDown={handleKeyDown} required />
                                 </div>
                             </div>
