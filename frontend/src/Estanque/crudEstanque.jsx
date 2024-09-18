@@ -98,6 +98,7 @@ const CrudEstanque = () => {
 
         // Configuración de autoTable
         const tableBody = EstanqueList.map((estanque) => [
+            estanque.Id_Estanque,
             estanque.Nom_Estanque,
             estanque.Esp_Agua,
             estanque.Tip_Estanque,
@@ -113,7 +114,7 @@ const CrudEstanque = () => {
         ]);
 
         doc.autoTable({
-            head: [['Nombre', 'Espejo Agua', 'Tipo', 'Largo', 'Ancho', 'Descripción', 'Imagen', 'Recambio Agua']],
+            head: [['Numero', 'Nombre', 'Espejo Agua', 'Tipo', 'Largo', 'Ancho', 'Descripción', 'Imagen', 'Recambio Agua']],
             body: tableBody,
             startY: 30, // Posición donde empieza la tabla
             theme: 'grid', // Tema de la tabla
@@ -128,14 +129,15 @@ const CrudEstanque = () => {
     // Función para exportar a Excel
     const exportToExcel = () => {
         const ws = XLSX.utils.json_to_sheet(EstanqueList.map((estanque) => ({
+            Numero: estanque.Id_Estanque,
             Nombre: estanque.Nom_Estanque,
-            Espejo_Agua: estanque.Esp_Agua,
+            'Espejo Agua': estanque.Esp_Agua,
             Tipo: estanque.Tip_Estanque,
             Largo: estanque.Lar_Estanque,
             Ancho: estanque.Anc_Estanque,
             Descripción: estanque.Des_Estanque,
             Imagen: estanque.Img_Estanque ? `${PATH_FOTOS}/${estanque.Img_Estanque}` : 'No Image',
-            Recambio_Agua: estanque.Rec_Agua
+            'Recambio Agua': estanque.Rec_Agua
         })));
 
         const wb = XLSX.utils.book_new();
@@ -146,7 +148,7 @@ const CrudEstanque = () => {
     // Función para exportar a SQL
     const exportToSQL = () => {
         let sqlStatements = `CREATE TABLE IF NOT EXISTS Estanques (
-            Id_Estanque INT AUTO_INCREMENT PRIMARY KEY,
+            Id_Estanque INT,
             Nom_Estanque VARCHAR(255),
             Esp_Agua VARCHAR(255),
             Tip_Estanque VARCHAR(255),
@@ -157,20 +159,22 @@ const CrudEstanque = () => {
             Rec_Agua VARCHAR(255)
         );\n\n`;
 
-        sqlStatements += "INSERT INTO Estanques (Nom_Estanque, Esp_Agua, Tip_Estanque, Lar_Estanque, Anc_Estanque, Des_Estanque, Img_Estanque, Rec_Agua) VALUES \n";
+        sqlStatements += "INSERT INTO Estanques (Id_Estanque, Nom_Estanque, Esp_Agua, Tip_Estanque, Lar_Estanque, Anc_Estanque, Des_Estanque, Img_Estanque, Rec_Agua) VALUES \n";
 
         sqlStatements += EstanqueList.map((estanque) => {
-            const nomEstanque = estanque.Nom_Estanque ? estanque.Nom_Estanque.replace(/'/g, "''") : '';
-            const espAgua = estanque.Esp_Agua ? estanque.Esp_Agua.replace(/'/g, "''") : '';
-            const tipEstanque = estanque.Tip_Estanque ? estanque.Tip_Estanque.replace(/'/g, "''") : '';
-            const larEstanque = estanque.Lar_Estanque ? estanque.Lar_Estanque.replace(/'/g, "''") : '';
-            const ancEstanque = estanque.Anc_Estanque ? estanque.Anc_Estanque.replace(/'/g, "''") : '';
-            const desEstanque = estanque.Des_Estanque ? estanque.Des_Estanque.replace(/'/g, "''") : '';
+            const numEstanque = String(estanque.Id_Estanque ?? '').replace(/'/g, "''");
+            const nomEstanque = String(estanque.Nom_Estanque ?? '').replace(/'/g, "''");
+            const espAgua = String(estanque.Esp_Agua ?? '').replace(/'/g, "''");
+            const tipEstanque = String(estanque.Tip_Estanque ?? '').replace(/'/g, "''");
+            const larEstanque = String(estanque.Lar_Estanque ?? '').replace(/'/g, "''");
+            const ancEstanque = String(estanque.Anc_Estanque ?? '').replace(/'/g, "''");
+            const desEstanque = String(estanque.Des_Estanque ?? '').replace(/'/g, "''");
             const imgEstanque = estanque.Img_Estanque ? `${PATH_FOTOS}/${estanque.Img_Estanque}` : '';
-            const recAgua = estanque.Rec_Agua ? estanque.Rec_Agua.replace(/'/g, "''") : '';
-
-            return `('${nomEstanque}', '${espAgua}', '${tipEstanque}', '${larEstanque}', '${ancEstanque}', '${desEstanque}', '${imgEstanque}', '${recAgua}')`;
+            const recAgua = String(estanque.Rec_Agua ?? '').replace(/'/g, "''");
+        
+            return `('${numEstanque}', '${nomEstanque}', '${espAgua}', '${tipEstanque}', '${larEstanque}', '${ancEstanque}', '${desEstanque}', '${imgEstanque}', '${recAgua}')`;
         }).join(",\n") + ";";
+        
 
         // Imprimir el script SQL en la consola
         console.log(sqlStatements);
@@ -214,6 +218,7 @@ const CrudEstanque = () => {
     };
 
     const data = EstanqueList.map((estanque) => [
+        estanque.Id_Estanque,
         estanque.Nom_Estanque,
         estanque.Esp_Agua,
         estanque.Tip_Estanque,
@@ -236,7 +241,7 @@ const CrudEstanque = () => {
       `
     ]);
 
-        const titles = ['Nombre', 'Espejo Agua', 'Tipo', 'Largo', 'Ancho', 'Descripción', 'Imagen', 'Recambio Agua', 'Acciones']
+        const titles = ['Numero', 'Nombre', 'Espejo Agua', 'Tipo', 'Largo', 'Ancho', 'Descripción', 'Imagen', 'Recambio Agua', 'Acciones']
 
     return (
         <>

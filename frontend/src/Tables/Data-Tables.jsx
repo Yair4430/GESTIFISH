@@ -41,7 +41,7 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
       },
       dom: "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
           "<'row'<'col-sm-12'tr>>" +
-          "<'row'<'col-sm-5'i><'col-sm-7'p>>",  // Estructura de Bootstrap
+          "<'row mt-3'<'col-sm-5'i><'col-sm-7'p>>",  // Estructura de Bootstrap
       
       drawCallback: function () {
         $(".dataTables_filter input")

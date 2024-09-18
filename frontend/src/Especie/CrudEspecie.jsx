@@ -124,13 +124,12 @@ const CrudEspecie = () => {
         sqlStatements += "INSERT INTO Especies (Nom_Especie, Car_Especie, Tam_Promedio, Den_Especie, Img_Especie) VALUES \n";
     
         sqlStatements += EspecieList.map((especie) => {
-            // Asegúrate de que Tam_Promedio es una cadena y reemplaza caracteres
-            const tamPromedio = typeof especie.Tam_Promedio === 'string' ? especie.Tam_Promedio.replace(/'/g, " ") : '';
-            
+    
             // Maneja valores null o undefined de manera adecuada
-            const nomEspecie = especie.Nom_Especie ? especie.Nom_Especie.replace(/'/g, "''") : '';
-            const carEspecie = especie.Car_Especie ? especie.Car_Especie.replace(/'/g, "''") : '';
-            const denEspecie = especie.Den_Especie ? especie.Den_Especie.replace(/'/g, "''") : '';
+            const nomEspecie = especie.Nom_Especie ? String(especie.Nom_Especie).replace(/'/g, "''") : '';
+            const carEspecie = especie.Car_Especie ? String(especie.Car_Especie).replace(/'/g, "''") : '';
+            const tamPromedio = especie.Tam_Promedio ? String(especie.Tam_Promedio).replace(/'/g, "''") : '';
+            const denEspecie = especie.Den_Especie ? String(especie.Den_Especie).replace(/'/g, "''") : '';
             const imgEspecie = especie.Img_Especie ? `${PATH_FOTOS}/${especie.Img_Especie}` : '';
     
             // Retorna la línea SQL con todos los campos
@@ -148,8 +147,6 @@ const CrudEspecie = () => {
         link.click();
     };
     
-    
-
     const exportToPDF = () => {
         const doc = new jsPDF();
         // Título de la tabla
@@ -157,6 +154,8 @@ const CrudEspecie = () => {
         doc.setFontSize(16);
         doc.text(title, 14, 20); // Posición del título
 
+        console.log(EspecieList[0])
+        console.log(`${PATH_FOTOS}/${EspecieList[0].Img_Especie}`)
         // Configuración de autoTable
         const tableBody = EspecieList.map((especie) => [
             especie.Nom_Especie,
@@ -164,7 +163,8 @@ const CrudEspecie = () => {
             especie.Tam_Promedio,
             especie.Den_Especie,
             especie.Img_Especie ? (
-                doc.addImage(`${PATH_FOTOS}/${especie.Img_Especie}`, 'JPEG', 14, 60, 50, 50)
+                // doc.addImage(`${PATH_FOTOS}/${especie.Img_Especie}`, 'PNG', 14, 60, 50, 50)
+                doc.addImage(`${PATH_FOTOS}/${especie.Img_Especie}`, 'PNG', 100, 100, 100, 100)
             ) : (
                 'No Image'
             )
@@ -178,6 +178,19 @@ const CrudEspecie = () => {
             headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
             styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
         });
+        // doc.html()
+    //     var doc = new jsPDF('l', 'mm', [1200, 1210]);
+
+	// var pdfjs = document.querySelector('#temp-target');
+
+	// // Convert HTML to PDF in JavaScript
+	// doc.html(pdfjs, {
+	// 	callback: function(doc) {
+	// 		doc.save("output.pdf");
+	// 	},
+	// 	x: 10,
+	// 	y: 10
+	// });
 
         // Guarda el PDF
         doc.save('Especies.pdf');
