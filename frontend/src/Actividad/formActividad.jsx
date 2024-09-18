@@ -41,10 +41,6 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
     const sendFormA = async (e) => {
         e.preventDefault();
 
-        if (!validateForm()) {
-            return; // Detener el envío del formulario si hay errores
-        }
-
         if (
             Nom_Actividad === actividad.Nom_Actividad &&
             Des_Actividad === actividad.Des_Actividad &&

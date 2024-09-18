@@ -8,7 +8,7 @@ const ResponsableModel = db.define('responsable', {
     Doc_Responsable: { type: DataTypes.INTEGER },
     Tip_Responsable: { type: DataTypes.ENUM(['Instructor','Pasante','Instructor a cargo de la Unidad']) },
     Cor_Responsable: { type: DataTypes.STRING(25) },
-    Num_Responsable: { type: DataTypes.INTEGER },
+    Num_Responsable: { type: DataTypes.STRING(10) },
 }, {
     freezeTableName: true
 })

@@ -64,8 +64,6 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
 
           // Corregido el filtrado de datos
           const filteredData = data.filter(row => !row[row.length - 1].includes(`data-id='${id}'`));
-          // const filteredData = data.filter(row => row[row.length - 1] !== id);
-          table.clear().rows.add(filteredData).draw();
         });
       },
       createdRow: function (row, data, dataIndex) {
