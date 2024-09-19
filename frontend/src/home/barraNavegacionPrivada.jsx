@@ -9,37 +9,38 @@ function barraNavegacionPrivada({ logOutUser }) {
   // Estilos en línea para la barra de navegación
   const styles = {
     navbar: {
-      padding: '5px 30px', // Espaciado interno de la barra
-      backgroundColor: '#007bff', // Color de fondo azul más llamativo
+      padding: '5px 30px',
+      height: '80px',
+      backgroundColor: '#007bff',
     },
     navbarTitle: {
-      fontSize: '3rem', // Tamaño del texto del título
-      color: 'white', // Color del texto del título
-      fontWeight: 'bold', // Grosor del texto del título
-      marginLeft: '10px', // Espacio a la izquierda del título
+      fontSize: '2rem', 
+      color: 'white', 
+      fontWeight: 'bold', 
+      marginLeft: '10px', 
     },
     navLink: {
-      marginLeft: '20px', // Espacio a la izquierda de cada enlace
-      fontSize: '1.5rem', // Tamaño del texto de los enlaces
-      display: 'flex', // Usa flexbox para alinear íconos y texto
-      flexDirection: 'column', // Alinea los íconos y el texto en columna
-      alignItems: 'center', // Centra el contenido en el eje transversal
-      transition: 'transform 0.3s ease, opacity 0.3s ease', // Transición para escala y opacidad
+      marginLeft: '30px', 
+      fontSize: '0rem', 
+      display: 'inline-block', 
+      transition: 'transform 0.3s ease, opacity 0.3s ease', 
+      textAlign: 'center', 
     },
     navbarBrandImg: {
-      borderRadius: '50%', // Imagen redonda (círculo)
-      width: '80px', // Ancho de la imagen
-      height: '80px', // Alto de la imagen
-      border: '3px solid white', // Borde blanco alrededor de la imagen
-      boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)', // Sombra para destacar la imagen
+      borderRadius: '50%', 
+      width: '70px', 
+      height: '70px', 
+      border: '3px solid white', 
+      boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)', 
     },
     icon: {
-      fontSize: '2.5rem', // Tamaño de los íconos en la barra de navegación
-      marginBottom: '5px', // Espacio entre el ícono y el texto
+      fontSize: '1.8rem', 
     },
     iconText: {
-      color: 'white', // Color del texto debajo del ícono
-      fontSize: '1rem', // Tamaño del texto
+      color: 'white', 
+      display: 'block', 
+      fontSize: '1rem', 
+      marginTop: '2px', 
     },
   };
 
@@ -82,7 +83,7 @@ function barraNavegacionPrivada({ logOutUser }) {
           <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul className="navbar-nav">
               {/* Elemento de la lista de navegación para el ícono de inicio */}
-              <li className="nav-item">
+              {/*<li className="nav-item">
                 <NavLink
                   to="/"
                   className="nav-link text-white"
@@ -96,14 +97,14 @@ function barraNavegacionPrivada({ logOutUser }) {
                     e.currentTarget.style.opacity = '1';
                   }}
                 >
-                  <i className="fas fa-home" style={styles.icon}></i> {/* Ícono de inicio */}
+                  <i className="fas fa-home" style={styles.icon}></i> 
                   <span style={styles.iconText}>Inicio</span>
                 </NavLink>
-              </li>
+              </li> */}
               {/* Elemento de la lista de navegación para el ícono de formularios */}
               <li className="nav-item">
                 <NavLink
-                  to="/RegistrosMenu"
+                  to="/Dashboard"
                   className="nav-link text-white"
                   style={styles.navLink}
                   onMouseEnter={(e) => {

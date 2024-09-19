@@ -9,7 +9,7 @@ const HomePublica = () => {
       {/* <BarraNavegacionPublica /> */}
       <section className="container mt-5">
         {/* Sección principal con el logo y el título */}
-        <br/>   
+        <br/>
         <Header title="GestiFish" />
 
         {/* Sección de contenido con la descripción del proyecto */}

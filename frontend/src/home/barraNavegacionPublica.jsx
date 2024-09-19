@@ -5,37 +5,38 @@ import Logo from '../IMG/LogoBlanco.jpeg';
 function BarraNavegacionPublica() {
   const styles = {
     navbar: {
-      padding: '5px 30px', 
-      backgroundColor: '#007bff', 
+      padding: '5px 30px',
+      height: '80px',
+      backgroundColor: '#007bff',
     },
     navbarTitle: {
-      fontSize: '3rem', 
+      fontSize: '2rem', 
       color: 'white', 
       fontWeight: 'bold', 
       marginLeft: '10px', 
     },
     navLink: {
       marginLeft: '30px', 
-      fontSize: '1.5rem', 
+      fontSize: '0rem', 
       display: 'inline-block', 
       transition: 'transform 0.3s ease, opacity 0.3s ease', 
       textAlign: 'center', 
     },
     navbarBrandImg: {
       borderRadius: '50%', 
-      width: '80px', 
-      height: '80px', 
+      width: '70px', 
+      height: '70px', 
       border: '3px solid white', 
       boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)', 
     },
     icon: {
-      fontSize: '2.5rem', 
+      fontSize: '1.8rem', 
     },
     iconText: {
       color: 'white', 
       display: 'block', 
       fontSize: '1rem', 
-      marginTop: '5px', 
+      marginTop: '2px', 
     },
   };
 
@@ -89,7 +90,7 @@ function BarraNavegacionPublica() {
               </li>
               <li className="nav-item">
                 <NavLink
-                  to="/CaruselContact"
+                  to="/Contactos"
                   className="nav-link text-white"
                   style={styles.navLink}
                   onMouseEnter={(e) => {

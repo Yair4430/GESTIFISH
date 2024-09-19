@@ -46,8 +46,7 @@ const CaruselContact = () => {
 
   return (
     <>
-    <br/>
-    <br/>
+
       {/* <BarraNavegacionPublica /> */}
       <div style={{
         paddingTop: '3rem',
@@ -56,6 +55,8 @@ const CaruselContact = () => {
         backgroundColor: '#f8f9fa',
         fontFamily: 'Poppins, sans-serif'
       }}>
+        <br/>
+        <br/>
         {/* Título de la sección ¿Quiénes Somos? */}
         <h2 style={styles.sectionHeaderQuienesSomos}>¿Quiénes Somos?</h2>
 

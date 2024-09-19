@@ -50,7 +50,7 @@ function App() {
             setIsAuth(true);
             const lastPath = localStorage.getItem('lastPath') || '/';
             if (lastPath === '/auth' || lastPath === '/') {
-              navigate('/'); // Redirige al Home si la última ruta es /auth o /
+              navigate('/Dashboard'); // Redirige al Home si la última ruta es /auth o /
             } else {
               navigate(lastPath); // Redirige a la última ruta guardada
             }
@@ -93,7 +93,7 @@ function App() {
           <BarraNavegacionPrivada logOutUser={logOutUser} />
           <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/RegistrosMenu' element={<PrivateRoute><RegistrosMenu /></PrivateRoute>} />
+            <Route path='/Dashboard' element={<PrivateRoute><RegistrosMenu /></PrivateRoute>} />
             <Route path='/Alimentacion' element={<PrivateRoute><CrudAlimentacion /></PrivateRoute>} />
             <Route path='/Responsable' element={<PrivateRoute><CrudResponsable /></PrivateRoute>} />
             <Route path='/Estanque' element={<PrivateRoute><CrudEstanque /></PrivateRoute>} />
@@ -112,7 +112,7 @@ function App() {
           <BarraNavegacionPublica />
           <Routes>
             <Route path='/' element={<HomePublico />} />
-            <Route path='/CaruselContact' element={<CaruselContact />} />
+            <Route path='/Contactos' element={<CaruselContact />} />
             <Route path='/SimuladorPublico' element={<Simulador />} />
             <Route path='/auth' element={<Auth />} />
             <Route path='/reset-password' element={<ResetPassword />} />

@@ -4,8 +4,8 @@ import db from '../database/db.js';
 const ActividadModel = db.define('actividad', {
   
   Id_Actividad: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true,},
-  Nom_Actividad: DataTypes.STRING,
-  Des_Actividad: DataTypes.STRING,
+  Nom_Actividad: DataTypes.STRING(25),
+  Des_Actividad: DataTypes.STRING(90),
   Id_Responsable: DataTypes.INTEGER,
   Fec_Actividad: DataTypes.DATE,
   Hor_Actividad: DataTypes.TIME,

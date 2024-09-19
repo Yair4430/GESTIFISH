@@ -12,7 +12,7 @@ const TrasladoModel = db.define('traslados', {
             key: "Id_Responsable"
         },
     },      
-    Obs_Traslado: {type: DataTypes.STRING(50),allowNull: true},
+    Obs_Traslado: {type: DataTypes.STRING(90),allowNull: true},
     Hor_Traslado: {type: DataTypes.TIME,allowNull: false}
 
 }, {

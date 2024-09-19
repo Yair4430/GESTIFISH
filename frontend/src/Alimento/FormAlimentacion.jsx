@@ -13,8 +13,64 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
     const [DatosResponsable, setDatosResponsable] = useState([]);
     const [DatosSiembra, setDatosSiembra] = useState([]);
 
+  // Estados para el rango de fechas de la semana actual
+  const [weekRange, setWeekRange] = useState({ start: '', end: '' });
+
+  useEffect(() => {
+    // Obtener la fecha de inicio y fin de la semana actual en formato YYYY-MM-DD
+    const today = new Date();
+    const firstDay = today.getDate() - today.getDay(); // Ajusta al primer día de la semana
+    const lastDay = firstDay + 6; // Ajusta al último día de la semana
+
+    const start = new Date(today.setDate(firstDay));
+    const end = new Date(today.setDate(lastDay));
+
+    const formatDate = (date) => {
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    setWeekRange({ start: formatDate(start), end: formatDate(end) });
+  }, []);
+
+  const handleDateChange = (e) => {
+    const selectedDate = e.target.value;
+    const { start, end } = weekRange;
+
+    if (selectedDate < start || selectedDate > end) {
+      Swal.fire({
+        title: 'Fecha Inválida',
+        text: `Solo se permite registrar fechas dentro de la semana actual (del ${start} al ${end}).`,
+        icon: 'warning'
+      });
+      e.target.value = Fec_Alimentacion; // Restablecer el valor del campo
+      return; // No actualizar el estado con una fecha fuera del rango
+    }
+    setFec_Alimentacion(selectedDate); // Actualizar el estado solo si la fecha es válida
+  };
+
     const sendForm = async (e) => {
         e.preventDefault();
+
+        if (
+            Fec_Alimentacion === alimentacion.Fec_Alimentacion &&
+            Can_RacionKg === alimentacion.Can_RacionKg &&
+            Id_Siembra === alimentacion.Id_Siembra &&
+            Id_Responsable === alimentacion.Id_Responsable &&
+            Tip_Alimento === alimentacion.Tip_Alimento &&
+            Hor_Alimentacion === alimentacion.Hor_Alimentacion &&
+            Vlr_Alimentacion === alimentacion.Vlr_Alimentacion
+        ) {
+            Swal.fire({
+                title: 'Sin cambios',
+                text: 'No ha realizado ningún cambio.',
+                icon: 'info'
+            });
+            return; // Salir de la función sin hacer la solicitud
+        }
+
         try {
             const data = {
                 Fec_Alimentacion,
@@ -33,9 +89,9 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
                     text: '¡Registro actualizado exitosamente!',
                     icon: 'success'
                 }).then(() => {
-                // updateTextButton('Enviar');
-                clearForm(); // Limpiar el formulario después de actualizar
-                $('#modalForm').modal('hide');
+                    // updateTextButton('Enviar');
+                    clearForm(); // Limpiar el formulario después de actualizar
+                    $('#modalForm').modal('hide');
                 })
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, data);
@@ -80,6 +136,24 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
         setId_Responsable(alimentacion.Id_Responsable);
     };
 
+    // Función para evitar la entrada de caracteres inválidos
+    const handleKeyDown = (e) => {
+        if (["e", "E", "+", "-", ","].includes(e.key)) {
+            e.preventDefault();  // Evita que el carácter sea ingresado
+        }
+    };
+
+    // Función para validar que solo números sean permitidos
+    const handleNumericInput = (e, setValue) => {
+        const value = e.target.value;
+
+        // Solo permite dígitos y puntos decimales
+        if (!isNaN(value) && !value.includes("e")) {
+            setValue(value);  // Actualiza el estado si es un número válido
+        }
+    };
+
+
     useEffect(() => {
         const getResponsable = async () => {
             try {
@@ -111,33 +185,39 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
 
     return (
         <>
-        {/* <div className="container mt-5"> */}
-        {/* <div style={{ marginLeft: '300px', paddingTop: '70px' }}> */}
-
-
-            <div className="card">
-                <div className="card-header bg-primary text-white">
-                <h1 className="text-center">
-                            {buttonForm === 'Actualizar' ? 'Actualizar Actividad' : 'Registrar Actividad'}
-                        </h1>
-                </div>
-                <div className="card-body">
-                    <form id="alimentacionForm" onSubmit={sendForm} className="fw-bold m-2">
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Fec_Alimentacion" className="col-sm-5 col-form-label text-end">Fecha de Alimentación:</label>
-                            <div className="col-sm-4">
-                                <input className="form-control" type="date" id="Fec_Alimentacion" value={Fec_Alimentacion} onChange={(e) => setFec_Alimentacion(e.target.value)} required />
+            {/*<div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
+                  <h1 className="text-center">
+                      {buttonForm === 'Actualizar' ? 'Actualizar Alimentación' : 'Registrar Alimentación'}
+                  </h1>
+              </div>*/}
+            <div className="card-body">
+                <form id="alimentacionForm" onSubmit={sendForm} className="fw-bold m-2">
+                    <div className="row mb-3">
+                        <div className="col-md-6">
+                            <div className="form-group mb-3">
+                                <label htmlFor="Fec_Alimentacion" className="form-label">Fecha Alimentación:</label>
+                                <input className="form-control" type="date" id="Fec_Alimentacion" value={Fec_Alimentacion} onChange={handleDateChange} required min={weekRange.start} max={weekRange.end} />
                             </div>
                         </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Can_RacionKg" className="col-sm-5 col-form-label text-end">Cantidad de Ración (Kg):</label>
-                            <div className="col-sm-4">
-                                <input className="form-control" type="number" id="Can_RacionKg" value={Can_RacionKg} onChange={(e) => setCan_RacionKg(e.target.value)} required />
+                        <div className="col-md-6">
+                            <div className="form-group mb-3">
+                                <label htmlFor="Can_RacionKg" className="form-label">Cantidad Ración (Kg):</label>
+                                <input
+                                    className="form-control"
+                                    type="number"
+                                    id="Can_RacionKg"
+                                    value={Can_RacionKg}
+                                    onChange={(e) => handleNumericInput(e, setCan_RacionKg)}
+                                    onKeyDown={handleKeyDown}
+                                    required
+                                />
                             </div>
                         </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Tip_Alimento" className="col-sm-5 col-form-label text-end">Tipo de Alimento:</label>
-                            <div className="col-sm-4">
+                    </div>
+                    <div className="row mb-3">
+                        <div className="col-md-6">
+                            <div className="form-group mb-3">
+                                <label htmlFor="Tip_Alimento" className="form-label">Tipo Alimento:</label>
                                 <select className="form-control" id="Tip_Alimento" value={Tip_Alimento} onChange={(e) => setTip_Alimento(e.target.value)} required>
                                     <option value="">Selecciona uno...</option>
                                     <option value="Concentrado">Concentrado</option>
@@ -145,33 +225,36 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
                                 </select>
                             </div>
                         </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Hor_Alimentacion" className="col-sm-5 col-form-label text-end">Hora de Alimentación:</label>
-                            <div className="col-sm-4">
+                        <div className="col-md-6">
+                            <div className="form-group mb-3">
+                                <label htmlFor="Hor_Alimentacion" className="form-label">Hora Alimentación:</label>
                                 <input className="form-control" type="time" id="Hor_Alimentacion" value={Hor_Alimentacion} onChange={(e) => setHor_Alimentacion(e.target.value)} required />
                             </div>
                         </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Vlr_Alimentacion" className="col-sm-5 col-form-label text-end">Valor de Alimentación:</label>
-                            <div className="col-sm-4">
-                                <input className="form-control" type="number" id="Vlr_Alimentacion" value={Vlr_Alimentacion} onChange={(e) => setVlr_Alimentacion(e.target.value)} required />
+                    </div>
+                    <div className="row mb-3">
+                        <div className="col-md-6">
+                            <div className="form-group mb-3">
+                                <label htmlFor="Vlr_Alimentacion" className="form-label">Valor Alimentación ($):</label>
+                                <input className="form-control" type="number" id="Vlr_Alimentacion" value={Vlr_Alimentacion} onChange={(e) => handleNumericInput(e, setVlr_Alimentacion)} onKeyDown={handleKeyDown} required />
                             </div>
                         </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Id_SiembraSelect" className="col-sm-5 col-form-label text-end">Fecha Siembra:</label>
-                            <div className="col-sm-4">
+                        <div className="col-md-6">
+                            <div className="form-group mb-3">
+                                <label htmlFor="Id_SiembraSelect" className="form-label">Fecha Siembra:</label>
                                 <select className="form-control" id="Id_SiembraSelect" value={Id_Siembra} onChange={(e) => setId_Siembra(e.target.value)} required>
                                     <option value="">Selecciona uno...</option>
                                     {DatosSiembra.map((siembra) => (
-                                        <option key={siembra.Id_Siembra} value={siembra.Id_Siembra}> {siembra.Fec_Siembra}
-                                        </option>
+                                        <option key={siembra.Id_Siembra} value={siembra.Id_Siembra}> {siembra.Fec_Siembra}</option>
                                     ))}
                                 </select>
                             </div>
                         </div>
-                        <div className="form-group row mb-3 gap-1 align-items-center">
-                            <label htmlFor="Id_ResponsableSelect" className="col-sm-5 col-form-label text-end">Nombre Responsable:</label>
-                            <div className="col-sm-4">
+                    </div>
+                    <div className="row mb-3">
+                        <div className="col-md-6">
+                            <div className="form-group mb-3">
+                                <label htmlFor="Id_ResponsableSelect" className="form-label">Nombre Responsable:</label>
                                 <select className="form-control" id="Id_ResponsableSelect" value={Id_Responsable} onChange={(e) => setId_Responsable(e.target.value)} required>
                                     <option value="">Selecciona uno...</option>
                                     {DatosResponsable.map((responsable) => (
@@ -182,18 +265,32 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
                                 </select>
                             </div>
                         </div>
-                        <div className="text-center">
-                            <button type="submit" id="boton" className="btn btn-success btn-block m-2">
-                                {buttonForm}
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div className="text-center">
+                        <button
+                            type="submit"
+                            id="boton"
+                            className={`btn btn-block m-2 ${buttonForm === 'Actualizar' ? 'btn-success' : 'btn-primary'}`}
+                        >
+                            {buttonForm === 'Actualizar' && (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-repeat" viewBox="0 0 16 16" style={{ marginRight: '8px' }}>
+                                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41m-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9" />
+                                    <path fillRule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5 5 0 0 0 8 3M3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9z" />
+                                </svg>
+                            )}
+                            {buttonForm === 'Enviar' && (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16" style={{ marginRight: '8px' }}>
+                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
+                                </svg>
+                            )}
+                            {buttonForm}
+                        </button>
+                    </div>
+                </form>
             </div>
-        {/* </div> */}
-    </>
+        </>
+    );
 
-);
 };
 
 export default FormAlimentacion;

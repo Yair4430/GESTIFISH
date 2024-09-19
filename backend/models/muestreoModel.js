@@ -5,7 +5,7 @@ const MuestreoModel = db.define('muestreo', {
   Id_Muestreo: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   Fec_Muestreo: { type: DataTypes.DATEONLY, allowNull: false },
   Num_Peces: { type: DataTypes.INTEGER, allowNull: false },
-  Obs_Muestreo: { type: DataTypes.STRING(100), allowNull: false },
+  Obs_Muestreo: { type: DataTypes.STRING(90), allowNull: false },
   Pes_Esperado: { type: DataTypes.FLOAT, allowNull: false },
   Id_Siembra: { type: DataTypes.INTEGER, allowNull: false },
   Id_Responsable: { type: DataTypes.INTEGER, allowNull: false },

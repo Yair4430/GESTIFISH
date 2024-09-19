@@ -10,7 +10,7 @@ const SiembraModel = db.define('siembra', {
     Id_Especie: { type: DataTypes.INTEGER },
     Id_Estanque: { type: DataTypes.INTEGER },
     Pes_Actual: { type: DataTypes.INTEGER },
-    Obs_Siembra: { type: DataTypes.STRING(50) },
+    Obs_Siembra: { type: DataTypes.STRING(90) },
     Hor_Siembra: { type: DataTypes.TIME },
     Gan_Peso: { type: DataTypes.FLOAT },
     Vlr_Siembra: { type: DataTypes.INTEGER }

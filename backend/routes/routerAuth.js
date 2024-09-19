@@ -16,7 +16,11 @@ routerAuth.get('/verify', (req, res) => {
     // Aquí debería ir la lógica para verificar el token
     res.status(200).send('Token Verified');
   });
-routerAuth.post('/login', logInUser);
+  routerAuth.post('/login', [
+    check('Cor_Usuario', 'Por favor ingrese un email válido').isEmail(),
+    check('Con_Usuario', 'La contraseña debe tener al menos 8 caracteres').isLength({ min: 8 })
+], logInUser);
+
 routerAuth.post('/request-password-reset', getResetPassword);
 routerAuth.post('/reset-password', setNewPassword);
 routerAuth.get('/protected-route', verifyToken, (req, res) => {
