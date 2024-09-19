@@ -373,11 +373,12 @@ const CrudActividad = () => {
                                     URI={URI}
                                     updateTextButton={updateTextButton}
                                     getAllActividad={getAllActividad}
-                                    closeModal={() => {
+                                    closeModal={closeModal}
+                                    /*closeModal={() => {
                                         const modalElement = document.getElementById('modalForm');
                                         const modal = window.bootstrap.Modal.getInstance(modalElement);
                                         modal.hide();
-                                    }}
+                                    }}*/
                                 />
                             </div>
                         </div>

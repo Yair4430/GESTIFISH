@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
-const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuestreo }) => {
+const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuestreo, closeModal }) => {
     const [Fec_Muestreo, setFec_Muestreo] = useState('');
     const [Num_Peces, setNum_Peces] = useState('');
     const [Obs_Muestreo, setObs_Muestreo] = useState('');
@@ -57,6 +57,8 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                 // updateTextButton('Enviar');
                 getAllMuestreo()
                 clearForm(); // Limpiar el formulario después de actualizar
+                closeModal()
+
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, data);
                 Swal.fire({

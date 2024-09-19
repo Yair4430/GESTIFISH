@@ -364,11 +364,12 @@ const CrudTraslado = () => {
                                         URI={URI}
                                         updateTextButton={updateTextButton}
                                         getAllTraslados={getAllTraslados}
-                                        closeModal={() => {
+                                        closeModal={closeModal}
+                                        /*closeModal={() => {
                                             const modalElement = document.getElementById('modalForm');
                                             const modal = window.bootstrap.Modal.getInstance(modalElement);
                                             modal.hide();
-                                        }}
+                                        }}*/
                                     />
                                 </div>
                             </div>

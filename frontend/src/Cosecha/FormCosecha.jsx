@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
-const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha }) => {
+const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha, closeModal}) => {
     const [Fec_Cosecha, setFec_Cosecha] = useState('');
     const [Can_Peces, setCan_Peces] = useState('');
     const [Pes_Eviscerado, setPes_Eviscerado] = useState('');
@@ -63,7 +63,8 @@ const FormCosecha = ({ buttonForm, cosecha, URI, updateTextButton, getAllCosecha
                 // updateTextButton('Enviar');
                 clearForm(); // Limpiar el formulario después de la actualización
                 getAllCosecha()
-                $('#modalForm').modal('hide');
+                closeModal()
+
                 })
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, data);

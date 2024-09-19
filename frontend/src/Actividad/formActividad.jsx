@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
-const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllActividad }) => {
+const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllActividad, closeModal  }) => {
     const [Id_Actividad, setId_Actividad] = useState('');
     const [Nom_Actividad, setNom_Actividad] = useState('');
     const [Des_Actividad, setDes_Actividad] = useState('');
@@ -77,6 +77,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
               });
               clearFormA();
               getAllActividad();
+              closeModal(); // Llamamos a la función closeModal que se pasó como una prop
           });
 
           } else if (buttonForm === 'Enviar') {
@@ -97,6 +98,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
               if (respuestaApi.status === 201) {
                   clearFormA();
                   getAllActividad();
+                 
               }
           }
       } catch (error) {

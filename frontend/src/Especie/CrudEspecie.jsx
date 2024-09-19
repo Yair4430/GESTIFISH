@@ -402,11 +402,12 @@ const CrudEspecie = () => {
                                         URI={URI} 
                                         updateTextButton={updateTextButton} 
                                         getAllEspecies={getAllEspecies} 
-                                        closeModal ={() => {
+                                        closeModal={closeModal}
+                                        /*closeModal ={() => {
                                             const modalElement = document.getElementById('modalForm');
                                             const modal = window.bootstrap.Modal.getInstance(modalElement);
                                             modal.hide();
-                                        }}
+                                        }}*/
                                     />
                                 </div>
                             </div>

@@ -386,11 +386,12 @@ const CrudMuestreo = () => {
                                         URI={URI}
                                         updateTextButton={updateTextButton}
                                         getAllMuestreo={getAllMuestreo}
-                                        closeModal={() => {
+                                        closeModal={closeModal}
+                                        /*closeModal={() => {
                                             const modalElement = document.getElementById('modalForm');
                                             const modal = window.bootstrap.Modal.getInstance(modalElement);
                                             modal.hide();
-                                        }}
+                                        }}*/
                                     />
                                 </div>
                             </div>

@@ -67,7 +67,8 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                 // updateTextButton('Enviar');
                 clearForm(); 
                 getAllSiembra()
-                $('#modalForm').modal('hide');
+                closeModal()
+                
                 });
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, data);

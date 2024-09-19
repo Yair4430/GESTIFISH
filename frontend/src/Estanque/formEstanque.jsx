@@ -2,7 +2,7 @@ import axios from "axios";
 import { useRef, useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
-const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstanques }) => {
+const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstanques, closeModal }) => {
     const [Id_Estanque, setId_Estanque] = useState('');
     const [Nom_Estanque, setNom_Estanque] = useState('');
     const [Esp_Agua, setEsp_Agua] = useState('');
@@ -62,7 +62,7 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
                     // updateTextButton('Enviar');
                     getAllEstanques();
                     clearForm();
-              $('#modalForm').modal('hide');
+                    closeModal()
 
                     })
                 } else {

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
-const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, getAllAlimentacion }) => {
+const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, getAllAlimentacion, closeModal }) => {
     const [Fec_Alimentacion, setFec_Alimentacion] = useState('');
     const [Can_RacionKg, setCan_RacionKg] = useState('');
     const [Tip_Alimento, setTip_Alimento] = useState('');
@@ -53,7 +53,7 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
                 }).then(() => {
                 // updateTextButton('Enviar');
                 clearForm(); // Limpiar el formulario después de actualizar
-                $('#modalForm').modal('hide');
+                closeModal()
                 })
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, data);

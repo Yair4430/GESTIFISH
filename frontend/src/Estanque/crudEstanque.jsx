@@ -402,11 +402,12 @@ const CrudEstanque = () => {
                                         URI={URI}
                                         updateTextButton={updateTextButton}
                                         getAllEstanques={getAllEstanques}
-                                        closeModal={() => {
+                                        closeModal={closeModal}
+                                        /*closeModal={() => {
                                             const modalElement = document.getElementById('modalForm');
                                             const modal = window.bootstrap.Modal.getInstance(modalElement);
                                             modal.hide();
-                                        }}
+                                        }}*/
                                         />
                                     </div>
                                 </div>

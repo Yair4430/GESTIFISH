@@ -2,7 +2,7 @@ import axios from "axios";
 import { useRef, useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
-const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecies }) => {
+const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecies, closeModal }) => {
     const [Nom_Especie, setNom_Especie] = useState('');
     const [Car_Especie, setCar_Especie] = useState('');
     const [Img_Especie, setImg_Especie] = useState(null);
@@ -13,70 +13,70 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
 
     const sendForm = async (e) => {
         e.preventDefault();
-
+      
         if (
-            Nom_Especie === especie.Nom_Especie &&
-            Car_Especie === especie.Car_Especie &&
-            Tam_Promedio === especie.Tam_Promedio &&
-            Den_Especie === especie.Den_Especie &&
-            Img_Especie === null
+          Nom_Especie === especie.Nom_Especie &&
+          Car_Especie === especie.Car_Especie &&
+          Tam_Promedio === especie.Tam_Promedio &&
+          Den_Especie === especie.Den_Especie &&
+          Img_Especie === null
         ) {
-            Swal.fire({
-                title: 'Sin cambios',
-                text: 'No ha realizado ningún cambio.',
-                icon: 'info'
-            });
-            return; // Salir de la función sin hacer la solicitud
-        }
-
+          Swal.fire({
+            title: 'Sin cambios',
+            text: 'No ha realizado ningún cambio.',
+            icon: 'info'
+          });
+          return;
+        }
+      
         const formData = new FormData();
         formData.append('Nom_Especie', Nom_Especie);
         formData.append('Car_Especie', Car_Especie);
         formData.append('Tam_Promedio', Tam_Promedio);
         formData.append('Den_Especie', Den_Especie);
         if (Img_Especie) {
-            formData.append('Img_Especie', Img_Especie);
+          formData.append('Img_Especie', Img_Especie);
         }
-
-        // Verificar el contenido de FormData
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}:`, value);
-        }
-
+      
         try {
-            let respuestaApi;
-            if (buttonForm === 'Actualizar') {
-                respuestaApi = await axios.put(`${URI}${especie.Id_Especie}`, formData, {
-                    headers: { "Content-Type": "multipart/form-data" }
-                });
-            } else if (buttonForm === 'Enviar') {
-                respuestaApi = await axios.post(URI, formData, {
-                    headers: { "Content-Type": "multipart/form-data" }
-                });
-            }
-
-            if (respuestaApi && respuestaApi.status >= 200 && respuestaApi.status < 300) {
-                Swal.fire({
-                    title: buttonForm === 'Actualizar' ? 'Actualizado' : 'Guardado',
-                    text: `¡Registro ${buttonForm === 'Actualizar' ? 'actualizado' : 'guardado'} exitosamente!`,
-                    icon: 'success'
-                });
-            } else {
-                console.warn('HTTP Status:', respuestaApi?.status);
-            }
-
-            clearForm();
-            getAllEspecies();
-            updateTextButton('Enviar');
-        } catch (error) {
-            console.error('Error al enviar el formulario:', error.response?.status || error.message);
-            Swal.fire({
-                title: 'Error',
-                text: 'No se pudo guardar la especie.',
-                icon: 'error'
+          if (buttonForm === 'Actualizar') {
+            await axios.put(`${URI}${especie.Id_Especie}`, formData, {
+              headers: { "Content-Type": "multipart/form-data" }
+            }).then(() => {
+              Swal.fire({
+                title: 'Actualizado',
+                text: '¡Registro actualizado exitosamente!',
+                icon: 'success'
+              });
+              clearForm();
+              getAllEspecies();
+              updateTextButton('Enviar');
+              closeModal();
             });
+          } else if (buttonForm === 'Enviar') {
+            const respuestaApi = await axios.post(URI, formData, {
+              headers: { "Content-Type": "multipart/form-data" }
+            });
+            Swal.fire({
+              title: 'Guardado',
+              text: '¡Registro guardado exitosamente!',
+              icon: 'success'
+            });
+            if (respuestaApi.status === 201) {
+              clearForm();
+              getAllEspecies();
+              updateTextButton('Enviar');
+              closeModal();
+            }
+          }
+        } catch (error) {
+          Swal.fire({
+            title: 'Error',
+            text: 'No se pudo guardar la especie.',
+            icon: 'error'
+          });
         }
-    };
+      };
 
     const clearForm = () => {
         setNom_Especie('');

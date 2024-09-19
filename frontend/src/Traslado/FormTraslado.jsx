@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
-const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTraslados }) => {
+const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTraslados, closeModal }) => {
     const [Fec_Traslado, setFec_Traslado] = useState('');
     const [Can_Peces, setCan_Peces] = useState('');
     const [Id_Responsable, setId_Responsable] = useState('');
@@ -47,6 +47,8 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
                 // updateTextButton('Enviar');
                 getAllTraslados();
                 clearForm(); // Limpiar el formulario después de la actualización
+                closeModal()
+                
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, data);
                 Swal.fire({

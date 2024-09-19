@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
-const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllMortalidad }) => {
+const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllMortalidad, closeModal }) => {
     const [Fec_Mortalidad, setFec_Mortalidad] = useState('');
     const [Can_Peces, setCan_Peces] = useState('');
     const [Mot_Mortalidad, setMot_Mortalidad] = useState('');
@@ -47,6 +47,8 @@ const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllM
                 });
                 updateTextButton('Enviar');
                 clearForm(); // Limpiar el formulario después de la actualización
+                closeModal()
+
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, data);
                 Swal.fire({

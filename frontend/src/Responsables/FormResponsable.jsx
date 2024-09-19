@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
-const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAllResponsable }) => {
+const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAllResponsable, closeModal }) => {
     const [Id_Responsable, setId_Responsable] = useState('');
     const [Nom_Responsable, setNom_Responsable] = useState('');
     const [Ape_Responsable, setApe_Responsable] = useState('');
@@ -21,7 +21,7 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
             Swal.fire('Error', 'Los apellidos del responsable son obligatorios', 'error');
             return false;
         }
-        if (!Doc_Responsable.trim()) {
+        if (!Doc_Responsable.toString().trim()) {
             Swal.fire('Error', 'El documento de identificación es obligatorio', 'error');
             return false;
         }
@@ -84,6 +84,7 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                     });
                     clearFormR();
                     getAllResponsable();
+                    closeModal()
                 }
             } else if (buttonForm === 'Enviar') {
                 const respuestaApi = await axios.post(URI, {
@@ -132,7 +133,7 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
         setTip_Responsable(responsable.Tip_Responsable);
         setCor_Responsable(responsable.Cor_Responsable);
         setNum_Responsable(responsable.Num_Responsable);
-    };
+      };
 
         // Función para evitar la entrada de caracteres inválidos
     const handleKeyDown = (e) => {
@@ -154,7 +155,7 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
       // Función para manejar cambios en los campos de texto
       const handleInputChange = (e) => {
         const { name, value, maxLength } = e.target;
-
+      
         if (value.length <= maxLength) {
           if (name === 'Nom_Responsable') {
             setNom_Responsable(value);
@@ -185,7 +186,16 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="Nom_Responsable" className="form-label">Nombres:</label>
-                                    <input className="form-control" type="text" id="Nom_Responsable" name="Nom_Responsable" onChange={handleInputChange} maxLength={25} required />
+                                    <input 
+                                        className="form-control" 
+                                        type="text" 
+                                        id="Nom_Responsable" 
+                                        name="Nom_Responsable"
+                                        value={Nom_Responsable} 
+                                        onChange={handleInputChange}
+                                        maxLength={25}
+                                        required 
+                                        />
                                     {Nom_Responsable.length === 25 && (
                                         <span className="text-danger">¡Has alcanzado el límite de 25 caracteres!</span>
                                     )}
@@ -232,8 +242,9 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                                     value={Cor_Responsable} 
                                     onChange={handleInputChange}
                                     maxLength={25}
-                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
-                                    title="El correo debe tener un formato válido, incluyendo una extensión como '.com', '.net', etc." 
+                                    pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                    title="El correo debe tener un formato válido"
+
                                     required 
                                 />
                                     {Cor_Responsable.length === 25 && (
