@@ -19,7 +19,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
     // Limitar el número de cifras
     if (name === 'espejoAgua' && value.replace(/\D/g, '').length > 4) return;
     if (name === 'densidad' && value.replace(/\D/g, '').length > 2) return;
-    if (name === 'precioBulto' && value.replace(/\D/g, '').length > 7) return;
+    if (name === 'precioBulto' && value.replace(/\D/g, '').length > 6) return;
 
     const formattedValue = formatNumber(value.replace(/\D/g, ''));
 

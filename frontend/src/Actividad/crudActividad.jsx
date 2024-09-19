@@ -139,8 +139,13 @@ const CrudActividad = () => {
 
         // Título de la tabla
         const title = "Actividades";
-        doc.setFontSize(16);
-        doc.text(title, 14, 20); // Posición del título
+        const pageWidth = doc.internal.pageSize.getWidth(); // Obtener el ancho de la página
+        const titleFontSize = 22; // Tamaño de fuente más grande
+        doc.setFontSize(titleFontSize);
+        doc.setFont('helvetica', 'bold'); // Poner el título en negrita
+        const textWidth = doc.getTextWidth(title); // Ancho del texto
+        const xOffset = (pageWidth - textWidth) / 2; // Calcular la posición para centrar el texto
+        doc.text(title, xOffset, 20); // Posición del título centrado
 
         // Configuración de autoTable
         const tableBody = ActividadList.map((actividad) => [
@@ -185,7 +190,9 @@ const CrudActividad = () => {
         setIsModalOpen(true);
     };
 
-    const closeModal = () => setIsModalOpen(false);
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
 
     const handleEdit = (Id_Actividad) => {
         getActividad(Id_Actividad);

@@ -168,7 +168,7 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="Img_Especie" className="form-label">Imagen:</label>
-                                <input className="form-control" type="file" id="Img_Especie" onChange={(e) => setImg_Especie(e.target.files[0])} ref={inputFoto} />
+                                <input className="form-control" type="file" accept="image/*" id="Img_Especie" onChange={(e) => setImg_Especie(e.target.files[0])} ref={inputFoto} />
                             </div>
                         </div>
                         <div className="col-md-6">

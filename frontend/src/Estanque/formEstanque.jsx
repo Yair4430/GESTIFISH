@@ -229,7 +229,7 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="Img_Estanque" className="form-label">Imagen:</label>
-                                    <input className="form-control" type="file" id="Img_Estanque" onChange={(e) => setImg_Estanque(e.target.files[0])} ref={inputFoto} />
+                                    <input className="form-control" type="file" accept="image/*" id="Img_Estanque" onChange={(e) => setImg_Estanque(e.target.files[0])} ref={inputFoto} />
                                 </div>
                             </div>
                         </div>

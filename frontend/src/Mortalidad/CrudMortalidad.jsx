@@ -139,8 +139,13 @@ const CrudMortalidad = () => {
         const doc = new jsPDF();
         // Título de la tabla
         const title = "Mortalidades";
-        doc.setFontSize(16);
-        doc.text(title, 14, 20); // Posición del título
+        const pageWidth = doc.internal.pageSize.getWidth(); // Obtener el ancho de la página
+        const titleFontSize = 22; // Tamaño de fuente más grande
+        doc.setFontSize(titleFontSize);
+        doc.setFont('helvetica', 'bold'); // Poner el título en negrita
+        const textWidth = doc.getTextWidth(title); // Ancho del texto
+        const xOffset = (pageWidth - textWidth) / 2; // Calcular la posición para centrar el texto
+        doc.text(title, xOffset, 20); // Posición del título centrado
 
         // Configuración de autoTable
         const tableBody = MortalidadList.map((mortalidad) => [
