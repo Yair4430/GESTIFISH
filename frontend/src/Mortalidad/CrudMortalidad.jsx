@@ -80,7 +80,7 @@ const CrudMortalidad = () => {
                         icon: "success"
                     });
                     //getAllMortalidad(); // Refrescar la lista después de la eliminación
-                } catch (error) {
+                } catch (error) {   
                     console.error('Error deleting mortalidad:', error.response?.status || error.message);
                 }
             } else {
