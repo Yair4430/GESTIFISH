@@ -15,6 +15,44 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
     const [DatosResponsable, setDatosResponsable] = useState([]);
     const [DatosEstanque, setDatosEstanque] = useState([]);
 
+        // Estados para el rango de fechas de la semana actual
+    const [weekRange, setWeekRange] = useState({ start: '', end: '' });
+
+    useEffect(() => {
+      // Obtener la fecha de inicio y fin de la semana actual en formato YYYY-MM-DD
+      const today = new Date();
+      const firstDay = today.getDate() - today.getDay(); // Ajusta al primer día de la semana
+      const lastDay = firstDay + 6; // Ajusta al último día de la semana
+  
+      const start = new Date(today.setDate(firstDay));
+      const end = new Date(today.setDate(lastDay));
+  
+      const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+  
+      setWeekRange({ start: formatDate(start), end: formatDate(end) });
+    }, []);
+  
+    const handleDateChange = (e) => {
+      const selectedDate = e.target.value;
+      const { start, end } = weekRange;
+  
+      if (selectedDate < start || selectedDate > end) {
+        Swal.fire({
+          title: 'Fecha Inválida',
+          text: `Solo se permite registrar fechas dentro de la semana actual (del ${start} al ${end}).`,
+          icon: 'warning'
+        });
+        e.target.value = Fec_Actividad; // Restablecer el valor del campo
+        return; // No actualizar el estado con una fecha fuera del rango
+      }
+      setFec_Actividad(selectedDate); // Actualizar el estado solo si la fecha es válida
+    };
+
     const getResponsable = async () => {
         try {
             const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/');
@@ -204,7 +242,9 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                       id="Fec_Actividad"
                       className="form-control"
                       value={Fec_Actividad}
-                      onChange={(e) => setFec_Actividad(e.target.value)}
+                      onChange={handleDateChange}
+                      min={weekRange.start}
+                      max={weekRange.end}
                       required
                     />
                   </div>

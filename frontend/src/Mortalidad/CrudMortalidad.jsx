@@ -79,7 +79,7 @@ const CrudMortalidad = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    getAllMortalidad(); // Refrescar la lista después de la eliminación
+                    //getAllMortalidad(); // Refrescar la lista después de la eliminación
                 } catch (error) {
                     console.error('Error deleting mortalidad:', error.response?.status || error.message);
                 }

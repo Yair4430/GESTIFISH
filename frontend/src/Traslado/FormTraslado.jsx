@@ -10,6 +10,21 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
     const [Hor_Traslado, setHor_Traslado] = useState('');
     const [DatosResponsable, setDatosResponsable] = useState([]);
 
+    // Obtener la fecha actual en formato YYYY-MM-DD
+    const getTodayDate = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Los meses en JavaScript son 0-indexados
+        const day = today.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    useEffect(() => {
+        // Establecer la fecha actual en el campo Fec_Cosecha por defecto
+        setFec_Traslado(getTodayDate());
+    }, []);  
+
+
     const sendForm = async (e) => {
         e.preventDefault();
 
@@ -148,7 +163,7 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
                             <div className="col-md-6">
                                 <div className="form-group mb-3">
                                     <label htmlFor="Fec_Traslado" className="form-label">Fecha Traslado:</label>
-                                    <input className="form-control" type="date" id="Fec_Traslado" value={Fec_Traslado} onChange={(e) => setFec_Traslado(e.target.value)} required />
+                                    <input className="form-control" type="date" id="Fec_Traslado" value={Fec_Traslado} onChange={(e) => setFec_Traslado(e.target.value)} required min={getTodayDate()} max={getTodayDate()} />
                                 </div>
                             </div>
                             <div className="col-md-6">

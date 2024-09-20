@@ -13,6 +13,44 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
     const [DatosResponsable, setDatosResponsable] = useState([]);
     const [DatosSiembra, setDatosSiembra] = useState([]);
 
+    // Estados para el rango de fechas de la semana actual
+    const [weekRange, setWeekRange] = useState({ start: '', end: '' });
+
+    useEffect(() => {
+        // Obtener la fecha de inicio y fin de la semana actual en formato YYYY-MM-DD
+        const today = new Date();
+        const firstDay = today.getDate() - today.getDay(); // Ajusta al primer día de la semana
+        const lastDay = firstDay + 6; // Ajusta al último día de la semana
+    
+        const start = new Date(today.setDate(firstDay));
+        const end = new Date(today.setDate(lastDay));
+    
+        const formatDate = (date) => {
+          const year = date.getFullYear();
+          const month = (date.getMonth() + 1).toString().padStart(2, '0');
+          const day = date.getDate().toString().padStart(2, '0');
+          return `${year}-${month}-${day}`;
+        };
+    
+        setWeekRange({ start: formatDate(start), end: formatDate(end) });
+      }, []);
+    
+      const handleDateChange = (e) => {
+        const selectedDate = e.target.value;
+        const { start, end } = weekRange;
+    
+        if (selectedDate < start || selectedDate > end) {
+          Swal.fire({
+            title: 'Fecha Inválida',
+            text: `Solo se permite registrar fechas dentro de la semana actual (del ${start} al ${end}).`,
+            icon: 'warning'
+          });
+          e.target.value = Fec_Alimentacion; // Restablecer el valor del campo
+          return; // No actualizar el estado con una fecha fuera del rango
+        }
+        setFec_Alimentacion(selectedDate); // Actualizar el estado solo si la fecha es válida
+      };
+
     const sendForm = async (e) => {
         e.preventDefault();
 
@@ -158,7 +196,7 @@ const FormAlimentacion = ({ buttonForm, alimentacion, URI, updateTextButton, get
                           <div className="col-md-6">
                               <div className="form-group mb-3">
                                   <label htmlFor="Fec_Alimentacion" className="form-label">Fecha Alimentación:</label>
-                                  <input className="form-control" type="date" id="Fec_Alimentacion" value={Fec_Alimentacion} onChange={(e) => setFec_Alimentacion(e.target.value)} required />
+                                  <input className="form-control" type="date" id="Fec_Alimentacion" value={Fec_Alimentacion} onChange={handleDateChange} required min={weekRange.start} max={weekRange.end}  />
                               </div>
                           </div>
                           <div className="col-md-6">

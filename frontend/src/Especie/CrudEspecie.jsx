@@ -76,21 +76,29 @@ const CrudEspecie = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const respuesta = await axios.delete(`${URI}${Id_Especie}`);
-                    if (respuesta.status === 200) {
-                        Swal.fire({
-                            title: "¡Borrado!",
-                            text: "Borrado exitosamente",
-                            icon: "success"
-                        });
-                        // getAllEspecies(); // Refresh the list after deletion
-                    } else {
-                        console.warn('HTTP Status:', respuesta.status);
-                    }
+                    await axios.delete(`${URI}${Id_Especie}`);
+                    Swal.fire({
+                        title: "¡Borrado!",
+                        text: "Borrado exitosamente",
+                        icon: "success"
+                    });
+                    //getAllEstanques(); // Refresh the list after deletion
                 } catch (error) {
-                    console.error('Error deleting especie:', error.response?.status || error.message);
+                    if (error.response?.status === 500) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "No se puede eliminar la Especie porque pertenece a un registro de otro formulario.",
+                            icon: "error"
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: error.response?.data?.message || "An error occurred while deleting the estanque. Please try again.",
+                            icon: "error"
+                        });
+                    }
                 }
-            } else {
+            }else {
                 getAllEspecies();
             }
         });
@@ -149,53 +157,44 @@ const CrudEspecie = () => {
     
     const exportToPDF = () => {
         const doc = new jsPDF();
-        // Título de la tabla
         const title = "Especies";
-        const pageWidth = doc.internal.pageSize.getWidth(); // Obtener el ancho de la página
-        const titleFontSize = 22; // Tamaño de fuente más grande
+        const pageWidth = doc.internal.pageSize.getWidth(); 
+        const titleFontSize = 22; 
         doc.setFontSize(titleFontSize);
-        doc.setFont('helvetica', 'bold'); // Poner el título en negrita
-        const textWidth = doc.getTextWidth(title); // Ancho del texto
-        const xOffset = (pageWidth - textWidth) / 2; // Calcular la posición para centrar el texto
-        doc.text(title, xOffset, 20); // Posición del título centrado
+        doc.setFont('helvetica', 'bold'); 
+        const textWidth = doc.getTextWidth(title); 
+        const xOffset = (pageWidth - textWidth) / 2; 
+        doc.text(title, xOffset, 20); 
         
-        // Configuración de autoTable
+        // Construir el cuerpo de la tabla sin la imagen
         const tableBody = EspecieList.map((especie) => [
             especie.Nom_Especie,
             especie.Car_Especie,
             especie.Tam_Promedio,
             especie.Den_Especie,
-            especie.Img_Especie ? (
-                // doc.addImage(`${PATH_FOTOS}/${especie.Img_Especie}`, 'PNG', 14, 60, 50, 50)
-                doc.addImage(`${PATH_FOTOS}/${especie.Img_Especie}`, 'PNG', 100, 100, 100, 100)
-            ) : (
-                'No Image'
-            )
+            '' // Dejar el espacio de la imagen vacío en el array
         ]);
-
+    
         doc.autoTable({
             head: [['Nombre', 'Características', 'Tamaño Promedio', 'Densidad', 'Imagen']],
             body: tableBody,
-            startY: 30, // Posición donde empieza la tabla
-            theme: 'grid', // Tema de la tabla
+            startY: 30, 
+            theme: 'grid', 
             headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
-            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 },
+            didDrawCell: function (data) {
+                // Verificar si es la columna de la imagen
+                if (data.column.index === 4 && data.cell.section === 'body') {
+                    const img = EspecieList[data.row.index].Img_Especie;
+                    if (img) {
+                        const imgWidth = data.cell.width - 4; // Ajustar el ancho de la imagen al ancho de la celda menos un pequeño margen
+                        const imgHeight = data.cell.height - 4; // Ajustar el alto de la imagen al alto de la celda menos un pequeño margen
+                        doc.addImage(`${PATH_FOTOS}/${img}`, 'PNG', data.cell.x + 2, data.cell.y + 2, imgWidth, imgHeight);
+                    }
+                }
+            }
         });
-        // doc.html()
-    //     var doc = new jsPDF('l', 'mm', [1200, 1210]);
-
-	// var pdfjs = document.querySelector('#temp-target');
-
-	// // Convert HTML to PDF in JavaScript
-	// doc.html(pdfjs, {
-	// 	callback: function(doc) {
-	// 		doc.save("output.pdf");
-	// 	},
-	// 	x: 10,
-	// 	y: 10
-	// });
-
-        // Guarda el PDF
+    
         doc.save('Especies.pdf');
     };
 

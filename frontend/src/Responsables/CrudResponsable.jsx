@@ -70,23 +70,34 @@ const CrudResponsable = () => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "¡Sí, borrar!"
+            
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const respuesta = await axios.delete(`${URI}${Id_Responsable}`);
-                    if (respuesta.status >= 200 && respuesta.status < 300) {
-                        Swal.fire({
-                            title: "¡Borrado!",
-                            text: "Borrado exitosamente",
-                            icon: "success"
-                        });
-                        // getAllResponsable(); // Refresh the list after deletion
-                    } else {
-                        console.warn('HTTP Status:', respuesta.status);
-                    }
+                    await axios.delete(`${URI}${Id_Responsable}`);
+                    Swal.fire({
+                        title: "¡Borrado!",
+                        text: "Borrado exitosamente",
+                        icon: "success"
+                    });
+                    //getAllEstanques(); // Refresh the list after deletion
                 } catch (error) {
-                    console.error('Error deleting responsable:', error.response?.status || error.message);
+                    if (error.response?.status === 500) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "No se puede eliminar el Responsable porque pertenece a un registro de otro formulario.",
+                            icon: "error"
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: error.response?.data?.message || "An error occurred while deleting the estanque. Please try again.",
+                            icon: "error"
+                        });
+
+                    }
                 }
+
             } else {
                 getAllResponsable();
             }

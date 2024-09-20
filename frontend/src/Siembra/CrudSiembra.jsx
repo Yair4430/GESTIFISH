@@ -84,10 +84,24 @@ const CrudSiembra = () => {
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    //getAllSiembra(); // Refrescar la lista después de la eliminación
+                    //getAllEstanques(); // Refresh the list after deletion
                 } catch (error) {
-                    console.error('Error deleting siembra:', error.response?.status || error.message);
+                    if (error.response?.status === 500) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "No se puede eliminar el Siembra porque pertenece a un registro de otro formulario.",
+                            icon: "error"
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: error.response?.data?.message || "An error occurred while deleting the estanque. Please try again.",
+                            icon: "error"
+                        });
+                    }
                 }
+            }else {
+                getAllSiembra();
             }
         });
     };

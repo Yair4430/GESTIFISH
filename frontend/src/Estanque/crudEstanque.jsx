@@ -81,27 +81,38 @@ const CrudEstanque = () => {
                     });
                     //getAllEstanques(); // Refresh the list after deletion
                 } catch (error) {
-                    console.error('Error deleting estanque:', error);
+                    if (error.response?.status === 500) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "No se puede eliminar el estanque porque pertenece a un registro de otro formulario.",
+                            icon: "error"
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: error.response?.data?.message || "An error occurred while deleting the estanque. Please try again.",
+                            icon: "error"
+                        });
+                    }
                 }
-            }else{
-                getAllEstanques()
+            } else {
+                getAllEstanques();
             }
         });
     };
 
     const exportToPDF = () => {
         const doc = new jsPDF();
-        // Título de la tabla
         const title = "Estanques";
-        const pageWidth = doc.internal.pageSize.getWidth(); // Obtener el ancho de la página
-        const titleFontSize = 22; // Tamaño de fuente más grande
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const titleFontSize = 22;
         doc.setFontSize(titleFontSize);
-        doc.setFont('helvetica', 'bold'); // Poner el título en negrita
-        const textWidth = doc.getTextWidth(title); // Ancho del texto
-        const xOffset = (pageWidth - textWidth) / 2; // Calcular la posición para centrar el texto
-        doc.text(title, xOffset, 20); // Posición del título centrado
-
-        // Configuración de autoTable
+        doc.setFont('helvetica', 'bold');
+        const textWidth = doc.getTextWidth(title);
+        const xOffset = (pageWidth - textWidth) / 2;
+        doc.text(title, xOffset, 20);
+    
+        // Construir el cuerpo de la tabla sin la imagen directamente
         const tableBody = EstanqueList.map((estanque) => [
             estanque.Id_Estanque,
             estanque.Nom_Estanque,
@@ -110,24 +121,31 @@ const CrudEstanque = () => {
             estanque.Lar_Estanque,
             estanque.Anc_Estanque,
             estanque.Des_Estanque,
-            estanque.Img_Estanque ? (
-                doc.addImage(`${PATH_FOTOS}/${estanque.Img_Estanque}`, 'JPEG', 14, 60, 50, 50)
-            ) : (
-                'No Image'
-            ),
+            '', // Dejar el espacio de la imagen vacío
             estanque.Rec_Agua
         ]);
-
+    
         doc.autoTable({
             head: [['Numero', 'Nombre', 'Espejo Agua', 'Tipo', 'Largo', 'Ancho', 'Descripción', 'Imagen', 'Recambio Agua']],
             body: tableBody,
-            startY: 30, // Posición donde empieza la tabla
-            theme: 'grid', // Tema de la tabla
+            startY: 30,
+            theme: 'grid',
             headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
-            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 }
+            styles: { cellPadding: 2, fontSize: 10, minCellHeight: 10 },
+            didDrawCell: function (data) {
+                // Verificar si es la columna de la imagen
+                if (data.column.index === 7 && data.cell.section === 'body') {
+                    const img = EstanqueList[data.row.index].Img_Estanque;
+                    if (img) {
+                        const imgWidth = data.cell.width - 4;
+                        const imgHeight = data.cell.height - 4;
+                        doc.addImage(`${PATH_FOTOS}/${img}`, 'JPEG', data.cell.x + 2, data.cell.y + 2, imgWidth, imgHeight);
+                    }
+                }
+            }
         });
-
-        // Guarda el PDF
+    
+        // Guardar el PDF
         doc.save('Estanques.pdf');
     };
 

@@ -18,6 +18,20 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
     const [DatosEspecie, setDatosEspecie] = useState([]);
     const [DatosEstanque, setDatosEstanque] = useState([]);
 
+    // Obtener la fecha actual en formato YYYY-MM-DD
+    const getTodayDate = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Los meses en JavaScript son 0-indexados
+        const day = today.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    useEffect(() => {
+        // Establecer la fecha actual en el campo Fec_Cosecha por defecto
+        setFec_Siembra(getTodayDate());
+    }, []); 
+
     const sendForm = async (e) => {
         e.preventDefault();
 
@@ -205,7 +219,7 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="Fec_Siembra" className="form-label">Fecha Siembra:</label>
-                                <input className="form-control" type="date" id="Fec_Siembra" value={Fec_Siembra} onChange={(e) => setFec_Siembra(e.target.value)} required />
+                                <input className="form-control" type="date" id="Fec_Siembra" value={Fec_Siembra} onChange={(e) => setFec_Siembra(e.target.value)} required min={getTodayDate()} max={getTodayDate()} />
                             </div>
                         </div>
                         <div className="col-md-6">
