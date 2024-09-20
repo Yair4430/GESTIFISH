@@ -34,10 +34,14 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
       language: {
         search: "",
         searchPlaceholder: "Buscar...",
+        lengthMenu: "Mostrar _MENU_ registros por página",
+        zeroRecords: "Ningún usuario encontrado",
         info: " ",
-        infoEmpty: "No hay registros disponibles",
-        infoFiltered: "(filtrado de MAX registros en total)",
-        lengthMenu: "Mostrar MENU registros por página"
+        infoEmpty: "Ningún usuario encontrado",
+        infoFiltered: "(filtrados desde MAX registros totales)",
+        loadingRecords: "Cargando...",
+        paginate: {
+        }
       },
       dom: "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
           "<'row'<'col-sm-12'tr>>" +
@@ -62,8 +66,6 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
           const id = $(this).data('id');
           onDeleteClick(id);
 
-          // Corregido el filtrado de datos
-          const filteredData = data.filter(row => !row[row.length - 1].includes(`data-id='${id}'`));
         });
       },
       createdRow: function (row, data, dataIndex) {
@@ -96,11 +98,11 @@ function WriteTable({ titles, data, onEditClick, onDeleteClick }) {
       <Sidebar />
       <div style={{ marginLeft: "300px", paddingTop: "30px", }}>
         <div className="table-container">
-          <div className="dataTables_filter"></div>
+          {/* <div className="dataTables_filter"></div> */}
 
           </div>
         <div className="table-position" >
-          <table className="table table-responsive table-bordered" id="TableDinamic" ref={tableRef} style={{ marginLeft: "-50px"}}>
+          <table className="table table-responsive table-bordered dataTables_filter" id="TableDinamic" ref={tableRef} style={{ marginLeft: "-50px"}}>
             <thead>
               <tr>
                 {titles.slice(0, -1).map((title, index) => (

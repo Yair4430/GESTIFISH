@@ -69,21 +69,26 @@ const CrudActividad = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(`${URI}/${Id_Actividad}`);
+                    await axios.delete(`${URI}/${Id_Actividad}`)
                     Swal.fire({
                         title: "¡Borrado!",
                         text: "Borrado exitosamente",
                         icon: "success"
                     });
-                    //getAllActividad(); // Refresh the list after deletion
+                    eliminarActividad(Id_Actividad)
+                    // getAllActividad(); // Refresh the list after deletion
+                     // Actualiza el estado eliminando el elemento manualmente
+                // setActividadList((ActividadList) => ActividadList.filter(act => act.Id_Actividad !== Id_Actividad));
+           
                 } catch (error) {
                     console.error('Error deleting actividad:', error);
                 }
             } else {
-                getAllActividad(); // Refresh the list after deletion
+                // getAllActividad(); // Refresh the list after deletion
 
             }
         });
+
     };
 
     // Función para exportar a Excel
@@ -224,6 +229,25 @@ const CrudActividad = () => {
     const titles = [
         "Nombre", "Descripción", "Responsable", "Fecha", "Hora", "Fase Producción", "Estanque", "Acciones"
     ];
+    function eliminarActividad(id) {
+        const element = document.querySelectorAll(`.btn-delete[data-id='${id}']`)[0];
+        if (element) {
+          element.parentNode.parentNode.remove();
+        }
+          
+      }
+      
+      
+      // Agrega un event listener para los botones de eliminación
+      document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const id = this.getAttribute('data-id');
+          eliminarActividad(id);
+        });
+        
+
+      });
+    
 
     return (
         <>
