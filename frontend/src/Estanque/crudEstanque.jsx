@@ -61,45 +61,51 @@ const CrudEstanque = () => {
         setButtonForm(texto);
     };
 
-    const deleteEstanque = async (Id_Estanque) => {
-        Swal.fire({
-            title: "¿Estás seguro?",
-            text: "¡No podrás revertir esto!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "¡Sí, borrar!"
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    await axios.delete(`${URI}${Id_Estanque}`);
-                    Swal.fire({
-                        title: "¡Borrado!",
-                        text: "Borrado exitosamente",
-                        icon: "success"
-                    });
-                    //getAllEstanques(); // Refresh the list after deletion
-                } catch (error) {
-                    if (error.response?.status === 500) {
-                        Swal.fire({
-                            title: "Error",
-                            text: "No se puede eliminar el estanque porque pertenece a un registro de otro formulario.",
-                            icon: "error"
-                        });
-                    } else {
-                        Swal.fire({
-                            title: "Error",
-                            text: error.response?.data?.message || "An error occurred while deleting the estanque. Please try again.",
-                            icon: "error"
-                        });
-                    }
-                }
-            } else {
-                getAllEstanques();
+    const deleteEstanque = async (Id_Estanque) => {      
+        try {
+            // Muestra un cuadro de confirmación estilizado
+            const result = await Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esta acción!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminarlo!',
+                cancelButtonText: 'Cancelar'
+            });
+    
+            // Si el usuario confirma la acción
+            if (result.isConfirmed) {        
+                await axios.delete(`${URI}/${Id_Estanque}`);
+                eliminar(Id_Estanque);
+                window.location.reload();
+                Swal.fire(
+                    'Eliminado!',
+                    'El registro ha sido eliminado.',
+                    'success'
+                );
             }
-        });
+        } catch (error) {
+            console.error('Error deleting Cosecha:', error);
+            Swal.fire('Error', 'No se puede eliminar el Estanque porque pertenece a un registro de otro formulario.', 'error');
+        }
     };
+
+    function eliminar(id) {
+        const element = document.querySelectorAll(`.btn-delete[data-id='${id}']`)[0];
+        if (element) {
+          element.parentNode.parentNode.remove();
+        }
+          
+      }
+      // Agrega un event listener para los botones de eliminación
+      document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const id = this.getAttribute('data-id');
+          eliminar(id);
+        }); 
+      });
 
     const exportToPDF = () => {
         const doc = new jsPDF();

@@ -67,33 +67,51 @@ const CrudCosecha = () => {
         setButtonForm(texto);
     };
 
-    const deleteCosecha = async (Id_Cosecha) => {
-        Swal.fire({
-            title: "¿Estás seguro?",
-            text: "¡No podrás revertir esto!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Sí, ¡borrar!"
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    await axios.delete(`${URI}${Id_Cosecha}`);
-                    Swal.fire({
-                        title: "¡Borrado!",
-                        text: "Borrado exitosamente",
-                        icon: "success"
-                    });
-                    //getAllCosecha(); // Refrescar la lista después de la eliminación
-                } catch (error) {
-                    console.error('Error deleting cosecha:', error.response?.status || error.message);
-                }
-            } else {
-                getAllCosecha(); // Refrescar la lista después de la eliminación
+    const deleteCosecha = async (Id_Cosecha) => {      
+        try {
+            // Muestra un cuadro de confirmación estilizado
+            const result = await Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esta acción!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminarlo!',
+                cancelButtonText: 'Cancelar'
+            });
+    
+            // Si el usuario confirma la acción
+            if (result.isConfirmed) {        
+                await axios.delete(`${URI}/${Id_Cosecha}`);
+                eliminar(Id_Cosecha);
+                window.location.reload();
+                Swal.fire(
+                    'Eliminado!',
+                    'El registro ha sido eliminado.',
+                    'success'
+                );
             }
-        });
+        } catch (error) {
+            console.error('Error deleting Cosecha:', error);
+            Swal.fire('Error', 'No se pudo eliminar el registro', 'error');
+        }
     };
+
+    function eliminar(id) {
+        const element = document.querySelectorAll(`.btn-delete[data-id='${id}']`)[0];
+        if (element) {
+          element.parentNode.parentNode.remove();
+        }
+          
+      }
+      // Agrega un event listener para los botones de eliminación
+      document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const id = this.getAttribute('data-id');
+          eliminar(id);
+        }); 
+      });
 
     // Función para exportar a Excel
     const exportToExcel = () => {
