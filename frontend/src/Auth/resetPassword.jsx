@@ -1,26 +1,45 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const URI = `${process.env.ROUTER_PRINCIPAL}/resetPassword/`; // Asegúrate de que la URI esté correcta
+const URI_AUTH =  process.env.ROUTER_PRINCIPAL + '/auth/'
 
 const ResetPassword = () => {
-    const [userId, setUserId] = useState(''); // Estado para el ID del usuario
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
+    const [tokenValido, setTokenValido] = useState(false);
 
-    const navigate = useNavigate();
+    const effectRan = useRef(false)
+    
 
-    // Obtiene el token de la URL
-    const tokenForPassword = new URLSearchParams(window.location.search).get('llave');
+    const params = useParams()
+    const { token } = params
+    console.log(token);
+    
+    useEffect(() => {
+        if (effectRan.current) {
+            return
+        }
+        effectRan.current = true
+        const verificarToken = async () => {
+            try {
+                const response = await axios.get(`${URI_AUTH}reset-password/${token}`)
+                setTokenValido(true)
+                alert(response.data.message) //Alertaaaaaaaaaaaaaaaaaaaaaaa
+            } catch (error) {
+               alert(error.response.data.message) //Alertaaaaaaaaaaaaaaaaaaaaaaa
+            }
+        }
+        verificarToken()
+    } )
 
     // Función para manejar la actualización de la contraseña
     const updatePassword = async (e) => {
         e.preventDefault();
 
-        // Verificar que las contraseñas coincidan
+        // Verificar si las contraseñas coinciden
         if (newPassword !== confirmPassword) {
             setMessage('Las contraseñas no coinciden.');
             setMessageType('error');
@@ -28,19 +47,29 @@ const ResetPassword = () => {
         }
 
         try {
-            const response = await axios.post(URI, { id: userId, newPassword });
+            console.log(`${URI_AUTH}reset-password`);
 
+            // Enviar la solicitud POST para actualizar la contraseña
+            const response = await axios.post(`${URI_AUTH}reset-password/${token}`, {
+                newPassword
+            });
+
+            // Mensaje de éxito
             setMessage(response.data.message);
             setMessageType('success');
-            setUserId('');
+
+            // Reiniciar los campos
             setNewPassword('');
             setConfirmPassword('');
 
-            setTimeout(() => {
-                navigate('/auth');
-            }, 2000);
+            // Redirigir a la página de inicio de sesión después de un breve tiempo
+            // setTimeout(() => {
+            //     navigate('/auth');
+            // }, 2000);
+
         } catch (error) {
             console.error('Error:', error);
+            // Mostrar el mensaje de error apropiado
             if (error.response && error.response.data) {
                 setMessage(error.response.data.message);
                 setMessageType('error');
@@ -52,57 +81,39 @@ const ResetPassword = () => {
     };
 
     return (
-        <>
-            <div className="auth-container">
-                <div className="auth-content">
-                    <div className="auth-left">
-                        <h3 className="bold-highlight">Restablecer Contraseña</h3>
-                        <form onSubmit={updatePassword}>
-                            <div className="form-group">
-                                <input
-                                    type="text"
-                                    placeholder="ID del Usuario"
-                                    value={userId}
-                                    onChange={(e) => setUserId(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <input
-                                    type="password"
-                                    placeholder="Nueva Contraseña"
-                                    value={newPassword}
-                                    onChange={(e) => setNewPassword(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <input
-                                    type="password"
-                                    placeholder="Confirmar Contraseña"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="d-grid">
-                                <button type="submit" className="btn-primary">Restablecer Contraseña</button>
-                            </div>
-                            {message && (
-                                <div className={`alert ${messageType === 'success' ? 'alert-success' : 'alert-danger'}`}>
-                                    {message}
-                                </div>
-                            )}
-                        </form>
+        <div className="auth-container">
+            <div className="auth-content">
+                <h3 className="bold-highlight">Restablecer Contraseña</h3>
+                <form onSubmit={updatePassword}>
+                    <div className="form-group">
+                        <input
+                            type="password"
+                            placeholder="Nueva Contraseña"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            required
+                        />
                     </div>
-                    <div className="auth-right">
-                        <h2>¡Bienvenido de nuevo a GestiFish!</h2>
-                        <p>Inicia sesión con tu cuenta para continuar</p>
-                        <button className="btn-signup" onClick={() => navigate('/auth')}>INICIAR SESIÓN</button>
+                    <div className="form-group">
+                        <input
+                            type="password"
+                            placeholder="Confirmar Contraseña"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                        />
                     </div>
-                </div>
+                    <div className="d-grid">
+                        <button type="submit" className="btn-primary">Restablecer Contraseña</button>
+                    </div>
+                    {message && (
+                        <div className={`alert ${messageType === 'success' ? 'alert-success' : 'alert-danger'}`}>
+                            {message}
+                        </div>
+                    )}
+                </form>
             </div>
-        </>
+        </div>
     );
 };
 

@@ -7,6 +7,7 @@ const UsuarioModel = db.define('usuario', {
     Ape_Usuario: { type: DataTypes.STRING(25), allowNull: false },
     Cor_Usuario: { type: DataTypes.STRING(25), allowNull: false },
     Con_Usuario: { type: DataTypes.STRING(255), allowNull: false },
+    Token: { type: DataTypes.STRING(200) }
 }, {
     freezeTableName: true,
     timestamps: true // Habilita las columnas createdAt y updatedAt

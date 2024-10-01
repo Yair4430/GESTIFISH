@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Link } from 'react-router-dom';
 import './auth.css';
 
-
 const URI = process.env.ROUTER_PRINCIPAL + '/auth/';
 
 const Auth = () => {
@@ -52,8 +51,6 @@ const validateEmail = (email) => {
         setMessage('El correo debe pertenecer a uno de los siguientes dominios: @gmail.com, @outlook.com, @hotmail.com, @soy.sena.edu.co');
         return false;
     }
-    
-
     return true;
 };
 // Validar que la contraseña tenga al menos 8 caracteres y contenga al menos un carácter especial

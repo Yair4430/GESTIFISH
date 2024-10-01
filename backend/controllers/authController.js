@@ -2,6 +2,7 @@ import bcryptjs from 'bcryptjs';
 import UsuarioModel from '../models/usuarioModel.js';
 import jwt from 'jsonwebtoken';
 import { sendPassworResetEmail } from '../servicios/emailService.js';
+import { generarToken } from "../helpers/generarToken.js";
 
 // Expresiones regulares para validación
 const nameRegex = /^[a-zA-Z\s]+$/;
@@ -46,6 +47,7 @@ export const createUser = async (req, res) => {
             Ape_Usuario,
             Cor_Usuario,
             Con_Usuario: passHash,
+            Token: generarToken(),
         });
 
         // Encriptar el Cor_Usuario y Id_Usuario para el token
@@ -98,8 +100,8 @@ export const logInUser = async (req, res) => {
     }
 };
 
-// Verificar token
-export const verifyToken = async (req, res, next) => {
+// Verificar token TENER EN CUENTA
+/*export const verifyToken = async (req, res, next) => {
     const authorizationHeader = req.headers['authorization'];
     
     if (authorizationHeader) {
@@ -119,29 +121,33 @@ export const verifyToken = async (req, res, next) => {
     } else {
         res.status(401).json({ message: 'No se encontró el token' });
     }
-};
+};*/
 
 // Restablecer contraseña
 export const getResetPassword = async (req, res) => {
-    const { Cor_Usuario } = req.body;
-    try {
-        const user = await UsuarioModel.findOne({ where: { Cor_Usuario } });
+  const { Cor_Usuario } = req.body;
+  try {
+    const user = await UsuarioModel.findOne({ where: { Cor_Usuario } });
 
-        if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-
-        const tokenForPassword = jwt.sign(
-            { user: { Id_Usuario: user.Id_Usuario, Nom_Usuario: user.Nom_Usuario, Ape_Usuario: user.Ape_Usuario, Cor_Usuario: user.Cor_Usuario } },
-            process.env.JWT_LLAVE,
-            { expiresIn: '1d' }
-        );
-
-        await sendPassworResetEmail(Cor_Usuario, tokenForPassword);
-        res.status(200).json({ message: 'El mensaje para restablecer contraseña fue enviado correctamente' });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
     }
+
+    const tokenForPassword = jwt.sign(
+      { user: { Id_Usuario: user.Id_Usuario, Nom_Usuario: user.Nom_Usuario, Ape_Usuario: user.Ape_Usuario, Cor_Usuario: user.Cor_Usuario } },
+      process.env.JWT_LLAVE,
+      { expiresIn: '1d' }
+    );
+
+    // Almacenar el token de restablecimiento de contraseña en la base de datos
+    user.Token = tokenForPassword;
+    await user.save();
+
+    await sendPassworResetEmail(Cor_Usuario, tokenForPassword);
+    res.status(200).json({ message: 'El mensaje para restablecer contraseña fue enviado correctamente' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 // Establecer nueva contraseña
