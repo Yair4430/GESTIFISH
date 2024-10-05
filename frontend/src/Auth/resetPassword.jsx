@@ -13,7 +13,6 @@ const ResetPassword = () => {
 
     const effectRan = useRef(false)
     
-
     const params = useParams()
     const { token } = params
     console.log(token);

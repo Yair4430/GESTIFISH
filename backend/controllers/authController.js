@@ -125,52 +125,57 @@ export const logInUser = async (req, res) => {
 
 // Restablecer contraseña
 export const getResetPassword = async (req, res) => {
-  const { Cor_Usuario } = req.body;
-  try {
-    const user = await UsuarioModel.findOne({ where: { Cor_Usuario } });
-
-    if (!user) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+    const { Cor_Usuario } = req.body;
+    try {
+      const user = await UsuarioModel.findOne({ where: { Cor_Usuario } });
+  
+      if (!user) {
+        return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+  
+      const tokenForPassword = jwt.sign(
+        { user: { Id_Usuario: user.Id_Usuario, Nom_Usuario: user.Nom_Usuario, Ape_Usuario: user.Ape_Usuario, Cor_Usuario: user.Cor_Usuario } },
+        process.env.JWT_LLAVE_RESET_PASSWORD, // Utiliza un secreto diferente para el token de restablecimiento de contraseña
+        { expiresIn: '1h' } // Reduce el tiempo de expiración del token
+      );
+  
+      // Almacenar el token de restablecimiento de contraseña en la base de datos
+      user.Token = tokenForPassword;
+      await user.save();
+  
+      await sendPassworResetEmail(Cor_Usuario, tokenForPassword);
+      res.status(200).json({ message: 'El mensaje para restablecer contraseña fue enviado correctamente' });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
-
-    const tokenForPassword = jwt.sign(
-      { user: { Id_Usuario: user.Id_Usuario, Nom_Usuario: user.Nom_Usuario, Ape_Usuario: user.Ape_Usuario, Cor_Usuario: user.Cor_Usuario } },
-      process.env.JWT_LLAVE,
-      { expiresIn: '1d' }
-    );
-
-    // Almacenar el token de restablecimiento de contraseña en la base de datos
-    user.Token = tokenForPassword;
-    await user.save();
-
-    await sendPassworResetEmail(Cor_Usuario, tokenForPassword);
-    res.status(200).json({ message: 'El mensaje para restablecer contraseña fue enviado correctamente' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// Establecer nueva contraseña
-export const setNewPassword = async (req, res) => {
+  };
+  
+  // Establecer nueva contraseña
+  export const setNewPassword = async (req, res) => {
     const { tokenForPassword, newPassword } = req.body;
     try {
-        const decodificado = jwt.verify(tokenForPassword, process.env.JWT_LLAVE);
-
-        const user = await UsuarioModel.findByPk(decodificado.user.Id_Usuario);
-
-        if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        } else {
-            const passHash = await bcryptjs.hash(newPassword, 8);
-
-            await UsuarioModel.update(
-                { Con_Usuario: passHash },
-                { where: { Id_Usuario: decodificado.user.Id_Usuario } }
-            );
-
-            res.status(200).json({ message: 'Contraseña actualizada correctamente' });
-        }
+      const decodificado = jwt.verify(tokenForPassword, process.env.JWT_LLAVE_RESET_PASSWORD);
+  
+      const user = await UsuarioModel.findByPk(decodificado.user.Id_Usuario);
+  
+      if (!user) {
+        return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+  
+      // Validar la nueva contraseña
+      if (!passwordRegex.test(newPassword)) {
+        return res.status(400).json({ message: 'La contraseña debe tener al menos 8 caracteres y contener al menos un carácter especial' });
+      }
+  
+      const passHash = await bcryptjs.hash(newPassword, 8);
+  
+      await UsuarioModel.update(
+        { Con_Usuario: passHash },
+        { where: { Id_Usuario: decodificado.user.Id_Usuario } }
+      );
+  
+      res.status(200).json({ message: 'Contraseña actualizada correctamente' });
     } catch (error) {
-        res.status(400).json({ message: 'Información inválida o el tiempo ha expirado' });
+      res.status(400).json({ message: 'Información inválida o el tiempo ha expirado' });
     }
-};
+  };

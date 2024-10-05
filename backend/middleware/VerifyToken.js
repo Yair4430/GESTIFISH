@@ -1,4 +1,4 @@
-export const verifyToken = (req, res, next) => {
+/*export const verifyToken = (req, res, next) => {
     const authorizationHeader = req.headers['authorization'];
 
     if (authorizationHeader) {
@@ -21,4 +21,4 @@ export const verifyToken = (req, res, next) => {
     } else {
         res.status(401).json({ message: 'No se encontró el token' });
     }
-};
+};*/
