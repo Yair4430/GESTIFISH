@@ -20,28 +20,6 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
 
     const sendForm = async (e) => {
         e.preventDefault();
-
-        if (
-            Can_Peces === siembra.Can_Peces &&
-            Fec_Siembra === siembra.Fec_Siembra &&
-            Fec_PosibleCosecha === siembra.Fec_PosibleCosecha &&
-            Id_Responsable === siembra.Id_Responsable &&
-            Id_Especie === siembra.Id_Especie &&
-            Id_Estanque === siembra.Id_Estanque &&
-            Obs_Siembra === siembra.Obs_Siembra &&
-            Pes_Actual === siembra.Pes_Actual &&
-            Hor_Siembra === siembra.Hor_Siembra &&
-            Gan_Peso === siembra.Gan_Peso &&
-            Vlr_Siembra === siembra.Vlr_Siembra
-        ) {
-            Swal.fire({
-                title: 'Sin cambios',
-                text: 'No ha realizado ningún cambio.',
-                icon: 'info'
-            });
-            return; // Salir de la función sin hacer la solicitud
-        }
-        
         try {
             const data = {
                 Fec_Siembra,
@@ -161,14 +139,13 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
         }
     }, [siembra]);
 
-
     return (
-        <>
-            {/*<div className="card-header text-dark" style={{ backgroundColor: '#adaca9' }}>
+        <div className="card">
+            <div className="card-header bg-primary text-white">
                 <h1 className="text-center">
                     {buttonForm === 'Actualizar' ? 'Actualizar Siembra' : 'Registrar Siembra'}
                 </h1>
-            </div>*/}
+            </div>
             <div className="card-body">
                 <form id="siembraForm" onSubmit={sendForm} className="fw-bold m-2">
                     <div className="row mb-3">
@@ -270,29 +247,12 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                             </div>
                         </div>
                     </div>
-                    <div className="text-center">
-                        <button
-                            type="submit"
-                            id="boton"
-                            className={`btn btn-block m-2 ${buttonForm === 'Actualizar' ? 'btn-success' : 'btn-primary'}`}
-                        >
-                            {buttonForm === 'Actualizar' && (
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-repeat" viewBox="0 0 16 16" style={{ marginRight: '8px' }}>
-                                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41m-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9"/>
-                                    <path fillRule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5 5 0 0 0 8 3M3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9z"/>
-                                </svg>
-                            )}
-                            {buttonForm === 'Enviar' && (
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16" style={{ marginRight: '8px' }}>
-                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
-                                </svg>
-                            )}
-                            {buttonForm}
-                        </button>
+                    <div className="d-grid gap-2">
+                        <button type="submit" className="btn btn-primary">{buttonForm}</button>
                     </div>
                 </form>
             </div>
-        </>
+        </div>
     );
     
 };
