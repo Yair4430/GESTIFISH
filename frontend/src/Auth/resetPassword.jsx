@@ -10,35 +10,26 @@ const ResetPassword = () => {
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
     const [tokenValido, setTokenValido] = useState(false);
+    const navigate = useNavigate(); // Añadir useNavigate para redireccionar después de restablecer la contraseña
+    const params = useParams();
+    const { token } = params;
 
-    const effectRan = useRef(false)
-    
-    const params = useParams()
-    const { token } = params
-    console.log(token);
-    
     useEffect(() => {
-        if (effectRan.current) {
-            return
-        }
-        effectRan.current = true
         const verificarToken = async () => {
             try {
-                const response = await axios.get(`${URI_AUTH}reset-password/${token}`)
-                setTokenValido(true)
-                alert(response.data.message) //Alertaaaaaaaaaaaaaaaaaaaaaaa
+                const response = await axios.get(`${URI_AUTH}reset-password/${token}`);
+                setTokenValido(true);
+                alert(response.data.message);
             } catch (error) {
-               alert(error.response.data.message) //Alertaaaaaaaaaaaaaaaaaaaaaaa
+               alert(error.response.data.message);
             }
         }
-        verificarToken()
-    } )
+        verificarToken();
+    }, [token]); // Solo ejecuta el efecto cuando cambia el token
 
-    // Función para manejar la actualización de la contraseña
     const updatePassword = async (e) => {
         e.preventDefault();
 
-        // Verificar si las contraseñas coinciden
         if (newPassword !== confirmPassword) {
             setMessage('Las contraseñas no coinciden.');
             setMessageType('error');
@@ -46,29 +37,23 @@ const ResetPassword = () => {
         }
 
         try {
-            console.log(`${URI_AUTH}reset-password`);
-
-            // Enviar la solicitud POST para actualizar la contraseña
             const response = await axios.post(`${URI_AUTH}reset-password/${token}`, {
                 newPassword
             });
 
-            // Mensaje de éxito
             setMessage(response.data.message);
             setMessageType('success');
 
-            // Reiniciar los campos
             setNewPassword('');
             setConfirmPassword('');
 
-            // Redirigir a la página de inicio de sesión después de un breve tiempo
-            // setTimeout(() => {
-            //     navigate('/auth');
-            // }, 2000);
+            // Redirigir al login después de un breve tiempo
+            setTimeout(() => {
+                navigate('/login'); // Aquí rediriges al login
+            }, 2000);
 
         } catch (error) {
             console.error('Error:', error);
-            // Mostrar el mensaje de error apropiado
             if (error.response && error.response.data) {
                 setMessage(error.response.data.message);
                 setMessageType('error');
@@ -115,5 +100,6 @@ const ResetPassword = () => {
         </div>
     );
 };
+
 
 export default ResetPassword;

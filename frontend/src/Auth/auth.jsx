@@ -4,7 +4,10 @@ import { useState } from "react";
 import { Link } from 'react-router-dom';
 import './auth.css';
 
-const URI = process.env.ROUTER_PRINCIPAL + '/auth/';
+const URI = import.meta.env.VITE_ROUTER_PRINCIPAL || 'http://localhost:3001/auth/';
+
+
+
 
 const Auth = () => {
     const [message, setMessage] = useState('');
@@ -141,9 +144,11 @@ const sendForm = async (e) => {
     const sendResetPasswordRequest = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${URI}forgot-password, { Cor_Usuario }`);
+            const response = await axios.post(`${URI}forgot-password`, { Cor_Usuario });
             setMessageType('success');
             setMessage('Se ha enviado un correo para restablecer la contraseña si el correo está registrado.');
+            console.log(response);
+            
         } catch (error) {
             console.error('Error al enviar el correo de restablecimiento:', error.response ? error.response.data : error.message);
             setMessageType('error');

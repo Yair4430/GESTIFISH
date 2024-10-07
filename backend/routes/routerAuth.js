@@ -105,25 +105,22 @@ routerAuth.post("/forgot-password", async (req, res) => {
   const { Cor_Usuario } = req.body;
 
   try {
-    // 1. Verificar si el usuario existe
     const user = await UsuarioModel.findOne({ where: { Cor_Usuario } });
 
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
-    user.Token = generarToken()
-    await user.save()
 
-    //2. Genera el token con el correo codificado
-    const resetToken = user.Token;
+    // Generar token
+    const resetToken = generarToken();
+    user.Token = resetToken;
+    await user.save();
 
-    // 3. Crear un enlace para el correo electrónico de restablecimiento
-    const URI = `http://localhost:5173/reset-password/${resetToken}`;
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
-    console.log(URI);
-    // 4. Configurar el correo electrónico
+    // Enviar correo electrónico con el enlace
     const transporter = nodemailer.createTransport({
-      service: "Gmail", // Cambia esto si usas otro servicio de correo
+      service: "Gmail",
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -131,24 +128,21 @@ routerAuth.post("/forgot-password", async (req, res) => {
     });
 
     const mailOptions = {
-      from: "no-reply@yourapp.com",
+      from: "Gestifish@gmail.com",
       to: Cor_Usuario,
       subject: "Restablecimiento de contraseña",
-      text: `Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace para restablecerla: ${URI}`,
-      html: `<p>Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace para restablecerla:</p>
-                   <a href="${URI}">Restablecer Contraseña</a>`,
+      html: `<p>Haz clic en el siguiente enlace para restablecer tu contraseña: <a href="${resetLink}">Restablecer contraseña</a></p>`,
     };
-
-    // 5. Enviar el correo electrónico
+    
     await transporter.sendMail(mailOptions);
 
-    // 6. Responder indicando que el correo ha sido enviado
     res.status(200).json({ message: "Correo de restablecimiento enviado" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al procesar la solicitud" });
   }
 });
+
 
 // routerAuth.post('/reset-password', setNewPassword);
 routerAuth.get("/protected-route", verifyToken, (req, res) => {
