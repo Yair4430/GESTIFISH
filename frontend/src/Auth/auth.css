@@ -9,6 +9,30 @@ body, h1, h2, h3, p {
     border: none; /* Elimina cualquier borde */
 }
 
+.no-box .auth-left {
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.no-box .auth-left form {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.no-box .auth-container {
+    height: calc(100vh - 60px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 .auth-container {
     display: flex;
