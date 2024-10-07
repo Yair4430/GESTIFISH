@@ -6,9 +6,6 @@ import './auth.css';
 
 const URI = import.meta.env.VITE_ROUTER_PRINCIPAL || 'http://localhost:3001/auth/';
 
-
-
-
 const Auth = () => {
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
@@ -160,21 +157,21 @@ const sendForm = async (e) => {
         setSingnInOrLogIn(opcion);
         setButtonForm(opcion === 'signIn' ? 'Registrar' : 'Iniciar Sesion');
         setIsSignUpActive(opcion === 'signIn');
-        setMessage('');  // Ocultar las alertas al cambiar de formulario
-        setMessageType('');  // Opcional, restablece el tipo de mensaje si es necesario
+        setMessage(''); 
+        setMessageType(''); 
     };
-    
+
     return (
         <>
             {/* <BarraNavegacionPublica /> */}
             <br />
             <div className="auth-container">
                 <br />
-                <div className={`auth-content ${isSignUpActive ? 'sign-up-mode' : ''}`}>
+                <div className={`auth-content ${isSignUpActive ? 'sign-up-mode' : ''} ${resetPass ? 'no-box' : ''}`}>
                     <br />
                     <br />
                     <div className="auth-left">
-                        <h3 className="bold-highlight">{singnInOrLogIn === 'signIn' ? 'Registrar' : 'Iniciar Sesión'}</h3>
+                    <h3 className="bold-highlight">{resetPass ? 'Restablecer Contraseña' : (singnInOrLogIn === 'signIn' ? 'Registrar' : 'Iniciar Sesión')}</h3>
                         {message && (
                             <div 
                             className={`alert ${messageType === 'success' ? 'alert-success' : 'alert-danger'}`}
@@ -229,7 +226,7 @@ const sendForm = async (e) => {
                                 </form>
                                 {singnInOrLogIn === 'logIn' && (
                                     <div className="text-center mt-3">
-                                        <Link to="#" onClick={() => setResetPass(!resetPass)}>¿Olvidaste tu contraseña?</Link>
+                                        <Link to="#" onClick={() => { setResetPass(!resetPass); switchForm('logIn'); }}>¿Olvidaste tu contraseña?</Link>
                                     </div>
                                 )}
                             </>
@@ -243,27 +240,30 @@ const sendForm = async (e) => {
                                         <button type="submit" className="btn-primary">Enviar</button>
                                     </div>
                                 </form>
-                                <div className="text-center mt-3">
-                                    <Link to="#" onClick={() => setResetPass(!resetPass)}>Volver</Link>
-                                </div>
                             </>
                         )}
                     </div>
-                    <div className="auth-right">
-                        {singnInOrLogIn === 'signIn' ? (
-                            <>
-                                <h2>¡Bienvenido de nuevo a GestiFish!</h2>
-                                <p>Inicia sesión con tu cuenta para continuar</p>
-                                <button className="btn-signup" onClick={() => switchForm('logIn')}>INICIAR SESIÓN</button>
-                            </>
-                        ) : (
-                            <>
-                                <h2>¡Hola, Bienvenido a GestiFish!</h2>
-                                <p>Regístrate con tus datos personales para usar todas las funcionalidades de esta maravillosa herramienta digital</p>
-                                <button className="btn-signup" onClick={() => switchForm('signIn')}>REGÍSTRATE</button>
-                            </>
-                        )}
-                    </div>
+                    {!resetPass && (
+                        <div className={`auth-right ${resetPass ? 'hidden' : ''}`}>
+                            {singnInOrLogIn === 'signIn' ? (
+                                <>
+                                    <h2>¡Bienvenido de nuevo a GestiFish!</h2>
+                                    <p>Inicia sesión con tu cuenta para continuar</p>
+                                    <button className="btn-signup" onClick={() => switchForm('logIn')}>INICIAR SESIÓN</button>
+                                </>
+                            ) : (
+                                <>
+                                
+                                    <div className="welcome-box">
+                                        <h2>¡Hola, Bienvenido a GestiFish!</h2>
+                                        <p>Regístrate con tus datos personales para usar todas las funcionalidades de esta maravillosa herramienta digital</p>
+                                        <button className="btn-signup" onClick={() => switchForm('signIn')}>REGÍSTRATE</button>
+                                    </div>
+                                
+                                </>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </>

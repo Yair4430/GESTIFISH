@@ -3,6 +3,12 @@
 body, h1, h2, h3, p {
     font-family: 'Poppins', sans-serif;
 }
+.no-box {
+    background-color: transparent; /* O el color de fondo que desees para ocultar el cuadro gris */
+    box-shadow: none; /* Elimina cualquier sombra que forme el cuadro */
+    border: none; /* Elimina cualquier borde */
+}
+
 
 .auth-container {
     display: flex;
