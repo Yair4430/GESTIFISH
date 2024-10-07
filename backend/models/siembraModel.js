@@ -18,15 +18,4 @@ const SiembraModel = db.define('siembra', {
     freezeTableName: true
 });
 
-// Asociaciones (Foreign Keys)
-// SiembraModel.associate = (models) => {
-//     // console.log(models)
-//     SiembraModel.belongsTo(models.Responsable, { foreignKey: 'Id_Responsable' });
-//     SiembraModel.belongsTo(models.Especie, { foreignKey: 'Id_Especie' });
-//     SiembraModel.belongsTo(models.Estanque, { foreignKey: 'Id_Estanque' });
-// };
-
-// console.log(SiembraModel.associations);  // Verifica las asociaciones
-
-// console.log(SiembraModel)
 export default SiembraModel;

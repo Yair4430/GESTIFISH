@@ -1,66 +1,20 @@
 import bcryptjs from 'bcryptjs';
-import UsuarioModel from '../models/UsuarioModel.js';
+import UsuarioModel from '../models/usuarioModel.js';
 import jwt from 'jsonwebtoken';
 import { sendPassworResetEmail } from '../servicios/emailService.js';
+import { generarToken } from "../helpers/generarToken.js";
 
-export const forgotPassword = async (req, res) => {
-    const { Cor_Usuario } = req.body;
+// Expresiones regulares para validación
+const nameRegex = /^[a-zA-Z\s]+$/;
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|edu\.co)$/; // Permite Gmail, Outlook, Hotmail y el dominio del Sena
+const passwordRegex = /^(?=.*[.!@#$%^&*])[a-zA-Z0-9.!@#$%^&*]{8,}$/;
 
-    try {
-        // Generar token de restablecimiento
-        const tokenForPassword = jwt.sign(
-            { Cor_Usuario },
-            process.env.JWT_LLAVE,
-            { expiresIn: '1h' }
-        );
-
-        // URL del frontend
-        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-        const resetPasswordUrl = `${frontendUrl}/reset-password?token=${tokenForPassword}`;
-
-        // Enviar el correo
-        await sendPassworResetEmail(Cor_Usuario, resetPasswordUrl);
-
-        res.status(200).json({ message: 'Correo enviado para restablecer la contraseña si el correo está registrado.' });
-    } catch (error) {
-        console.error('Error al enviar el correo de restablecimiento:', error.message);
-        res.status(500).json({ message: 'Hubo un error al intentar enviar el correo de restablecimiento.' });
-    }
-};
-
-export const updatePassword = async (req, res) => {
-    const { tokenForPassword, newPassword } = req.body;
-
-    try {
-        // Verifica el token (este es un ejemplo; ajusta según tu implementación)
-        const decoded = jwt.verify(tokenForPassword, process.env.JWT_SECRET);
-
-        // Encuentra al usuario
-        const user = await User.findOne({ where: { id: decoded.userId } });
-
-        if (!user) {
-            return res.status(400).json({ message: 'Usuario no encontrado' });
-        }
-
-        // Encripta la nueva contraseña
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-        // Actualiza la contraseña en la base de datos
-        user.password = hashedPassword;
-        await user.save();
-
-        res.status(200).json({ message: 'Contraseña actualizada exitosamente' });
-    } catch (error) {
-        res.status(400).json({ message: 'Token inválido o error en la actualización' });
-    }
-};
-
+// Crear nuevo usuario
 export const createUser = async (req, res) => {
     try {
         const { Nom_Usuario, Ape_Usuario, Cor_Usuario, Con_Usuario } = req.body;
 
-        const nameRegex = /^[a-zA-Z\s]+$/;
-
+        // Validar nombres y apellidos
         if (!nameRegex.test(Nom_Usuario)) {
             return res.status(400).json({ message: 'El nombre solo puede contener letras y espacios' });
         }
@@ -69,22 +23,39 @@ export const createUser = async (req, res) => {
             return res.status(400).json({ message: 'El apellido solo puede contener letras y espacios' });
         }
 
+        // Validar correo electrónico
+        if (!emailRegex.test(Cor_Usuario)) {
+            return res.status(400).json({ message: 'El correo debe tener un formato válido y pertenecer a un dominio permitido' });
+        }
+
+        // Validar contraseña
+        if (!passwordRegex.test(Con_Usuario)) {
+            return res.status(400).json({ message: 'La contraseña debe tener al menos 8 caracteres y contener al menos un carácter especial' });
+        }
+
+        // Verificar si el usuario ya existe
         let user = await UsuarioModel.findOne({ where: { Cor_Usuario } });
 
         if (user) {
-            return res.status(400).json({ message: "El usuario ya existe" });
+            return res.status(400).json({ message: 'El usuario ya existe' });
         }
 
-        let passHash = await bcryptjs.hash(Con_Usuario, 8);
+        // Crear nuevo usuario
+        let passHash = await bcryptjs.hash(Con_Usuario, 12);
         const newUser = await UsuarioModel.create({
             Nom_Usuario,
             Ape_Usuario,
             Cor_Usuario,
             Con_Usuario: passHash,
+            Token: generarToken(),
         });
 
+        // Encriptar el Cor_Usuario y Id_Usuario para el token
+        const encryptedEmail = await bcryptjs.hash(newUser.Cor_Usuario, 8);
+        const encryptedId = await bcryptjs.hash(newUser.Id_Usuario.toString(), 8);
+
         const tokenUser = jwt.sign(
-            { user: { Cor_Usuario: newUser.Cor_Usuario, Id_Usuario: newUser.Id_Usuario } },
+            { user: { Cor_Usuario: encryptedEmail, Id_Usuario: encryptedId } },
             process.env.JWT_LLAVE,
             { expiresIn: '1h' }
         );
@@ -96,8 +67,7 @@ export const createUser = async (req, res) => {
     }
 };
 
-
-
+// Iniciar sesión
 export const logInUser = async (req, res) => {
     try {
         const { Cor_Usuario, Con_Usuario } = req.body;
@@ -105,31 +75,35 @@ export const logInUser = async (req, res) => {
         const usuario = await UsuarioModel.findOne({ where: { Cor_Usuario } });
 
         if (!usuario) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
+            return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
         const usuarioValido = await bcryptjs.compare(Con_Usuario, usuario.Con_Usuario);
 
         if (usuarioValido) {
+            // Encriptar el Cor_Usuario y Id_Usuario para el token
+            const encryptedEmail = await bcryptjs.hash(usuario.Cor_Usuario, 8);
+            const encryptedId = await bcryptjs.hash(usuario.Id_Usuario.toString(), 8);
+
             const token = jwt.sign(
-                { user: { Cor_Usuario: usuario.Cor_Usuario, Id_Usuario: usuario.Id_Usuario } },
+                { user: { Cor_Usuario: encryptedEmail, Id_Usuario: encryptedId } },
                 process.env.JWT_LLAVE,
                 { expiresIn: '1h' }
             );
 
             res.json({ tokenUser: token });
         } else {
-            res.status(401).json({ error: "Contraseña incorrecta" });
+            res.status(401).json({ error: 'Contraseña incorrecta' });
         }
     } catch (error) {
-        console.error("Error al iniciar sesión:", error);
-        res.status(500).json({ error: "Error del servidor" });
+        res.status(500).json({ error: 'Error del servidor' });
     }
 };
 
-export const verifyToken = async (req, res, next) => {
+// Verificar token TENER EN CUENTA
+/*export const verifyToken = async (req, res, next) => {
     const authorizationHeader = req.headers['authorization'];
-
+    
     if (authorizationHeader) {
         const token = authorizationHeader.split(' ')[1];
 
@@ -139,82 +113,69 @@ export const verifyToken = async (req, res, next) => {
 
         try {
             const decoded = jwt.verify(token, process.env.JWT_LLAVE);
-            req.user = decoded;
-            next();
+            req.user = decoded; // Almacena los datos del usuario decodificado en `req.user`
+            next(); // Continúa con la ruta protegida
         } catch (error) {
-            console.error('Error de verificación de token:', error);
             res.status(403).json({ message: 'Token inválido o expirado' });
         }
     } else {
         res.status(401).json({ message: 'No se encontró el token' });
     }
-};
+};*/
 
+// Restablecer contraseña
 export const getResetPassword = async (req, res) => {
     const { Cor_Usuario } = req.body;
     try {
-        const user = await UsuarioModel.findOne({ where: { Cor_Usuario } });
-
-        if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-
-        const tokenForPassword = jwt.sign(
-            { user: { Id_Usuario: user.Id_Usuario } },
-            process.env.JWT_LLAVE,
-            { expiresIn: '1d' }
-        );
-
-        await sendPassworResetEmail(Cor_Usuario, tokenForPassword);
-        res.status(200).json({ message: 'El mensaje para restablecer contraseña fue enviado correctamente' });
+      const user = await UsuarioModel.findOne({ where: { Cor_Usuario } });
+  
+      if (!user) {
+        return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+  
+      const tokenForPassword = jwt.sign(
+        { user: { Id_Usuario: user.Id_Usuario, Nom_Usuario: user.Nom_Usuario, Ape_Usuario: user.Ape_Usuario, Cor_Usuario: user.Cor_Usuario } },
+        process.env.JWT_LLAVE_RESET_PASSWORD, // Utiliza un secreto diferente para el token de restablecimiento de contraseña
+        { expiresIn: '1h' } // Reduce el tiempo de expiración del token
+      );
+  
+      // Almacenar el token de restablecimiento de contraseña en la base de datos
+      user.Token = tokenForPassword;
+      await user.save();
+  
+      await sendPassworResetEmail(Cor_Usuario, tokenForPassword);
+      res.status(200).json({ message: 'El mensaje para restablecer contraseña fue enviado correctamente' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message });
     }
-};
-
-export const setNewPassword = async (req, res) => {
+  };
+  
+  // Establecer nueva contraseña
+  export const setNewPassword = async (req, res) => {
     const { tokenForPassword, newPassword } = req.body;
     try {
-        const decoded = jwt.verify(tokenForPassword, process.env.JWT_LLAVE);
-
-        const user = await UsuarioModel.findByPk(decoded.user.Id_Usuario);
-
-        if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        } else {
-            const passHash = await bcryptjs.hash(newPassword, 8);
-
-            await UsuarioModel.update(
-                { Con_Usuario: passHash },
-                { where: { Id_Usuario: decoded.user.Id_Usuario } }
-            );
-
-            res.status(200).json({ message: 'Contraseña actualizada correctamente' });
-        }
+      const decodificado = jwt.verify(tokenForPassword, process.env.JWT_LLAVE_RESET_PASSWORD);
+  
+      const user = await UsuarioModel.findByPk(decodificado.user.Id_Usuario);
+  
+      if (!user) {
+        return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+  
+      // Validar la nueva contraseña
+      if (!passwordRegex.test(newPassword)) {
+        return res.status(400).json({ message: 'La contraseña debe tener al menos 8 caracteres y contener al menos un carácter especial' });
+      }
+  
+      const passHash = await bcryptjs.hash(newPassword, 8);
+  
+      await UsuarioModel.update(
+        { Con_Usuario: passHash },
+        { where: { Id_Usuario: decodificado.user.Id_Usuario } }
+      );
+  
+      res.status(200).json({ message: 'Contraseña actualizada correctamente' });
     } catch (error) {
-        res.status(400).json({ message: 'Información inválida o el tiempo ha expirado' });
+      res.status(400).json({ message: 'Información inválida o el tiempo ha expirado' });
     }
-};
-
-export const resetPasswordHandler = async (req, res) => {
-    const { id, newPassword } = req.body;
-
-    try {
-        // Encuentra al usuario por ID
-        const user = await UsuarioModel.findById(id);
-
-        if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-
-        // Actualiza la contraseña
-        user.password = newPassword; // Asegúrate de que la contraseña se encripte antes de guardar
-
-        await user.save();
-
-        res.status(200).json({ message: 'Contraseña actualizada exitosamente' });
-    } catch (error) {
-        console.error('Error en el servidor:', error);
-        res.status(500).json({ message: 'Error al actualizar la contraseña' });
-    }
-};
+  };

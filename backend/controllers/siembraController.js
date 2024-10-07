@@ -9,9 +9,9 @@ export const getAllSiembra = async (req, res) => {
         // Buscar todas las siembras e incluir los datos relacionados
         const siembras = await SiembraModel.findAll({
             include: [
-                { model: ResponsableModel, attributes: ['Nom_Responsable'] },
-                { model: EspecieModel, attributes: ['Nom_Especie'] },
-                { model: EstanqueModel, attributes: ['Nom_Estanque'] },
+                { model: ResponsableModel },
+                { model: EspecieModel},
+                { model: EstanqueModel }
             ],
         });
 
@@ -44,9 +44,9 @@ export const getSiembra = async (req, res) => {
         // Buscar la siembra por su ID e incluir los datos relacionados
         const siembra = await SiembraModel.findByPk(Id_Siembra, {
             include: [
-                { model: ResponsableModel, attributes: ['Nom_Responsable'] },
-                { model: EspecieModel, attributes: ['Nom_Especie'] },
-                { model: EstanqueModel, attributes: ['Nom_Estanque'] }
+                { model: ResponsableModel },
+                { model: EspecieModel },
+                { model: EstanqueModel }
             ]
         });
 
@@ -80,9 +80,9 @@ export const getSiembraByFechaInicio = async (req, res) => {
         const siembras = await SiembraModel.findAll({
             where: { Fec_Siembra },
             include: [
-                { model: ResponsableModel, attributes: ['Nom_Responsable'] },
-                { model: EspecieModel, attributes: ['Nom_Especie'] },
-                { model: EstanqueModel, attributes: ['Nom_Estanque'] }
+                { model: ResponsableModel},
+                { model: EspecieModel},
+                { model: EstanqueModel }
             ]
         });
 

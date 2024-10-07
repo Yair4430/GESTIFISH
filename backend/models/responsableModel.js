@@ -3,12 +3,12 @@ import { DataTypes } from "sequelize";
 
 const ResponsableModel = db.define('responsable', {
     Id_Responsable: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    Nom_Responsable: { type: DataTypes.STRING },
-    Ape_Responsable: { type: DataTypes.STRING },
-    Doc_Responsable: { type: DataTypes.STRING },
-    Tip_Responsable: { type: DataTypes.CHAR },
-    Cor_Responsable: { type: DataTypes.STRING },
-    Num_Responsable: { type: DataTypes.STRING },
+    Nom_Responsable: { type: DataTypes.STRING(25) },
+    Ape_Responsable: { type: DataTypes.STRING(25) },
+    Doc_Responsable: { type: DataTypes.INTEGER },
+    Tip_Responsable: { type: DataTypes.ENUM(['Instructor','Pasante','Instructor a cargo de la Unidad']) },
+    Cor_Responsable: { type: DataTypes.STRING(25) },
+    Num_Responsable: { type: DataTypes.STRING(10) },
 }, {
     freezeTableName: true
 })

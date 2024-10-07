@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Swal from 'sweetalert2';
 
 const SimuladorForm = ({ onSimulate, onClear }) => {
   const [formData, setFormData] = useState({
@@ -8,19 +9,43 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
     precioBulto: '',
   });
 
+  const formatNumber = (num) => {
+    return num.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  };
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // Limitar el número de cifras
+    if (name === 'espejoAgua' && value.replace(/\D/g, '').length > 4) return;
+    if (name === 'densidad' && value.replace(/\D/g, '').length > 2) return;
+    if (name === 'precioBulto' && value.replace(/\D/g, '').length > 6) return;
+
+    const formattedValue = formatNumber(value.replace(/\D/g, ''));
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: formattedValue,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.especie && formData.densidad && formData.espejoAgua && formData.precioBulto) {
-      onSimulate(formData);
+      // Remover puntos antes de enviar los datos
+      const cleanedData = {
+        ...formData,
+        densidad: formData.densidad.replace(/\./g, ''),
+        espejoAgua: formData.espejoAgua.replace(/\./g, ''),
+        precioBulto: formData.precioBulto.replace(/\./g, ''),
+      };
+      onSimulate(cleanedData);
     } else {
-      alert('Por favor complete todos los campos en el orden correcto.');
+      Swal.fire({
+        title: 'Por favor complete todos los campos',
+        text: 'Debe completar todos los campos en el orden correcto.',
+        icon: 'info'
+      });
     }
   };
 
@@ -29,7 +54,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
     setFormData({
       ...formData,
       especie: value,
-      densidad: value === 'Cachama' ? 2 : '',
+      densidad: value === 'Cachama' ? '2' : '',
     });
   };
 
@@ -53,8 +78,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
           padding: 20px;
           border-radius: 8px;
           box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          /*width: 50%;  Define un ancho para el contenedor */
-          margin: 0 auto; /* Centra el contenedor horizontalmente */
+          margin: 0 auto;
         }
         .form-container h2 {
           margin-bottom: 20px;
@@ -97,7 +121,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
         <div className="col-md-6">
           <label htmlFor="densidad" className="form-label">Densidad</label>
           <input
-            type="number"
+            type="text"
             id="densidad"
             name="densidad"
             value={formData.densidad}
@@ -109,7 +133,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
         <div className="col-md-6">
           <label htmlFor="espejoAgua" className="form-label">Espejo de agua</label>
           <input
-            type="number"
+            type="text"
             id="espejoAgua"
             name="espejoAgua"
             value={formData.espejoAgua}
@@ -121,7 +145,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
         <div className="col-md-6">
           <label htmlFor="precioBulto" className="form-label">Precio del Bulto</label>
           <input
-            type="number"
+            type="text"
             id="precioBulto"
             name="precioBulto"
             value={formData.precioBulto}

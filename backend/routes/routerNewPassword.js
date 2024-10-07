@@ -2,9 +2,9 @@
 import express from 'express';
 import resetPasswordController from '../controllers/resetPasswordController.js';
 
-const router = express.Router();
+const routerResetPassword = express.Router();
 
 // Ruta para manejar el restablecimiento de contraseña
-router.post('/resetPassword', resetPasswordController.resetPassword);
+routerResetPassword.post('/resetPassword', resetPasswordController.resetPassword);
 
-export default router;
+export default routerResetPassword;

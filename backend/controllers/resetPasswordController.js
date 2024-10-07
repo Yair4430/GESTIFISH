@@ -1,5 +1,5 @@
 // controllers/resetPasswordController.js
-import UsuarioModel from '../models/UsuarioModel.js'; // Importa el modelo de usuario
+import UsuarioModel from '../models/usuarioModel.js'; // Importa el modelo de usuario
 import jwt from 'jsonwebtoken'; // Asegúrate de instalar jsonwebtoken
 
 // Función para restablecer la contraseña

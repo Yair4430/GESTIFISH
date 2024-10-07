@@ -1,9 +1,23 @@
 
-.dt-search{
-  text-align: 0px;
-  margin-left: 220px;
+input[type=search]{
+  margin-right: 50px;
+  margin-bottom: 20px;
 }
 
+.col-sm-7{
+  margin-left: 330px;
+  margin-top: 10px;
+}
+
+/*.pagination{
+  margin-left: 330px;
+  margin-top: 10px;
+}*/
+
+/*.dt-paging{
+  margin-left: 330px;
+  margin-top: 10px;
+}*/
 
 /* Estilo para el contenedor que rodea la tabla */
 .table-container {
@@ -13,65 +27,55 @@
   margin-bottom: 10px; /* Margen inferior para separar del contenido de la tabla */
 }
 
-/* Alineación de la barra de búsqueda */
-.dataTables_filter {
-  display: flex;
-  justify-content: flex-end; /* Alinea el campo de búsqueda a la derecha */
-  margin-right: 10px; /* Espaciado a la derecha */
-  margin-top: -50px; /* Ajusta la posición vertical para alinearlo con la tabla */
-  margin-bottom: 10px; /* Ajusta el margen inferior */
-}
-
-.dataTables_filter label {
-  display: flex;
-  align-items: center;
-}
-
-/* Ajusta el estilo del input de búsqueda */
-.dataTables_filter input {
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  padding: 5px 10px;
-  font-size: 14px;
-  width: auto; /* Ajusta el ancho automáticamente según el contenido */
-}
-
-
 /* Estilo para el contenedor de la tabla */
 .table-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: center; /* Centra la tabla horizontalmente */
   margin-bottom: 10px;
 }
 
+/* Tabla con estilo gris */
 .table {
   width: 100%;
   max-width: 90%;
   margin: 0 auto;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse; /* Asegura que las fronteras no se dupliquen */
+  background-color: #f0f0f0; /* Fondo gris claro para la tabla */
+  color: #000000; /* Texto negro para contraste */
 }
 
+/* Estilo para las cabeceras de la tabla */
 .table th {
-  font-size: 15px !important;
-  background-color: #adaca9 !important;
-  color: #060606 !important;
+  font-size: 13px !important;
+  background-color: #d0d0d0 !important; /* Fondo gris medio para las cabeceras */
+  color: #000000 !important; /* Texto negro */
   text-align: center !important;
-  padding: 10px !important;
-  border: 1px solid #ddd !important;
+  padding: 8px !important;
+  border: 1px solid #b0b0b0 !important; /* Borde gris oscuro */
   font-weight: bold !important;
 }
 
+/* Estilo para las celdas de la tabla */
 .table td {
-  font-size: 15px !important;
+  font-size: 14px !important;
   text-align: center !important;
-  padding: 10px !important;
-  border: 1px solid #ddd !important;
+  padding: 1px !important;
+  border: 1px solid #b0b0b0 !important; /* Borde gris oscuro */
+  white-space: nowrap;
 }
 
+/* Estilo para las filas alternas */
+.table tbody tr:nth-child(even) {
+  background-color: #e0e0e0; /* Fondo gris claro para filas pares */
+}
+
+.table tbody tr:nth-child(odd) {
+  background-color: #f0f0f0; /* Fondo gris aún más claro para filas impares */
+}
+
+/* Estilo para tablas responsivas */
 .table-responsive {
-  max-width: 4400px;
+  max-width: 100%; /* Asegura que la tabla sea responsiva */
   overflow-x: auto;
 }
 
@@ -99,4 +103,10 @@ body, html {
 .btn-sm {
   padding: 3px 7px;
   font-size: 10px;
+}
+
+.table-position {
+  margin-left: 0px;  /* Ajusta el valor para mover a la izquierda o derecha */
+  padding-top: 20px;   /* Ajusta el valor para mover hacia arriba o abajo */
+
 }
