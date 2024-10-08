@@ -147,13 +147,19 @@ const sendForm = async (e) => {
             setMessageType('success');
             setMessage('Se ha enviado un correo para restablecer la contraseña si el correo está registrado.');
             console.log(response);
-            
+    
+            // Redirigir a la página principal después de enviar el correo
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 3000); // Espera 3 segundos antes de redirigir
+    
         } catch (error) {
             console.error('Error al enviar el correo de restablecimiento:', error.response ? error.response.data : error.message);
             setMessageType('error');
             setMessage('Hubo un error al intentar enviar el correo de restablecimiento.');
         }
     };
+    
 
     const switchForm = (opcion) => {
         setSingnInOrLogIn(opcion);

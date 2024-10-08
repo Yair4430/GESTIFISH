@@ -16,6 +16,7 @@ import routerCosecha from './routes/routerCosecha.js';
 import routerMuestreo from './routes/routerMuestreo.js';
 
 import errorHandler from './middleware/handlerbar.js';
+import authenticateToken from './middleware/VerifyToken.js';
 
 import ResponsableModel from './models/responsableModel.js';
 import ActividadModel from './models/actividadModel.js';
@@ -42,16 +43,16 @@ app.use('/public/uploads', express.static('public/uploads'));
 //app.use('/api/auth', routerAuth);
 app.use('/auth', routerAuth);
 
-app.use('/alimentacion', routerAlimentacion);
-app.use('/responsable', routerResponsable);
-app.use('/estanque', routerEstanque);
-app.use('/especie', routerEspecie);
-app.use('/traslado', routerTraslado);
-app.use('/actividad', routerActividad);
-app.use('/siembra', routerSiembra);
-app.use('/mortalidad', routerMortalidad);
-app.use('/cosecha', routerCosecha)
-app.use('/muestreo', routerMuestreo);
+app.use('/alimentacion', authenticateToken, routerAlimentacion);
+app.use('/responsable', authenticateToken, routerResponsable);
+app.use('/estanque', authenticateToken, routerEstanque);
+app.use('/especie', authenticateToken, routerEspecie);
+app.use('/traslado', authenticateToken, routerTraslado);
+app.use('/actividad', authenticateToken, routerActividad);
+app.use('/siembra', authenticateToken, routerSiembra);
+app.use('/mortalidad', authenticateToken, routerMortalidad);
+app.use('/cosecha', authenticateToken, routerCosecha);
+app.use('/muestreo', authenticateToken, routerMuestreo);
 
 
 // Middleware de manejo de errores

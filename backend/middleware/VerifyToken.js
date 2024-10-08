@@ -1,24 +1,21 @@
-/*export const verifyToken = (req, res, next) => {
-    const authorizationHeader = req.headers['authorization'];
+import jwt from 'jsonwebtoken';
 
-    if (authorizationHeader) {
-        const token = authorizationHeader.split(' ')[1];
-        console.log('Token recibido:', token);
+const authenticateToken = (req, res, next) => {
+  const token = req.headers['authorization'];
 
-        if (!token) {
-            return res.status(401).json({ message: 'Token no proporcionado' });
-        }
+  if (!token) {
+    return res.status(401).json({ message: 'Acceso denegado. No se proporcionó un token.' });
+  }
 
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_LLAVE);
-            console.log('Token decodificado:', decoded);
-            req.user = decoded; // Almacena los datos del usuario decodificado en `req.user`
-            next(); // Continúa con la ruta protegida
-        } catch (error) {
-            console.error('Error de verificación de token:', error);
-            res.status(403).json({ message: 'Token inválido o expirado' });
-        }
-    } else {
-        res.status(401).json({ message: 'No se encontró el token' });
+  const tokenWithoutBearer = token.split(' ')[1]; // Remover "Bearer" si está incluido en la autorización
+
+  jwt.verify(tokenWithoutBearer, process.env.JWT_LLAVE, (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: 'Token inválido o expirado.' });
     }
-};*/
+    req.user = user;
+    next();
+  });
+};
+
+export default authenticateToken;
