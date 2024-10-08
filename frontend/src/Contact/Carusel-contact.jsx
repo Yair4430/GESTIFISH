@@ -3,7 +3,7 @@ import React from "react";
 const CaruselContact = () => {
   const teamMembers = [
     {
-      img: "/public/Imagenes/Yair.jpg",
+      img: "/Imagenes/Yair.jpg",
       alt: "Yair Alexander Cardenas Guzman",
       name: "Yair Alexander Cardenas Guzman",
       title: "Gerente",
@@ -11,7 +11,7 @@ const CaruselContact = () => {
       place: "Soy de Flandes Tolima"
     },
     {
-      img: "/public/Imagenes/Valentina.jpg",
+      img: "/Imagenes/Valentina.jpg",
       alt: "Paula Valentina Muñoz Duran",
       name: "Paula Valentina Muñoz Duran",
       title: "Sub-Gerente",
@@ -19,7 +19,7 @@ const CaruselContact = () => {
       place: "Soy de Ibague Tolima"
     },
     {
-      img: "/public/Imagenes/Shirel.jpg",
+      img: "/Imagenes/Shirel.jpg",
       alt: "Shirel Daniela Oyuela Saavedra",
       name: "Shirel Daniela Oyuela Saavedra",
       title: "Analista y Desarrolladora",
@@ -27,7 +27,7 @@ const CaruselContact = () => {
       place: "Soy de Ibague Tolima"
     },
     {
-      img: "/public/Imagenes/JuanDavid.jpg",
+      img: "/Imagenes/JuanDavid.jpg",
       alt: "Juan David Rodriguez Barrero",
       name: "Juan David Rodriguez Barrero",
       title: "Analista y Desarrollador",
@@ -35,7 +35,7 @@ const CaruselContact = () => {
       place: "Soy de Flandes Tolima"
     },
     {
-      img: "/public/Imagenes/Saul.jpg",
+      img: "/Imagenes/Saul.jpg",
       alt: "Saúl Andrés Hernandez Olaya",
       name: "Saúl Andrés Hernandez Olaya",
       title: "Analista y Desarrollador",
@@ -88,7 +88,7 @@ const CaruselContact = () => {
             textAlign: 'center'
           }}>
             <img 
-              src="/public/Imagenes/ImagenGrupalActualizada.jpeg" 
+              src="/Imagenes/ImagenGrupalActualizada.jpeg" 
               alt="Foto grupal del equipo"
               style={{
                 maxWidth: '100%',
