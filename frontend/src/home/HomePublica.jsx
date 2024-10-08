@@ -1,6 +1,6 @@
 import React from 'react';
-import imgtodo from '../IMG/Logo_FondoBlanco.jpeg';
-import img2 from '../IMG/Estanque.jpeg';
+import imgtodo from '/Imagenes/Logo_FondoBlanco.jpeg';
+import img2 from '/Imagenes/Estanque.jpeg';
 // import BarraNavegacionPublica from './barraNavegacionPublica';
 
 const HomePublica = () => {

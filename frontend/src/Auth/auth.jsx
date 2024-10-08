@@ -127,7 +127,9 @@ const sendForm = async (e) => {
                     localStorage.setItem('usuario', JSON.stringify(response.data));
                     setMessageType('success');
                     setMessage('Inicio de sesión exitoso');
-                    window.location.href = process.env.ROUTER_WINDOW + window.location.host;
+                    // window.location.href = process.env.ROUTER_WINDOW + window.location.host;
+                    window.location.href = import.meta.env.VITE_ROUTER_WINDOW + window.location.host;
+
                     // navigate('/ruta-protegida');
                 }
             } catch (error) {
@@ -141,7 +143,7 @@ const sendForm = async (e) => {
     const sendResetPasswordRequest = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${URI}forgot-password, { Cor_Usuario }`);
+            const response = await axios.post(`${URI}forgot-password`, { Cor_Usuario });
             setMessageType('success');
             setMessage('Se ha enviado un correo para restablecer la contraseña si el correo está registrado.');
             console.log(response);
@@ -174,7 +176,7 @@ const sendForm = async (e) => {
                     <h3 className="bold-highlight">{resetPass ? 'Restablecer Contraseña' : (singnInOrLogIn === 'signIn' ? 'Registrar' : 'Iniciar Sesión')}</h3>
                         {message && (
                             <div 
-                            className={alert `${messageType === 'success' ? 'alert-success' : 'alert-danger'}`}
+                            className={`alert ${messageType === 'success' ? 'alert-success' : 'alert-danger'}`}
                             style={{ width: '330px', margin: '15px auto', padding: '0px', textAlign: 'center' }}>
                             {message}
                         </div>

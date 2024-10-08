@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from 'react-router-dom'; 
-import Logo from '../IMG/LogoBlanco.jpeg'; 
+import Logo from '/Imagenes/LogoBlanco.jpeg'; 
 
 function BarraNavegacionPublica() {
   const styles = {

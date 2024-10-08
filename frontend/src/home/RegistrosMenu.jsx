@@ -2,7 +2,7 @@ import React from 'react';
 import Sidebar from './Sidebar.jsx'; // Asegúrate de usar la ruta correcta
 import './RegistrosMenu.css';
 
-import FormImage from '../IMG/Cachamas.jpeg';
+import FormImage from '/Imagenes/Cachamas.jpeg';
 
 function RegistrosMenu() {
   return (

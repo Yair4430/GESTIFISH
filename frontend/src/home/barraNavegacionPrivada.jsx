@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from 'react-router-dom'; // Importa NavLink
-import Logo from '../IMG/LogoBlanco.jpeg'; // Asegúrate de reemplazar esta línea con el logo que quieres usar
+import Logo from '/Imagenes/LogoBlanco.jpeg'; // Asegúrate de reemplazar esta línea con el logo que quieres usar
 
 // Definición del componente de barra de navegación privada
 function barraNavegacionPrivada({ logOutUser }) {

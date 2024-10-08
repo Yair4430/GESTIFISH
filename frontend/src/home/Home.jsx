@@ -1,9 +1,9 @@
 import React from 'react';
 import Slider from 'react-slick'; // Importa el componente Slider
-import imgtodo from '../IMG/ImagenGrupalActualizada.jpeg';
-import Cachama from '../IMG/Cachamas.jpeg';
-import Estanque1 from '../IMG/Estanque1.jpeg';
-import Estanque from '../IMG/Estanque.jpeg';
+import imgtodo from '/Imagenes/ImagenGrupalActualizada.jpeg';
+import Cachama from '/Imagenes/Cachamas.jpeg';
+import Estanque1 from '/Imagenes/Estanque1.jpeg';
+import Estanque from '/Imagenes/Estanque.jpeg';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import './Home.css'; // Archivo CSS personalizado
