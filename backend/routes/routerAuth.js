@@ -108,7 +108,7 @@ routerAuth.post("/forgot-password", async (req, res) => {
     const user = await UsuarioModel.findOne({ where: { Cor_Usuario } });
 
     if (!user) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
+      return res.status(404).json({ message: "El correo electrónico no está registrado en nuestra base de datos." });
     }
 
     // Generar token

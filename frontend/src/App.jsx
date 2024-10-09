@@ -20,6 +20,7 @@ import Simulador from './Simulador/Simulador.jsx';
 // Importaciones Registro, inicio de sesión y recuperación de contraseña
 import Auth from './Auth/auth.jsx';
 import ResetPassword from './Auth/resetPassword.jsx';
+import FormReset from './Auth/formReset.jsx';
 
 // Importaciones de estructura del proyecto
 import Home from './home/Home.jsx';
@@ -115,6 +116,7 @@ function App() {
             <Route path='/Contactos' element={<CaruselContact />} />
             <Route path='/SimuladorPublico' element={<Simulador />} />
             <Route path='/auth' element={<Auth />} />
+            <Route path='/reset-password' element={<FormReset />} />
             <Route path='/reset-password/:token' element={<ResetPassword />} />
             <Route path='*' element={<Navigate to="/" />} />
           </Routes>

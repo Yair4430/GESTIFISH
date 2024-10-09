@@ -7,132 +7,150 @@ const URI_AUTH = process.env.ROUTER_PRINCIPAL + '/auth/';
 
 // Componente de restablecimiento de contraseña
 const ResetPassword = () => {
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState('');
-  const [tokenValido, setTokenValido] = useState(false);
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState('');
+    const [tokenValido, setTokenValido] = useState(false);
+  
+    const navigate = useNavigate();
+    const params = useParams();
+    const { token } = params;
+  
+    useEffect(() => {
+      const verificarToken = async () => {
+        try {
+          const response = await axios.get(`${URI_AUTH}reset-password/${token}`);
+          setTokenValido(true);
+        } catch (error) {
+          setTimeout(() => {
+            navigate('/');
+          }, 1000);
+        }
+      };
+      verificarToken();
+    }, [token]);
 
-  const navigate = useNavigate();
-  const params = useParams();
-  const { token } = params;
-
-  useEffect(() => {
-    const verificarToken = async () => {
+    const validatePassword = (password) => {
+        const regex = /^(?=.*[.!@#$%^&])[a-zA-Z0-9.!@#$%^&*]{8,}$/;
+        if (!regex.test(password)) {
+          setMessageType('error');
+          setMessage('La contraseña debe tener al menos 8 caracteres y contener al menos un carácter especial.');
+        //   setTimeout(2000)
+          setTimeout(() => { setMessage(''); }, 4000);
+          return false;
+        }
+        return true;
+      };
+  
+    const updatePassword = async (e) => {
+      e.preventDefault();
+    // Validar que la nueva contraseña cumpla los requisitos
+    if (!validatePassword(newPassword)) {
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        setMessage('Las contraseñas no coinciden.');
+        setTimeout(() => { setMessage(''); }, 4000);
+        setMessageType('error');
+        return;
+      }
+  
       try {
-        const response = await axios.get(`${URI_AUTH}reset-password/${token}`);
-        setTokenValido(true);
-      } catch (error) {
+        const response = await axios.post(`${URI_AUTH}reset-password/${token}`, { newPassword });
+        setMessage(response.data.message);
+        setMessageType('success');
+        setNewPassword('');
+        setConfirmPassword('');
+  
         setTimeout(() => {
           navigate('/');
-        }, 1000);
+        }, 2000);
+  
+      } catch (error) {
+        console.error('Error:', error);
+        if (error.response && error.response.data) {
+          setMessage(error.response.data.message);
+          setMessageType('error');
+        } else {
+          setMessage('Ocurrió un error al intentar restablecer la contraseña.');
+          setMessageType('error');
+        }
       }
     };
-    verificarToken();
-  }, [token]);
-
-  const updatePassword = async (e) => {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      setMessage('Las contraseñas no coinciden.');
-      setTimeout(() => { setMessage(''); }, 4000);
-      setMessageType('error');
-      return;
-    }
-
-    try {
-      const response = await axios.post(`${URI_AUTH}reset-password/${token}`, { newPassword });
-      setMessage(response.data.message);
-      setMessageType('success');
-      setNewPassword('');
-      setConfirmPassword('');
-
-      setTimeout(() => {
-        navigate('/');
-      }, 2000);
-
-    } catch (error) {
-      console.error('Error:', error);
-      if (error.response && error.response.data) {
-        setMessage(error.response.data.message);
-        setMessageType('error');
-      } else {
-        setMessage('Ocurrió un error al intentar restablecer la contraseña.');
-        setMessageType('error');
-      }
-    }
-  };
-
-  return (
-    
-    <div style={styles.authContainer}>
-      <h3 style={styles.authTitle}>Cambiar Contraseña</h3>
-      <span>Ingresa la nueva contraseña para actualizarla.</span>
-      {message && (
-          <div style={messageType === 'success' ? styles.alertSuccess : styles.alertError}>
-            {message}
+  
+    return (
+      <div style={styles.authContainer}>
+        <h3 style={styles.authTitle}>Cambiar Contraseña</h3>
+        {message && (
+            <div style={messageType === 'success' ? styles.alertSuccess : styles.alertError}>
+              {message}
+            </div>
+          )}
+          <br />
+        <form onSubmit={updatePassword} style={styles.authForm}>
+  
+          <div className="input-group mb-3">
+            <input
+              type={showNewPassword ? "text" : "password"}
+              className="form-control"
+              placeholder="Nueva Contraseña"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+            />
+            <a 
+              className="btn btn-outline-secondary" 
+              onClick={() => setShowNewPassword(!showNewPassword)}
+            >
+              {showNewPassword ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye-slash" viewBox="0 0 16 16">
+                  <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"/>
+                  <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"/>
+                  <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"/>
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye-fill" viewBox="0 0 16 16">
+                  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                </svg>
+              )}
+            </a>
           </div>
-        )}
-        <br />
-      <form onSubmit={updatePassword} style={styles.authForm}>
-
-        <div className="input-group mb-3">
-          <input
-            type={showNewPassword ? "text" : "password"}
-            // style={styles.formInput} 
-            className="form-control"
-            placeholder="Nueva Contraseña"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
-          <a 
-            className="btn btn-outline-secondary" 
-            onClick={() => setShowNewPassword(!showNewPassword)}
-          >
-            {showNewPassword ? <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye-slash" viewBox="0 0 16 16">
-            <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"/>
-            <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"/>
-            <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"/>
-            </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye-fill" viewBox="0 0 16 16">
-            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-            </svg>}
-          </a>
-        </div>
-
-        <div className="input-group mb-3">
-          <input
-            type={showConfirmPassword ? "text" : "password"}
-            // style={styles.formInput} 
-            className="form-control"
-            placeholder="Confirmar Contraseña"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-          <a 
-            className="btn btn-outline-secondary"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-          >
-            {showConfirmPassword ? <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye-slash" viewBox="0 0 16 16">
-            <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"/>
-            <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"/>
-            <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"/>
-            </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye-fill" viewBox="0 0 16 16">
-            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-            </svg>}
-          </a>
-        </div>
-
-        <div style={styles.formGroup}>
-          <button type="submit" style={styles.btnSubmit}>Cambiar Contraseña</button>
-        </div>
-      </form>
-    </div>
+  
+          <div className="input-group mb-3">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              className="form-control"
+              placeholder="Confirmar Contraseña"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            <a 
+              className="btn btn-outline-secondary"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye-slash" viewBox="0 0 16 16">
+                  <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"/>
+                  <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"/>
+                  <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"/>
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye-fill" viewBox="0 0 16 16">
+                  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                </svg>
+              )}
+            </a>
+          </div>
+  
+          <button type="submit" className="btn btn-primary">Restablecer Contraseña</button>
+        </form>
+      </div>
   );
 };
 
