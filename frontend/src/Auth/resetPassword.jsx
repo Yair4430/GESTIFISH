@@ -24,9 +24,10 @@ const ResetPassword = () => {
       try {
         const response = await axios.get(`${URI_AUTH}reset-password/${token}`);
         setTokenValido(true);
-        alert(response.data.message);
       } catch (error) {
-        alert(error.response.data.message);
+        setTimeout(() => {
+          navigate('/');
+        }, 1000);
       }
     };
     verificarToken();
