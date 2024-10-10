@@ -85,7 +85,10 @@ const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllM
             };
 
             if (buttonForm === 'Actualizar') {
-                await axios.put(`${URI}${mortalidad.Id_Mortalidad} }`, data);
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                await axios.put(`${URI}${mortalidad.Id_Mortalidad}`, data,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                });
                 Swal.fire({
                     title: 'Actualizado',
                     text: '¡Registro actualizado exitosamente!',
@@ -96,7 +99,10 @@ const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllM
                 closeModal()
 
             } else if (buttonForm === 'Enviar') {
-                const respuestaApi = await axios.post(URI, data);
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                const respuestaApi = await axios.post(URI, data,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                },);
                 Swal.fire({
                     title: 'Guardado',
                     text: '¡Registro guardado exitosamente!',
@@ -165,7 +171,10 @@ const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllM
     useEffect(() => {
         const getResponsable = async () => {
             try {
-                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/');
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/', {
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  })
                 setDatosResponsable(response.data);
             } catch (error) {
                 console.error('Error al obtener responsables:', error);
@@ -174,7 +183,10 @@ const FormMortalidad = ({ buttonForm, mortalidad, URI, updateTextButton, getAllM
 
         const getSiembras = async () => {
             try {
-                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/siembra/');
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/siembra/' , {
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  })
                 setDatosSiembra(response.data);
             } catch (error) {
                 console.error('Error al obtener siembras:', error);

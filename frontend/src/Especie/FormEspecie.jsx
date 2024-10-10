@@ -40,8 +40,10 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
       
         try {
           if (buttonForm === 'Actualizar') {
+            const user = JSON.parse(localStorage.getItem('usuario'));
             await axios.put(`${URI}${especie.Id_Especie}`, formData, {
-              headers: { "Content-Type": "multipart/form-data" }
+              headers: { "Content-Type": "multipart/form-data" },
+                headers: { Authorization: `Bearer ${user.tokenUser }` }
             }).then(() => {
               Swal.fire({
                 title: 'Actualizado',
@@ -54,8 +56,10 @@ const FormEspecie = ({ buttonForm, especie, URI, updateTextButton, getAllEspecie
               closeModal();
             });
           } else if (buttonForm === 'Enviar') {
+            const user = JSON.parse(localStorage.getItem('usuario'));
             const respuestaApi = await axios.post(URI, formData, {
-              headers: { "Content-Type": "multipart/form-data" }
+              headers: { "Content-Type": "multipart/form-data" },
+              headers: { Authorization: `Bearer ${user.tokenUser }` }
             });
             Swal.fire({
               title: 'Guardado',

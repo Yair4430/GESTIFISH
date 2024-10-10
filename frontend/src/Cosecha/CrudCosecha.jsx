@@ -34,7 +34,11 @@ const CrudCosecha = () => {
 
     const getAllCosecha = async () => {
         try {
-            const respuesta = await axios.get(URI);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(URI, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
+
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setCosechaList(respuesta.data);
             } else {
@@ -48,7 +52,10 @@ const CrudCosecha = () => {
     const getCosecha = async (Id_Cosecha) => {
         setButtonForm('Enviar');
         try {
-            const respuesta = await axios.get(`${URI}${Id_Cosecha}`);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(`${URI}/${Id_Cosecha}`, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setButtonForm('Actualizar');
                 setCosecha({ ...respuesta.data });
@@ -82,15 +89,18 @@ const CrudCosecha = () => {
             });
     
             // Si el usuario confirma la acción
-            if (result.isConfirmed) {        
-                await axios.delete(`${URI}/${Id_Cosecha}`);
+            if (result.isConfirmed) {
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                await axios.delete(`${URI}/${Id_Cosecha}`,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  });
                 eliminar(Id_Cosecha);
-                window.location.reload();
                 Swal.fire(
                     'Eliminado!',
                     'El registro ha sido eliminado.',
                     'success'
                 );
+                window.location.reload();
             }
         } catch (error) {
             console.error('Error deleting Cosecha:', error);

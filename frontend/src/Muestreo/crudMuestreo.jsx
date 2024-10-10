@@ -31,7 +31,10 @@ const CrudMuestreo = () => {
 
     const getAllMuestreo = async () => {
         try {
-            const respuesta = await axios.get(URI);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(URI, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setMuestreoList(respuesta.data);
             } else {
@@ -45,7 +48,10 @@ const CrudMuestreo = () => {
     const getMuestreo = async (Id_Muestreo) => {
         setButtonForm('Actualizar');
         try {
-            const respuesta = await axios.get(`${URI}${Id_Muestreo}`);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(`${URI}/${Id_Muestreo}`, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setButtonForm('Actualizar');
                 setMuestreo({ ...respuesta.data });
@@ -80,14 +86,17 @@ const CrudMuestreo = () => {
     
             // Si el usuario confirma la acción
             if (result.isConfirmed) {        
-                await axios.delete(`${URI}/${Id_Muestreo}`);
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                await axios.delete(`${URI}/${Id_Muestreo}`,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  });
                 eliminar(Id_Muestreo);
-                window.location.reload();
                 Swal.fire(
                     'Eliminado!',
                     'El registro ha sido eliminado.',
                     'success'
                 );
+                window.location.reload();
             }
         } catch (error) {
             console.error('Error deleting actividad:', error);

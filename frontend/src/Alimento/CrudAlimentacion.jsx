@@ -31,7 +31,10 @@ const CrudAlimentacion = () => {
 
     const getAllAlimentacion = async () => {
         try {
-            const respuesta = await axios.get(URI);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(URI, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
             setAlimentacionList(respuesta.data);
         } catch (error) {
             console.error('Error fetching alimentacion:', error);
@@ -41,7 +44,10 @@ const CrudAlimentacion = () => {
     const getAlimentacion = async (Id_Alimentacion) => {
         setButtonForm('Enviar');
         try {
-            const respuesta = await axios.get(`${URI}${Id_Alimentacion}`);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(`${URI}/${Id_Alimentacion}`, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
             setButtonForm('Actualizar');
             setAlimentacion(respuesta.data);
             const modalElement = document.getElementById('modalForm');
@@ -72,14 +78,17 @@ const CrudAlimentacion = () => {
     
             // Si el usuario confirma la acción
             if (result.isConfirmed) {        
-                await axios.delete(`${URI}/${Id_Alimentacion}`);
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                await axios.delete(`${URI}/${Id_Alimentacion}`,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                });
                 eliminar(Id_Alimentacion);
-                window.location.reload();
                 Swal.fire(
                     'Eliminado!',
                     'El registro ha sido eliminado.',
                     'success'
                 );
+                window.location.reload();
             }
         } catch (error) {
             console.error('Error deleting Cosecha:', error);

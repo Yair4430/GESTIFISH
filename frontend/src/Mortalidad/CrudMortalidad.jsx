@@ -29,7 +29,10 @@ const CrudMortalidad = () => {
 
     const getAllMortalidad = async () => {
         try {
-            const respuesta = await axios.get(URI);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(URI, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setMortalidadList(respuesta.data);
             } else {
@@ -43,7 +46,10 @@ const CrudMortalidad = () => {
     const getMortalidad = async (Id_Mortalidad) => {
         setButtonForm('Actualizar');
         try {
-            const respuesta = await axios.get(`${URI}${Id_Mortalidad}`);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(`${URI}/${Id_Mortalidad}`, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setMortalidad({ ...respuesta.data });
                 const modalElement = document.getElementById('modalForm');
@@ -76,15 +82,18 @@ const CrudMortalidad = () => {
             });
     
             // Si el usuario confirma la acción
-            if (result.isConfirmed) {        
-                await axios.delete(`${URI}/${Id_Mortalidad}`);
+            if (result.isConfirmed) {
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                await axios.delete(`${URI}/${Id_Mortalidad}`,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  });
                 eliminar(Id_Mortalidad);
-                window.location.reload();
                 Swal.fire(
                     'Eliminado!',
                     'El registro ha sido eliminado.',
                     'success'
                 );
+                window.location.reload();
             }
         } catch (error) {
             console.error('Error deleting actividad:', error);

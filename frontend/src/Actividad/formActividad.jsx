@@ -61,7 +61,11 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
 
   const getResponsable = async () => {
     try {
-      const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/');
+      const user = JSON.parse(localStorage.getItem('usuario'));
+      const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/' , {
+        headers: { Authorization: `Bearer ${user.tokenUser }` },
+      })
+
       setDatosResponsable(response.data);
     } catch (error) {
       console.error('Error al obtener responsables:', error);
@@ -70,7 +74,10 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
 
   const getEstanque = async () => {
     try {
-      const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/estanque/');
+      const user = JSON.parse(localStorage.getItem('usuario'));
+      const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/estanque/',{
+        headers: { Authorization: `Bearer ${user.tokenUser }` },
+      });
       setDatosEstanque(response.data);
     } catch (error) {
       console.error('Error al obtener estanques:', error);
@@ -104,6 +111,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
 
     try {
       if (buttonForm === 'Actualizar') {
+        const user = JSON.parse(localStorage.getItem('usuario'));
         await axios.put(`${URI}${actividad.Id_Actividad}`, {
           Id_Actividad,
           Nom_Actividad,
@@ -113,7 +121,9 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
           Fas_Produccion,
           Id_Responsable,
           Id_Estanque
-        }).then(() => {
+        },{
+          headers: { Authorization: `Bearer ${user.tokenUser }` },
+        },).then(() => {
           Swal.fire({
             title: 'Actualizado',
             text: '¡Registro actualizado exitosamente!',
@@ -125,6 +135,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
         });
 
       } else if (buttonForm === 'Enviar') {
+        const user = JSON.parse(localStorage.getItem('usuario'));
         const respuestaApi = await axios.post(URI, {
           Nom_Actividad,
           Des_Actividad,
@@ -133,7 +144,10 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
           Fas_Produccion,
           Id_Responsable,
           Id_Estanque
-        });
+        },{
+          headers: { Authorization: `Bearer ${user.tokenUser }` },
+        }
+      );
         Swal.fire({
           title: 'Guardado',
           text: '¡Registro guardado exitosamente!',
@@ -309,7 +323,7 @@ const FormActividad = ({ buttonForm, actividad, URI, updateTextButton, getAllAct
                   <option value="">Selecciona uno...</option>
                   {DatosEstanque.map((estanque) => (
                     <option key={estanque.Id_Estanque} value={estanque.Id_Estanque}>
-                      {estanque.Nom_Estanque}
+                      {estanque.Id_Estanque}
                     </option>
                   ))}
                 </select>

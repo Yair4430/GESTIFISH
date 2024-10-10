@@ -72,7 +72,10 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
             };
 
             if (buttonForm === 'Actualizar') {
-                await axios.put(`${URI}${siembra.Id_Siembra}`, data);
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                await axios.put(`${URI}${siembra.Id_Siembra}`, data,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                });
                 Swal.fire({
                     title: 'Actualizado',
                     text: '¡Registro actualizado exitosamente!',
@@ -85,7 +88,10 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                 
                 });
             } else if (buttonForm === 'Enviar') {
-                const respuestaApi = await axios.post(URI, data);
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                const respuestaApi = await axios.post(URI, data,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                },);
                 Swal.fire({
                     title: 'Guardado',
                     text: '¡Registro guardado exitosamente!',
@@ -169,7 +175,10 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
     useEffect(() => {
         const getResponsable = async () => {
             try {
-                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/');
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/', {
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  })
                 setDatosResponsable(response.data);
             } catch (error) {
                 console.error('Error al obtener responsables:', error);
@@ -178,7 +187,10 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
 
         const getEspecies = async () => {
             try {
-                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/especie/');
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/especie/', {
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                })
                 setDatosEspecie(response.data);
             } catch (error) {
                 console.error('Error al obtener especies:', error);
@@ -187,7 +199,10 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
 
         const getEstanques = async () => {
             try {
-                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/estanque/');
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/estanque/' , { 
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                });
                 setDatosEstanque(response.data);
             } catch (error) {
                 console.error('Error al obtener estanques:', error);

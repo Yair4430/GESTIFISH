@@ -31,17 +31,23 @@ const CrudActividad = () => {
 
     const getAllActividad = async () => {
         try {
-            const respuesta = await axios.get(URI);
-            setActividadList(respuesta.data);
+          const user = JSON.parse(localStorage.getItem('usuario'));
+          const respuesta = await axios.get(URI, {
+            headers: { Authorization: `Bearer ${user.tokenUser }` },
+          });
+          setActividadList(respuesta.data);
         } catch (error) {
-            console.error('Error fetching actividades:', error);
+          console.error('Error fetching actividades:', error);
         }
-    };
+      };
 
     const getActividad = async (Id_Actividad) => {
         setButtonForm('Enviar');
         try {
-            const respuesta = await axios.get(`${URI}/${Id_Actividad}`);
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                const respuesta = await axios.get(`${URI}/${Id_Actividad}`, {
+                  headers: { Authorization: `Bearer ${user.tokenUser }` },
+                });
             setButtonForm('Actualizar');
             setActividad(respuesta.data);
             //Mostrar el modal
@@ -72,15 +78,18 @@ const CrudActividad = () => {
             });
     
             // Si el usuario confirma la acción
-            if (result.isConfirmed) {        
-                await axios.delete(`${URI}/${Id_Actividad}`);
+            if (result.isConfirmed) {
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                await axios.delete(`${URI}/${Id_Actividad}`,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  });
                 eliminar(Id_Actividad);
-                window.location.reload();
                 Swal.fire(
                     'Eliminado!',
                     'El registro ha sido eliminado.',
                     'success'
                 );
+                window.location.reload();
             }
         } catch (error) {
             console.error('Error deleting actividad:', error);
@@ -227,7 +236,7 @@ const CrudActividad = () => {
         actividad.Fec_Actividad,
         actividad.Hor_Actividad,
         actividad.Fas_Produccion,
-        actividad.estanque.Nom_Estanque,
+        actividad.estanque.Id_Estanque,
         `
           <a class='text-primary align-middle btn-edit' data-id='${actividad.Id_Actividad}' onClick={handleAddClick}>
             <i class="fa-solid fa-pen-to-square"></i> 

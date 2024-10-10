@@ -53,7 +53,10 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
             };
 
             if (buttonForm === 'Actualizar') {
-                await axios.put(`${URI}${traslado.Id_Traslado}`, data);
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                await axios.put(`${URI}${traslado.Id_Traslado}`, data,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                });
                 Swal.fire({
                     title: 'Actualizado',
                     text: '¡Registro actualizado exitosamente!',
@@ -65,7 +68,10 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
                 closeModal()
                 
             } else if (buttonForm === 'Enviar') {
-                const respuestaApi = await axios.post(URI, data);
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                const respuestaApi = await axios.post(URI, data,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                },);
                 Swal.fire({
                     title: 'Guardado',
                     text: '¡Registro guardado exitosamente!',
@@ -134,7 +140,10 @@ const FormTraslado = ({ buttonForm, traslado, URI, updateTextButton, getAllTrasl
     useEffect(() => {
         const getResponsable = async () => {
             try {
-                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/');
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/', {
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  })
                 setDatosResponsable(response.data);
             } catch (error) {
                 console.error('Error al obtener responsables:', error);

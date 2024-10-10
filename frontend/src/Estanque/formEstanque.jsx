@@ -49,8 +49,10 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
     
         try {
             if (buttonForm === 'Actualizar') {
+                const user = JSON.parse(localStorage.getItem('usuario'));
                 const respuesta = await axios.put(`${URI}${estanque.Id_Estanque}`, formData, {
-                    headers: { "Content-Type": "multipart/form-data" }
+                    headers: { "Content-Type": "multipart/form-data" },
+                    headers: { Authorization: `Bearer ${user.tokenUser }` }
                 });
 
                 if (respuesta.status === 200) {
@@ -59,7 +61,7 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
                         text: '¡Registro actualizado exitosamente!',
                         icon: 'success'
                     }).then(() => {
-                    // updateTextButton('Enviar');
+                    updateTextButton('Enviar');
                     getAllEstanques();
                     clearForm();
                     closeModal()
@@ -69,8 +71,10 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
                     console.warn('HTTP Status:', respuesta.status);
                 }
             } else if (buttonForm === 'Enviar') {
+                const user = JSON.parse(localStorage.getItem('usuario'));
                 const respuestaApi = await axios.post(URI, formData, {
-                    headers: { "Content-Type": "multipart/form-data" }
+                    headers: { "Content-Type": "multipart/form-data" },
+                    headers: { Authorization: `Bearer ${user.tokenUser }` }
                 });
 
                 if (respuestaApi.status === 201) {
@@ -81,6 +85,9 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
                     });
                     clearForm();
                     getAllEstanques();
+                    updateTextButton('Enviar');
+
+                    
                 } else {
                     console.warn('HTTP Status:', respuestaApi.status);
                 }

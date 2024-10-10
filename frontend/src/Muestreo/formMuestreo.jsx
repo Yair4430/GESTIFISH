@@ -62,7 +62,10 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
             };
 
             if (buttonForm === 'Actualizar') {
-                await axios.put(`${URI}${muestreo.Id_Muestreo}`, data);
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                await axios.put(`${URI}${muestreo.Id_Muestreo}`, data,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                });
                 Swal.fire({
                     title: 'Actualizado',
                     text: '¡Registro actualizado exitosamente!',
@@ -74,7 +77,10 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
                 closeModal()
 
             } else if (buttonForm === 'Enviar') {
-                const respuestaApi = await axios.post(URI, data);
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                const respuestaApi = await axios.post(URI, data,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                },);
                 Swal.fire({
                     title: 'Guardado',
                     text: '¡Registro guardado exitosamente!',
@@ -149,7 +155,10 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
     useEffect(() => {
         const getResponsable = async () => {
             try {
-                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/');
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/responsable/', {
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  })
                 setDatosResponsable(response.data);
             } catch (error) {
                 console.error('Error al obtener responsables:', error);
@@ -158,7 +167,10 @@ const FormMuestreo = ({ buttonForm, muestreo, URI, updateTextButton, getAllMuest
 
         const getSiembras = async () => {
             try {
-                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/siembra/');
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                const response = await axios.get(process.env.ROUTER_PRINCIPAL + '/siembra/' , {
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  })
                 setDatosSiembra(response.data);
             } catch (error) {
                 console.error('Error al obtener siembras:', error);

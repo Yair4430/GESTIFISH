@@ -32,7 +32,10 @@ const CrudEstanque = () => {
 
     const getAllEstanques = async () => {
         try {
-            const respuesta = await axios.get(URI);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(URI, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
             setEstanqueList(respuesta.data);
         } catch (error) {
             console.error('Error fetching estanques:', error);
@@ -42,7 +45,10 @@ const CrudEstanque = () => {
     const getEstanque = async (Id_Estanque) => {
         setButtonForm('Enviar');
         try {
-            const respuesta = await axios.get(`${URI}${Id_Estanque}`);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(`${URI}/${Id_Estanque}`, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setButtonForm('Actualizar');
                 setEstanque(respuesta.data);
@@ -76,15 +82,18 @@ const CrudEstanque = () => {
             });
     
             // Si el usuario confirma la acción
-            if (result.isConfirmed) {        
-                await axios.delete(`${URI}/${Id_Estanque}`);
+            if (result.isConfirmed) {
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                await axios.delete(`${URI}/${Id_Estanque}`,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  });
                 eliminar(Id_Estanque);
-                window.location.reload();
                 Swal.fire(
                     'Eliminado!',
                     'El registro ha sido eliminado.',
                     'success'
                 );
+                window.location.reload();
             }
         } catch (error) {
             console.error('Error deleting Cosecha:', error);

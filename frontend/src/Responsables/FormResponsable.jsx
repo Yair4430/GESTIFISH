@@ -66,6 +66,7 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
 
         try {
             if (buttonForm === 'Actualizar') {
+                const user = JSON.parse(localStorage.getItem('usuario'));
                 const respuesta = await axios.put(`${URI}${responsable.Id_Responsable}`, {
                     Id_Responsable,
                     Nom_Responsable,
@@ -74,7 +75,9 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                     Tip_Responsable,
                     Cor_Responsable,
                     Num_Responsable
-                });
+                },{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  },);
 
                 if (respuesta.status >= 200 && respuesta.status < 300) {
                     Swal.fire({
@@ -87,6 +90,7 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                     closeModal()
                 }
             } else if (buttonForm === 'Enviar') {
+                const user = JSON.parse(localStorage.getItem('usuario'));
                 const respuestaApi = await axios.post(URI, {
                     Nom_Responsable,
                     Ape_Responsable,
@@ -94,7 +98,9 @@ const FormResponsable = ({ buttonForm, responsable, URI, updateTextButton, getAl
                     Tip_Responsable,
                     Cor_Responsable,
                     Num_Responsable
-                });
+                },{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  },);
 
                 if (respuestaApi.status === 201) {
                     Swal.fire({

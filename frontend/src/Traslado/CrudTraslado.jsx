@@ -29,7 +29,10 @@ const CrudTraslado = () => {
 
     const getAllTraslados = async () => {
         try {
-            const respuesta = await axios.get(URI);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(URI, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setTrasladoList(respuesta.data);
             } else {
@@ -43,7 +46,10 @@ const CrudTraslado = () => {
     const getTraslado = async (Id_Traslado) => {
         setButtonForm('Actualizar');
         try {
-            const respuesta = await axios.get(`${URI}/${Id_Traslado}`);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(`${URI}/${Id_Traslado}`, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setTraslado({ ...respuesta.data });
                 const modalElement = document.getElementById('modalForm');
@@ -77,14 +83,17 @@ const CrudTraslado = () => {
     
             // Si el usuario confirma la acción
             if (result.isConfirmed) {        
-                await axios.delete(`${URI}/${Id_Traslado}`);
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                await axios.delete(`${URI}/${Id_Traslado}`,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  });
                 eliminar(Id_Traslado);
-                window.location.reload();
                 Swal.fire(
                     'Eliminado!',
                     'El registro ha sido eliminado.',
                     'success'
                 );
+                window.location.reload();
             }
         } catch (error) {
             console.error('Error deleting actividad:', error);

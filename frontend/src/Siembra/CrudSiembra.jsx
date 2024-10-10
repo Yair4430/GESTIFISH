@@ -34,7 +34,10 @@ const CrudSiembra = () => {
 
     const getAllSiembra = async () => {
         try {
-            const respuesta = await axios.get(URI);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(URI, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setSiembraList(respuesta.data);
             } else {
@@ -48,7 +51,10 @@ const CrudSiembra = () => {
     const getSiembra = async (Id_Siembra) => {
         setButtonForm('Actualizar');
         try {
-            const respuesta = await axios.get(`${URI}${Id_Siembra}`);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(`${URI}/${Id_Siembra}`, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
             if (respuesta.status >= 200 && respuesta.status < 300) {
                 setSiembra({ ...respuesta.data });
                 const modalElement = document.getElementById('modalForm');
@@ -82,14 +88,17 @@ const CrudSiembra = () => {
     
             // Si el usuario confirma la acción
             if (result.isConfirmed) {        
-                await axios.delete(`${URI}/${Id_Siembra}`);
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                await axios.delete(`${URI}/${Id_Siembra}`,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  });
                 eliminar(Id_Siembra);
-                window.location.reload();
                 Swal.fire(
                     'Eliminado!',
                     'El registro ha sido eliminado.',
                     'success'
                 );
+                window.location.reload();
             }
         } catch (error) {
             console.error('Error deleting actividad:', error);

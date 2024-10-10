@@ -30,7 +30,10 @@ const CrudEspecie = () => {
 
     const getAllEspecies = async () => {
         try {
-            const respuesta = await axios.get(URI);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(URI, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
             if (respuesta.status === 200) {
                 setEspecieList(respuesta.data);
             } else {
@@ -44,7 +47,10 @@ const CrudEspecie = () => {
     const getEspecie = async (Id_Especie) => {
         setButtonForm('Enviar');
         try {
-            const respuesta = await axios.get(`${URI}${Id_Especie}`);
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            const respuesta = await axios.get(`${URI}/${Id_Especie}`, {
+              headers: { Authorization: `Bearer ${user.tokenUser }` },
+            });
             if (respuesta.status === 200) {
                 setButtonForm('Actualizar');
                 setEspecie({ ...respuesta.data });
@@ -79,15 +85,18 @@ const CrudEspecie = () => {
             });
     
             // Si el usuario confirma la acción
-            if (result.isConfirmed) {        
-                await axios.delete(`${URI}/${Id_Especie}`);
+            if (result.isConfirmed) {
+                const user = JSON.parse(localStorage.getItem('usuario'));
+                await axios.delete(`${URI}/${Id_Especie}`,{
+                    headers: { Authorization: `Bearer ${user.tokenUser }` },
+                  });
                 eliminar(Id_Especie);
-                window.location.reload();
                 Swal.fire(
                     'Eliminado!',
                     'El registro ha sido eliminado.',
                     'success'
                 );
+                window.location.reload();
             }
         } catch (error) {
             console.error('Error deleting Cosecha:', error);
