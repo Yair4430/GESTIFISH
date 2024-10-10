@@ -51,8 +51,9 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
             if (buttonForm === 'Actualizar') {
                 const user = JSON.parse(localStorage.getItem('usuario'));
                 const respuesta = await axios.put(`${URI}${estanque.Id_Estanque}`, formData, {
-                    headers: { "Content-Type": "multipart/form-data" },
-                    headers: { Authorization: `Bearer ${user.tokenUser }` }
+                    headers: { "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${user.tokenUser }`
+                     }
                 });
 
                 if (respuesta.status === 200) {
@@ -73,8 +74,9 @@ const FormEstanque = ({ buttonForm, estanque, URI, updateTextButton, getAllEstan
             } else if (buttonForm === 'Enviar') {
                 const user = JSON.parse(localStorage.getItem('usuario'));
                 const respuestaApi = await axios.post(URI, formData, {
-                    headers: { "Content-Type": "multipart/form-data" },
-                    headers: { Authorization: `Bearer ${user.tokenUser }` }
+                    headers: { "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${user.tokenUser }`
+                     }
                 });
 
                 if (respuestaApi.status === 201) {

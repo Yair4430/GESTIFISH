@@ -286,7 +286,7 @@ const FormSiembra = ({ buttonForm, siembra, URI, updateTextButton, getAllSiembra
                                     <option value="">Selecciona uno...</option>
                                     {DatosEstanque.map((estanque) => (
                                         <option key={estanque.Id_Estanque} value={estanque.Id_Estanque}>
-                                            {estanque.Nom_Estanque}
+                                            {estanque.Id_Estanque}
                                         </option>
                                     ))}
                                 </select>
