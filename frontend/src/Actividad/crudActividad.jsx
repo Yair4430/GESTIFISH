@@ -121,7 +121,7 @@ const CrudActividad = () => {
             Fecha: actividad.Fec_Actividad,
             Hora: actividad.Hor_Actividad,
             'Fase Producción': actividad.Fas_Produccion,
-            Estanque: actividad.estanque.Nom_Estanque
+            Estanque: actividad.estanque.Id_Estanque
         })));
 
         const wb = XLSX.utils.book_new();
@@ -181,7 +181,7 @@ const CrudActividad = () => {
             actividad.Fec_Actividad,
             actividad.Hor_Actividad,
             actividad.Fas_Produccion,
-            actividad.estanque.Nom_Estanque
+            actividad.estanque.Id_Estanque
         ]);
 
         doc.autoTable({
