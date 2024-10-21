@@ -56,8 +56,8 @@ const Simulador = () => {
           ...row,
           numero: numeroAnimales.toLocaleString('es-ES'), // Formatear con separadores de miles
           biomasa: biomasa.toLocaleString('es-ES'), // Formatear con separadores de miles
-          alimento: `${alimento.toLocaleString('es-ES')} kg`, // Formatear con separadores de miles
-          concentrado: `${concentradoMensual.toLocaleString('es-ES')} kg`, // Formatear con separadores de miles
+          alimento: `${alimento.toLocaleString('es-ES')} g`, // Formatear con separadores de miles
+          concentrado: `${concentradoMensual.toLocaleString('es-ES')} g`, // Formatear con separadores de miles
           bultos: `${bultos.toLocaleString('es-ES')} bultos`, // Formatear con separadores de miles
           precio: `$${precioTotal.toLocaleString('es-ES')}`, // Formatear con separadores de miles
         };
@@ -72,7 +72,7 @@ const Simulador = () => {
   const handleExportExcel = () => {
     // Define los encabezados de la hoja de cálculo
     const worksheetData = [
-      ["Mes", "Número de Animales", "Peso (g)", "Tasa de Alimentación", "Biomasa (kg)", "Alimento Diario (kg)", "Concentrado Mensual (kg)", "Bultos", "Precio Total"]
+      ["Mes", "Número de Animales", "Peso (g)", "Tasa de Alimentación", "Biomasa (g)", "Alimento Diario (g)", "Concentrado Mensual (g)", "Bultos", "Precio Total"]
     ];
   
     // Agrega los datos de la tabla

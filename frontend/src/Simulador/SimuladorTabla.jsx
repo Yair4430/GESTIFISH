@@ -26,7 +26,7 @@ const SimuladorTabla = ({ data }) => {
               <td>{row.numero}</td>
               <td>{row.peso} g</td>
               <td>{row.tasa}</td>
-              <td>{row.biomasa} kg</td>
+              <td>{row.biomasa} g</td>
               <td>{row.alimento}</td>
               <td>{row.concentrado}</td>
               <td>{row.proteina}%</td>

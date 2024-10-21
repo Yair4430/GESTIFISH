@@ -106,7 +106,25 @@ function BarraNavegacionPublica() {
                   <span style={styles.iconText}>Creadores</span>
                 </NavLink>
               </li>
+
               <li className="nav-item">
+                <NavLink
+                  to="/ManualUsuario"
+                  className="nav-link text-white"
+                  style={styles.navLink}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.1)';
+                    e.currentTarget.style.opacity = '0.8';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.opacity = '1';
+                  }}
+                >
+                  <i className="fas fa-book" style={styles.icon}></i>
+                  <span style={styles.iconText}>Manual</span>
+                </NavLink>
+
                 <NavLink
                   to="/SimuladorPublico"
                   className="nav-link text-white"

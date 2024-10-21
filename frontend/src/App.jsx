@@ -29,6 +29,7 @@ import BarraNavegacionPublica from './home/barraNavegacionPublica.jsx';
 import HomePublico from './home/HomePublica.jsx';
 import RegistrosMenu from './home/RegistrosMenu.jsx';
 import CaruselContact from './Contact/Carusel-contact.jsx';
+import ManualUsuario from './Contact/manualUsuario.jsx';
 
 const URL_AUTH = process.env.ROUTER_PRINCIPAL + '/auth/';
 
@@ -116,6 +117,7 @@ function App() {
             <Route path='/Contactos' element={<CaruselContact />} />
             <Route path='/SimuladorPublico' element={<Simulador />} />
             <Route path='/auth' element={<Auth />} />
+            <Route path='/ManualUsuario' element={<ManualUsuario />} />
             <Route path='/reset-password' element={<FormReset />} />
             <Route path='/reset-password/:token' element={<ResetPassword />} />
             <Route path='*' element={<Navigate to="/" />} />

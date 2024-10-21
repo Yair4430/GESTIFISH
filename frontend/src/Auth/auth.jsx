@@ -127,8 +127,8 @@ const Auth = () => {
                     localStorage.setItem('usuario', JSON.stringify(response.data));
                     setMessageType('success');
                     setMessage('Inicio de sesión exitoso');
-                    // window.location.href = process.env.ROUTER_WINDOW + window.location.host;
-                    window.location.href = import.meta.env.VITE_ROUTER_WINDOW + '/Dashboard';
+                    // window.location.href = process.env.VITE_ROUTER_WINDOW + window.location.host;
+                    window.location.href = import.meta.env.VITE_ROUTER_WINDOW + window.location.host;
 
                     // navigate('/ruta-protegida');
                 }

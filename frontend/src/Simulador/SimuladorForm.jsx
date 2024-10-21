@@ -119,7 +119,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
           </select>
         </div>
         <div className="col-md-6">
-          <label htmlFor="densidad" className="form-label">Densidad</label>
+          <label htmlFor="densidad" className="form-label">Densidad por m2</label>
           <input
             type="text"
             id="densidad"
@@ -131,7 +131,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
           />
         </div>
         <div className="col-md-6">
-          <label htmlFor="espejoAgua" className="form-label">Espejo de agua</label>
+          <label htmlFor="espejoAgua" className="form-label">Espejo de agua en m2</label>
           <input
             type="text"
             id="espejoAgua"
@@ -143,7 +143,7 @@ const SimuladorForm = ({ onSimulate, onClear }) => {
           />
         </div>
         <div className="col-md-6">
-          <label htmlFor="precioBulto" className="form-label">Precio del Bulto</label>
+          <label htmlFor="precioBulto" className="form-label">Precio del Bulto $</label>
           <input
             type="text"
             id="precioBulto"

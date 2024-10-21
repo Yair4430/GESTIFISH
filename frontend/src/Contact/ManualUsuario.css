@@ -1,0 +1,43 @@
+.manual-container {
+    text-align: center;
+    margin: 20px;
+    padding: 20px;
+}
+
+.manual-title {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.manual-description {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.pdf-viewer-container {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.pdf-viewer {
+    width: 80%;
+    height: 600px;
+    border: 1px solid #ccc;
+}
+
+.download-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.download-button:hover {
+    background-color: #45a049;
+}
